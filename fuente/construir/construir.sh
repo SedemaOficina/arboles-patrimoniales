@@ -13,6 +13,9 @@ if [ "$DESTINO" = "produccion" ]; then CARPETA=docs; else CARPETA=prueba; fi
 node armar.js
 node armar-ficha.js "${2:-viejo-del-agua}"
 node armar-recursos.js
+# Los datos abiertos se publican como archivos con direccion propia, no se
+# fabrican en el navegador: asi se pueden citar y enlazar desde fuera.
+node armar-datos.js
 # Las versiones .dc.html son artefactos de Claude Design, no del servidor.
 [ "$DESTINO" != "produccion" ] && node armar-dc.js
 
@@ -28,6 +31,13 @@ mkdir -p "$DEST/assets/js"
 cp ../mapa.js ../indicadores.js ../especies.js ../menu.js ../geo-cdmx.js ../fotos.js ../patrimoniales-loader.js "$DEST/assets/js/"
 mkdir -p "$DEST/assets/css"
 cp ../estilos.css "$DEST/assets/css/estilos.css"
+
+# Los PDF de las declaratorias viajan al sitio con su nombre intacto: la ficha
+# los busca por el nombre que la hoja de calculo guarda en el campo del
+# decreto. La carpeta puede estar vacia; en ese caso las tarjetas se apagan
+# solas en la ficha, sin enlaces rotos.
+mkdir -p "$DEST/decretos"
+cp ../decretos/*.pdf "$DEST/decretos/" 2>/dev/null || true
 
 # La guía de identidad y la página de pendientes son documentación interna:
 # solo viajan a pruebas, nunca al servidor público.

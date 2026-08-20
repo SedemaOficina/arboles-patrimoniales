@@ -15,6 +15,7 @@
       <a href="#datos">Datos abiertos</a>
       <a href="#metodologia">Metodología</a>
       <a href="#directorio">A quién acudir</a>
+      <a href="#creditos">Créditos</a>
     </nav>
   </div>
 </section>
@@ -94,8 +95,11 @@
       <article class="recurso">
         <h3>Listado de árboles patrimoniales</h3>
         <p>Un renglón por ejemplar, con su identificador, especie validada, categorías, domicilio, coordenadas, medidas de campo y servicios ambientales estimados.</p>
-        <p class="recurso__nota">Formatos CSV y JSON. La descarga se genera desde la portada, sobre los datos vigentes al momento de la consulta.</p>
-        <a class="enlace" href="__PORTADA__#listado">Ir a la descarga</a>
+        <p class="recurso__nota">El CSV abre en Excel sin configurar nada: separador de coma y codificación UTF-8. El JSON conserva la estructura completa del registro, con los campos anidados que el CSV aplana.</p>
+        <p class="recurso__descargas">
+          <a class="enlace" href="datos/arboles-patrimoniales-cdmx.csv" download>Descargar CSV</a>
+          <a class="enlace" href="datos/arboles-patrimoniales-cdmx.json" download>Descargar JSON</a>
+        </p>
       </article>
       <article class="recurso">
         <h3>Perímetro de la Ciudad de México</h3>
@@ -166,6 +170,74 @@
         <a href="mailto:atencionciudadana@sedema.cdmx.gob.mx">atencionciudadana@sedema.cdmx.gob.mx</a></p>
       </article>
     </div>
+  </div>
+</section>
+
+<section class="seccion" id="creditos">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">Quién lo hizo</span>
+      <h2>Créditos y atribuciones</h2>
+      <p>Este sitio se construyó dentro de la Secretaría del Medio Ambiente de la Ciudad de México. Abajo se acredita a quien lo desarrolló y se reconocen las obras de terceros que utiliza, con la licencia bajo la que cada una se usa.</p>
+    </div>
+
+    <div class="creditos">
+      <div class="creditos__bloque">
+        <h3 class="rotulo">Responsable institucional</h3>
+        <dl class="creditos__lista">
+          <div><dt>Dependencia</dt><dd>Secretaría del Medio Ambiente de la Ciudad de México</dd></div>
+          <div><dt>Área coordinadora</dt><dd>Oficina de la Secretaría · Sistema de Información Ambiental</dd></div>
+          <div><dt>Registro de origen</dt><dd>Registro de árboles patrimoniales de la Ciudad de México</dd></div>
+        </dl>
+      </div>
+
+      <div class="creditos__bloque">
+        <h3 class="rotulo">Desarrollo del sitio</h3>
+        <dl class="creditos__lista">
+          <div><dt>Concepto y contenidos</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Diseño e identidad visual</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Desarrollo y publicación</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Fotografía de los ejemplares</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Ilustraciones de las especies</dt><dd data-pendiente>Por definir</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <h3 class="creditos__titulo">Obras de terceros que utiliza el sitio</h3>
+    <div class="recursos-rejilla">
+      <article class="recurso">
+        <h3>Cartografía base</h3>
+        <p>Los mapas se dibujan sobre datos de <strong>OpenStreetMap</strong>, aportados por su comunidad de colaboradores, con teselas del estilo Positron de <strong>CARTO</strong>.</p>
+        <p class="recurso__nota">Datos bajo Open Database License. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">Aviso de derechos de OpenStreetMap<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Perímetro de la Ciudad de México</h3>
+        <p>El contorno que recorta todos los mapas proviene del <strong>Marco Geoestadístico</strong> del Instituto Nacional de Estadística y Geografía, clave geoestadística 09.</p>
+        <p class="recurso__nota"><a href="https://www.inegi.org.mx/temas/mg/" target="_blank" rel="noopener">Marco Geoestadístico del INEGI<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Biblioteca de mapas</h3>
+        <p><strong>Leaflet</strong> 1.9.4, de Vladimir Agafonkin y sus colaboradores. Es la que dibuja los marcadores, el desplazamiento y el acercamiento de los mapas.</p>
+        <p class="recurso__nota">Licencia BSD de dos cláusulas. <a href="https://leafletjs.com/" target="_blank" rel="noopener">leafletjs.com<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Tipografías</h3>
+        <p><strong>Anton</strong> en los titulares, <strong>Fraunces</strong> en los nombres científicos y <strong>Source Sans 3</strong> en el texto corrido.</p>
+        <p class="recurso__nota">Las tres bajo SIL Open Font License 1.1. <a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Estimación de servicios ambientales</h3>
+        <p>Las cifras de carbono, dióxido de carbono, precipitación interceptada y escurrimiento evitado se estiman con <strong>i-Tree</strong>, del Servicio Forestal de Estados Unidos.</p>
+        <p class="recurso__nota">Uso público sin costo. <a href="https://www.itreetools.org/" target="_blank" rel="noopener">itreetools.org<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Taxonomía y estado de conservación</h3>
+        <p>Los nombres científicos se validan contra el <strong>Sistema Nacional de Información sobre Biodiversidad</strong> de la CONABIO. La categoría de riesgo proviene de la <strong>Lista Roja de la UICN</strong>.</p>
+        <p class="recurso__nota"><a href="https://www.snib.mx/" target="_blank" rel="noopener">snib.mx<span aria-hidden="true"> →</span></a> · <a href="https://www.iucnredlist.org/es" target="_blank" rel="noopener">iucnredlist.org<span aria-hidden="true"> →</span></a></p>
+      </article>
+    </div>
+
+    <p class="creditos__cierre">El contenido propio de este sitio —textos, datos del registro y diseño— puede reutilizarse citando como fuente a la Secretaría del Medio Ambiente de la Ciudad de México. Las obras de terceros conservan la licencia de su autor.</p>
   </div>
 </section>
 

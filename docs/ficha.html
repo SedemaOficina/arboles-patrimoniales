@@ -654,6 +654,31 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-lista p{margin:0 0 12px;font-size:15px;line-height:1.6;color:var(--tinta-suave);max-width:78ch}
 
 .recursos-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+/* Créditos y atribuciones. Dos bloques de datos arriba —quién responde y
+   quién lo hizo— y debajo la rejilla de obras de terceros, que reutiliza la
+   tarjeta de recursos: son el mismo tipo de contenido y no merecen una pieza
+   nueva. */
+.creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
+.creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
+.creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
+.creditos__lista{margin:0;display:grid;gap:11px}
+.creditos__lista div{display:grid;grid-template-columns:minmax(140px,38%) 1fr;gap:12px;align-items:baseline}
+.creditos__lista dt{margin:0;font-size:13px;font-weight:700;color:var(--gris)}
+.creditos__lista dd{margin:0;font-size:14.5px;line-height:1.4;color:var(--tinta)}
+/* Los campos que aún no tienen nombre se marcan: así se ve de un vistazo qué
+   falta llenar y nadie los confunde con un dato ya confirmado. */
+.creditos__lista dd[data-pendiente]{color:var(--gris);font-style:italic}
+.creditos__lista dd[data-pendiente]::after{content:"";display:inline-block;width:7px;height:7px;
+  margin-left:8px;border-radius:50%;background:var(--dorado);vertical-align:middle}
+.creditos__titulo{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;
+  font-size:20px;line-height:1.1;margin:0 0 18px;color:var(--tinta-jacaranda)}
+.creditos__cierre{margin:26px 0 0;font-size:14px;line-height:1.6;color:var(--gris);max-width:78ch}
+.recurso__descargas{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+@media(max-width:560px){
+  .creditos__bloque{padding:18px 18px}
+  .creditos__lista div{grid-template-columns:1fr;gap:2px}
+}
+
 .recurso{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px 26px 22px}
 .recurso--ancho{grid-column:1/-1;border-top-color:var(--dorado)}
 .recurso h3{font-size:18px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
@@ -1018,8 +1043,19 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   text-align:left;transition:background .16s,border-color .16s}
 .enlace--fuente b{display:flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--jacaranda)}
 .enlace--fuente span{font-size:12.5px;line-height:1.45;color:var(--gris)}
-.enlace--fuente:hover{background:var(--niebla);border-color:var(--jacaranda-hondo)}
-.enlace--fuente:hover b{color:var(--jacaranda-hondo)}
+/* CUIDADO con la especificidad: «.enlace:hover» —que pinta el fondo morado
+   pleno— se declara MÁS ABAJO en esta hoja y tiene el mismo peso que
+   «.enlace--fuente:hover», así que ganaba por orden de origen. La tarjeta se
+   llenaba de morado mientras el título y el pie conservaban su color morado
+   propio: texto morado sobre fondo morado, ilegible. Se dobla la clase para
+   subir el peso y se fija el color de las dos líneas interiores, que no
+   heredan del enlace. */
+.enlace.enlace--fuente:hover,
+.enlace.enlace--fuente:focus-visible{background:var(--niebla);border-color:var(--jacaranda-hondo)}
+.enlace.enlace--fuente:hover b,
+.enlace.enlace--fuente:focus-visible b{color:var(--jacaranda-hondo)}
+.enlace.enlace--fuente:hover span,
+.enlace.enlace--fuente:focus-visible span{color:var(--tinta-suave)}
 /* La propia de la Secretaría lleva filete lleno; la externa, punteado: la
    diferencia se ve antes de leer la flecha. */
 .enlace.enlace--propia{border-left-width:4px}
@@ -1839,7 +1875,7 @@ body.sin-desplazamiento{overflow:hidden}
   <div class="envoltura">
     <span class="rotulo">Fuentes y documentos</span>
     <h2>De dónde sale cada dato</h2>
-    <p class="guia">El decreto y el registro son la fuente oficial del ejemplar. Los otros dos abren sistemas externos a la Secretaría.</p>
+    <p class="guia">El decreto es la fuente oficial del ejemplar y lo publica la Secretaría. La ficha del SNIB abre un sistema externo, de la CONABIO.</p>
     <div class="enlaces enlaces--fuentes" id="fFuentes"></div>
   </div>
 </section>
@@ -1902,6 +1938,7 @@ body.sin-desplazamiento{overflow:hidden}
           <li><a href="index.html#mapa">El mapa</a></li>
           <li><a href="index.html#servicios">Lo que hacen por la ciudad</a></li>
           <li><a href="recursos.html">Recursos: videos, normativa y datos</a></li>
+          <li><a href="recursos.html#creditos">Créditos y atribuciones</a></li>
           <li><a href="index.html#proteccion">Cómo se protegen</a></li>
           <li><a href="index.html#cuidado">Patrimonial no es intocable</a></li>
           <li><a href="index.html#postula">Postula un árbol</a></li>
@@ -3245,23 +3282,79 @@ function pintarTaxonomia(e) {
 
 }
 
-/** Las cuatro fuentes del ejemplar, juntas al final de la ficha.
- *  Se distingue lo propio de la Secretaría de lo que abre un sistema ajeno:
- *  antes los cuatro botones se veían iguales y no anticipaban a dónde llevan. */
+/** Carpeta del sitio donde viven los PDF de los decretos. */
+const CARPETA_DECRETOS = "decretos";
+
+/**
+ * Convierte lo que el registro guarda en `linkDecreto` en una dirección que el
+ * navegador pueda abrir.
+ *
+ * La hoja de cálculo no guarda una URL: guarda el NOMBRE del archivo, del
+ * estilo «DECRETO JUARISTA.pdf» o «GOCDMX_26-06-01_TACUBA.pdf». Publicado tal
+ * cual, el navegador lo resolvía contra la raíz del sitio y devolvía 404,
+ * porque ahí no hay ningún PDF. Ahora:
+ *
+ *   · si el campo ya trae una dirección completa, se respeta;
+ *   · si trae un nombre de archivo, se busca dentro de decretos/;
+ *   · el nombre se limpia de espacios sobrantes —varios registros traen
+ *     «DECRETO_ JARDIN…», con un espacio después del guion bajo— y se codifica,
+ *     porque los espacios y los acentos no viajan crudos en una URL.
+ */
+function rutaDecreto(valor) {
+  const bruto = String(valor || "").trim();
+  if (!bruto) return null;
+  if (/^https?:\/\//i.test(bruto)) return bruto;
+  const archivo = bruto.replace(/^[\\/]+/, "").replace(/\s+/g, " ").trim();
+  if (!archivo) return null;
+  return `${CARPETA_DECRETOS}/${encodeURIComponent(archivo)}`;
+}
+
+/**
+ * Las fuentes del ejemplar, al final de la ficha.
+ *
+ * Quedan dos. Se retiraron «Fuente del registro» y «Cálculo i-Tree»: la
+ * primera apuntaba a la misma observación de iNaturalist en los trece
+ * ejemplares, y la segunda no guardaba una dirección sino el texto «MyTree»,
+ * el nombre de la herramienta. Ninguna de las dos llevaba a información de
+ * ESE árbol, que es lo único que justifica un enlace en su ficha.
+ *
+ * Se distingue lo propio de la Secretaría de lo que abre un sistema ajeno:
+ * antes los botones se veían iguales y no anticipaban a dónde llevan.
+ */
 function pintarFuentes(e) {
   const caja = document.getElementById("fFuentes");
   if (!caja) return;
   const fuentes = [
-    ["Consultar el decreto", e.linkDecreto, "propia", "El acuerdo publicado que lo declara patrimonial"],
-    ["Fuente del registro", e.urlOrigen, "propia", "El expediente del que proviene su captura"],
+    ["Consultar el decreto", rutaDecreto(e.linkDecreto), "propia", "El acuerdo publicado que lo declara patrimonial"],
     ["Ejemplar en el SNIB", e.urlSNIB, "externa", "Sistema Nacional de Información sobre Biodiversidad"],
-    ["Cálculo i-Tree", e.linkITree, "externa", "La corrida que estimó sus servicios ambientales"],
   ];
   caja.innerHTML = fuentes.map(([t2, url, tipo, pie]) => url
     ? `<a class="enlace enlace--fuente enlace--${tipo}" href="${esc(url)}" target="_blank" rel="noopener">
-         <b>${t2}${tipo === "externa" ? '<span class="enlace__fuera" aria-hidden="true">\u2197</span><span class="vo">, abre un sitio externo</span>' : ""}</b>
+         <b>${t2}${tipo === "externa" ? '<span class="enlace__fuera" aria-hidden="true">↗</span><span class="vo">, abre un sitio externo</span>' : ""}</b>
          <span>${pie}</span></a>`
     : `<span class="enlace enlace--fuente enlace--apagado"><b>${t2}</b><span>No disponible en el registro</span></span>`).join("");
+
+  // Un enlace que promete un documento y devuelve un 404 es peor que no
+  // ofrecerlo: la persona cree que el decreto no existe. Se comprueba que el
+  // archivo esté publicado y, si no está, la tarjeta se apaga con un texto que
+  // dice la verdad. La comprobación es una sola petición de cabecera, sin
+  // descargar el PDF.
+  const enlaceDecreto = caja.querySelector(".enlace--propia");
+  if (enlaceDecreto && typeof fetch === "function") {
+    const url = enlaceDecreto.getAttribute("href");
+    fetch(url, { method: "HEAD" })
+      .then((r) => { if (!r.ok) apagarDecreto(caja); })
+      .catch(() => { /* sin red o con file://: se deja el enlace como está */ });
+  }
+}
+
+function apagarDecreto(caja) {
+  const a = caja.querySelector(".enlace--propia");
+  if (!a) return;
+  const reemplazo = document.createElement("span");
+  reemplazo.className = "enlace enlace--fuente enlace--propia enlace--apagado";
+  reemplazo.innerHTML = "<b>Consultar el decreto</b><span>El documento aún no está publicado en este sitio</span>";
+  a.replaceWith(reemplazo);
 }
 
 function pintarProcedencia(e) {

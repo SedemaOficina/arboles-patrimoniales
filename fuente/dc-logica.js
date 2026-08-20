@@ -95,60 +95,9 @@ class Component extends DCLogic {
   /** Minúsculas sin acentos: la base de cualquier comparación de texto. */
   norm(s) { return String(s == null ? "" : s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
 
-  /** Descarga de datos abiertos: el listado tal como lo publica el registro. */
-  descargar(tipo, ejemplares) {
-    const columnas = [
-      ["id", (e) => e.id], ["consecutivo", (e) => e.consecutivo],
-      ["nombre_asignado", (e) => e.nombreAsignado], ["especie", (e) => e.especie],
-      ["nombre_comun", (e) => e.nombreComun], ["categorias", (e) => (e.categorias || []).join("; ")],
-      ["fecha_decreto", (e) => e.fechaDecreto && e.fechaDecreto.iso], ["alcaldia", (e) => e.alcaldia],
-      ["colonia", (e) => e.ubicacion && e.ubicacion.colonia], ["calle", (e) => e.ubicacion && e.ubicacion.calle],
-      ["numero", (e) => e.ubicacion && e.ubicacion.numero], ["cp", (e) => e.ubicacion && e.ubicacion.cp],
-      ["tipo_ubicacion", (e) => e.ubicacion && e.ubicacion.tipo],
-      ["latitud", (e) => e.coords && e.coords.lat], ["longitud", (e) => e.coords && e.coords.lng],
-      ["altura_m", (e) => e.morfologia.altura_m], ["diametro_cm", (e) => e.morfologia.diametro_cm],
-      ["circunferencia_cm", (e) => e.morfologia.circunferencia_cm],
-      ["ancho_copa_m", (e) => e.morfologia.anchoCopa_m], ["largo_copa_m", (e) => e.morfologia.largoCopa_m],
-      ["extension_copa_m", (e) => e.morfologia.extensionCopa_m],
-      ["edad_estimada_anios", (e) => e.edadEstimada], ["expectativa_vida", (e) => e.expectativaVida],
-      ["categoria_riesgo_uicn", (e) => e.conservacion && e.conservacion.iucn],
-      ["carbono_secuestrado_kg_anio", (e) => e.serviciosAmbientales.carbonoSecuestrado_kg],
-      ["co2_absorbido_kg_anio", (e) => e.serviciosAmbientales.co2Absorbido_kg],
-      ["precipitacion_interceptada_l_anio", (e) => e.serviciosAmbientales.precipitacionInterceptada_L],
-      ["escorrentia_reducida_l_anio", (e) => e.serviciosAmbientales.escorrentiaReducida_L],
-      ["link_decreto", (e) => e.linkDecreto],
-    ];
-    // Un valor que empiece por = + - @ o tabulador lo ejecuta Excel como
-    // fórmula al abrir el archivo. La comilla simple lo marca como texto.
-    const celda = (v) => {
-      if (v === null || v === undefined) return "";
-      let t = String(v);
-      if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;
-      return /[",\n;]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
-    };
-    let texto, mime;
-    if (tipo === "csv") {
-      // El BOM evita que Excel rompa los acentos.
-      texto = "\ufeff" + [columnas.map((c) => c[0]).join(",")]
-        .concat(ejemplares.map((e) => columnas.map(([, f]) => celda(f(e))).join(",")))
-        .join("\r\n");
-      mime = "text/csv;charset=utf-8";
-    } else {
-      texto = JSON.stringify({
-        nombre: "Árboles patrimoniales de la Ciudad de México",
-        fuente: "Secretaría del Medio Ambiente de la Ciudad de México",
-        licencia: "Uso libre citando la fuente",
-        total: ejemplares.length, ejemplares,
-      }, null, 2);
-      mime = "application/json;charset=utf-8";
-    }
-    const hoy = new Date().toISOString().slice(0, 10);
-    const url = URL.createObjectURL(new Blob([texto], { type: mime }));
-    const a = document.createElement("a");
-    a.href = url; a.download = `arboles-patrimoniales-cdmx-${hoy}.${tipo}`;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-  }
+  /* La descarga de datos abiertos salió del navegador: los archivos se
+     generan al construir el sitio —construir/armar-datos.js— y se enlazan
+     desde la página de Recursos, con dirección propia y citable. */
   germinacion(e) { return e.edadEstimada == null ? null : this.ANIO - Math.round(e.edadEstimada); }
 
   escala(ejemplares) {
@@ -323,8 +272,6 @@ class Component extends DCLogic {
       listadoVacio: lista.length === 0,
       alBuscar: (ev) => this.setState({ busqueda: ev && ev.target ? ev.target.value : "" }),
       alBorrarBusqueda: () => this.setState({ busqueda: "" }),
-      alDescargarCsv: () => this.descargar("csv", d),
-      alDescargarJson: () => this.descargar("json", d),
       coberturaServicios: incompletos === 0
         ? `Las cuatro cifras están calculadas con el dato de los ${n} ejemplares del registro.`
         : "Algunas cifras se calculan con menos ejemplares de los que integran el registro; cada tarjeta lo indica.",

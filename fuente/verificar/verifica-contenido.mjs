@@ -46,7 +46,10 @@ for(const f of [PRUEBA+'portada.dc.html',PRUEBA+'portada-vista-previa.html']){
   t(f+' · enlaza la Ley Ambiental', /1611-nueva-ley-31/.test(s));
 
   t(f+' · buscador del listado', /id="buscaPadron"/.test(s)&&/Nombre, especie, alcaldía o colonia/.test(s));
-  t(f+' · descarga en CSV y JSON', (/data-descarga="csv"/.test(s)||/alDescargarCsv/.test(s)) && (/data-descarga="json"/.test(s)||/alDescargarJson/.test(s)));
+  // La descarga salió de la portada: ahora son archivos estáticos enlazados
+  // desde Recursos. La portada no debe conservar ni los botones ni el bloque.
+  t(f+' · la portada ya no fabrica la descarga',
+    !/data-descarga=/.test(s) && !/alDescargarCsv/.test(s) && !/class="datos-abiertos"/.test(s));
   t(f+' · el cintillo ya no anuncia el total', !/Ejemplares declarados/.test(s));
   t(f+' · sin valoración económica', !/Valor estimado de sus beneficios/.test(s)&&!/atribuirle moneda/.test(s));
   t(f+' · el pie del mapa ya no habla del tamaño', !/El tamaño de cada marcador corresponde/.test(s));
@@ -64,6 +67,15 @@ t('mapa.js · recorte a la Ciudad de México', /MASCARA_CDMX = GEO_CDMX/.test(m)
 t('mapa.js · sin capa de perímetros', !/perimetro/i.test(m));
 const dl=fs.readFileSync('dc-logica.js','utf8');
 t('Design · buscador en el estado', /busqueda: ""/.test(dl)&&/alBuscar/.test(dl));
-t('Design · descarga de datos abiertos', /descargar\(tipo, ejemplares\)/.test(dl)&&/alDescargarCsv/.test(dl));
+t('Design · ya no arma la descarga en el navegador',
+  !/descargar\(tipo, ejemplares\)/.test(dl) && !/alDescargarCsv/.test(dl));
+// Los archivos se generan al construir y viven con dirección propia.
+const rec = fs.readFileSync('recursos-cuerpo.html','utf8');
+t('Recursos · enlaza el CSV y el JSON publicados',
+  /href="datos\/arboles-patrimoniales-cdmx\.csv" download/.test(rec)
+  && /href="datos\/arboles-patrimoniales-cdmx\.json" download/.test(rec));
+t('Recursos · los archivos existen en la salida',
+  fs.existsSync(PRUEBA+'datos/arboles-patrimoniales-cdmx.csv')
+  && fs.existsSync(PRUEBA+'datos/arboles-patrimoniales-cdmx.json'));
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal?1:0);

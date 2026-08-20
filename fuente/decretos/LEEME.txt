@@ -1,0 +1,43 @@
+DECRETOS · PDF de las declaratorias
+===================================
+
+Aquí van los archivos PDF de los decretos que declaran patrimonial a cada
+ejemplar. Todo lo que esté en esta carpeta se copia tal cual al sitio, dentro
+de la carpeta decretos/, y la ficha lo enlaza desde la tarjeta «Consultar el
+decreto».
+
+CÓMO SE ENLAZA
+--------------
+La ficha NO adivina el nombre: lo toma del campo del registro que la hoja de
+cálculo guarda como link del decreto. El nombre del archivo que pongas aquí
+debe coincidir EXACTAMENTE con lo que dice ese campo, incluidos acentos,
+mayúsculas y espacios.
+
+Si el campo de la hoja trae una dirección completa —empieza con http:// o
+https://— la ficha la usa tal cual y no busca nada en esta carpeta.
+
+Si el archivo no está, la tarjeta de la ficha no queda rota: se apaga sola y
+dice «El documento aún no está publicado en este sitio».
+
+ARCHIVOS QUE EL REGISTRO ESPERA HOY
+-----------------------------------
+  DECRETO EUGENIO.pdf
+  DECRETO JARDIN RAMON LOPEZ VELARDE.pdf
+  DECRETO JUARISTA.pdf
+  DECRETO VIEJO DL AGUA LAUREANO.pdf
+  DECRETO_ JARDIN DE SAN FERNANDO.pdf
+  DECRETO_GLORIETA DE LOS AHUEHUETES.pdf
+  GOCDMX_26-06-01_ESPAÑA.pdf
+  GOCDMX_26-06-01_TACUBA.pdf
+  GOCDMX_26-06-02_CHURUBUSCO.pdf
+  GOCDMX_26-06-02_MAGDALENA.pdf
+  GOCDMX_26-06-03_CATARINA.pdf
+
+DOS COSAS QUE CONVIENE REVISAR EN LA HOJA
+-----------------------------------------
+1. «DECRETO VIEJO DL AGUA LAUREANO.pdf» aparece en DOS ejemplares: Viejo del
+   Agua y Laureano. Si son dos declaratorias distintas, cada una necesita su
+   propio archivo y su propio nombre en la hoja.
+2. «Árbol Ahuehuete (Sabino) de San Juan y su Arboleda» no tiene ningún
+   nombre de archivo en la hoja: su tarjeta saldrá apagada hasta que se
+   capture.

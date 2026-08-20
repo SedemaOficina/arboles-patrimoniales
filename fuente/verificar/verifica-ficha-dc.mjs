@@ -45,7 +45,16 @@ t('Cuatro grupos i-Tree con 15 filas',v.grupos.length===4&&v.grupos.reduce((a,g)
 t('Carbono con miles correctos',v.grupos[0].filas[0].valor==='4,610',v.grupos[0].filas[0].valor);
 t('La ficha ya no publica valoración económica',v.beneficio===undefined&&!JSON.stringify(v).includes('atribuirle moneda'));
 t('Taxonomía completa en la ficha',v.taxonomia.length>=8,`${v.taxonomia.length} filas`);
-t('Enlaces disponibles y no disponibles diferenciados',v.enlaces.filter(e=>e.hay).length===1&&v.enlaces.filter(e=>!e.hay).length===2);
+// Queda un solo enlace externo: el SNIB. Se retiraron «Fuente del registro»
+// —el mismo enlace de iNaturalist en los trece— y «Cálculo i-Tree», que no
+// guardaba una dirección sino el texto «MyTree».
+t('Un solo enlace externo, el del SNIB',
+  v.enlaces.length===1 && v.enlaces[0].texto.startsWith('Ejemplar en el SNIB'),
+  JSON.stringify(v.enlaces.map(e=>e.texto)));
+// Este ejemplar de prueba no trae dirección del SNIB: la tarjeta debe salir
+// apagada y decirlo, no enlazar a ninguna parte.
+t('Sin dirección, la tarjeta se apaga y lo dice',
+  !v.enlaces[0].hay && v.enlaces[0].url==='#' && /no disponible$/.test(v.enlaces[0].texto));
 t('Trazabilidad con nominación',v.procedencia[0].valor==='Vecinos de la colonia');
 
 console.log('\n══ FICHA · ejemplar sin ningún dato ══');

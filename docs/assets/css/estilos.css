@@ -623,6 +623,31 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-lista p{margin:0 0 12px;font-size:15px;line-height:1.6;color:var(--tinta-suave);max-width:78ch}
 
 .recursos-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+/* Créditos y atribuciones. Dos bloques de datos arriba —quién responde y
+   quién lo hizo— y debajo la rejilla de obras de terceros, que reutiliza la
+   tarjeta de recursos: son el mismo tipo de contenido y no merecen una pieza
+   nueva. */
+.creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
+.creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
+.creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
+.creditos__lista{margin:0;display:grid;gap:11px}
+.creditos__lista div{display:grid;grid-template-columns:minmax(140px,38%) 1fr;gap:12px;align-items:baseline}
+.creditos__lista dt{margin:0;font-size:13px;font-weight:700;color:var(--gris)}
+.creditos__lista dd{margin:0;font-size:14.5px;line-height:1.4;color:var(--tinta)}
+/* Los campos que aún no tienen nombre se marcan: así se ve de un vistazo qué
+   falta llenar y nadie los confunde con un dato ya confirmado. */
+.creditos__lista dd[data-pendiente]{color:var(--gris);font-style:italic}
+.creditos__lista dd[data-pendiente]::after{content:"";display:inline-block;width:7px;height:7px;
+  margin-left:8px;border-radius:50%;background:var(--dorado);vertical-align:middle}
+.creditos__titulo{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;
+  font-size:20px;line-height:1.1;margin:0 0 18px;color:var(--tinta-jacaranda)}
+.creditos__cierre{margin:26px 0 0;font-size:14px;line-height:1.6;color:var(--gris);max-width:78ch}
+.recurso__descargas{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+@media(max-width:560px){
+  .creditos__bloque{padding:18px 18px}
+  .creditos__lista div{grid-template-columns:1fr;gap:2px}
+}
+
 .recurso{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px 26px 22px}
 .recurso--ancho{grid-column:1/-1;border-top-color:var(--dorado)}
 .recurso h3{font-size:18px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
@@ -987,8 +1012,19 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   text-align:left;transition:background .16s,border-color .16s}
 .enlace--fuente b{display:flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--jacaranda)}
 .enlace--fuente span{font-size:12.5px;line-height:1.45;color:var(--gris)}
-.enlace--fuente:hover{background:var(--niebla);border-color:var(--jacaranda-hondo)}
-.enlace--fuente:hover b{color:var(--jacaranda-hondo)}
+/* CUIDADO con la especificidad: «.enlace:hover» —que pinta el fondo morado
+   pleno— se declara MÁS ABAJO en esta hoja y tiene el mismo peso que
+   «.enlace--fuente:hover», así que ganaba por orden de origen. La tarjeta se
+   llenaba de morado mientras el título y el pie conservaban su color morado
+   propio: texto morado sobre fondo morado, ilegible. Se dobla la clase para
+   subir el peso y se fija el color de las dos líneas interiores, que no
+   heredan del enlace. */
+.enlace.enlace--fuente:hover,
+.enlace.enlace--fuente:focus-visible{background:var(--niebla);border-color:var(--jacaranda-hondo)}
+.enlace.enlace--fuente:hover b,
+.enlace.enlace--fuente:focus-visible b{color:var(--jacaranda-hondo)}
+.enlace.enlace--fuente:hover span,
+.enlace.enlace--fuente:focus-visible span{color:var(--tinta-suave)}
 /* La propia de la Secretaría lleva filete lleno; la externa, punteado: la
    diferencia se ve antes de leer la flecha. */
 .enlace.enlace--propia{border-left-width:4px}

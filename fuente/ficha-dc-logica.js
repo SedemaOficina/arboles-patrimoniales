@@ -309,7 +309,11 @@ class Component extends DCLogic {
       this.fila("CITES", e.conservacion.cites),
       this.fila("Especie prioritaria", e.conservacion.prioritaria),
     ];
-    const enlaces = [["Ejemplar en el SNIB", e.urlSNIB], ["Fuente del registro", e.urlOrigen], ["Cálculo i-Tree", e.linkITree]]
+    // Igual que en la ficha del sitio: se retiraron «Fuente del registro» y
+    // «Cálculo i-Tree». La primera apuntaba a la misma observación de
+    // iNaturalist en los trece ejemplares; la segunda guardaba el texto
+    // «MyTree», no una dirección.
+    const enlaces = [["Ejemplar en el SNIB", e.urlSNIB]]
       .map(([texto, url]) => ({ texto: url ? texto : `${texto} no disponible`, url: url || "#", hay: !!url,
         clase: url ? "enlace" : "enlace enlace--apagado" }));
     const procedencia = [

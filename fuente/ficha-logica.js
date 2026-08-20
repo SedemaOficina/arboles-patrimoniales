@@ -483,23 +483,79 @@ function pintarTaxonomia(e) {
 
 }
 
-/** Las cuatro fuentes del ejemplar, juntas al final de la ficha.
- *  Se distingue lo propio de la Secretaría de lo que abre un sistema ajeno:
- *  antes los cuatro botones se veían iguales y no anticipaban a dónde llevan. */
+/** Carpeta del sitio donde viven los PDF de los decretos. */
+const CARPETA_DECRETOS = "decretos";
+
+/**
+ * Convierte lo que el registro guarda en `linkDecreto` en una dirección que el
+ * navegador pueda abrir.
+ *
+ * La hoja de cálculo no guarda una URL: guarda el NOMBRE del archivo, del
+ * estilo «DECRETO JUARISTA.pdf» o «GOCDMX_26-06-01_TACUBA.pdf». Publicado tal
+ * cual, el navegador lo resolvía contra la raíz del sitio y devolvía 404,
+ * porque ahí no hay ningún PDF. Ahora:
+ *
+ *   · si el campo ya trae una dirección completa, se respeta;
+ *   · si trae un nombre de archivo, se busca dentro de decretos/;
+ *   · el nombre se limpia de espacios sobrantes —varios registros traen
+ *     «DECRETO_ JARDIN…», con un espacio después del guion bajo— y se codifica,
+ *     porque los espacios y los acentos no viajan crudos en una URL.
+ */
+function rutaDecreto(valor) {
+  const bruto = String(valor || "").trim();
+  if (!bruto) return null;
+  if (/^https?:\/\//i.test(bruto)) return bruto;
+  const archivo = bruto.replace(/^[\\/]+/, "").replace(/\s+/g, " ").trim();
+  if (!archivo) return null;
+  return `${CARPETA_DECRETOS}/${encodeURIComponent(archivo)}`;
+}
+
+/**
+ * Las fuentes del ejemplar, al final de la ficha.
+ *
+ * Quedan dos. Se retiraron «Fuente del registro» y «Cálculo i-Tree»: la
+ * primera apuntaba a la misma observación de iNaturalist en los trece
+ * ejemplares, y la segunda no guardaba una dirección sino el texto «MyTree»,
+ * el nombre de la herramienta. Ninguna de las dos llevaba a información de
+ * ESE árbol, que es lo único que justifica un enlace en su ficha.
+ *
+ * Se distingue lo propio de la Secretaría de lo que abre un sistema ajeno:
+ * antes los botones se veían iguales y no anticipaban a dónde llevan.
+ */
 function pintarFuentes(e) {
   const caja = document.getElementById("fFuentes");
   if (!caja) return;
   const fuentes = [
-    ["Consultar el decreto", e.linkDecreto, "propia", "El acuerdo publicado que lo declara patrimonial"],
-    ["Fuente del registro", e.urlOrigen, "propia", "El expediente del que proviene su captura"],
+    ["Consultar el decreto", rutaDecreto(e.linkDecreto), "propia", "El acuerdo publicado que lo declara patrimonial"],
     ["Ejemplar en el SNIB", e.urlSNIB, "externa", "Sistema Nacional de Información sobre Biodiversidad"],
-    ["Cálculo i-Tree", e.linkITree, "externa", "La corrida que estimó sus servicios ambientales"],
   ];
   caja.innerHTML = fuentes.map(([t2, url, tipo, pie]) => url
     ? `<a class="enlace enlace--fuente enlace--${tipo}" href="${esc(url)}" target="_blank" rel="noopener">
-         <b>${t2}${tipo === "externa" ? '<span class="enlace__fuera" aria-hidden="true">\u2197</span><span class="vo">, abre un sitio externo</span>' : ""}</b>
+         <b>${t2}${tipo === "externa" ? '<span class="enlace__fuera" aria-hidden="true">↗</span><span class="vo">, abre un sitio externo</span>' : ""}</b>
          <span>${pie}</span></a>`
     : `<span class="enlace enlace--fuente enlace--apagado"><b>${t2}</b><span>No disponible en el registro</span></span>`).join("");
+
+  // Un enlace que promete un documento y devuelve un 404 es peor que no
+  // ofrecerlo: la persona cree que el decreto no existe. Se comprueba que el
+  // archivo esté publicado y, si no está, la tarjeta se apaga con un texto que
+  // dice la verdad. La comprobación es una sola petición de cabecera, sin
+  // descargar el PDF.
+  const enlaceDecreto = caja.querySelector(".enlace--propia");
+  if (enlaceDecreto && typeof fetch === "function") {
+    const url = enlaceDecreto.getAttribute("href");
+    fetch(url, { method: "HEAD" })
+      .then((r) => { if (!r.ok) apagarDecreto(caja); })
+      .catch(() => { /* sin red o con file://: se deja el enlace como está */ });
+  }
+}
+
+function apagarDecreto(caja) {
+  const a = caja.querySelector(".enlace--propia");
+  if (!a) return;
+  const reemplazo = document.createElement("span");
+  reemplazo.className = "enlace enlace--fuente enlace--propia enlace--apagado";
+  reemplazo.innerHTML = "<b>Consultar el decreto</b><span>El documento aún no está publicado en este sitio</span>";
+  a.replaceWith(reemplazo);
 }
 
 function pintarProcedencia(e) {

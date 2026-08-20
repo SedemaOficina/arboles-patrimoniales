@@ -643,6 +643,31 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-lista p{margin:0 0 12px;font-size:15px;line-height:1.6;color:var(--tinta-suave);max-width:78ch}
 
 .recursos-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+/* Créditos y atribuciones. Dos bloques de datos arriba —quién responde y
+   quién lo hizo— y debajo la rejilla de obras de terceros, que reutiliza la
+   tarjeta de recursos: son el mismo tipo de contenido y no merecen una pieza
+   nueva. */
+.creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
+.creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
+.creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
+.creditos__lista{margin:0;display:grid;gap:11px}
+.creditos__lista div{display:grid;grid-template-columns:minmax(140px,38%) 1fr;gap:12px;align-items:baseline}
+.creditos__lista dt{margin:0;font-size:13px;font-weight:700;color:var(--gris)}
+.creditos__lista dd{margin:0;font-size:14.5px;line-height:1.4;color:var(--tinta)}
+/* Los campos que aún no tienen nombre se marcan: así se ve de un vistazo qué
+   falta llenar y nadie los confunde con un dato ya confirmado. */
+.creditos__lista dd[data-pendiente]{color:var(--gris);font-style:italic}
+.creditos__lista dd[data-pendiente]::after{content:"";display:inline-block;width:7px;height:7px;
+  margin-left:8px;border-radius:50%;background:var(--dorado);vertical-align:middle}
+.creditos__titulo{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;
+  font-size:20px;line-height:1.1;margin:0 0 18px;color:var(--tinta-jacaranda)}
+.creditos__cierre{margin:26px 0 0;font-size:14px;line-height:1.6;color:var(--gris);max-width:78ch}
+.recurso__descargas{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+@media(max-width:560px){
+  .creditos__bloque{padding:18px 18px}
+  .creditos__lista div{grid-template-columns:1fr;gap:2px}
+}
+
 .recurso{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px 26px 22px}
 .recurso--ancho{grid-column:1/-1;border-top-color:var(--dorado)}
 .recurso h3{font-size:18px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
@@ -1007,8 +1032,19 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   text-align:left;transition:background .16s,border-color .16s}
 .enlace--fuente b{display:flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--jacaranda)}
 .enlace--fuente span{font-size:12.5px;line-height:1.45;color:var(--gris)}
-.enlace--fuente:hover{background:var(--niebla);border-color:var(--jacaranda-hondo)}
-.enlace--fuente:hover b{color:var(--jacaranda-hondo)}
+/* CUIDADO con la especificidad: «.enlace:hover» —que pinta el fondo morado
+   pleno— se declara MÁS ABAJO en esta hoja y tiene el mismo peso que
+   «.enlace--fuente:hover», así que ganaba por orden de origen. La tarjeta se
+   llenaba de morado mientras el título y el pie conservaban su color morado
+   propio: texto morado sobre fondo morado, ilegible. Se dobla la clase para
+   subir el peso y se fija el color de las dos líneas interiores, que no
+   heredan del enlace. */
+.enlace.enlace--fuente:hover,
+.enlace.enlace--fuente:focus-visible{background:var(--niebla);border-color:var(--jacaranda-hondo)}
+.enlace.enlace--fuente:hover b,
+.enlace.enlace--fuente:focus-visible b{color:var(--jacaranda-hondo)}
+.enlace.enlace--fuente:hover span,
+.enlace.enlace--fuente:focus-visible span{color:var(--tinta-suave)}
 /* La propia de la Secretaría lleva filete lleno; la externa, punteado: la
    diferencia se ve antes de leer la flecha. */
 .enlace.enlace--propia{border-left-width:4px}
@@ -1677,6 +1713,7 @@ body.sin-desplazamiento{overflow:hidden}
       <a href="#datos">Datos abiertos</a>
       <a href="#metodologia">Metodología</a>
       <a href="#directorio">A quién acudir</a>
+      <a href="#creditos">Créditos</a>
     </nav>
   </div>
 </section>
@@ -1756,8 +1793,11 @@ body.sin-desplazamiento{overflow:hidden}
       <article class="recurso">
         <h3>Listado de árboles patrimoniales</h3>
         <p>Un renglón por ejemplar, con su identificador, especie validada, categorías, domicilio, coordenadas, medidas de campo y servicios ambientales estimados.</p>
-        <p class="recurso__nota">Formatos CSV y JSON. La descarga se genera desde la portada, sobre los datos vigentes al momento de la consulta.</p>
-        <a class="enlace" href="index.html#listado">Ir a la descarga</a>
+        <p class="recurso__nota">El CSV abre en Excel sin configurar nada: separador de coma y codificación UTF-8. El JSON conserva la estructura completa del registro, con los campos anidados que el CSV aplana.</p>
+        <p class="recurso__descargas">
+          <a class="enlace" href="datos/arboles-patrimoniales-cdmx.csv" download>Descargar CSV</a>
+          <a class="enlace" href="datos/arboles-patrimoniales-cdmx.json" download>Descargar JSON</a>
+        </p>
       </article>
       <article class="recurso">
         <h3>Perímetro de la Ciudad de México</h3>
@@ -1831,6 +1871,74 @@ body.sin-desplazamiento{overflow:hidden}
   </div>
 </section>
 
+<section class="seccion" id="creditos">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">Quién lo hizo</span>
+      <h2>Créditos y atribuciones</h2>
+      <p>Este sitio se construyó dentro de la Secretaría del Medio Ambiente de la Ciudad de México. Abajo se acredita a quien lo desarrolló y se reconocen las obras de terceros que utiliza, con la licencia bajo la que cada una se usa.</p>
+    </div>
+
+    <div class="creditos">
+      <div class="creditos__bloque">
+        <h3 class="rotulo">Responsable institucional</h3>
+        <dl class="creditos__lista">
+          <div><dt>Dependencia</dt><dd>Secretaría del Medio Ambiente de la Ciudad de México</dd></div>
+          <div><dt>Área coordinadora</dt><dd>Oficina de la Secretaría · Sistema de Información Ambiental</dd></div>
+          <div><dt>Registro de origen</dt><dd>Registro de árboles patrimoniales de la Ciudad de México</dd></div>
+        </dl>
+      </div>
+
+      <div class="creditos__bloque">
+        <h3 class="rotulo">Desarrollo del sitio</h3>
+        <dl class="creditos__lista">
+          <div><dt>Concepto y contenidos</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Diseño e identidad visual</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Desarrollo y publicación</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Fotografía de los ejemplares</dt><dd data-pendiente>Por definir</dd></div>
+          <div><dt>Ilustraciones de las especies</dt><dd data-pendiente>Por definir</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <h3 class="creditos__titulo">Obras de terceros que utiliza el sitio</h3>
+    <div class="recursos-rejilla">
+      <article class="recurso">
+        <h3>Cartografía base</h3>
+        <p>Los mapas se dibujan sobre datos de <strong>OpenStreetMap</strong>, aportados por su comunidad de colaboradores, con teselas del estilo Positron de <strong>CARTO</strong>.</p>
+        <p class="recurso__nota">Datos bajo Open Database License. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">Aviso de derechos de OpenStreetMap<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Perímetro de la Ciudad de México</h3>
+        <p>El contorno que recorta todos los mapas proviene del <strong>Marco Geoestadístico</strong> del Instituto Nacional de Estadística y Geografía, clave geoestadística 09.</p>
+        <p class="recurso__nota"><a href="https://www.inegi.org.mx/temas/mg/" target="_blank" rel="noopener">Marco Geoestadístico del INEGI<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Biblioteca de mapas</h3>
+        <p><strong>Leaflet</strong> 1.9.4, de Vladimir Agafonkin y sus colaboradores. Es la que dibuja los marcadores, el desplazamiento y el acercamiento de los mapas.</p>
+        <p class="recurso__nota">Licencia BSD de dos cláusulas. <a href="https://leafletjs.com/" target="_blank" rel="noopener">leafletjs.com<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Tipografías</h3>
+        <p><strong>Anton</strong> en los titulares, <strong>Fraunces</strong> en los nombres científicos y <strong>Source Sans 3</strong> en el texto corrido.</p>
+        <p class="recurso__nota">Las tres bajo SIL Open Font License 1.1. <a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Estimación de servicios ambientales</h3>
+        <p>Las cifras de carbono, dióxido de carbono, precipitación interceptada y escurrimiento evitado se estiman con <strong>i-Tree</strong>, del Servicio Forestal de Estados Unidos.</p>
+        <p class="recurso__nota">Uso público sin costo. <a href="https://www.itreetools.org/" target="_blank" rel="noopener">itreetools.org<span aria-hidden="true"> →</span></a></p>
+      </article>
+      <article class="recurso">
+        <h3>Taxonomía y estado de conservación</h3>
+        <p>Los nombres científicos se validan contra el <strong>Sistema Nacional de Información sobre Biodiversidad</strong> de la CONABIO. La categoría de riesgo proviene de la <strong>Lista Roja de la UICN</strong>.</p>
+        <p class="recurso__nota"><a href="https://www.snib.mx/" target="_blank" rel="noopener">snib.mx<span aria-hidden="true"> →</span></a> · <a href="https://www.iucnredlist.org/es" target="_blank" rel="noopener">iucnredlist.org<span aria-hidden="true"> →</span></a></p>
+      </article>
+    </div>
+
+    <p class="creditos__cierre">El contenido propio de este sitio —textos, datos del registro y diseño— puede reutilizarse citando como fuente a la Secretaría del Medio Ambiente de la Ciudad de México. Las obras de terceros conservan la licencia de su autor.</p>
+  </div>
+</section>
+
 </main>
 
 <footer class="pie">
@@ -1884,6 +1992,7 @@ body.sin-desplazamiento{overflow:hidden}
           <li><a href="index.html#mapa">El mapa</a></li>
           <li><a href="index.html#servicios">Lo que hacen por la ciudad</a></li>
           <li><a href="recursos.html">Recursos: videos, normativa y datos</a></li>
+          <li><a href="recursos.html#creditos">Créditos y atribuciones</a></li>
           <li><a href="index.html#proteccion">Cómo se protegen</a></li>
           <li><a href="index.html#cuidado">Patrimonial no es intocable</a></li>
           <li><a href="index.html#postula">Postula un árbol</a></li>

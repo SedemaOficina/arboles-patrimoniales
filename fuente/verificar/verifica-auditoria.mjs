@@ -24,9 +24,17 @@ t('Los avisos del mapa se buscan donde viven', /\(filtros && filtros\.querySelec
 const lg=fs.readFileSync('logica.js','utf8');
 t('El mapa no se reconstruye dos veces', /let mapaCreado = false/.test(lg)&&/\|\| mapaCreado\) return/.test(lg));
 t('Los escuchadores se registran una sola vez', (lg.match(/dataset\.escuchando/g)||[]).length>=8);
-t('El CSV neutraliza fórmulas', /\^\[=\+\\-@\\t\\r\]/.test(lg));
 const dl=fs.readFileSync('dc-logica.js','utf8');
-t('El CSV de la versión Design también', /\^\[=\+\\-@\\t\\r\]/.test(dl));
+// El CSV ya no se arma en el navegador: lo genera construir/armar-datos.js.
+const gen=fs.readFileSync('construir/armar-datos.js','utf8');
+t('El CSV neutraliza fórmulas', /\^\[=\+\\-@\\t\\r\]/.test(gen));
+// …pero NO a los números: con la regla anterior toda longitud de la Ciudad
+// —siempre negativa— salía como texto y Excel dejaba de reconocerla.
+t('La neutralización no toca los números',
+  /const esNumero = \(v\) => typeof v === 'number'/.test(gen)
+  && /if \(!esNumero\(v\) && \/\^\[=\+/.test(gen));
+t('Ni la portada ni Design vuelven a armar el CSV',
+  !/const columnas = \[/.test(lg) && !/const columnas = \[/.test(dl));
 
 for (const f of ['logica.js','ficha-logica.js','mapa.js']) {
   const s=fs.readFileSync(f,'utf8');

@@ -128,5 +128,54 @@ t('ficha · tampoco el par de latitud y longitud suelto',
 t('ficha · sigue el botón que abre la ruta', /google\.com\/maps\/search/.test(fl));
 t('ficha · sigue el mapa del ejemplar', /pintarMapaEjemplar\(e\)/.test(fl));
 
+
+console.log('══ FICHA · fuentes y decreto ══');
+t('fuentes · quedan dos tarjetas', /\["Consultar el decreto"[\s\S]{0,400}?\["Ejemplar en el SNIB"/.test(fl)
+  && !/"Fuente del registro"/.test(fl) && !/"Cálculo i-Tree"/.test(fl));
+t('fuentes · nada lee urlOrigen ni linkITree',
+  !/e\.urlOrigen/.test(fl) && !/e\.linkITree/.test(fl)
+  && !/e\.urlOrigen/.test(fdc) && !/e\.linkITree/.test(fdc));
+// El registro guarda el NOMBRE del PDF, no una URL: publicado crudo, el
+// navegador lo resolvía contra la raíz y devolvía 404.
+t('decreto · el nombre de archivo se resuelve a la carpeta decretos/',
+  /const CARPETA_DECRETOS = "decretos"/.test(fl) && /rutaDecreto\(e\.linkDecreto\)/.test(fl));
+t('decreto · una dirección completa se respeta', /if \(\/\^https\?:\\\/\\\/\/i\.test\(bruto\)\) return bruto;/.test(fl));
+t('decreto · el nombre se codifica para la URL', /encodeURIComponent\(archivo\)/.test(fl));
+t('decreto · los espacios sobrantes se limpian', /replace\(\/\\s\+\/g, " "\)/.test(fl));
+t('decreto · si el PDF no está, la tarjeta se apaga en vez de dar 404',
+  /method: "HEAD"/.test(fl) && /apagarDecreto\(caja\)/.test(fl)
+  && /aún no está publicado en este sitio/.test(fl));
+t('decreto · la construcción copia la carpeta al sitio',
+  /cp \.\.\/decretos\/\*\.pdf "\$DEST\/decretos\/"/.test(fs.readFileSync('construir/construir.sh','utf8')));
+
+// Comprobación de la propia función, no del texto: se recorta y se ejecuta.
+const cuerpoRuta = fl.slice(fl.indexOf('function rutaDecreto'));
+const rutaDecreto = new Function('CARPETA_DECRETOS',
+  cuerpoRuta.slice(0, cuerpoRuta.indexOf('\n}') + 2) + '; return rutaDecreto;')('decretos');
+t('decreto · «DECRETO JUARISTA.pdf» → decretos/DECRETO%20JUARISTA.pdf',
+  rutaDecreto('DECRETO JUARISTA.pdf')==='decretos/DECRETO%20JUARISTA.pdf', rutaDecreto('DECRETO JUARISTA.pdf'));
+t('decreto · el espacio de más en «DECRETO_ JARDIN…» no duplica',
+  rutaDecreto('DECRETO_  JARDIN DE SAN FERNANDO.pdf')==='decretos/DECRETO_%20JARDIN%20DE%20SAN%20FERNANDO.pdf',
+  rutaDecreto('DECRETO_  JARDIN DE SAN FERNANDO.pdf'));
+t('decreto · una URL completa pasa intacta',
+  rutaDecreto('https://data.consejeria.cdmx.gob.mx/gaceta.pdf')==='https://data.consejeria.cdmx.gob.mx/gaceta.pdf');
+t('decreto · vacío devuelve nulo', rutaDecreto('')===null && rutaDecreto(null)===null && rutaDecreto('   ')===null);
+t('decreto · el acento sobrevive codificado',
+  rutaDecreto('GOCDMX_26-06-01_ESPAÑA.pdf')==='decretos/GOCDMX_26-06-01_ESPA%C3%91A.pdf',
+  rutaDecreto('GOCDMX_26-06-01_ESPAÑA.pdf'));
+
+console.log('══ RECURSOS · créditos ══');
+const rec = fs.readFileSync('recursos-cuerpo.html','utf8');
+const pie = fs.readFileSync('parciales/pie.html','utf8');
+t('créditos · hay sección con ancla propia', /id="creditos"/.test(rec));
+t('créditos · el índice de Recursos la lista', /href="#creditos">Créditos<\/a>/.test(rec));
+t('créditos · el mapa del sitio del pie la enlaza', /__RECURSOS__#creditos/.test(pie));
+t('créditos · acredita las obras de terceros que sí usa el sitio',
+  ['OpenStreetMap','CARTO','INEGI','Leaflet','Anton','Fraunces','Source Sans 3','i-Tree','CONABIO','UICN']
+    .every((n)=>rec.includes(n)));
+t('créditos · los campos de autoría quedan marcados como pendientes',
+  (rec.match(/data-pendiente/g)||[]).length>=5);
+t('créditos · lo pendiente se distingue a la vista', /\.creditos__lista dd\[data-pendiente\]/.test(css));
+
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

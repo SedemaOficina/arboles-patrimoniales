@@ -347,85 +347,10 @@ function pintarRedaccion() {
 }
 
 
-/** Descarga de datos abiertos: el listado tal como lo publica el registro. */
-function armarDescarga(ejemplares, meta) {
-  const zona = document.querySelector(".datos-abiertos");
-  if (!zona) return;
-
-  const columnas = [
-    ["id", (e) => e.id],
-    ["consecutivo", (e) => e.consecutivo],
-    ["nombre_asignado", (e) => e.nombreAsignado],
-    ["especie", (e) => e.especie],
-    ["nombre_comun", (e) => e.nombreComun],
-    ["categorias", (e) => (e.categorias || []).join("; ")],
-    ["fecha_decreto", (e) => e.fechaDecreto && e.fechaDecreto.iso],
-    ["alcaldia", (e) => e.alcaldia],
-    ["colonia", (e) => e.ubicacion && e.ubicacion.colonia],
-    ["calle", (e) => e.ubicacion && e.ubicacion.calle],
-    ["numero", (e) => e.ubicacion && e.ubicacion.numero],
-    ["cp", (e) => e.ubicacion && e.ubicacion.cp],
-    ["tipo_ubicacion", (e) => e.ubicacion && e.ubicacion.tipo],
-    ["latitud", (e) => e.coords && e.coords.lat],
-    ["longitud", (e) => e.coords && e.coords.lng],
-    ["altura_m", (e) => e.morfologia.altura_m],
-    ["diametro_cm", (e) => e.morfologia.diametro_cm],
-    ["circunferencia_cm", (e) => e.morfologia.circunferencia_cm],
-    ["ancho_copa_m", (e) => e.morfologia.anchoCopa_m],
-    ["largo_copa_m", (e) => e.morfologia.largoCopa_m],
-    ["extension_copa_m", (e) => e.morfologia.extensionCopa_m],
-    ["edad_estimada_anios", (e) => e.edadEstimada],
-    ["expectativa_vida", (e) => e.expectativaVida],
-    ["categoria_riesgo_uicn", (e) => e.conservacion && e.conservacion.iucn],
-    ["carbono_secuestrado_kg_anio", (e) => e.serviciosAmbientales.carbonoSecuestrado_kg],
-    ["co2_absorbido_kg_anio", (e) => e.serviciosAmbientales.co2Absorbido_kg],
-    ["precipitacion_interceptada_l_anio", (e) => e.serviciosAmbientales.precipitacionInterceptada_L],
-    ["escorrentia_reducida_l_anio", (e) => e.serviciosAmbientales.escorrentiaReducida_L],
-    ["link_decreto", (e) => e.linkDecreto],
-  ];
-
-  // Comillas dobles y separador de coma: el dialecto que leen Excel y R sin
-  // configurar nada. El BOM evita que Excel rompa los acentos.
-  // Un valor que empiece por = + - @ o tabulador lo ejecuta Excel como
-  // fórmula al abrir el archivo. Se le antepone una comilla simple, que las
-  // hojas de cálculo interpretan como «esto es texto» y no muestran.
-  const celda = (v) => {
-    if (v === null || v === undefined) return "";
-    let t = String(v);
-    if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;
-    return /[",\n;]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
-  };
-  const csv = "\ufeff" + [columnas.map((c) => c[0]).join(",")]
-    .concat(ejemplares.map((e) => columnas.map(([, f]) => celda(f(e))).join(",")))
-    .join("\r\n");
-
-  const json = JSON.stringify({
-    nombre: "Árboles patrimoniales de la Ciudad de México",
-    fuente: "Secretaría del Medio Ambiente de la Ciudad de México",
-    licencia: "Uso libre citando la fuente",
-    generado: new Date().toISOString(),
-    total: ejemplares.length,
-    ejemplares,
-  }, null, 2);
-
-  const bajar = (texto, tipo, nombre) => {
-    const url = URL.createObjectURL(new Blob([texto], { type: tipo }));
-    const a = document.createElement("a");
-    a.href = url; a.download = nombre;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-  };
-
-  const hoy = new Date().toISOString().slice(0, 10);
-  if (zona.dataset.escuchando === "si") return;
-  zona.dataset.escuchando = "si";
-  zona.addEventListener("click", (ev) => {
-    const b = ev.target.closest("[data-descarga]");
-    if (!b) return;
-    if (b.dataset.descarga === "csv") bajar(csv, "text/csv;charset=utf-8", `arboles-patrimoniales-cdmx-${hoy}.csv`);
-    else bajar(json, "application/json;charset=utf-8", `arboles-patrimoniales-cdmx-${hoy}.json`);
-  });
-}
+/* La descarga de datos abiertos ya no se fabrica en el navegador.
+   Los archivos se generan al construir el sitio —ver construir/armar-datos.js—
+   y viven en datos/arboles-patrimoniales-cdmx.csv y .json, con dirección
+   propia y citables. La página de Recursos enlaza a ellos. */
 
 export function pintarPortada({ ejemplares, meta, stats }) {
   pintarRedaccion();
@@ -435,6 +360,5 @@ export function pintarPortada({ ejemplares, meta, stats }) {
   pintarPadron(ejemplares, stats);
   pintarMapa(ejemplares);
   pintarServicios(stats);
-  armarDescarga(ejemplares, meta);
   pintarPie(meta);
 }
