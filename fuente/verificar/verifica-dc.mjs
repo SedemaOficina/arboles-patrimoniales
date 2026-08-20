@@ -6,7 +6,7 @@ const PRUEBA = '../prueba/';
 const src = fs.readFileSync('dc-logica.js','utf8');
 class DCLogic { setState(o){ this.state = { ...this.state, ...o }; } }
 const Component = new Function('DCLogic', src + '; return Component;')(DCLogic);
-const datos = JSON.parse(fs.readFileSync('/tmp/audit/datos-fixture.json','utf8'));
+const datos = JSON.parse(fs.readFileSync('verificar/datos/datos-fixture.json','utf8'));
 
 const c = new Component();
 c.state = { estado:'listo', ejemplares:datos.ejemplares, meta:datos.meta, stats:datos.stats, filtro:'', mensajeError:'' };

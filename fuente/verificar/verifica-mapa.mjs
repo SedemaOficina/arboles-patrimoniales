@@ -3,8 +3,8 @@ import fs from 'fs';
 // solas en fuente/ para poder ejecutarse desde cualquier sitio.
 process.chdir(new URL('..', import.meta.url).pathname);
 const PRUEBA = '../prueba/';
-const D=JSON.parse(fs.readFileSync('/tmp/audit/datos-con-fotos.json','utf8'));
-const M=await import('/tmp/audit/portada/mapa.js');
+const D=JSON.parse(fs.readFileSync('verificar/datos/datos-con-fotos.json','utf8'));
+const M=await import('../mapa.js');
 let ok=0,mal=0; const t=(n,c,d='')=>{c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d));};
 
 console.log('══ MAPA · lógica ══');
@@ -173,9 +173,15 @@ const pie = fs.readFileSync('parciales/pie.html','utf8');
 t('créditos · hay sección con ancla propia', /id="creditos"/.test(rec));
 t('créditos · el índice de Recursos la lista', /href="#creditos">Créditos y cómo citar<\/a>/.test(rec));
 t('créditos · el mapa del sitio del pie la enlaza', /__RECURSOS__#creditos/.test(pie));
-t('créditos · acredita las obras de terceros que sí usa el sitio',
-  ['OpenStreetMap','CARTO','INEGI','Leaflet','Anton','Fraunces','Source Sans 3','i-Tree','CONABIO','UICN']
-    .every((n)=>rec.includes(n)));
+// El bloque de obras de terceros se retiró por decisión editorial. La
+// atribución de la cartografía —que sí es obligación de licencia— la sigue
+// llevando el propio mapa en su esquina, que es donde OpenStreetMap y CARTO
+// la piden. Lo que queda en Recursos es la autoría y el cómo citar.
+t('créditos · sin el bloque de obras de terceros',
+  !/Obras de terceros que utiliza el sitio/.test(rec) && !/Licencia BSD de dos cláusulas/.test(rec));
+t('créditos · la cartografía se sigue atribuyendo desde el mapa',
+  /colaboradores de <a href="https:\/\/www\.openstreetmap\.org\/copyright">OpenStreetMap<\/a>/.test(src)
+  && /teselas de <a href="https:\/\/carto\.com\/attributions">CARTO<\/a>/.test(src));
 t('créditos · los campos de autoría quedan marcados como pendientes',
   (rec.match(/data-pendiente/g)||[]).length>=5);
 t('créditos · lo pendiente se distingue a la vista', /\.creditos__lista dd\[data-pendiente\]/.test(css));
@@ -188,18 +194,22 @@ const port = fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
 
 // El panel del mapa dejó de repetir el resumen del registro: eso vive ahora en
 // el cintillo, junto al dibujo de los trece.
-t('panel · sin ejemplar elegido, no se muestra',
-  /if \(!sel\) \{ panel\.hidden = true; return; \}/.test(src) && /panel\.hidden = false;/.test(src));
-t('panel · su único título es «Este ejemplar»',
-  /textContent = "Este ejemplar";/.test(src)
-  && !/Todo el listado/.test(src) && !/Selección actual/.test(src));
+// El panel del mapa se retiró por completo: en agregado repetía el cintillo y
+// en modo ejemplar repetía la ficha, a la que el globo ya lleva en un clic.
+t('panel · no queda nada de él en el mapa',
+  !/pintarPanel/.test(src) && !/data-panel-titulo/.test(src)
+  && !/Todo el listado/.test(src) && !/Este ejemplar/.test(src));
+t('panel · el mapa ya no recibe el elemento del panel', !/, panel, ejemplares/.test(src));
+t('panel · indicadores.js solo conserva el modo agregado',
+  !/indicadoresEjemplar/.test(fs.readFileSync('indicadores.js','utf8'))
+  && /export function indicadoresPadron/.test(fs.readFileSync('indicadores.js','utf8')));
 
 // Las sumas NO se recalculan en el cintillo: se piden a la función que ya las
 // hacía y que declara sobre cuántos ejemplares está calculado cada valor.
 t('cintillo · reutiliza indicadoresPadron en vez de rehacer la aritmética',
   /const agregado = indicadoresPadron\(ejemplares, ejemplares\.length\)/.test(lg));
 t('cintillo · el ensamblador expone indicadoresPadron',
-  /envolver\('indicadores\.js',\['indicadores','indicadoresPadron'\]\)/
+  /envolver\('indicadores\.js',\['indicadoresPadron'\]\)/
     .test(fs.readFileSync('construir/armar.js','utf8'))
   && /window\.indicadoresPadron=/.test(port));
 t('cintillo · lleva las ocho cifras', (lg.match(/^\s{4}\[/gm)||[]).length>=8);
@@ -220,6 +230,58 @@ t('cintillo · el pie nombra las especies', /Las especies del registro: \$\{espe
 t('cintillo · el pie se oculta si no hay nada que decir',
   /pie\.hidden = renglones\.length === 0;/.test(lg));
 t('cintillo · el pie existe en el cuerpo', /id="cifrasPie"/.test(cu));
+
+
+console.log('══ RECURSOS · normativa, datos y capa ══');
+const rec2 = fs.readFileSync('recursos-cuerpo.html','utf8');
+t('normativa · el título habla de normatividad',
+  /<h2>La normatividad que protege a estos árboles<\/h2>/.test(rec2));
+t('normativa · seis tarjetas, no una lista',
+  (rec2.match(/class="norma-tarjeta"/g)||[]).length===6 && !/class="recursos-lista"/.test(rec2));
+t('normativa · cada tarjeta encabeza con su clave',
+  (rec2.match(/class="norma-tarjeta__clave"/g)||[]).length===6);
+t('normativa · en rejilla de varias columnas',
+  /\.normas-rejilla\{display:grid;grid-template-columns:repeat\(auto-fit/.test(css));
+t('datos abiertos · el título es corto y grande', /<h2>Datos abiertos<\/h2>/.test(rec2));
+t('datos abiertos · sin el párrafo de formatos', !/El CSV abre en Excel sin configurar nada/.test(rec2));
+t('recursos · fuera el perímetro y la taxonomía',
+  !/Perímetro de la Ciudad de México/.test(rec2) && !/Clasificación taxonómica/.test(rec2));
+t('recursos · fuera las obras de terceros', !/Obras de terceros que utiliza el sitio/.test(rec2));
+t('recursos · se conservan los créditos y el cómo citar',
+  /id="creditos"/.test(rec2) && /Cómo citar este sitio/.test(rec2));
+t('capa · se descarga en los tres formatos',
+  /datos\/arboles-patrimoniales-cdmx\.geojson" download/.test(rec2)
+  && /datos\/arboles-patrimoniales-cdmx\.kml" download/.test(rec2)
+  && /datos\/arboles-patrimoniales-cdmx-shp\.zip" download/.test(rec2));
+t('capa · los tres archivos existen en la salida',
+  ['geojson','kml','-shp.zip'].every((e)=>fs.existsSync(
+    PRUEBA+'datos/arboles-patrimoniales-cdmx'+(e==='-shp.zip'?e:'.'+e))));
+t('capa · se genera en la construcción, no a mano',
+  /node armar-capa\.js/.test(fs.readFileSync('construir/construir.sh','utf8')));
+// Un shapefile que recorta un domicilio a media calle sigue pareciendo un
+// domicilio: el ancho se mide sobre los datos y truncar lanza error.
+t('capa · el ancho de cada campo se mide sobre los datos',
+  /Math\.min\(254, Math\.max\(8, mayor\)\)/.test(fs.readFileSync('construir/armar-capa.js','utf8')));
+t('capa · truncar un campo lanza error en vez de callarse',
+  /Ensancha el campo/.test(fs.readFileSync('construir/shapefile.js','utf8')));
+t('i-Tree · la tarjeta ancha reparte el texto en dos columnas',
+  /\.recurso--ancho\{column-count:2/.test(css) && /\.recurso--ancho p\{max-width:none\}/.test(css));
+
+console.log('══ MENSAJES INSTITUCIONALES ══');
+const cu2 = fs.readFileSync('cuerpo.html','utf8');
+t('mensajes · la sección existe y nace oculta', /<section class="seccion seccion--niebla" id="mensaje" hidden>/.test(cu2));
+t('mensajes · nombra a las dos titulares',
+  /Clara Brugada Molina/.test(lg) && /Julia Álvarez Icaza/.test(lg));
+// Publicar palabras atribuidas a una persona con nombre y cargo sin que las
+// haya aprobado sería ponerle en la boca algo que no dijo.
+t('mensajes · el texto nace vacío, a la espera de autorización',
+  (lg.match(/mensaje: "",/g)||[]).length===2);
+t('mensajes · sin texto, la sección entera no se muestra',
+  /if \(!conTexto\.length\) \{ seccion\.hidden = true; return; \}/.test(lg));
+t('mensajes · el retrato se descubre por archivo',
+  /CARPETA_RETRATOS = "assets\/img\/personas"/.test(lg) && /img\.onerror = probar;/.test(lg));
+t('mensajes · sin retrato queda el medallón de iniciales',
+  /class="mensaje__iniciales"/.test(lg) && /\.mensaje__retrato--foto \.mensaje__iniciales\{display:none\}/.test(css));
 
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

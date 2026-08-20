@@ -64,7 +64,8 @@ for(const f of [PRUEBA+'portada.dc.html',PRUEBA+'portada-vista-previa.html']){
   t(f+' · sin la capa de perímetros', !/data-capa="perimetros"/.test(s));
   t(f+' · filtros en barra propia sobre el mapa', /class="mapa-filtros" id="mapaFiltros"/.test(s)&&/\.mapa-filtros\{display:flex/.test(s));
   t(f+' · los filtros ya no flotan sobre el lienzo', !/mapa-controles/.test(s));
-  t(f+' · indicadores en franja horizontal', /\.panel-datos__lista\{display:grid/.test(s));
+  // El panel de indicadores se retiró: sus cifras viven en el cintillo.
+  t(f+' · sin panel de indicadores', !/id="mapaPanel"/.test(s));
   t(f+' · el panel de indicadores ya no se desplaza por dentro', !/\.panel-datos__lista\{overflow-y:auto/.test(s));
   t(f+' · control de pantalla completa', /pantalla completa/i.test(s)&&/mapa-marco--pleno/.test(s));
 }

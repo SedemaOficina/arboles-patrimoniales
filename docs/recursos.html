@@ -312,6 +312,33 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .encabezado p{margin:18px 0 0;color:var(--tinta-suave);max-width:660px}
 .seccion--oscura .encabezado p{color:rgba(255,255,255,.82)}
 
+/* --- mensajes institucionales --- */
+/* Dos mensajes, uno al lado del otro, con el retrato arriba. Se resisten a
+   ser tarjetas con borde: son voces, no fichas de datos, así que llevan el
+   filete dorado a la izquierda y nada más. */
+.mensajes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:28px}
+.mensaje{margin:0;background:var(--blanco);border-left:4px solid var(--dorado);
+  padding:30px 32px 26px;display:flex;flex-direction:column}
+/* El retrato se recorta en círculo. Mientras no haya archivo, el medallón con
+   las iniciales ocupa su lugar: el bloque se ve completo desde el primer día. */
+.mensaje__retrato{width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+  background:var(--niebla);background-size:cover;background-position:center 30%;
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px;
+  border:3px solid var(--blanco);box-shadow:0 0 0 1px rgba(141,73,146,.22)}
+.mensaje__retrato--foto .mensaje__iniciales{display:none}
+.mensaje__iniciales{font-family:var(--display);font-weight:400;font-size:34px;
+  line-height:1;color:var(--jacaranda);letter-spacing:.02em}
+.mensaje__texto{margin:0 0 20px;flex:1}
+.mensaje__texto p{margin:0;font-family:var(--editorial);font-size:17.5px;line-height:1.62;
+  color:var(--tinta);max-width:62ch}
+.mensaje__firma{display:block;padding-top:16px;border-top:1px solid rgba(42,22,48,.12)}
+.mensaje__firma b{display:block;font-size:15.5px;color:var(--tinta-jacaranda);letter-spacing:.01em}
+.mensaje__firma span{display:block;margin-top:3px;font-size:13px;color:var(--gris)}
+@media(max-width:560px){.mensaje{padding:24px 22px 20px}
+  .mensaje__retrato{width:84px;height:84px}
+  .mensaje__iniciales{font-size:28px}
+  .mensaje__texto p{font-size:16.5px}}
+
 /* --- categorías --- */
 .categorias{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(232px,100%),1fr));gap:16px}
 .categoria{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px;display:flex;flex-direction:column}
@@ -647,6 +674,20 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-lista p{margin:0 0 12px;font-size:15px;line-height:1.6;color:var(--tinta-suave);max-width:78ch}
 
 .recursos-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+/* Normativa en tarjetas, no en lista.
+   Los seis instrumentos en una columna ocupaban pantalla y media y obligaban a
+   recorrerlos en fila india para comparar cuál regula qué. En tres columnas
+   caben en dos renglones y se abarcan de una mirada. La clave del artículo
+   sube a la cabecera: es lo que distingue a un instrumento de otro y antes
+   quedaba enterrada a media frase. */
+.normas-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:16px}
+.norma-tarjeta{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);
+  padding:22px 24px 20px;display:flex;flex-direction:column}
+.norma-tarjeta__clave{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--jacaranda-hondo);margin-bottom:10px}
+.norma-tarjeta h3{font-size:17px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
+.norma-tarjeta p{margin:0 0 16px;font-size:14.5px;line-height:1.55;color:var(--tinta-suave);flex:1}
+@media(max-width:560px){.norma-tarjeta{padding:18px 18px 16px}}
 /* Créditos y atribuciones. Dos bloques de datos arriba —quién responde y
    quién lo hizo— y debajo la rejilla de obras de terceros, que reutiliza la
    tarjeta de recursos: son el mismo tipo de contenido y no merecen una pieza
@@ -690,7 +731,20 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 }
 
 .recurso{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px 26px 22px}
+/* La tarjeta ancha reparte su texto en dos columnas.
+   Ocupa el renglón completo —1 124 px en escritorio— pero el párrafo se corta
+   a 78 caracteres para que se pueda leer, así que sobraban casi cuatrocientos
+   pixeles de aire a la derecha y la tarjeta parecía a medio llenar. En dos
+   columnas la medida de lectura se conserva y el ancho se usa. El título y el
+   enlace cruzan de lado a lado: son los extremos de la pieza, no parte del
+   flujo. Por debajo de 900 px vuelve a una sola columna. */
 .recurso--ancho{grid-column:1/-1;border-top-color:var(--dorado)}
+@media(min-width:900px){
+  .recurso--ancho{column-count:2;column-gap:44px}
+  .recurso--ancho h3,.recurso--ancho .norma__fuente{column-span:all}
+  .recurso--ancho p{max-width:none}
+  .recurso--ancho p:first-of-type{margin-top:0}
+}
 .recurso h3{font-size:18px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
 .recurso p{margin:0 0 10px;font-size:15px;line-height:1.62;color:var(--tinta-suave);max-width:78ch}
 .recurso p:last-of-type{margin-bottom:14px}
@@ -1449,32 +1503,9 @@ body.sin-desplazamiento{overflow:hidden}
    se desplaza por dentro en vez de alargar la página. */
 
 @media(max-width:1100px){.mapa-lista{max-height:420px}}
-/* Los indicadores bajan a una franja de ancho completo: nueve cifras no caben
-   en una columna sin recortarse, y recortadas se leen como un error. */
-.panel-datos{margin-top:34px;border:1px solid rgba(42,22,48,.14);background:var(--blanco);overflow:hidden}
-.panel-datos__cabeza{background:var(--verde-bosque);color:#fff;
-  padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.panel-datos__cabeza span{font-family:var(--display);font-weight:400;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
-.panel-datos__cabeza button{background:rgba(255,255,255,.16);border:0;color:#fff;font-family:inherit;font-size:12px;
-  font-weight:700;padding:5px 10px;border-radius:2px;cursor:pointer;letter-spacing:.03em}
-.panel-datos__cabeza button:hover{background:rgba(255,255,255,.3)}
-/* Rejilla sin huecos grises: las celdas llevan su propio filete, de modo que
-   la última fila incompleta se funde con el fondo en lugar de dejar vacíos. */
-.panel-datos__lista{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));
-  background:var(--blanco)}
-.dato{background:var(--blanco);padding:20px 22px;display:flex;flex-direction:column;
-  border-right:1px solid rgba(42,22,48,.1);border-bottom:1px solid rgba(42,22,48,.1)}
-/* Rotulo sobre encabezado, en su tamano mas pequeno. */
-.dato h3{font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gris);margin:0 0 6px}
-.dato__cifra{margin:0;font-family:var(--display);font-weight:400;font-size:34px;line-height:1;color:var(--verde-bosque);
-  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.dato__cifra span{font-family:var(--texto);font-size:12.5px;font-weight:600;color:var(--gris);letter-spacing:.02em}
-.dato--largo .dato__cifra{font-size:22px;line-height:1.15}
-.dato__cifra--italica{font-family:var(--editorial);font-style:italic;font-size:19px}
-.dato__texto{margin:9px 0 0;font-size:13.5px;line-height:1.5;color:var(--tinta-suave);flex:1}
-/* El dorado #B28E5C sobre blanco daba 2.98:1. La corteza sube a 6.4:1 y
-   conserva el registro calido de la nota. */
-.dato__nota{margin:9px 0 0;font-size:12px;line-height:1.45;color:var(--corteza);font-weight:600}
+/* Los estilos del panel de indicadores del mapa se retiraron con el panel.
+   Repetía debajo del mapa lo que el cintillo dice arriba y lo que la ficha
+   dice con contexto. */
 
 /* El aviso flota sobre el lienzo, encima de los controles de Leaflet: bajo los
    filtros quedaba fuera de la mirada de quien acaba de tocar «mi ubicación». */
@@ -1753,76 +1784,75 @@ body.sin-desplazamiento{overflow:hidden}
   <div class="envoltura">
     <div class="encabezado">
       <span class="rotulo">Marco normativo</span>
-      <h2>Los textos que protegen a estos árboles</h2>
+      <h2>La normatividad que protege a estos árboles</h2>
       <p>Cada instrumento con su liga al texto vigente publicado por la Consejería Jurídica y de Servicios Legales de la Ciudad de México, o por la propia Secretaría cuando se trata de una norma ambiental.</p>
     </div>
-    <ul class="recursos-lista">
-      <li>
+    <div class="normas-rejilla">
+      <article class="norma-tarjeta">
+        <span class="norma-tarjeta__clave">Artículo 18, apartado A</span>
         <h3>Constitución Política de la Ciudad de México</h3>
-        <p>Artículo 18, apartado A. Reconoce el patrimonio natural como un bien común de la Ciudad.</p>
+        <p>Reconoce el patrimonio natural como un bien común de la Ciudad.</p>
         <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/gaceta/category/1-constitucion-politica-de-la-ciudad-de-mexico" target="_blank" rel="noopener">Consultar<span aria-hidden="true"> →</span></a>
-      </li>
-      <li>
-        <h3>Ley de Patrimonio Cultural, Natural y Biocultural de la Ciudad de México</h3>
-        <p>Define las declaratorias, el procedimiento de postulación, los efectos de la declaratoria y las obligaciones de quien tiene a su cargo un bien declarado.</p>
+      </article>
+      <article class="norma-tarjeta">
+        <span class="norma-tarjeta__clave">Declaratorias y obligaciones</span>
+        <h3>Ley de Patrimonio Cultural, Natural y Biocultural</h3>
+        <p>Define las declaratorias, cómo se postula un bien y qué obliga tenerlo a cargo.</p>
         <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar<span aria-hidden="true"> →</span></a>
-      </li>
-      <li>
+      </article>
+      <article class="norma-tarjeta">
+        <span class="norma-tarjeta__clave">Numeral 7.5</span>
         <h3>Norma Ambiental NADF-001-RNAT-2015</h3>
-        <p>Requisitos y especificaciones técnicas para la poda, el derribo, el trasplante y la restitución de árboles en la Ciudad de México. El numeral 7.5 es el que rige a los ejemplares notables, singulares y monumentales.</p>
+        <p>Poda, derribo, trasplante y restitución. El numeral 7.5 rige a los ejemplares notables, singulares y monumentales.</p>
         <a class="norma__fuente" href="http://data.sedema.cdmx.gob.mx/sedema/images/archivos/sedema/leyes-reglamentos/normas/locales/NADF-001-RNAT-2016.pdf" target="_blank" rel="noopener">Descargar (PDF)<span aria-hidden="true"> →</span></a>
-      </li>
-      <li>
+      </article>
+      <article class="norma-tarjeta">
+        <span class="norma-tarjeta__clave">Artículos 106 y 107</span>
         <h3>Ley Ambiental de la Ciudad de México</h3>
-        <p>Artículos 106 y 107. Supuestos en los que procede autorizar una intervención y encomienda a la Secretaría integrar el inventario del arbolado urbano en el Sistema de Información Ambiental.</p>
+        <p>Cuándo procede autorizar una intervención y a quién toca integrar el inventario del arbolado urbano.</p>
         <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1611-nueva-ley-31#ley-ambiental-de-la-ciudad-de-m%C3%A9xico" target="_blank" rel="noopener">Consultar<span aria-hidden="true"> →</span></a>
-      </li>
-      <li>
-        <h3>Reglamento de Impacto Ambiental y Riesgo de la Ciudad de México</h3>
-        <p>Artículo 139, fracción III. Niega la autorización en materia de impacto ambiental cuando se pretende derribar árboles declarados patrimonio o árboles notables.</p>
+      </article>
+      <article class="norma-tarjeta">
+        <span class="norma-tarjeta__clave">Artículo 139, fracción III</span>
+        <h3>Reglamento de Impacto Ambiental y Riesgo</h3>
+        <p>Niega la autorización cuando se pretende derribar un árbol declarado patrimonio o un árbol notable.</p>
         <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/reglamentos?start=27#reglamento-de-impacto-ambiental-y-riesgo-de-la-ciudad-de-m%C3%A9xico" target="_blank" rel="noopener">Consultar<span aria-hidden="true"> →</span></a>
-      </li>
-      <li>
-        <h3>Ley Orgánica de la Procuraduría Ambiental y del Ordenamiento Territorial</h3>
-        <p>Artículo 16, fracción I. Faculta a la PAOT para recibir e investigar las denuncias en materia ambiental y de ordenamiento territorial.</p>
+      </article>
+      <article class="norma-tarjeta">
+        <span class="norma-tarjeta__clave">Artículo 16, fracción I</span>
+        <h3>Ley Orgánica de la PAOT</h3>
+        <p>Faculta a la Procuraduría Ambiental y del Ordenamiento Territorial para recibir e investigar denuncias.</p>
         <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1600-nueva-ley-20#ley-org%C3%A1nica-de-la-procuradur%C3%ADa-ambiental-y-del-ordenamiento-territorial-de-la-ciudad-de-m%C3%A9xico" target="_blank" rel="noopener">Consultar<span aria-hidden="true"> →</span></a>
-      </li>
-    </ul>
+      </article>
+    </div>
   </div>
 </section>
 
 <section class="seccion seccion--niebla" id="datos">
   <div class="envoltura">
     <div class="encabezado">
-      <span class="rotulo">Datos abiertos</span>
-      <h2>El registro completo, para reutilizarlo</h2>
+      <span class="rotulo">Para reutilizar</span>
+      <h2>Datos abiertos</h2>
       <p>El listado se publica en formato abierto y se actualiza de forma continua. Puedes reutilizarlo citando como fuente a la Secretaría del Medio Ambiente de la Ciudad de México.</p>
     </div>
     <div class="recursos-rejilla">
       <article class="recurso">
         <h3>Listado de árboles patrimoniales</h3>
         <p>Un renglón por ejemplar, con su identificador, especie validada, categorías, domicilio, coordenadas, medidas de campo y servicios ambientales estimados.</p>
-        <p class="recurso__nota">El CSV abre en Excel sin configurar nada: separador de coma y codificación UTF-8. El JSON conserva la estructura completa del registro, con los campos anidados que el CSV aplana.</p>
         <p class="recurso__descargas">
           <a class="enlace" href="datos/arboles-patrimoniales-cdmx.csv" download>Descargar CSV</a>
           <a class="enlace" href="datos/arboles-patrimoniales-cdmx.json" download>Descargar JSON</a>
         </p>
       </article>
       <article class="recurso">
-        <h3>Perímetro de la Ciudad de México</h3>
-        <p>Geometría oficial de la entidad, clave geoestadística 09, tomada del Marco Geoestadístico del Instituto Nacional de Estadística y Geografía. Es la misma que recorta los mapas de este sitio.</p>
-        <p class="recurso__nota">Coordenadas geográficas WGS 84 (EPSG:4326), simplificadas a 20 metros de tolerancia. El comprimido del shapefile incluye los archivos .shp, .shx, .dbf, .prj y .cpg.</p>
+        <h3>La capa geográfica del inventario</h3>
+        <p>Los ejemplares del registro como capa de puntos, con sus atributos: identificador, especie, categorías, domicilio, alcaldía, medidas de campo y fecha del decreto. Se abre en QGIS, ArcGIS o Google Earth sin conversión previa.</p>
+        <p class="recurso__nota">Coordenadas geográficas WGS 84 (EPSG:4326). El comprimido del shapefile incluye .shp, .shx, .dbf, .prj y .cpg, más un archivo con la descripción de cada campo.</p>
         <p class="recurso__descargas">
-          <a class="enlace" href="assets/geo/descargas/perimetro-cdmx.geojson" download>GeoJSON</a>
-          <a class="enlace" href="assets/geo/descargas/perimetro-cdmx.kml" download>KML</a>
-          <a class="enlace" href="assets/geo/descargas/perimetro-cdmx-shp.zip" download>Shapefile (ZIP)</a>
+          <a class="enlace" href="datos/arboles-patrimoniales-cdmx.geojson" download>GeoJSON</a>
+          <a class="enlace" href="datos/arboles-patrimoniales-cdmx.kml" download>KML</a>
+          <a class="enlace" href="datos/arboles-patrimoniales-cdmx-shp.zip" download>Shapefile (ZIP)</a>
         </p>
-        <p class="recurso__nota"><a href="https://www.inegi.org.mx/temas/mg/" target="_blank" rel="noopener">Marco Geoestadístico del INEGI<span aria-hidden="true"> →</span></a></p>
-      </article>
-      <article class="recurso">
-        <h3>Clasificación taxonómica</h3>
-        <p>Los nombres científicos del registro se validan contra el Sistema Nacional de Información sobre Biodiversidad, que administra la CONABIO.</p>
-        <a class="norma__fuente" href="https://www.snib.mx/" target="_blank" rel="noopener">Sistema Nacional de Información sobre Biodiversidad<span aria-hidden="true"> →</span></a>
       </article>
     </div>
   </div>
@@ -1941,41 +1971,6 @@ body.sin-desplazamiento{overflow:hidden}
         </dl>
       </div>
     </div>
-
-    <h3 class="creditos__titulo">Obras de terceros que utiliza el sitio</h3>
-    <div class="recursos-rejilla">
-      <article class="recurso">
-        <h3>Cartografía base</h3>
-        <p>Los mapas se dibujan sobre datos de <strong>OpenStreetMap</strong>, aportados por su comunidad de colaboradores, con teselas del estilo Positron de <strong>CARTO</strong>.</p>
-        <p class="recurso__nota">Datos bajo Open Database License. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">Aviso de derechos de OpenStreetMap<span aria-hidden="true"> →</span></a></p>
-      </article>
-      <article class="recurso">
-        <h3>Perímetro de la Ciudad de México</h3>
-        <p>El contorno que recorta todos los mapas proviene del <strong>Marco Geoestadístico</strong> del Instituto Nacional de Estadística y Geografía, clave geoestadística 09.</p>
-        <p class="recurso__nota"><a href="https://www.inegi.org.mx/temas/mg/" target="_blank" rel="noopener">Marco Geoestadístico del INEGI<span aria-hidden="true"> →</span></a></p>
-      </article>
-      <article class="recurso">
-        <h3>Biblioteca de mapas</h3>
-        <p><strong>Leaflet</strong> 1.9.4, de Vladimir Agafonkin y sus colaboradores. Es la que dibuja los marcadores, el desplazamiento y el acercamiento de los mapas.</p>
-        <p class="recurso__nota">Licencia BSD de dos cláusulas. <a href="https://leafletjs.com/" target="_blank" rel="noopener">leafletjs.com<span aria-hidden="true"> →</span></a></p>
-      </article>
-      <article class="recurso">
-        <h3>Tipografías</h3>
-        <p><strong>Anton</strong> en los titulares, <strong>Fraunces</strong> en los nombres científicos y <strong>Source Sans 3</strong> en el texto corrido.</p>
-        <p class="recurso__nota">Las tres bajo SIL Open Font License 1.1. <a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts<span aria-hidden="true"> →</span></a></p>
-      </article>
-      <article class="recurso">
-        <h3>Estimación de servicios ambientales</h3>
-        <p>Las cifras de carbono, dióxido de carbono, precipitación interceptada y escurrimiento evitado se estiman con <strong>i-Tree</strong>, del Servicio Forestal de Estados Unidos.</p>
-        <p class="recurso__nota">Uso público sin costo. <a href="https://www.itreetools.org/" target="_blank" rel="noopener">itreetools.org<span aria-hidden="true"> →</span></a></p>
-      </article>
-      <article class="recurso">
-        <h3>Taxonomía y estado de conservación</h3>
-        <p>Los nombres científicos se validan contra el <strong>Sistema Nacional de Información sobre Biodiversidad</strong> de la CONABIO. La categoría de riesgo proviene de la <strong>Lista Roja de la UICN</strong>.</p>
-        <p class="recurso__nota"><a href="https://www.snib.mx/" target="_blank" rel="noopener">snib.mx<span aria-hidden="true"> →</span></a> · <a href="https://www.iucnredlist.org/es" target="_blank" rel="noopener">iucnredlist.org<span aria-hidden="true"> →</span></a></p>
-      </article>
-    </div>
-
 
     <h3 class="creditos__titulo">Cómo citar este sitio</h3>
     <div class="creditos">

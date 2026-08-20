@@ -6,7 +6,6 @@
  * aunque el mapa no cargue: es la vía accesible al mismo contenido.
  */
 
-import { indicadores } from "./indicadores.js";
 import { GEO_CDMX } from "./geo-cdmx.js";
 import { montarPrimeraFoto } from "./fotos.js";
 
@@ -66,7 +65,7 @@ export function filtrar(ejemplares, { categoria = "", alcaldia = "", especie = "
 
 /** Nombre de la alcaldía dentro de un rasgo GeoJSON, sea cual sea su esquema. */
 
-export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSeleccionar, mascara = MASCARA_CDMX }) {
+export function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, mascara = MASCARA_CDMX }) {
   const conCoords = ejemplares.filter((e) => e.coords);
   const sinCoords = ejemplares.length - conCoords.length;
 
@@ -579,34 +578,13 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
     lista.querySelectorAll(".mapa-item").forEach((b) =>
       b.addEventListener("click", () => seleccionar(b.dataset.slug, true)));
 
-    pintarPanel(vis);
   }
 
-  /* ---------- panel de indicadores ---------- */
-  function pintarPanel(vis) {
-    if (!panel) return;
-    const sel = estado.activo ? ejemplares.find((e) => e.slug === estado.activo) : null;
-    /* Sin ejemplar elegido el panel NO se muestra.
-       Antes traía el resumen del registro entero —cuántos son, cuántas especies,
-       cuánto suman de alto—, que es exactamente lo que el cintillo de la
-       portada ya dijo mil pixeles antes. Repetirlo aquí obligaba a leer dos
-       veces lo mismo y dejaba el panel ocupado con algo que nadie vino a
-       buscar al mapa. Ahora el panel solo aparece cuando responde a un acto de
-       la persona: elegir un árbol. */
-    if (!sel) { panel.hidden = true; return; }
-    panel.hidden = false;
-    const datos = indicadores({ lista: vis, seleccionado: sel, totalPadron: ejemplares.length });
-    panel.querySelector("[data-panel-titulo]").textContent = "Este ejemplar";
-    const limpiar = panel.querySelector("[data-panel-limpiar]");
-    if (limpiar) limpiar.hidden = !sel;
-    panel.querySelector("[data-panel-lista]").innerHTML = datos.map((d) => `
-      <article class="dato${d.largo ? " dato--largo" : ""}">
-        <h3>${esc(d.titulo)}</h3>
-        <p class="dato__cifra${d.italica ? " dato__cifra--italica" : ""}">${esc(d.cifra)}${d.unidad ? `<span>${esc(d.unidad)}</span>` : ""}</p>
-        <p class="dato__texto">${esc(d.texto)}</p>
-        ${d.nota ? `<p class="dato__nota">${esc(d.nota)}</p>` : ""}
-      </article>`).join("");
-  }
+  /* El panel de indicadores del mapa se retiró por completo.
+     En su modo agregado repetía el cintillo de la portada; en su modo de
+     ejemplar repetía la ficha, que es donde ese dato tiene contexto y a la que
+     el globo del marcador ya lleva en un clic. Un tercer lugar donde leer lo
+     mismo solo obligaba a decidir cuál de los tres estaba al día. */
 
   /** Devuelve la vista a todos los ejemplares visibles. Sin esto, al quitar la
    *  selección o al borrar los filtros el listado se restauraba pero el mapa

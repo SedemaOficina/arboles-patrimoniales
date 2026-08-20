@@ -3,8 +3,8 @@ import fs from 'fs';
 // solas en fuente/ para poder ejecutarse desde cualquier sitio.
 process.chdir(new URL('..', import.meta.url).pathname);
 const PRUEBA = '../prueba/';
-const D=JSON.parse(fs.readFileSync('/tmp/audit/datos-con-fotos.json','utf8'));
-const S=await import('/tmp/audit/siluetas/especies.js');
+const D=JSON.parse(fs.readFileSync('verificar/datos/datos-con-fotos.json','utf8'));
+const S=await import('../especies.js');
 class DCLogic{ setState(o){this.state={...this.state,...o};} }
 globalThis.location={hash:''}; globalThis.window={addEventListener(){},removeEventListener(){},scrollTo(){}};
 const F=new Function('DCLogic',fs.readFileSync('ficha-dc-logica.js','utf8')+'; return Component;')(DCLogic);
@@ -28,11 +28,17 @@ t('Solo una miniatura queda activa',v2.fotos.filter(f=>f.activa).length===1);
 const v3=ver('viejo-del-agua',99);
 t('Índice fuera de rango se acota',v3.contadorFoto==='3 / 3',v3.contadorFoto);
 const v4=ver('tacuba');
-t('Sin fotos, se recurre a la silueta',v4.sinFotos===true&&v4.haySilueta===true);
+// Las tres especies del registro tienen ilustración propia, así que el
+// respaldo sin fotografías es la ILUSTRACIÓN de la especie, no la silueta
+// dibujada. La silueta sigue en el código para una especie que aún no la
+// tenga. (Esta prueba pasaba contra una copia vieja de especies.js: al
+// apuntarla al archivo real salió el desfase.)
+t('Sin fotos, se recurre a la ilustración de la especie',
+  v4.sinFotos===true && v4.hayIlustracionEspecie===true && v4.haySilueta===false);
 
 console.log('\n══ SILUETA DE RESPALDO ══');
 const s1=ver('laureano');
-t('Sin fotos activa la silueta',s1.sinFotos&&s1.haySilueta);
+t('Sin fotos activa el respaldo de especie',s1.sinFotos&&(s1.hayIlustracionEspecie||s1.haySilueta));
 t('Reconoce Ficus microcarpa',s1.silueta.clave==='ficus'&&s1.especieSilueta==='Laurel de la India',s1.silueta.clave);
 t('Laurel dibuja raíces aéreas',s1.siluetaRaices===true);
 t('Contorno y fuste presentes',s1.silueta.contorno.startsWith('M')&&Number(s1.silueta.fusteAncho)>0);

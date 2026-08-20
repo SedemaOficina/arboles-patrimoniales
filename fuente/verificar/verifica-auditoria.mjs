@@ -23,7 +23,7 @@ t('Los avisos del mapa se buscan donde viven', /\(filtros && filtros\.querySelec
 
 const lg=fs.readFileSync('logica.js','utf8');
 t('El mapa no se reconstruye dos veces', /let mapaCreado = false/.test(lg)&&/\|\| mapaCreado\) return/.test(lg));
-t('Los escuchadores se registran una sola vez', (lg.match(/dataset\.escuchando/g)||[]).length>=8);
+t('Los escuchadores se registran una sola vez', (lg.match(/dataset\.escuchando/g)||[]).length>=6);
 const dl=fs.readFileSync('dc-logica.js','utf8');
 // El CSV ya no se arma en el navegador: lo genera construir/armar-datos.js.
 const gen=fs.readFileSync('construir/armar-datos.js','utf8');
@@ -47,7 +47,7 @@ t('El barrido del deslizador se agrupa por cuadro', /requestAnimationFrame/.test
 t('Los observadores se desconectan al desaparecer la hilera', /o\.disconnect\(\)/.test(mn)&&/pista\.isConnected/.test(mn)&&/removeEventListener\("resize"/.test(mn));
 t('La geometría reacciona al cambio de contenido', /mo\.observe\(pista, \{ childList: true \}\)/.test(mn));
 const ind=fs.readFileSync('indicadores.js','utf8');
-t('La unidad se calla cuando no hay cifra', /const uni = /.test(ind)&&/const u = /.test(ind));
+t('La unidad se calla cuando no hay cifra', /const uni = /.test(ind));
 t('Sin unidades escritas a mano junto a cifras opcionales',
   !/unidad: "(años|litros al año|kg al año|metros)"/.test(ind), (ind.match(/unidad: "(años|litros al año|kg al año|metros)"/)||[])[0]||'');
 for (const f of ['logica.js','ficha-logica.js','dc-logica.js','ficha-dc-logica.js','indicadores.js']) {
@@ -134,17 +134,13 @@ console.log('\n══ SERVICIOS AMBIENTALES · lo que no se pudo estimar ══'
 // Cambio de criterio: un servicio sin cifra ya NO se explica, se omite. Cuatro
 // o cinco tarjetas con raya seguidas convertían el panel en un inventario de
 // lo que falta y el ejemplar quedaba descrito por sus ausencias.
-t('El panel no pinta tarjetas sin cifra',
-  /return tarjetas\.filter\(\(c\) => c\.cifra !== RAYA\);/.test(ind));
-t('Ya no queda texto de hueco en el panel',
-  !/No se pudo estimar este servicio/.test(ind)
-  && !/no tiene el dato registrado/.test(ind)
+// El panel del mapa se retiró: ya no hay tarjetas que omitir ni identidad que
+// pintar. Lo que sobrevive de indicadores.js es el modo agregado.
+t('indicadores.js solo conserva el modo agregado',
+  !/indicadoresEjemplar/.test(ind) && !/No se pudo estimar este servicio/.test(ind)
   && !/No fue posible determinar su edad/.test(ind));
-// La identidad del ejemplar nunca cae en el filtro: no son medidas.
-t('Ejemplar, especie y ubicación siempre se pintan',
-  /cifra: e\.nombreAsignado \|\| "Sin nombre asignado"/.test(ind)
-  && /cifra: e\.especie \|\| "Por determinar"/.test(ind)
-  && /cifra: e\.alcaldia \|\| "Por determinar"/.test(ind));
+t('Y sigue declarando la cobertura de cada suma',
+  /function cobertura\(r\)/.test(ind) && /Calculado sobre \$\{r\.con\} de \$\{r\.de\}/.test(ind));
 const fcuerpo=fs.readFileSync('ficha-cuerpo.html','utf8');
 const fdc=fs.readFileSync('ficha-dc-cuerpo.html','utf8');
 t('La ficha avisa cuáles renglones no se pudieron estimar',
@@ -328,10 +324,13 @@ console.log('\n══ PALETA · el verde no entra al fondo profundo ══');
     && /\.grupo h3\{[^}]*var\(--dorado-luz\)/.test(cs5));
   t('La regla queda escrita en la propia paleta',
     /el verde solo va sobre fondo\s*\n?\s*claro/.test(cs5));
+  // El verde vive en lo que ES vegetación y en la cartografía; el morado, en
+  // lo institucional. El panel del mapa se retiró, así que su cabecera verde
+  // ya no participa de la prueba.
   t('El verde sigue donde es vegetación y cartografía',
     /\.pin\{[^}]*var\(--verde-bosque\)/.test(cs5)
     && /\.silueta__copa\{fill:var\(--verde-hoja\)/.test(cs5)
-    && /\.panel-datos__cabeza\{background:var\(--verde-bosque\)/.test(cs5));
+    && /\.globo-mapa__boton\{[^}]*background:var\(--verde-bosque\)/.test(cs5));
   t('La nota del bosque dejó de usar verde lima sobre crema',
     /\.bosque__nota strong\{color:var\(--verde-bosque\)/.test(cs5));
 }
@@ -499,12 +498,13 @@ console.log('\n══ AUDITORÍA INTEGRAL · correcciones ══');
     /\.saltar\{position:fixed/.test(cs9));
   t('El ancla #inicio existe: el logotipo lleva a algún lado',
     /<section class="portada" id="inicio">/.test(pv9));
-  t('Los datos del panel son h3, sin salto de jerarquía desde h2',
-    /<h3>\$\{esc\(d\.titulo\)\}<\/h3>/.test(mp9) && !/<h4>\$\{esc\(d\.titulo\)\}/.test(mp9));
+  // El panel del mapa se retiró: ya no hay datos que rotular ahí.
+  t('El mapa ya no arma el panel de indicadores',
+    !/data-panel-lista/.test(mp9) && !/pintarPanel/.test(mp9));
 
   // --- contraste ---
-  t('La nota del panel usa corteza, no dorado (2.98:1 era insuficiente)',
-    /\.dato__nota\{[^}]*color:var\(--corteza\)/.test(cs9));
+  t('No quedan estilos huérfanos del panel',
+    !/\.panel-datos/.test(cs9) && !/\.dato__/.test(cs9));
   t('La etiqueta dorada sube por encima del mínimo', /\.etiqueta--dorada\{background:#F6EFE3;color:#7A5E33\}/.test(cs9));
   // «Sin dato» pasó de 6.72:1 a 10.7:1 y lleva recuadro: es un estado, no ruido.
   t('El crédito fotográfico y los renglones sin dato se leen',

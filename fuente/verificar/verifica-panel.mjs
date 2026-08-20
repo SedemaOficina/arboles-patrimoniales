@@ -3,15 +3,19 @@ import fs from 'fs';
 // solas en fuente/ para poder ejecutarse desde cualquier sitio.
 process.chdir(new URL('..', import.meta.url).pathname);
 const PRUEBA = '../prueba/';
-const D=JSON.parse(fs.readFileSync('/tmp/audit/datos-reales.json','utf8'));
-const I=await import('/tmp/audit/portada/indicadores.js');
-const M=await import('/tmp/audit/portada/mapa.js');
+const D=JSON.parse(fs.readFileSync('verificar/datos/datos-reales.json','utf8'));
+const I=await import('../indicadores.js');
+const M=await import('../mapa.js');
 let ok=0,mal=0; const t=(n,c,d='')=>{c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d));};
 const E=D.ejemplares;
 
-console.log('══ PANEL · sin selección ══');
-const A=I.indicadores({lista:E,seleccionado:null,totalPadron:13});
-t('Nueve indicadores',A.length===9,String(A.length));
+/* El panel del mapa se retiró. De indicadores.js sobrevive el modo agregado,
+   que hoy alimenta el cintillo de cifras de la portada: las mismas sumas, en
+   otro lugar. Esta suite las sigue verificando, que es lo que importa. */
+
+console.log('══ SUMATORIAS DEL REGISTRO ══');
+const A=I.indicadoresPadron(E,13);
+t('Nueve sumatorias',A.length===9,String(A.length));
 t('Árboles: 13',A[0].cifra==='13'&&A[0].unidad==='ejemplares');
 t('Especies distintas: 3',A[1].cifra==='3');
 t('Y las nombra',/Taxodium mucronatum/.test(A[1].nota));
@@ -26,25 +30,18 @@ t('Escurrimientos correctos',A[6].cifra==='1,258');
 t('Carbono con dato completo',A[7].cifra==='64.2'&&A[7].nota==='');
 t('CO2 con dato completo',A[8].cifra==='235.4'&&A[8].nota==='');
 
-console.log('\n══ PANEL · con un ejemplar ══');
-const V=I.indicadores({lista:E,seleccionado:E.find(e=>e.slug==='viejo-del-agua'),totalPadron:13});
-t('Encabeza con el nombre del ejemplar',V[0].cifra==='Viejo del Agua'&&V[0].unidad==='Ahuehuete');
-// La nota «Uno de los 13 del registro» se retiró por decisión editorial.
-t('Sin nota de pertenencia al registro',V[0].nota==='',V[0].nota);
-t('Su especie y categoría UICN',V[1].cifra==='Taxodium mucronatum'&&/Preocupación menor/.test(V[1].texto));
-t('Su altura, no la sumatoria',V[2].cifra==='27'&&V[2].unidad==='metros');
-t('Traducida a personas de 1.70 m',/16 personas/.test(V[2].texto),V[2].texto.slice(-40));
-t('Su alcaldía',V[3].cifra==='Azcapotzalco');
-t('Su edad y año de germinación',V[4].cifra==='700'&&/año 1326/.test(V[4].texto));
-t('Sus servicios sin dato se declaran como cálculo imposible',V[5].cifra==='—'&&/No se pudo estimar este servicio/.test(V[5].texto),V[5].texto);
-t('Y los que sí tiene, con su valor',V[7].cifra==='1.13');
+console.log('\n══ EL MODO EJEMPLAR YA NO EXISTE ══');
+t('No se exporta indicadoresEjemplar',I.indicadoresEjemplar===undefined);
+t('Ni el despachador',I.indicadores===undefined);
+t('Y el mapa no lo pide',
+  !/indicadores\(/.test(fs.readFileSync('mapa.js','utf8')));
 
-console.log('\n══ PANEL · con filtro aplicado ══');
-const C=I.indicadores({lista:M.filtrar(E,{alcaldia:'Cuauhtémoc'}),seleccionado:null,totalPadron:13});
+console.log('\n══ SUMATORIAS · subconjuntos y casos vacíos ══');
+const C=I.indicadoresPadron(M.filtrar(E,{alcaldia:'Cuauhtémoc'}),13);
 t('Cuenta solo los filtrados',C[0].cifra==='4');
 t('Y aclara que es un subconjunto',/De los 13 que integran el registro/.test(C[0].texto),C[0].texto);
 t('La alcaldía top es la filtrada',C[3].cifra==='Cuauhtémoc');
-const X=I.indicadores({lista:[],seleccionado:null,totalPadron:13});
+const X=I.indicadoresPadron([],13);
 t('Selección vacía no rompe',X.length===9&&X[0].cifra==='0');
 t('Y lo dice sin inventar cifras',X[2].cifra==='—'&&/Aún no hay alturas/.test(X[2].texto));
 

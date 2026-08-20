@@ -3,7 +3,7 @@ import fs from 'fs';
 // solas en fuente/ para poder ejecutarse desde cualquier sitio.
 process.chdir(new URL('..', import.meta.url).pathname);
 const PRUEBA = '../prueba/';
-const D=JSON.parse(fs.readFileSync('/tmp/audit/datos-reales.json','utf8'));
+const D=JSON.parse(fs.readFileSync('verificar/datos/datos-reales.json','utf8'));
 class DCLogic{ setState(o){this.state={...this.state,...o};} }
 globalThis.location={hash:''}; globalThis.window={addEventListener(){},removeEventListener(){},scrollTo(){}};
 let ok=0,mal=0; const t=(n,c,d='')=>{c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d));};

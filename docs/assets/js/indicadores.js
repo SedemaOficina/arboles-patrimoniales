@@ -1,11 +1,11 @@
 /**
  * indicadores.js · Árboles patrimoniales
- * Los nueve indicadores del panel del mapa.
+ * Las sumatorias del registro.
  *
- * El mismo indicador se lee de dos maneras: como sumatoria del registro cuando
- * no hay nada seleccionado, y como dato del ejemplar cuando se elige uno.
- * Cada valor declara sobre cuántos ejemplares está calculado: publicar una
- * suma sin decir que proviene de 5 de 13 registros sería engañoso.
+ * Las sumatorias del registro que alimentan el cintillo de cifras de la
+ * portada. Cada valor declara sobre cuántos ejemplares está calculado:
+ * publicar una suma sin decir que proviene de 5 de 13 registros sería
+ * engañoso.
  */
 
 const S = (e) => e.serviciosAmbientales || {};
@@ -100,67 +100,6 @@ export function indicadoresPadron(lista, totalPadron) {
   ];
 }
 
-/* ---------------- modo ejemplar ---------------- */
-
-export function indicadoresEjemplar(e, totalPadron) {
-  const s = S(e);
-  const alt = num(e.morfologia && e.morfologia.altura_m);
-  const anio = e.edadEstimada != null ? ANIO_ACTUAL - Math.round(e.edadEstimada) : null;
-  /* Las tarjetas sin cifra NO se pintan.
-     Antes se mostraban con una raya y una frase explicando el hueco. Cuatro o
-     cinco de esas seguidas convertían el panel en un inventario de lo que
-     falta, y el ejemplar quedaba descrito por sus ausencias. Quien mira el
-     panel quiere saber lo que SÍ se sabe del árbol; lo que no se pudo
-     determinar se explica en la ficha y en la metodología, no aquí.
-     La marca es la raya: v() la devuelve exactamente cuando el número es nulo,
-     y al final se filtran las tarjetas que la traen. Las tres primeras
-     —ejemplar, especie y ubicación— no son medidas y siempre tienen texto,
-     así que nunca caen en el filtro. */
-  const RAYA = "—";
-  const v = (x, dec = 0) => (num(x) === null ? RAYA : fmt(x, dec));
-  const u = (x, texto) => (num(x) === null ? "" : texto);
-
-  const tarjetas = [
-    { clave: "arboles", titulo: "Ejemplar seleccionado", cifra: e.nombreAsignado || "Sin nombre asignado",
-      unidad: e.nombreComun || "", texto: e.especie || "Especie por determinar",
-      nota: "", largo: true, italica: true },
-
-    { clave: "especies", titulo: "Especie", cifra: e.especie || "Por determinar", unidad: "",
-      texto: e.conservacion && e.conservacion.iucn ? `Categoría UICN: ${e.conservacion.iucn}.` : "Clasificación validada contra el SNIB.",
-      nota: e.conservacion && e.conservacion.esExotica ? "Especie no originaria de la Cuenca de México" : "", largo: true, italica: true },
-
-    { clave: "altura", titulo: "Altura", cifra: v(alt, 1), unidad: u(alt, "metros"),
-      texto: `Medida en campo durante el dictamen técnico. Equivale a ${Math.round((alt || 0) / 1.7)} personas de 1.70 m una sobre otra.`,
-      nota: "" },
-
-    { clave: "alcaldia", titulo: "Dónde está", cifra: e.alcaldia || "Por determinar",
-      unidad: (e.ubicacion && e.ubicacion.colonia) || "",
-      texto: (e.ubicacion && e.ubicacion.tipo) ? `Se ubica en ${e.ubicacion.tipo.toLowerCase()}.` : "Ubicación registrada en el listado.",
-      nota: "", largo: true },
-
-    { clave: "edad", titulo: "Edad estimada", cifra: v(e.edadEstimada), unidad: u(e.edadEstimada, "años"),
-      texto: e.edadEstimada == null ? ""
-        : `Germinó alrededor del año ${anio}, unas ${Math.round(e.edadEstimada / 25)} generaciones humanas atrás.`,
-      nota: "" },
-
-    { clave: "lluvia", titulo: "Lluvia interceptada", cifra: v(s.precipitacionInterceptada_L), unidad: u(s.precipitacionInterceptada_L, "litros al año"),
-      texto: "Capturada por su copa antes de tocar el suelo.", nota: "" },
-
-    { clave: "escurrimiento", titulo: "Reducción de escurrimientos", cifra: v(s.escorrentiaReducida_L), unidad: u(s.escorrentiaReducida_L, "litros al año"),
-      texto: "Agua que este ejemplar evita que corra por la calle.", nota: "" },
-
-    { clave: "carbono", titulo: "Carbono secuestrado", cifra: v(s.carbonoSecuestrado_kg, 2), unidad: u(s.carbonoSecuestrado_kg, "kg al año"),
-      texto: "Almacenado en su tronco, sus ramas y sus raíces.", nota: "" },
-
-    { clave: "co2", titulo: "Absorción de CO₂ equivalente", cifra: v(s.co2Absorbido_kg, 2), unidad: u(s.co2Absorbido_kg, "kg al año"),
-      texto: "Gases de efecto invernadero que retira del aire cada año.", nota: "" },
-  ];
-
-  return tarjetas.filter((c) => c.cifra !== RAYA);
-}
-
-export function indicadores({ lista, seleccionado, totalPadron }) {
-  return seleccionado
-    ? indicadoresEjemplar(seleccionado, totalPadron)
-    : indicadoresPadron(lista, totalPadron);
-}
+/* El modo «ejemplar» y el despachador se retiraron con el panel del mapa.
+   Lo que queda —el modo agregado— alimenta el cintillo de cifras de la
+   portada, que es hoy su único consumidor. */

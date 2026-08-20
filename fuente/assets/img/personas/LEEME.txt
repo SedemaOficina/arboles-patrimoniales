@@ -1,0 +1,26 @@
+RETRATOS INSTITUCIONALES
+========================
+
+Aquí van las fotografías que acompañan al bloque «Por qué la Ciudad protege a
+estos árboles», en la portada.
+
+ARCHIVOS QUE EL SITIO BUSCA
+---------------------------
+  jefa-de-gobierno.jpg
+  secretaria-medio-ambiente.jpg
+
+También sirven .webp y .png con esos mismos nombres. Si el archivo no está,
+el bloque muestra un medallón con las iniciales: no se rompe ni deja un hueco.
+
+CÓMO DEBEN VENIR
+----------------
+· Cuadradas, mínimo 640 × 640 px. El sitio las recorta en círculo, así que el
+  rostro debe quedar centrado y con aire alrededor.
+· Retrato oficial, de frente o tres cuartos.
+· Sin texto ni logotipo encima: el nombre y el cargo los pone la página.
+
+DERECHOS
+--------
+Solo deben cargarse imágenes cuyos derechos tenga la Secretaría o que estén
+expresamente licenciadas para uso público. Un retrato oficial descargado de
+una nota de prensa NO cumple con eso.

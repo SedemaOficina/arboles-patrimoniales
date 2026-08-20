@@ -292,6 +292,33 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .encabezado p{margin:18px 0 0;color:var(--tinta-suave);max-width:660px}
 .seccion--oscura .encabezado p{color:rgba(255,255,255,.82)}
 
+/* --- mensajes institucionales --- */
+/* Dos mensajes, uno al lado del otro, con el retrato arriba. Se resisten a
+   ser tarjetas con borde: son voces, no fichas de datos, así que llevan el
+   filete dorado a la izquierda y nada más. */
+.mensajes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:28px}
+.mensaje{margin:0;background:var(--blanco);border-left:4px solid var(--dorado);
+  padding:30px 32px 26px;display:flex;flex-direction:column}
+/* El retrato se recorta en círculo. Mientras no haya archivo, el medallón con
+   las iniciales ocupa su lugar: el bloque se ve completo desde el primer día. */
+.mensaje__retrato{width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+  background:var(--niebla);background-size:cover;background-position:center 30%;
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px;
+  border:3px solid var(--blanco);box-shadow:0 0 0 1px rgba(141,73,146,.22)}
+.mensaje__retrato--foto .mensaje__iniciales{display:none}
+.mensaje__iniciales{font-family:var(--display);font-weight:400;font-size:34px;
+  line-height:1;color:var(--jacaranda);letter-spacing:.02em}
+.mensaje__texto{margin:0 0 20px;flex:1}
+.mensaje__texto p{margin:0;font-family:var(--editorial);font-size:17.5px;line-height:1.62;
+  color:var(--tinta);max-width:62ch}
+.mensaje__firma{display:block;padding-top:16px;border-top:1px solid rgba(42,22,48,.12)}
+.mensaje__firma b{display:block;font-size:15.5px;color:var(--tinta-jacaranda);letter-spacing:.01em}
+.mensaje__firma span{display:block;margin-top:3px;font-size:13px;color:var(--gris)}
+@media(max-width:560px){.mensaje{padding:24px 22px 20px}
+  .mensaje__retrato{width:84px;height:84px}
+  .mensaje__iniciales{font-size:28px}
+  .mensaje__texto p{font-size:16.5px}}
+
 /* --- categorías --- */
 .categorias{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(232px,100%),1fr));gap:16px}
 .categoria{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px;display:flex;flex-direction:column}
@@ -627,6 +654,20 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-lista p{margin:0 0 12px;font-size:15px;line-height:1.6;color:var(--tinta-suave);max-width:78ch}
 
 .recursos-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+/* Normativa en tarjetas, no en lista.
+   Los seis instrumentos en una columna ocupaban pantalla y media y obligaban a
+   recorrerlos en fila india para comparar cuál regula qué. En tres columnas
+   caben en dos renglones y se abarcan de una mirada. La clave del artículo
+   sube a la cabecera: es lo que distingue a un instrumento de otro y antes
+   quedaba enterrada a media frase. */
+.normas-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:16px}
+.norma-tarjeta{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);
+  padding:22px 24px 20px;display:flex;flex-direction:column}
+.norma-tarjeta__clave{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--jacaranda-hondo);margin-bottom:10px}
+.norma-tarjeta h3{font-size:17px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
+.norma-tarjeta p{margin:0 0 16px;font-size:14.5px;line-height:1.55;color:var(--tinta-suave);flex:1}
+@media(max-width:560px){.norma-tarjeta{padding:18px 18px 16px}}
 /* Créditos y atribuciones. Dos bloques de datos arriba —quién responde y
    quién lo hizo— y debajo la rejilla de obras de terceros, que reutiliza la
    tarjeta de recursos: son el mismo tipo de contenido y no merecen una pieza
@@ -670,7 +711,20 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 }
 
 .recurso{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px 26px 22px}
+/* La tarjeta ancha reparte su texto en dos columnas.
+   Ocupa el renglón completo —1 124 px en escritorio— pero el párrafo se corta
+   a 78 caracteres para que se pueda leer, así que sobraban casi cuatrocientos
+   pixeles de aire a la derecha y la tarjeta parecía a medio llenar. En dos
+   columnas la medida de lectura se conserva y el ancho se usa. El título y el
+   enlace cruzan de lado a lado: son los extremos de la pieza, no parte del
+   flujo. Por debajo de 900 px vuelve a una sola columna. */
 .recurso--ancho{grid-column:1/-1;border-top-color:var(--dorado)}
+@media(min-width:900px){
+  .recurso--ancho{column-count:2;column-gap:44px}
+  .recurso--ancho h3,.recurso--ancho .norma__fuente{column-span:all}
+  .recurso--ancho p{max-width:none}
+  .recurso--ancho p:first-of-type{margin-top:0}
+}
 .recurso h3{font-size:18px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
 .recurso p{margin:0 0 10px;font-size:15px;line-height:1.62;color:var(--tinta-suave);max-width:78ch}
 .recurso p:last-of-type{margin-bottom:14px}
@@ -1429,32 +1483,9 @@ body.sin-desplazamiento{overflow:hidden}
    se desplaza por dentro en vez de alargar la página. */
 
 @media(max-width:1100px){.mapa-lista{max-height:420px}}
-/* Los indicadores bajan a una franja de ancho completo: nueve cifras no caben
-   en una columna sin recortarse, y recortadas se leen como un error. */
-.panel-datos{margin-top:34px;border:1px solid rgba(42,22,48,.14);background:var(--blanco);overflow:hidden}
-.panel-datos__cabeza{background:var(--verde-bosque);color:#fff;
-  padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.panel-datos__cabeza span{font-family:var(--display);font-weight:400;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
-.panel-datos__cabeza button{background:rgba(255,255,255,.16);border:0;color:#fff;font-family:inherit;font-size:12px;
-  font-weight:700;padding:5px 10px;border-radius:2px;cursor:pointer;letter-spacing:.03em}
-.panel-datos__cabeza button:hover{background:rgba(255,255,255,.3)}
-/* Rejilla sin huecos grises: las celdas llevan su propio filete, de modo que
-   la última fila incompleta se funde con el fondo en lugar de dejar vacíos. */
-.panel-datos__lista{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));
-  background:var(--blanco)}
-.dato{background:var(--blanco);padding:20px 22px;display:flex;flex-direction:column;
-  border-right:1px solid rgba(42,22,48,.1);border-bottom:1px solid rgba(42,22,48,.1)}
-/* Rotulo sobre encabezado, en su tamano mas pequeno. */
-.dato h3{font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gris);margin:0 0 6px}
-.dato__cifra{margin:0;font-family:var(--display);font-weight:400;font-size:34px;line-height:1;color:var(--verde-bosque);
-  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.dato__cifra span{font-family:var(--texto);font-size:12.5px;font-weight:600;color:var(--gris);letter-spacing:.02em}
-.dato--largo .dato__cifra{font-size:22px;line-height:1.15}
-.dato__cifra--italica{font-family:var(--editorial);font-style:italic;font-size:19px}
-.dato__texto{margin:9px 0 0;font-size:13.5px;line-height:1.5;color:var(--tinta-suave);flex:1}
-/* El dorado #B28E5C sobre blanco daba 2.98:1. La corteza sube a 6.4:1 y
-   conserva el registro calido de la nota. */
-.dato__nota{margin:9px 0 0;font-size:12px;line-height:1.45;color:var(--corteza);font-weight:600}
+/* Los estilos del panel de indicadores del mapa se retiraron con el panel.
+   Repetía debajo del mapa lo que el cintillo dice arriba y lo que la ficha
+   dice con contexto. */
 
 /* El aviso flota sobre el lienzo, encima de los controles de Leaflet: bajo los
    filtros quedaba fuera de la mirada de quien acaba de tocar «mi ubicación». */

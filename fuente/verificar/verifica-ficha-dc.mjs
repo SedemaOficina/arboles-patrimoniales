@@ -7,7 +7,7 @@ const src=fs.readFileSync('ficha-dc-logica.js','utf8');
 class DCLogic{ setState(o){ this.state={...this.state,...o}; } }
 globalThis.location={hash:''}; globalThis.window={addEventListener(){},removeEventListener(){},scrollTo(){}};
 const Component=new Function('DCLogic',src+'; return Component;')(DCLogic);
-const datos=JSON.parse(fs.readFileSync('/tmp/audit/datos-prueba-extremo.json','utf8'));
+const datos=JSON.parse(fs.readFileSync('verificar/datos/datos-prueba-extremo.json','utf8'));
 
 let ok=0,mal=0;
 const t=(n,c,d='')=>{ if(c){ok++;console.log('  ✅',n);} else {mal++;console.log('  ❌',n,d);} };

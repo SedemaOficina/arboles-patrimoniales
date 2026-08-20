@@ -327,13 +327,7 @@ function pintarMapa(ejemplares) {
   guia.textContent = conCoords === ejemplares.length ? ""
     : `${conCoords} de los ${ejemplares.length} ejemplares tienen coordenadas capturadas. Los demás aparecen en el listado con su domicilio.`;
   guia.hidden = !guia.textContent;
-  const panel = document.getElementById("mapaPanel");
-  const api = crearMapa({ contenedor: lienzo, lista, filtros, panel, ejemplares });
-  const limpiar = panel && panel.querySelector("[data-panel-limpiar]");
-  if (limpiar && limpiar.dataset.escuchando !== "si") {
-    limpiar.dataset.escuchando = "si";
-    limpiar.addEventListener("click", () => api.limpiarSeleccion());
-  }
+  crearMapa({ contenedor: lienzo, lista, filtros, ejemplares });
 }
 
 
@@ -384,6 +378,79 @@ function pintarRedaccion() {
    y viven en datos/arboles-patrimoniales-cdmx.csv y .json, con dirección
    propia y citables. La página de Recursos enlaza a ellos. */
 
+/* ---------- mensajes institucionales ---------- */
+
+/**
+ * El bloque de mensajes de la Jefatura de Gobierno y de la Secretaría.
+ *
+ * El texto NACE VACÍO a propósito. Son palabras que se atribuyen a personas
+ * con nombre y cargo: publicarlas sin que ellas las hayan aprobado sería
+ * ponerles en la boca algo que no dijeron. Mientras el mensaje esté vacío la
+ * sección entera no se muestra —no queda un hueco ni un texto de relleno— y
+ * aparece sola en cuanto se peguen los textos autorizados.
+ *
+ * El retrato se descubre por archivo, igual que las fotografías de los
+ * ejemplares. Si no está, queda un medallón con las iniciales.
+ */
+const MENSAJES = [
+  {
+    archivo: "jefa-de-gobierno",
+    nombre: "Clara Brugada Molina",
+    cargo: "Jefa de Gobierno de la Ciudad de México",
+    iniciales: "CB",
+    mensaje: "",
+  },
+  {
+    archivo: "secretaria-medio-ambiente",
+    nombre: "Julia Álvarez Icaza",
+    cargo: "Secretaria del Medio Ambiente",
+    iniciales: "JA",
+    mensaje: "",
+  },
+];
+
+const CARPETA_RETRATOS = "assets/img/personas";
+const EXT_RETRATO = ["jpg", "webp", "png", "jpeg", "JPG"];
+
+function pintarMensajes() {
+  const seccion = document.getElementById("mensaje");
+  const caja = document.getElementById("mensajes");
+  if (!seccion || !caja) return;
+  const conTexto = MENSAJES.filter((m) => m.mensaje && m.mensaje.trim());
+  if (!conTexto.length) { seccion.hidden = true; return; }
+  seccion.hidden = false;
+
+  caja.innerHTML = conTexto.map((m) => `
+    <figure class="mensaje">
+      <div class="mensaje__retrato" data-retrato="${esc(m.archivo)}">
+        <span class="mensaje__iniciales" aria-hidden="true">${esc(m.iniciales)}</span>
+      </div>
+      <blockquote class="mensaje__texto"><p>${esc(m.mensaje)}</p></blockquote>
+      <figcaption class="mensaje__firma">
+        <b>${esc(m.nombre)}</b>
+        <span>${esc(m.cargo)}</span>
+      </figcaption>
+    </figure>`).join("");
+
+  // El retrato se prueba extensión por extensión y solo se coloca si carga.
+  caja.querySelectorAll("[data-retrato]").forEach((caja2) => {
+    const base = caja2.getAttribute("data-retrato");
+    let i = 0;
+    const probar = () => {
+      if (i >= EXT_RETRATO.length) return;      // se queda el medallón
+      const url = `${CARPETA_RETRATOS}/${base}.${EXT_RETRATO[i++]}`;
+      const img = new Image();
+      img.onload = () => {
+        caja2.style.backgroundImage = `url('${url}')`;
+        caja2.classList.add("mensaje__retrato--foto");
+      };
+      img.onerror = probar;
+      img.src = url;
+    };
+    probar();
+  });
+}
+
 export function pintarPortada({ ejemplares, meta, stats }) {
   pintarRedaccion();
   pintarBosque(ejemplares);
@@ -392,4 +459,5 @@ export function pintarPortada({ ejemplares, meta, stats }) {
   pintarPadron(ejemplares, stats);
   pintarMapa(ejemplares);
   pintarServicios(stats);
+  pintarMensajes();
 }

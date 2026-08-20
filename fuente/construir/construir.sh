@@ -16,6 +16,8 @@ node armar-recursos.js
 # Los datos abiertos se publican como archivos con direccion propia, no se
 # fabrican en el navegador: asi se pueden citar y enlazar desde fuera.
 node armar-datos.js
+# La capa geografica del inventario, para QGIS y compania.
+node armar-capa.js
 # Las versiones .dc.html son artefactos de Claude Design, no del servidor.
 [ "$DESTINO" != "produccion" ] && node armar-dc.js
 

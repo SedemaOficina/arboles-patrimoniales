@@ -1,0 +1,376 @@
+{
+ "type": "FeatureCollection",
+ "name": "arboles-patrimoniales-cdmx",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-MIH-TAX-19405GIMNO-0001",
+    "CONSEC": "0001",
+    "NOMBRE": "Tacuba",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-06-01",
+    "ALCALDIA": "Miguel Hidalgo",
+    "COLONIA": "Tacuba",
+    "DOMICILIO": "Avenida Marina Nacional S/N",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 22,
+    "DAP_CM": 320,
+    "COPA_M": 28,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.188791,
+     19.457671
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-CUH-TAX-19405GIMNO-0002",
+    "CONSEC": "0002",
+    "NOMBRE": "Jardin San Fernando",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "NOTABLE",
+    "F_DECRETO": "2026-05-28",
+    "ALCALDIA": "Cuauhtémoc",
+    "COLONIA": "Guerrero",
+    "DOMICILIO": "Eje 1 Poniente Guerrero S/N",
+    "TIPO_UBIC": "Jardín de San Fernando",
+    "ALTURA_M": 28,
+    "DAP_CM": 175,
+    "COPA_M": 27,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.148823,
+     19.438349
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-COY-TAX-19405GIMNO-0003",
+    "CONSEC": "0003",
+    "NOMBRE": "San Diego Churubusco",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-06-02",
+    "ALCALDIA": "Coyoacán",
+    "COLONIA": "San Diego Churubusco",
+    "DOMICILIO": "Calle 20 de agosto S/N",
+    "TIPO_UBIC": "Plaza",
+    "ALTURA_M": 20.2,
+    "DAP_CM": 154,
+    "COPA_M": 24.25,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.148478,
+     19.354239
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-CUH-TAX-19405GIMNO-0004",
+    "CONSEC": "0004",
+    "NOMBRE": "Jardín Ramón López Velarde",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "NOTABLE",
+    "F_DECRETO": "2026-05-29",
+    "ALCALDIA": "Cuauhtémoc",
+    "COLONIA": "Roma Sur",
+    "DOMICILIO": "Eje 1 Poniente Avenida Cuauhtémoc S/N",
+    "TIPO_UBIC": "Jardín Ramón López Velarde",
+    "ALTURA_M": 27.5,
+    "DAP_CM": 161,
+    "COPA_M": 34,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.155441,
+     19.409119
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-CUH-TAX-19405GIMNO-0005",
+    "CONSEC": "0005",
+    "NOMBRE": "Parque España",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-06-01",
+    "ALCALDIA": "Cuauhtémoc",
+    "COLONIA": "Roma Norte",
+    "DOMICILIO": "Avenida Sonora S/N",
+    "TIPO_UBIC": "Parque España",
+    "ALTURA_M": 28,
+    "DAP_CM": 160,
+    "COPA_M": 31,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.170486,
+     19.41616
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-AZC-TAX-19405GIMNO-0006",
+    "CONSEC": "0006",
+    "NOMBRE": "Viejo del Agua",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; HISTORICO; NOTABLE",
+    "F_DECRETO": "2025-08-04",
+    "ALCALDIA": "Azcapotzalco",
+    "COLONIA": "Santa Catarina",
+    "DOMICILIO": "Calle Central S/N",
+    "TIPO_UBIC": "Jardinera",
+    "ALTURA_M": 27,
+    "DAP_CM": 440,
+    "COPA_M": 39,
+    "EDAD_ANIO": 700,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.177133,
+     19.491067
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-XOC-TAX-19405GIMNO-0007",
+    "CONSEC": "0007",
+    "NOMBRE": "Árbol Ahuehuete (Sabino) de San Juan y su Arboleda",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": null,
+    "F_DECRETO": null,
+    "ALCALDIA": "Xochimilco",
+    "COLONIA": "San Juan Tlatenchi",
+    "DOMICILIO": "Calle Plazuela San Juan S/N",
+    "TIPO_UBIC": "Jardinera",
+    "ALTURA_M": 24.5,
+    "DAP_CM": 590,
+    "COPA_M": 32,
+    "EDAD_ANIO": 500,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.106594,
+     19.265862
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-COY-FRA-30222ANGIO-0008",
+    "CONSEC": "0008",
+    "NOMBRE": "Santa Catarina",
+    "ESPECIE": "Fraxinus uhdei",
+    "N_COMUN": "Fresno Mexicano",
+    "CATEGORIA": "NOTABLE",
+    "F_DECRETO": "2026-06-03",
+    "ALCALDIA": "Coyoacán",
+    "COLONIA": "Santa Catarina",
+    "DOMICILIO": "Avenida Francisco Sosa 202-A",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 26.5,
+    "DAP_CM": 195,
+    "COPA_M": 39,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.170505,
+     19.349388
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-COY-TAX-19405GIMNO-0009",
+    "CONSEC": "0009",
+    "NOMBRE": "Río Magdalena",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "NOTABLE",
+    "F_DECRETO": "2026-06-02",
+    "ALCALDIA": "Coyoacán",
+    "COLONIA": "Santa Catarina",
+    "DOMICILIO": "Callejón del Río S/N",
+    "TIPO_UBIC": "Camellón",
+    "ALTURA_M": 26.6,
+    "DAP_CM": 180,
+    "COPA_M": 113.5,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.177512,
+     19.351499
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-AZC-TAX-19405GIMNO-0010",
+    "CONSEC": "0010",
+    "NOMBRE": "Glorieta de Ahuehuetes",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "NOTABLE",
+    "F_DECRETO": "2026-05-28",
+    "ALCALDIA": "Azcapotzalco",
+    "COLONIA": "San Juan Tihuaca",
+    "DOMICILIO": "Glorieta de los Ahuehuetes S/N",
+    "TIPO_UBIC": "Glorieta",
+    "ALTURA_M": 23,
+    "DAP_CM": 92,
+    "COPA_M": 25,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.200791,
+     19.488362
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-CUH-TAX-19405GIMNO-0011",
+    "CONSEC": "0011",
+    "NOMBRE": "Juarista",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-05-29",
+    "ALCALDIA": "Cuauhtémoc",
+    "COLONIA": "Tabacalera",
+    "DOMICILIO": "Avenida Paseo de la Reforma S/N",
+    "TIPO_UBIC": "Plaza Luis Pasteur",
+    "ALTURA_M": 24,
+    "DAP_CM": 160,
+    "COPA_M": 27,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.158199,
+     19.431763
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "25-BJU-FIC-75040ANGIO-0012",
+    "CONSEC": "0012",
+    "NOMBRE": "Laureano",
+    "ESPECIE": "Ficus microcarpa",
+    "N_COMUN": "Laurel de la India",
+    "CATEGORIA": "NOTABLE; SINGULAR",
+    "F_DECRETO": "2025-08-04",
+    "ALCALDIA": "Benito Juárez",
+    "COLONIA": "Tlacoquemecatl del Valle",
+    "DOMICILIO": "Miguel Laurent 48",
+    "TIPO_UBIC": "Sobre banqueta en esquina de Calle Miguel Laurent y Calle Fresas",
+    "ALTURA_M": 23,
+    "DAP_CM": 90,
+    "COPA_M": 30.05,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.17546,
+     19.37758
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "24-BJU-FRA-30222ANGIO-0013",
+    "CONSEC": "0013",
+    "NOMBRE": "Eugenio",
+    "ESPECIE": "Fraxinus uhdei",
+    "N_COMUN": "Fresno Mexicano",
+    "CATEGORIA": null,
+    "F_DECRETO": "2024-06-13",
+    "ALCALDIA": "Benito Juárez",
+    "COLONIA": "Del Valle",
+    "DOMICILIO": "Cerrada de Eugenia 28",
+    "TIPO_UBIC": "Interior del predio con número 28",
+    "ALTURA_M": 30,
+    "DAP_CM": 122,
+    "COPA_M": 30,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.16593,
+     19.38827
+    ]
+   }
+  }
+ ]
+}
