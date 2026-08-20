@@ -144,10 +144,13 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
         const c = L.DomUtil.create("div", "leaflet-bar mapa-control mapa-control--todos");
         const b = L.DomUtil.create("a", "", c);
         b.href = "#"; b.setAttribute("role", "button");
-        b.innerHTML = "⤢";
-        b.title = `Ver los ${conCoords.length} ejemplares`;
+        // El rótulo no lleva la cuenta. «Ver los 13» obliga a quien lee a
+        // saber de qué trece se habla, y además envejece: el día que se
+        // declare el catorceavo, el botón miente hasta que alguien lo note.
+        // La cuenta vive en el título, que es donde sí ayuda.
+        b.title = `Ver los ${conCoords.length} ejemplares en el mapa`;
         b.setAttribute("aria-label", b.title);
-        b.innerHTML = `<span class="mapa-control__texto">Ver los ${conCoords.length}</span>`;
+        b.innerHTML = `<span class="mapa-control__texto">Ver todos</span>`;
         L.DomEvent.on(b, "click", (ev) => { L.DomEvent.stop(ev); encuadreCompleto(); });
         c.hidden = true;
         contenedor._verTodos = c;

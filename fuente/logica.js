@@ -123,22 +123,21 @@ function pintarBosque(ejemplares) {
 }
 
 
-/* Iconos del cintillo. Trazo, no relleno: a 22 px un icono macizo se vuelve
-   una mancha. Heredan el color, así que el dorado se fija una sola vez en el
-   CSS. El de los años son anillos de crecimiento, que es como se lee la edad
-   de un árbol de verdad. */
-const ICONO = {
-  ejemplares: '<circle cx="12" cy="9" r="6.2"/><path d="M12 21v-5.8"/><path d="m9.4 11.8 2.6 3.4 2.6-3.4"/>',
-  alcaldias: '<path d="M12 21s6.5-5.4 6.5-10a6.5 6.5 0 1 0-13 0C5.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.6" r="2.4"/>',
-  especies: '<path d="M4 20c0-7 5-12 15-12 0 8-5 12-11 12H4Z"/><path d="M4 20c3.5-3.5 6.5-5.6 11-7"/>',
-  concentra: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10.4" r="1.25"/><circle cx="14.6" cy="9" r="1.25"/><circle cx="12" cy="14.6" r="1.25"/>',
-  alto: '<path d="M12 3v18"/><path d="m8.5 6.5 3.5-3.5 3.5 3.5"/><path d="m8.5 17.5 3.5 3.5 3.5-3.5"/>',
-  suma: '<path d="M4 20h16"/><path d="M6.5 20V9.5h3.5V20"/><path d="M14 20V4.5h3.5V20"/>',
-  antiguo: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2.4"/>',
-  acumulados: '<path d="M6.5 3h11M6.5 21h11"/><path d="M7.5 3v3.2c0 2 4.5 3.9 4.5 5.8s-4.5 3.8-4.5 5.8V21"/><path d="M16.5 3v3.2c0 2-4.5 3.9-4.5 5.8s4.5 3.8 4.5 5.8V21"/>',
-};
-const icono = (clave) => `<svg class="cifra__icono" viewBox="0 0 24 24" aria-hidden="true"
-  fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONO[clave] || ""}</svg>`;
+/* LOS ICONOS DEL CINTILLO SE RETIRARON.
+   Eran ocho pictogramas de trazo dorado sobre el morado profundo. A 24 px
+   apenas se veían; al probarlos al doble de peso quedó claro que el problema
+   no era el tamaño sino el significado: la diana de «años del más antiguo»
+   —anillos de crecimiento -- se lee como un objetivo, la gráfica de barras de
+   «sumando sus alturas» como estadística genérica y el recuadro de «en
+   Cuauhtémoc» no se lee como nada. Agrandarlos solo hacía más grande un
+   pictograma que no comunicaba.
+
+   Además competían por el color: icono y cifra iban los dos en dorado, y el
+   dorado tiene que ser de la cifra. Sin ellos la banda pierde 168 px de alto
+   y la jerarquía queda en dos escalones sin ruido: cifra y luego rótulo.
+
+   Si algún día vuelven, que sea con pictogramas que se entiendan sin leyenda
+   y en un color que no le dispute el dorado al número. */
 
 /**
  * El cintillo de cifras, debajo de la hilera de los trece.
@@ -175,7 +174,7 @@ function pintarCifras(stats, ejemplares) {
     ["acumulados", edad.cifra, "Años sumados"],
   ];
   document.getElementById("cifras").innerHTML = datos
-    .map(([k, v, l]) => `<div class="cifra">${icono(k)}<strong>${esc(String(v))}</strong><span>${esc(l)}</span></div>`).join("");
+    .map(([, v, l]) => `<div class="cifra"><strong>${esc(String(v))}</strong><span>${esc(l)}</span></div>`).join("");
 
   // Al pie: los nombres de las especies y la cobertura de la suma de edades.
   // La segunda es obligatoria: sumar 1,200 años sin decir que salen de dos

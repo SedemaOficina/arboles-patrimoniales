@@ -543,7 +543,10 @@ console.log('\n══ PÁGINA DE RECURSOS ══');
         fv4=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8'),
         pd4=fs.readFileSync(PRUEBA+'portada.dc.html','utf8');
   t('Existe en las dos versiones', rec.length>50000 && recdc.length>50000);
-  t('Trae las cinco secciones', ['id="videos"','id="normativa"','id="datos"','id="metodologia"','id="directorio"']
+  // El ancla del marco normativo pasó de #normativa a #normatividad: es el
+  // destino de la liga que la portada añadió al final de «Lo que dice la ley»,
+  // y las dos secciones legales tenían que poder señalarse entre sí.
+  t('Trae las cinco secciones', ['id="videos"','id="normatividad"','id="datos"','id="metodologia"','id="directorio"']
     .every(x=>rec.includes(x)));
   t('El video salió de la portada y vive aquí',
     !/youtube-nocookie/.test(pv4) && !/youtube-nocookie/.test(pd4) && /youtube-nocookie/.test(rec));
@@ -939,6 +942,31 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
   // tarjeta anterior por semanas.
   t('La imagen para compartir es absoluta y del mismo origen',
     /og:image" content="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/assets\/img\/portada\/compartir\.jpg\?v=\d+"/.test(pv));
+}
+
+// LAS DOS SECCIONES LEGALES SE SEÑALAN ENTRE SÍ.
+// Una revisión externa las leyó como repetidas. No lo son —la portada es el
+// argumento, Recursos es el catálogo, y Recursos trae tres instrumentos que la
+// portada no—, pero nada se lo decía a quien lee. Cada una declara ahora qué
+// es y remata con la liga a la otra.
+{
+  const pv5=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
+  const rec5=fs.readFileSync(PRUEBA+'recursos-vista-previa.html','utf8');
+  t('La portada manda al catálogo completo en Recursos',
+    /href="recursos\.html#normatividad"/.test(pv5));
+  t('Recursos manda de regreso al argumento de la portada',
+    /href="index\.html#proteccion"/.test(rec5));
+  t('El ancla existe de verdad en Recursos', /id="normatividad"/.test(rec5));
+  t('El ancla existe de verdad en la portada', /id="proteccion"/.test(pv5));
+}
+
+// Los iconos del cintillo se retiraron: no comunicaban y le disputaban el
+// dorado a la cifra. Si vuelven, que sea con pictogramas legibles.
+{
+  const pv6=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
+  t('El cintillo de cifras ya no dibuja iconos', !/class="cifra__icono"/.test(pv6));
+  t('No queda la regla huérfana del icono en la hoja de estilo',
+    !/\.cifra__icono\{/.test(fs.readFileSync('estilos.css','utf8')));
 }
 
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);

@@ -318,5 +318,29 @@ t('diferido · el ensamblador lo expone en las dos páginas',
   /envolver\('leaflet-diferido\.js',\['cargarLeaflet','cuandoSeAcerque'\]\)/.test(armar)
   && /window\.cuandoSeAcerque=cuandoSeAcerque/.test(armarF));
 
+
+// LA CRUZ PARA CERRAR EL GLOBO.
+// Leaflet la sirve en gris #757575 sin fondo, encima de la fotografía del
+// ejemplar: 1.1:1 contra el follaje. Era invisible. Lleva disco de papel y
+// tinta morada propios; si alguien afloja el selector, Leaflet vuelve a ganar
+// porque su hoja se inyecta después de esta.
+t('css · la cruz del globo gana a Leaflet por especificidad, no por !important',
+  /\.leaflet-container \.leaflet-popup a\.leaflet-popup-close-button\{/.test(css));
+t('css · la cruz lleva su propio fondo, no el de la fotografía',
+  /a\.leaflet-popup-close-button\{[^}]*background:rgba\(254,247,228/.test(css));
+t('css · la cruz usa la tinta morada de la marca, no el gris de Leaflet',
+  /a\.leaflet-popup-close-button\{[^}]*color:var\(--jacaranda-hondo\)/.test(css));
+t('css · el área táctil de la cruz llega a 44 px',
+  /a\.leaflet-popup-close-button::before\{[^}]*width:44px;height:44px/.test(css));
+t('css · la cruz tiene foco visible',
+  /a\.leaflet-popup-close-button:focus-visible\{outline:3px/.test(css));
+
+// El control que recupera el encuadre no lleva la cuenta en el rótulo: «Ver
+// los 13» envejece solo el día que se declare el catorceavo ejemplar.
+t('mapa.js · el control dice «Ver todos», sin la cuenta',
+  /mapa-control__texto">Ver todos</.test(src) && !/mapa-control__texto">Ver los/.test(src));
+t('mapa.js · la cuenta sigue viva en el título, que es donde ayuda',
+  /b\.title = `Ver los \$\{conCoords\.length\} ejemplares/.test(src));
+
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

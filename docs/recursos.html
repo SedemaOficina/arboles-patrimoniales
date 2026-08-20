@@ -383,15 +383,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @media(max-width:900px){#cifras{grid-template-columns:repeat(2,1fr);gap:26px 22px;padding:24px 0 26px}}
 
 .cifra{display:block}
-.cifra__icono{display:block;width:24px;height:24px;color:var(--dorado);opacity:.9;margin-bottom:12px}
+/* Los iconos del cintillo se retiraron: el porqué está en logica.js. */
 /* La cifra no se parte: «330 m» quebraba en dos renglones y la unidad quedaba
    sola debajo del número, leyéndose como otra cifra. */
 .cifra strong{display:block;font-family:var(--display);font-size:clamp(30px,3vw,42px);line-height:1;
   color:var(--dorado-luz);white-space:nowrap;letter-spacing:.01em}
 .cifra span{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   color:rgba(255,255,255,.68);margin-top:9px;font-weight:600;line-height:1.35}
-@media(max-width:900px){.cifra__icono{width:21px;height:21px;margin-bottom:9px}
-  .cifra span{font-size:11px;letter-spacing:.07em}}
+@media(max-width:900px){.cifra span{font-size:11px;letter-spacing:.07em}}
 
 /* Pie del cintillo: los nombres de las especies y la cobertura de la suma de
    edades. Va dentro de la banda, en cuerpo pequeño: no compite con las cifras
@@ -1572,6 +1571,40 @@ body.sin-desplazamiento{overflow:hidden}
 .leaflet-pane.leaflet-popup-pane{z-index:1010}
 .leaflet-popup-content{margin:0!important;width:238px!important}
 .leaflet-popup-content-wrapper{border-radius:3px;padding:0;overflow:hidden}
+/* LA CRUZ PARA CERRAR EL GLOBO.
+   Leaflet la entrega en gris #757575 sin fondo, y en este globo cae justo
+   encima de la fotografía: gris medio sobre follaje verde da 1.1:1 y
+   desaparece. Quien abría una ficha en el mapa no encontraba cómo cerrarla.
+
+   Se convierte en un disco de papel con la tinta morada de la marca —11.7:1
+   sobre crema— que se sostiene sobre cualquier fotografía porque lleva su
+   propio fondo, no el de la imagen. El área táctil llega a 44 px con el
+   ::before, que es el mínimo que fija la propia hoja para dedo grueso, sin
+   que el disco visible tenga que crecer hasta ahí.
+
+   CUIDADO con el selector: Leaflet escribe «.leaflet-container a.leaflet-popup-
+   close-button», que pesa (0,3,1), y su hoja se inyecta DESPUÉS de esta
+   porque Leaflet se carga en diferido. Un selector a secas pierde por
+   especificidad; uno que solo la iguale pierde por orden de aparición. Se
+   añade «.leaflet-popup» —ancestro real del botón— para llegar a (0,4,1) y
+   ganar por peso, sin repartir !important por toda la regla. */
+.leaflet-container .leaflet-popup a.leaflet-popup-close-button{position:absolute;top:9px;right:9px;z-index:2;
+  width:28px;height:28px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:rgba(254,247,228,.96);
+  box-shadow:0 1px 5px rgba(42,22,48,.32);
+  font:0/0 var(--texto);color:var(--jacaranda-hondo);text-decoration:none;
+  transition:background .14s,box-shadow .14s}
+/* El glifo de Leaflet es un «×» de texto que hereda tamaño del tema. Se apaga
+   con font-size:0 y se dibuja aquí, para que mida lo mismo pase lo que pase. */
+.leaflet-container .leaflet-popup a.leaflet-popup-close-button::after{content:"×";
+  font:400 21px/1 var(--texto);margin-top:-2px}
+.leaflet-container .leaflet-popup a.leaflet-popup-close-button::before{content:"";position:absolute;
+  top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+.leaflet-container .leaflet-popup a.leaflet-popup-close-button:hover,
+.leaflet-container .leaflet-popup a.leaflet-popup-close-button:focus{background:#fff;
+  color:var(--jacaranda-hondo);box-shadow:0 2px 9px rgba(42,22,48,.42)}
+.leaflet-container .leaflet-popup a.leaflet-popup-close-button:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
 
 .mapa-lista{border:1px solid rgba(42,22,48,.14);background:var(--blanco);overflow-y:auto;min-height:0;
   height:clamp(440px,72vh,720px)}
@@ -1868,7 +1901,7 @@ body.sin-desplazamiento{overflow:hidden}
     <p class="recursos-portada__entrada">Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México. Todo lo que sostiene la información publicada en este sitio, reunido y descargable.</p>
     <nav class="recursos-indice" aria-label="Secciones de recursos">
       <a href="#videos">Videos</a>
-      <a href="#normativa">Marco normativo</a>
+      <a href="#normatividad">Marco normativo</a>
       <a href="#datos">Datos abiertos</a>
       <a href="#metodologia">Metodología</a>
       <a href="#directorio">A quién acudir</a>
@@ -1894,12 +1927,12 @@ body.sin-desplazamiento{overflow:hidden}
   </div>
 </section>
 
-<section class="seccion" id="normativa">
+<section class="seccion" id="normatividad">
   <div class="envoltura">
     <div class="encabezado">
       <span class="rotulo">Marco normativo</span>
       <h2>La normatividad que protege a estos árboles</h2>
-      <p>Cada instrumento con su liga al texto vigente publicado por la Consejería Jurídica y de Servicios Legales de la Ciudad de México, o por la propia Secretaría cuando se trata de una norma ambiental.</p>
+      <p>El catálogo completo: cada instrumento con su liga al texto vigente publicado por la Consejería Jurídica y de Servicios Legales de la Ciudad de México, o por la propia Secretaría cuando se trata de una norma ambiental. El argumento —de dónde viene la protección y qué implica para el árbol y para ti— está en <a class="enlace" href="index.html#proteccion">la página de inicio</a>.</p>
     </div>
     <div class="normas-rejilla">
       <article class="norma-tarjeta">
