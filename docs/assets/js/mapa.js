@@ -85,7 +85,7 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
     history.replaceState(null, "", location.pathname + (cad ? "?" + cad : "") + location.hash);
   }
   const marcadores = new Map();
-  let mapa = null, marcadorUsuario = null;
+  let mapa = null, marcadorUsuario = null, anilloCercano = null;
   // Estas dos se leen durante el montaje del mapa, que ocurre antes de las
   // funciones que las usan: declararlas junto a ellas las dejaba en zona muerta
   // y el montaje reventaba con «Cannot access before initialization».
@@ -264,7 +264,23 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
       });
       const m = L.marker([e.coords.lat, e.coords.lng], { icon: icono, title: e.nombreAsignado || "Ejemplar",
         alt: `${e.nombreAsignado || "Ejemplar"}, ${nf(e.morfologia.altura_m)} metros` }).addTo(mapa);
-      m.bindPopup(globo(e), { closeButton: true, maxWidth: 238, minWidth: 238 });
+      /* autoPanPaddingTopLeft reserva la esquina donde viven los controles de
+         acercamiento, ubicación y pantalla completa: sin esa reserva el globo
+         se abría encima de ellos y tapaba los botones. */
+      m.bindPopup(globo(e), { closeButton: true, maxWidth: 238, minWidth: 238,
+        autoPan: true, autoPanPaddingTopLeft: [66, 16], autoPanPaddingBottomRight: [16, 96] });
+      m.on("popupopen", (ev) => {
+        const caja = ev.popup.getContent();
+        const img = caja && caja.querySelector && caja.querySelector("img[data-ejemplar]");
+        if (!img || img.dataset.montada === "1") return;
+        img.dataset.montada = "1";
+        montarPrimeraFoto(img, (ok) => {
+          if (ok) img.classList.add("globo-mapa__foto--cargada"); else img.remove();
+          // Recoloca el globo: al aparecer o desaparecer la banda de 118 px
+          // cambia su altura y la punta dejaría de apuntar al marcador.
+          if (ev.popup.isOpen()) ev.popup.update();
+        });
+      });
       m.on("click", () => seleccionar(e.slug, false));
       marcadores.set(e.slug, m);
     });
@@ -284,53 +300,102 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
   }
 
   /* ---------- ubicación de la persona ---------- */
+
+  /** Dibuja el punto de la persona, su anillo de precisión y resuelve cuál es
+   *  su ejemplar más próximo. Se llama dos veces: con la posición rápida y,
+   *  si llega, con la afinada. */
+  function pintarUbicacion(lat, lng, accuracy, encuadrar) {
+    if (marcadorUsuario) mapa.removeLayer(marcadorUsuario);
+    // El anillo iba a un pixel de trazo y 12 % de relleno: sobre el beige y
+    // el café de la cartografía, a zoom alto, prácticamente no se veía. Se
+    // engrosa, se le sube la opacidad y lleva halo blanco por CSS para que
+    // se lea sobre cualquier fondo del mapa.
+    marcadorUsuario = L.layerGroup([
+      L.circle([lat, lng], { radius: Math.max(accuracy || 0, 25), className: "anillo-precision",
+        color: "#7A3E7F", weight: 3, opacity: 0.95, fillColor: "#8D4992", fillOpacity: 0.2 }),
+      L.marker([lat, lng], { icon: L.divIcon({ className: "", iconSize: [18, 18], html: '<div class="pin-usuario"></div>' }),
+        title: "Tu ubicación aproximada" }),
+    ]).addTo(mapa);
+
+    const dentro = lat > 19 && lat < 19.65 && lng > -99.4 && lng < -98.9;
+    if (!dentro) {
+      avisar("Tu ubicación queda fuera de la Ciudad de México; el mapa se mantiene sobre el listado.");
+      return;
+    }
+    const cerca = masCercano(lat, lng);
+    if (!cerca) { if (encuadrar) mapa.setView([lat, lng], 15); return; }
+
+    if (encuadrar) {
+      // Antes se hacía zoom 15 sobre la persona y desaparecían los otros doce
+      // marcadores y el contorno de la Ciudad: quedabas ubicado pero perdido.
+      // El encuadre abarca a la persona y a los DOS ejemplares más próximos.
+      const vecinos = masCercanos(lat, lng, 2).map((c) => [c.e.coords.lat, c.e.coords.lng]);
+      mapa.fitBounds(L.latLngBounds([[lat, lng], ...vecinos]), { padding: [80, 80], maxZoom: 15 });
+    }
+    avisar(`<span class="mapa-aviso__rotulo">Tu árbol patrimonial más cercano</span>`
+      + `<b class="mapa-aviso__nombre">${esc(cerca.e.nombreAsignado || "Sin nombre asignado")}</b>`
+      + `<span class="mapa-aviso__pie">a <b>${esc(formatoDistancia(cerca.d))}</b> de tu ubicación aproximada</span>`);
+    // El resultado también se marca en el listado: antes el renglón del
+    // ejemplar encontrado se veía igual que los otros doce.
+    seleccionar(cerca.e.slug, false);
+    marcarResultado(cerca.e.slug);
+  }
+
+  /**
+   * Ubicación en dos tiempos.
+   *
+   * Con enableHighAccuracy en verdadero el navegador enciende el GPS y espera
+   * a que fije satélites: en una computadora de escritorio eso tarda entre
+   * cinco y quince segundos, y el botón parecía trabado. Para la pregunta que
+   * este mapa responde —cuál de trece árboles, separados por kilómetros, te
+   * queda más cerca— una posición de red con cien metros de error da la misma
+   * respuesta que una de cinco.
+   *
+   * Así que primero se pide la rápida (red y caché de hasta diez minutos), que
+   * suele volver en menos de un segundo, y con ella ya se responde. En paralelo
+   * se pide la fina; si llega y mueve el punto más de cincuenta metros, se
+   * redibuja sin volver a encuadrar el mapa para no marear a quien ya está
+   * leyendo el resultado.
+   */
   function ubicarme(boton) {
     if (!navigator.geolocation) { avisar("Tu navegador no permite compartir la ubicación."); return; }
     boton.classList.add("mapa-control--buscando");
+    avisar('<span class="mapa-aviso__rotulo">Buscando tu ubicación…</span>');
+
+    let respondido = false;
+    let base = null;
+
+    const listo = () => { respondido = true; boton.classList.remove("mapa-control--buscando"); };
+
+    const fallo = () => {
+      if (respondido) return;
+      listo();
+      avisar("No pudimos obtener tu ubicación. Revisa los permisos del navegador.");
+    };
+
+    // 1. Posición rápida: red, con caché reciente. Es la que responde.
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        boton.classList.remove("mapa-control--buscando");
-        const { latitude: lat, longitude: lng, accuracy } = pos.coords;
-        if (marcadorUsuario) mapa.removeLayer(marcadorUsuario);
-        // El anillo iba a un pixel de trazo y 12 % de relleno: sobre el beige y
-        // el café de la cartografía, a zoom alto, practicamente no se veia. Se
-        // engrosa, se le sube la opacidad y lleva halo blanco por CSS para que
-        // se lea sobre cualquier fondo del mapa.
-        marcadorUsuario = L.layerGroup([
-          L.circle([lat, lng], { radius: Math.max(accuracy, 25), className: "anillo-precision",
-            color: "#7A3E7F", weight: 3, opacity: 0.95, fillColor: "#8D4992", fillOpacity: 0.2 }),
-          L.marker([lat, lng], { icon: L.divIcon({ className: "", iconSize: [18, 18], html: '<div class="pin-usuario"></div>' }),
-            title: "Tu ubicación aproximada" }),
-        ]).addTo(mapa);
-        const dentro = lat > 19 && lat < 19.65 && lng > -99.4 && lng < -98.9;
-        if (dentro) {
-          const cerca = masCercano(lat, lng);
-          if (cerca) {
-            // Antes se hacia zoom 15 sobre la persona y desaparecian los otros
-            // doce marcadores y el contorno de la Ciudad: quedabas ubicado pero
-            // perdido. El encuadre abarca a la persona Y a su arbol, que es la
-            // relacion que la pregunta plantea.
-            // El encuadre abarca a la persona y a los DOS ejemplares más
-            // próximos: con uno solo, a veces quedaba en cuadro un único punto
-            // verde y volvía a perderse la noción del padrón.
-            const vecinos = masCercanos(lat, lng, 2).map((c) => [c.e.coords.lat, c.e.coords.lng]);
-            mapa.fitBounds(L.latLngBounds([[lat, lng], ...vecinos]), { padding: [80, 80], maxZoom: 15 });
-            avisar(`<span class="mapa-aviso__rotulo">Tu árbol patrimonial más cercano</span>`
-              + `<b class="mapa-aviso__nombre">${esc(cerca.e.nombreAsignado || "Sin nombre asignado")}</b>`
-              + `<span class="mapa-aviso__pie">a <b>${esc(formatoDistancia(cerca.d))}</b> de tu ubicación aproximada</span>`);
-            // El resultado tambien se marca en el listado: antes el renglon del
-            // ejemplar encontrado se veia igual que los otros doce.
-            seleccionar(cerca.e.slug, false);
-            marcarResultado(cerca.e.slug);
-          } else {
-            mapa.setView([lat, lng], 15);
-          }
-        } else {
-          avisar("Tu ubicación queda fuera de la Ciudad de México; el mapa se mantiene sobre el listado.");
-        }
+        listo();
+        base = pos.coords;
+        pintarUbicacion(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, true);
       },
-      () => { boton.classList.remove("mapa-control--buscando"); avisar("No pudimos obtener tu ubicación. Revisa los permisos del navegador."); },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      fallo,
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+    );
+
+    // 2. Posición fina, en segundo plano. Solo afina; nunca es la que informa
+    //    del fracaso, para no contradecir a la rápida si esa sí funcionó.
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+        if (!base) { listo(); pintarUbicacion(lat, lng, accuracy, true); return; }
+        if (distancia(base.latitude, base.longitude, lat, lng) < 50) return;
+        base = pos.coords;
+        pintarUbicacion(lat, lng, accuracy, false);
+      },
+      () => { /* la rápida ya respondió o ya avisó del fallo */ },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
 
@@ -341,8 +406,7 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
     slugResultado = slug;
     pintarLista();
     pintarPinResultado();
-    const fila = lista.querySelector(`.mapa-item[data-slug="${slug}"]`);
-    if (fila && fila.scrollIntoView) fila.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    traerFilaAlaVista(slug);
   }
 
   /** El marcador del ejemplar más cercano lleva halo y pulso, en verde, igual
@@ -355,6 +419,27 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
       const pin = el && el.querySelector(".pin");
       if (pin) pin.classList.toggle("pin--cercano", s === slugResultado);
     });
+    pintarAnilloCercano();
+  }
+
+  /** Radio del anillo del ejemplar, en metros. No mide precisión —la posición
+   *  del árbol está verificada— sino que replica en verde el mismo gesto
+   *  gráfico del anillo morado de la persona, para que la pareja
+   *  «aquí estoy / aquí está tu árbol» se lea como un solo par. */
+  const RADIO_ANILLO_CERCANO = 90;
+
+  function pintarAnilloCercano() {
+    if (anilloCercano) { mapa.removeLayer(anilloCercano); anilloCercano = null; }
+    if (!slugResultado || !mapa) return;
+    const m = marcadores.get(slugResultado);
+    if (!m) return;
+    anilloCercano = L.circle(m.getLatLng(), {
+      radius: RADIO_ANILLO_CERCANO, className: "anillo-cercano",
+      color: "#1E4D2B", weight: 3, opacity: 0.95,
+      fillColor: "#2D7A3E", fillOpacity: 0.2, interactive: false,
+    }).addTo(mapa);
+    // El anillo se dibuja por debajo del marcador para no comerse el punto.
+    if (anilloCercano.bringToBack) anilloCercano.bringToBack();
   }
 
   /** Los n ejemplares más próximos, del más cercano al más lejano. */
@@ -396,18 +481,30 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
   }
 
   function globo(e) {
-    const foto = e.fotos && e.fotos.length ? e.fotos[0] : null;
+    /* La fotografía NO se toma de e.fotos: ese campo viene de la hoja de
+       cálculo y en varios ejemplares trae rutas heredadas que ya no existen,
+       de ahí el icono de imagen rota que sólo aparecía en un globo. Se usa el
+       mismo descubrimiento por carpeta que el listado —montarPrimeraFoto—, que
+       prueba las extensiones y retira el <img> si no hay archivo. Así o se ve
+       la foto real o no se ve nada, nunca un hueco roto. */
     const meta = [e.alcaldia, e.morfologia.altura_m != null ? `${nf(e.morfologia.altura_m)} m de alto` : null,
                   e.edadEstimada != null ? `${nf(e.edadEstimada, 0)} años` : null].filter(Boolean).join(" · ");
-    return `<div class="globo-mapa">
-      ${foto ? `<img src="${esc(foto.url)}" alt="">` : ""}
+    /* Se devuelve un ELEMENTO, no una cadena. Con cadena, cada llamada de
+       popup.update() —la que hace falta para recolocar el globo cuando la foto
+       carga— vuelve a construir el contenido desde el texto original y borra
+       lo que el montaje de la imagen acababa de hacer. Con elemento, Leaflet
+       lo reinserta tal cual y el trabajo sobrevive. */
+    const caja = document.createElement("div");
+    caja.className = "globo-mapa";
+    caja.innerHTML = `
+      <img class="globo-mapa__foto" data-ejemplar="${esc(e.id || "")}" alt="">
       <div class="cuerpo">
         <h3>${esc(e.nombreAsignado || "Sin nombre asignado")}</h3>
         <p class="esp">${esc(e.especie || "Especie por determinar")}</p>
         <p class="met">${esc(meta)}</p>
         <a class="globo-mapa__boton" href="${RUTA_FICHA}#ficha-${esc(e.slug)}">Ver la ficha completa</a>
-      </div>
-    </div>`;
+      </div>`;
+    return caja;
   }
 
   /* ---------- listado ---------- */
@@ -440,8 +537,8 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
           // La miniatura es la fotografía del ejemplar. No se usa la silueta de
           // la especie: solo hay tres especies en el registro y trece siluetas
           // repetidas se leen como un error de carga, no como información.
-          // La miniatura se busca en la carpeta del ejemplar, no en los datos.
-          const foto = e.fotos && e.fotos.length ? e.fotos[0] : null;
+          // La miniatura se busca en la carpeta del ejemplar, no en los datos:
+          // el <img> lleva data-ejemplar y lo resuelve montarPrimeraFoto.
           const met = [e.alcaldia || "Ubicación por determinar",
                        e.morfologia.altura_m == null ? null : `${nf(e.morfologia.altura_m)} m de alto`,
                        e.coords ? null : "sin coordenadas"].filter(Boolean).join(" · ");
@@ -515,6 +612,48 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
     mapa.fitBounds(caja, { padding: [46, 46], maxZoom: 15, animate: true });
   }
 
+  /**
+   * Trae el renglón de un ejemplar al centro del listado.
+   *
+   * scrollIntoView con block:"nearest" dejaba el renglón pegado al borde
+   * inferior, medio tapado por la sombra del contenedor: se veía la franja
+   * morada pero no el nombre ni la foto. Y con behavior:"smooth" arrastraba
+   * también la página, no sólo la columna. Aquí se calcula el desplazamiento
+   * dentro del propio contenedor: la página no se mueve y el renglón queda a
+   * media altura, con contexto arriba y abajo.
+   */
+  let temporizadorFila = null;
+  function traerFilaAlaVista(slug) {
+    // El listado se vuelve a pintar entero en cada selección y sus fotografías
+    // se montan después: mientras no cargan, los renglones miden menos y el
+    // desplazamiento se calcula sobre una altura que aún va a crecer. Por eso
+    // se repite el cálculo un instante más tarde, cuando la columna ya tiene
+    // su altura definitiva.
+    colocarFila(slug);
+    clearTimeout(temporizadorFila);
+    temporizadorFila = setTimeout(() => colocarFila(slug), 420);
+  }
+
+  function colocarFila(slug) {
+    if (!lista || !slug) return;
+    const fila = lista.querySelector(`.mapa-item[data-slug="${slug}"]`);
+    if (!fila) return;
+    // Se mide con rectángulos, no con offsetTop: offsetTop cuenta desde el
+    // ancestro posicionado, que no siempre es el contenedor del listado, y con
+    // el último renglón dejaba el cálculo corto.
+    const alto = lista.clientHeight;
+    const rl = lista.getBoundingClientRect();
+    const rf = fila.getBoundingClientRect();
+    const arriba = rf.top - rl.top + lista.scrollTop;
+    const destino = Math.max(0, Math.min(arriba - (alto - rf.height) / 2,
+      lista.scrollHeight - alto));
+    // Si ya está cómodamente a la vista no se mueve nada: desplazar en cada
+    // clic marea a quien está recorriendo el listado con el ratón.
+    if (rf.top >= rl.top + 8 && rf.bottom <= rl.bottom - 8) return;
+    if (lista.scrollTo) lista.scrollTo({ top: destino, behavior: "smooth" });
+    else lista.scrollTop = destino;
+  }
+
   function seleccionar(slug, centrar) {
     estado.activo = estado.activo === slug && !centrar ? null : slug;
     if (!estado.activo) { marcadores.forEach((m) => { const el = m.getElement(); const pin = el && el.querySelector(".pin"); if (pin) pin.classList.remove("pin--activo"); }); pintarLista(); return; }
@@ -527,6 +666,9 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
     const m = marcadores.get(slug);
     if (m && centrar && mapa) { mapa.setView(m.getLatLng(), Math.max(mapa.getZoom(), 16), { animate: true }); m.openPopup(); }
     pintarLista();
+    // El renglón se pinta de morado, pero si queda fuera de la ventana del
+    // listado la marca no sirve de nada: hay que traerlo.
+    traerFilaAlaVista(slug);
     if (typeof alSeleccionar === "function") alSeleccionar(slug);
   }
 

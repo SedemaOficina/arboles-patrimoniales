@@ -30,5 +30,86 @@ t('Sin Leaflet, no revienta',(()=>{try{
   const cont={innerHTML:''}; const lista={querySelector:()=>({innerHTML:'',textContent:''}),querySelectorAll:()=>[]};
   M.crearMapa({contenedor:cont,lista,filtros:null,ejemplares:E}); return /listado de la derecha/.test(cont.innerHTML);
 }catch(e){return false}})());
+
+console.log('══ MAPA · globo, halo y desplazamiento ══');
+const src = fs.readFileSync('mapa.js','utf8');
+const css = fs.readFileSync('estilos.css','utf8');
+
+// El globo dejó de leer la fotografía de la hoja de cálculo: varios ejemplares
+// arrastraban rutas heredadas que ya no existen y sólo uno mostraba el icono
+// de imagen rota. Ahora la descubre por carpeta, igual que el listado.
+t('globo · nada lee ya la fotografía de la hoja', !/const foto = e\.fotos/.test(src));
+t('globo · la foto se descubre por carpeta', /globo-mapa__foto" data-ejemplar=/.test(src));
+t('globo · se monta al abrirse', /m\.on\("popupopen"/.test(src) && /montarPrimeraFoto\(img/.test(src));
+t('globo · si no hay archivo, se retira el hueco', /else img\.remove\(\)/.test(src));
+// Con contenido en cadena, popup.update() reconstruye el HTML y borra la foto
+// recién montada; con elemento, Leaflet lo reinserta tal cual.
+t('globo · el contenido es un elemento, no una cadena',
+  /caja = document\.createElement\("div"\)/.test(src) && /return caja;/.test(src));
+t('globo · la banda de la foto no ocupa espacio hasta que carga',
+  /\.globo-mapa img\.globo-mapa__foto\{height:0/.test(css)
+  && /\.globo-mapa img\.globo-mapa__foto--cargada\{height:118px/.test(css));
+
+// El globo se abría bajo los botones de acercamiento y ubicación.
+t('globo · reserva la esquina de los controles al desplazarse',
+  /autoPanPaddingTopLeft: \[66, 16\]/.test(src));
+t('globo · queda por encima de los controles (Leaflet los pone en 1000)',
+  /\.leaflet-pane\.leaflet-popup-pane\{z-index:1010\}/.test(css));
+
+// Halo del ejemplar más cercano: anillo geográfico verde, gemelo del morado.
+t('halo · hay anillo geográfico verde', /className: "anillo-cercano"/.test(src));
+t('halo · el anillo va detrás del marcador', /anilloCercano\.bringToBack\(\)/.test(src));
+t('halo · el anillo se retira antes de redibujarse',
+  /if \(anilloCercano\) \{ mapa\.removeLayer\(anilloCercano\); anilloCercano = null; \}/.test(src));
+t('halo · el punto parpadea, no sólo pulsa', /@keyframes parpadeo-cercano/.test(css)
+  && /\.pin--cercano\{[^}]*animation:parpadeo-cercano/.test(css));
+t('halo · el anillo verde lleva el mismo halo blanco que el morado',
+  /\.anillo-cercano\{filter:drop-shadow/.test(css));
+
+// Un transform sin translate descentra el punto ocho pixeles: deja de señalar
+// el árbol. Se revisan TODAS las reglas de .pin que llevan transform.
+// Se excluyen los pseudoelementos —que se centran con margin, no con
+// translate— y la guía de identidad, donde los pines se pintan en flujo
+// estático y no los posiciona Leaflet.
+const reglasPin = [...css.matchAll(/(^|\})\s*(\.pin[^{@]*)\{([^}]*transform:[^;}]+)/gm)]
+  .map(m=>({sel:m[2].trim(), cuerpo:m[3]}))
+  .filter(r=>!/::/.test(r.sel) && !/guia-pines/.test(r.sel));
+t('pin · ninguna regla pierde el centrado', reglasPin.length>=2
+  && reglasPin.every(r=>/transform:translate\(-50%,-50%\)/.test(r.cuerpo)),
+  reglasPin.filter(r=>!/translate\(-50%,-50%\)/.test(r.cuerpo)).map(r=>r.sel).join(' | '));
+const cuadrosParpadeo = [...css.matchAll(/@keyframes parpadeo-cercano\{([^}]*\}[^}]*)\}/g)];
+t('pin · el parpadeo tampoco lo pierde',
+  /0%,100%\{transform:translate\(-50%,-50%\) scale\(1\)/.test(css)
+  && /50%\s*\{transform:translate\(-50%,-50%\) scale\(1\.4\)/.test(css));
+
+// Ubicación en dos tiempos: con GPS obligatorio el botón tardaba segundos.
+t('ubicación · la primera petición no exige GPS',
+  /enableHighAccuracy: false, timeout: 8000, maximumAge: 600000/.test(src));
+t('ubicación · la fina va después y sólo afina',
+  /enableHighAccuracy: true, timeout: 15000, maximumAge: 0/.test(src));
+t('ubicación · la fina no vuelve a encuadrar el mapa',
+  /pintarUbicacion\(lat, lng, accuracy, false\)/.test(src));
+t('ubicación · el botón avisa mientras busca', /Buscando tu ubicación…/.test(src));
+
+// El renglón se pintaba de morado aunque quedara fuera de la ventana.
+t('listado · elegir un punto del mapa trae su renglón a la vista',
+  /traerFilaAlaVista\(slug\);\n    if \(typeof alSeleccionar/.test(src));
+t('listado · el cálculo usa rectángulos, no offsetTop', /rf\.top - rl\.top \+ lista\.scrollTop/.test(src));
+t('listado · se repite cuando las fotos ya crecieron los renglones',
+  /setTimeout\(\(\) => colocarFila\(slug\), 420\)/.test(src));
+t('listado · si ya está a la vista no se mueve nada',
+  /if \(rf\.top >= rl\.top \+ 8 && rf\.bottom <= rl\.bottom - 8\) return;/.test(src));
+t('listado · sólo se desplaza la columna, no la página',
+  !/scrollIntoView\(\{ block: "nearest"/.test(src));
+
+
+console.log('══ ESCALA · el rótulo de 1.70 m ══');
+const fl = fs.readFileSync('ficha-logica.js','utf8');
+t('escala · 1.70 m se rotula una sola vez a la vista',
+  (fl.match(/>1\.70 m</g)||[]).length===1);
+t('escala · el dato sigue existiendo para lector de pantalla',
+  /<b class="vo">Figura humana de referencia: 1\.70 metros<\/b>/.test(fl));
+t('escala · nada cuelga bajo el lienzo', !/\.escala__persona b\{[^}]*bottom:-/.test(css));
+
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

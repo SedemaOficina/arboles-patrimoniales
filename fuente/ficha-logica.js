@@ -1,4 +1,4 @@
-import { svgSilueta, svgPersona, perfilDe, ilustracionDe, PROPORCION_ILUSTRACION } from "./especies.js";
+import { svgSilueta, svgPersona, perfilDe, ilustracionDe, PROPORCION_ILUSTRACION, PERSONA } from "./especies.js";
 import { GEO_CDMX } from "./geo-cdmx.js";
 import { descubrirFotos } from "./fotos.js";
 
@@ -184,12 +184,51 @@ function pintarVistaCalle(e) {
     : "Panorama de Google Street View sobre las coordenadas registradas.";
 }
 
+/** Espacio que hay que dejar libre a la derecha para las etiquetas del eje. */
+const ANCHO_ETIQUETAS = 46;
+/** Ancho de la figura humana respecto a su altura. */
+const PERSONA_RAZON = PERSONA.proporcion;
+/** Separación entre el árbol y la figura humana, igual que el gap del lienzo. */
+const HUECO_FIGURA = 40;
+
 function pintarEscala(e) {
   const alt = e.morfologia.altura_m;
   const copa = e.morfologia.extensionCopa_m || e.morfologia.anchoCopa_m;
   const lienzo = document.getElementById("fEscala");
   const tope = Math.max(Math.ceil((alt || 10) / 5) * 5, 10);
-  const px = (m) => (m / tope) * 360;
+
+  // La escala del dibujo se calcula contra el espacio que HAY, no contra un
+  // número fijo. Antes eran 360 px de alto siempre: en el teléfono el lienzo
+  // mide 330, así que el árbol se salía por arriba y las marcas del eje
+  // quedaban fuera de la caja. Y como el ancho tampoco cabía, la tira se
+  // desplazaba en horizontal y la figura humana —que es la referencia de toda
+  // la comparación— se quedaba fuera de la pantalla.
+  //
+  // Ahora el diagrama entra completo: se toma la menor de las dos escalas que
+  // permiten el alto y el ancho disponibles, y el eje usa esa misma. Árbol,
+  // persona y marcas siguen compartiendo factor, que es lo que hace que la
+  // comparación sea cierta.
+  const razonArbol = ilustracionDe(e.especie)
+    ? (PROPORCION_ILUSTRACION[perfilDe(e.especie).clave] || 1)
+    : 1;
+  // Las medidas se leen del CSS, no se repiten aquí: el relleno, la separación
+  // y el ancho mínimo de la figura cambian con el tamaño de pantalla y el
+  // cálculo tiene que enterarse.
+  const est = getComputedStyle(lienzo);
+  const num = (v) => parseFloat(v) || 0;
+  const cajaAncho = lienzo.clientWidth || 700;
+  const anchoFigura = 56;
+  const util = Math.max(110,
+    cajaAncho - num(est.paddingLeft) - num(est.paddingRight) - num(est.columnGap || est.gap) - anchoFigura);
+  const anchoPorUnidad = razonArbol + (ALTURA_PERSONA / tope) * PERSONA_RAZON;
+  const porAncho = anchoPorUnidad > 0 ? util / anchoPorUnidad : Infinity;
+  // El alto declarado en el CSS es un techo, no una obligación.
+  const porAlto = (num(est.height) || 400) * 0.9;
+  const LIENZO = Math.max(110, Math.min(porAlto, porAncho));
+  const px = (m) => (m / tope) * LIENZO;
+  // Si mandó el ancho, el lienzo se encoge para no dejar una franja vacía
+  // arriba del árbol; si mandó el alto, se queda como lo puso el CSS.
+  lienzo.style.height = Math.round(LIENZO / 0.9) + "px";
 
   const reglas = [];
   for (let m = 5; m <= tope; m += 5) reglas.push(`<div class="escala__marca" style="bottom:${px(m)}px"><span>${m} m</span></div>`);
@@ -212,7 +251,7 @@ function pintarEscala(e) {
       ${arbol}
       <div class="escala__persona" style="--alto-persona:${px(ALTURA_PERSONA).toFixed(1)}px">
         <span class="escala__guia" aria-hidden="true"><i>1.70 m</i></span>
-        ${svgPersona(px(ALTURA_PERSONA))}<b>1.70 m</b></div>`;
+        ${svgPersona(px(ALTURA_PERSONA))}<b class="vo">Figura humana de referencia: 1.70 metros</b></div>`;
   }
 
   const medidas = [

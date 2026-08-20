@@ -48,8 +48,16 @@ t('menu.js · con guía los controles van ARRIBA de la hilera',
   /if \(conGuia\) pista\.insertAdjacentElement\("beforebegin", barra\)/.test(m));
 t('css · la guía se pinta por delante del relleno de la hilera',
   /\.deslizador--guia\{[^}]*z-index:6\}/.test(css));
-t('css · la guía tiene presencia propia, no gris de 13 px',
-  /\.deslizador__pista-guia\{[^}]*font-size:14px[^}]*\}/.test(css) && /\.deslizador__pista-guia\{[^}]*border-radius:999px/.test(css));
+// La guía es una leyenda, no un control: con borde, fondo y pastilla la gente
+// intentaba pulsarla. Debe leerse bien (>=13 px) sin prometer un clic.
+t('css · la guía no aparenta ser un botón',
+  /\.deslizador__pista-guia\{[^}]*background:none[^}]*\}/.test(css)
+  && /\.deslizador__pista-guia\{[^}]*border:0[^}]*\}/.test(css)
+  && /\.deslizador__pista-guia\{[^}]*border-radius:0[^}]*\}/.test(css)
+  && !/\.deslizador__pista-guia\{[^}]*border-radius:999px/.test(css));
+t('css · la guía sigue siendo legible', /\.deslizador__pista-guia\{[^}]*font-size:13\.5px/.test(css));
+t('css · lo único pulsable de esa fila son las flechas',
+  /\.deslizador__pista-guia\{[^}]*cursor:default/.test(css));
 t('logica.js · la hilera ya no dibuja la figura humana',
   !/svgPersona/.test(lg) && !/bosque__ref/.test(lg));
 t('css · no quedan estilos de la referencia humana en la hilera', !/\.bosque__ref/.test(css));

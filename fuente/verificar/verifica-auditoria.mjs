@@ -69,8 +69,14 @@ console.log('\n══ LISTADO DEL MAPA · fuera el recuadro verde ══');
 const cs=fs.readFileSync('estilos.css','utf8');
 t('El renglón ya no lleva el recuadro de altura', !/mapa-item__alt/.test(mp) && !/mapa-item__alt/.test(cs));
 t('La altura pasó a la línea de datos', /m de alto/.test(mp) && /mapa-item__met/.test(mp));
+// La miniatura se descubre en la carpeta del ejemplar; si no hay archivo, el
+// <img> se retira y el renglón se queda sin columna de foto. La hoja de
+// cálculo ya no interviene: sus rutas heredadas producían imágenes rotas.
 t('La miniatura solo aparece si hay fotografía',
-  /mapa-item--con-foto/.test(mp) && /e\.fotos && e\.fotos\.length \? e\.fotos\[0\] : null/.test(mp));
+  /mapa-item--con-foto/.test(mp)
+  && /<img class="mapa-item__foto" data-ejemplar=/.test(mp)
+  && /else \{ img\.remove\(\); \}/.test(mp)
+  && !/e\.fotos && e\.fotos\.length/.test(mp));
 t('No se recurre a la silueta de la especie en el listado', !/svgSilueta|ilustracionDe/.test(mp));
 t('La columna de la miniatura solo existe cuando hay foto',
   /\.mapa-item\{[^}]*grid-template-columns:1fr/.test(cs) && /\.mapa-item--con-foto\{grid-template-columns:64px 1fr\}/.test(cs));
