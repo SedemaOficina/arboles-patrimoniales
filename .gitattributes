@@ -1,2 +1,18 @@
-# Auto detect text files and perform LF normalization
+# Normalización de finales de línea al guardar en el repositorio.
 * text=auto
+
+# Los guiones de shell DEBEN conservar finales de línea LF. Con «* text=auto»
+# a secas, Windows los recibe con CRLF y Git Bash falla al ejecutarlos con
+# «bad interpreter: /bin/sh^M». Esta línea los exceptúa.
+*.sh text eol=lf
+
+# Binarios: que Git no intente normalizarlos ni mostrar diferencias de texto.
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.webp binary
+*.gif  binary
+*.pdf  binary
+*.ico  binary
+*.woff  binary
+*.woff2 binary

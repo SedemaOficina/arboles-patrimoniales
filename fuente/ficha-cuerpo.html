@@ -1,0 +1,182 @@
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<!--#encabezado-->
+
+<main id="contenido">
+<!-- Membrete y pie de la ficha impresa. Invisibles en pantalla. -->
+<div class="hoja-cabeza" aria-hidden="true">
+  <img class="hoja-cabeza__gob" src="assets/img/marca/logo-institucional-grande.png"
+       alt="Gobierno de la Ciudad de México · Secretaría del Medio Ambiente · Sistema de Información Ambiental de la Ciudad de México">
+  <span class="hoja-cabeza__texto">
+    <b>Árboles patrimoniales de la Ciudad de México</b>
+    Registro público · Secretaría del Medio Ambiente
+  </span>
+  <img class="hoja-cabeza__emblema" src="assets/img/marca/emblema-media.png"
+       alt="Árboles Patrimoniales de la Ciudad de México">
+</div>
+<section class="ficha-portada">
+  <div class="envoltura">
+    <p class="migas" style="padding:0;margin:0 0 6px"><a href="__PORTADA__#inicio">Inicio</a> · <a href="__PORTADA__#listado">El listado</a></p>
+
+    <h1 id="fNombre"></h1>
+    <p class="binomio especie" id="fBinomio"></p>
+    <p class="comun" id="fComun"></p>
+    <div class="etiquetas" id="fEtiquetas"></div>
+    <div class="resumen" id="fResumen"></div>
+  </div>
+</section>
+
+<section class="bloque">
+  <div class="envoltura">
+    <span class="rotulo">El ejemplar</span>
+    <h2 id="fTituloGaleria">Así se ve</h2>
+    <p class="guia" id="fGuiaGaleria"></p>
+    <div class="galeria" id="fGaleria"></div>
+    <p class="galeria__pie" id="fPieFoto"></p>
+  </div>
+</section>
+
+<section class="bloque bloque--niebla">
+  <div class="envoltura">
+    <span class="rotulo">Dimensiones</span>
+    <h2>De este tamaño</h2>
+    <p class="guia">Las medidas provienen del dictamen técnico levantado en campo. La ilustración de la especie está dibujada a la altura registrada, junto a una figura humana de 1.70 metros.</p>
+    <div class="escala">
+      <div>
+        <div class="escala__lienzo" id="fEscala" data-desliza></div>
+        <p class="escala__pie" id="fEscalaPie"></p>
+      </div>
+      <div class="medidas" id="fMedidas"></div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque">
+  <div class="envoltura">
+    <span class="rotulo">Dónde está</span>
+    <h2>Cómo llegar</h2>
+    <p class="llamado">
+      <span class="llamado__marca" aria-hidden="true">!</span>
+      <span><b>Puedes visitarlo.</b> Si notas que está dañado, en riesgo o que alguien lo interviene sin
+      autorización, repórtalo a tu Alcaldía o a la Procuraduría Ambiental y del Ordenamiento Territorial.</span>
+    </p>
+    <div class="ubicacion">
+      <div>
+        <p class="domicilio" id="fDomicilio"></p>
+        <dl class="tabla-datos" id="fUbicacion"></dl>
+        <details class="datos-tecnicos" id="fUbicacionTecnica"></details>
+      </div>
+      <!-- El recuadro ya no explica dónde está el árbol: lo muestra. El botón
+           va debajo del mapa: es el remate de esa mirada, no de la tabla. -->
+      <div class="mapa-caja">
+        <div class="mapa-caja__lienzo" id="fMapa" role="img"
+             aria-label="Mapa con la ubicación de este ejemplar"></div>
+        <div class="ubicacion__accion" id="fAccionMapa"></div>
+        <p class="mapa-caja__pie" id="fMapaPie"></p>
+      </div>
+    </div>
+
+    <div style="margin-top:38px">
+      <span class="rotulo" style="color:var(--jacaranda);display:block;margin-bottom:12px">Vista desde la calle</span>
+      <p class="aviso-fecha" id="fVistaCalleAviso"></p>
+      <div class="vista-calle" id="fVistaCalle"></div>
+      <p class="vista-calle__pie" id="fVistaCallePie"></p>
+    </div>
+  </div>
+</section>
+
+<section class="bloque bloque--niebla" id="fVisita">
+  <div class="envoltura">
+    <div class="visita">
+      <div>
+        <span class="rotulo">Llévatelo</span>
+        <h2>Un árbol patrimonial se visita con papel en la mano</h2>
+        <p>Imprime esta ficha y ve a verlo. Lleva el domicilio, las referencias para llegar, sus medidas y lo que la ley dice sobre él, en una hoja que funciona sin señal de celular y sin batería.</p>
+      </div>
+      <div class="visita__acciones">
+        <button type="button" class="boton boton--solido" id="fImprimir">Imprimir la ficha</button>
+        <a class="visita__mapa" id="fComoLlegar" target="_blank" rel="noopener" href="#">Cómo llegar<span aria-hidden="true"> →</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque bloque--oscuro">
+  <div class="envoltura">
+    <span class="rotulo">Lo que hace por la ciudad</span>
+    <h2>Su trabajo cada año</h2>
+    <p class="guia">Cifras estimadas con i-Tree a partir de las medidas de campo de este ejemplar. Son estimaciones anuales y no sustituyen un dictamen técnico.</p>
+    <div class="grupos" id="fServicios"></div>
+    <details class="glosario-servicios">
+      <summary>Qué significa cada cifra</summary>
+      <div class="glosario-servicios__cuerpo">
+        <p>Todas las cifras de esta sección se estiman con <b>i-Tree</b>, la herramienta del Servicio Forestal de Estados Unidos, a partir de las medidas de campo del ejemplar: especie, altura, diámetro del tronco y tamaño de la copa. Son estimaciones anuales, no mediciones directas.</p>
+        <h4>Clima y carbono</h4>
+        <p>El árbol toma dióxido de carbono del aire y lo guarda como madera en su tronco, sus ramas y sus raíces. El dióxido de carbono (CO₂) es un gas de efecto invernadero: atrapa calor en la atmósfera. Llega al aire sobre todo por la quema de combustibles fósiles —carbón, gas natural y petróleo—, por los residuos sólidos y por procesos industriales como la fabricación de cemento.</p>
+        <h4>Calidad del aire</h4>
+        <p>Las hojas retienen contaminantes que de otro modo respirarías. Cada uno afecta distinto:</p>
+        <ul>
+          <li><b>Monóxido de carbono (CO).</b> Interfiere con el transporte de oxígeno dentro del cuerpo.</li>
+          <li><b>Dióxido de nitrógeno (NO₂).</b> Contribuye a formar ozono y partículas finas, y daña las vías respiratorias.</li>
+          <li><b>Ozono (O₃).</b> A nivel del suelo es dañino. Agrava enfermedades pulmonares como el asma, sobre todo en la infancia.</li>
+          <li><b>Partículas (PM 2.5).</b> Mezcla de partículas y gotas diminutas que penetran hasta el pulmón y provocan efectos graves en la salud.</li>
+          <li><b>Dióxido de azufre (SO₂).</b> Dificulta la respiración, contribuye a la lluvia ácida y forma la neblina que reduce la visibilidad de la ciudad.</li>
+        </ul>
+        <h4>Agua de lluvia</h4>
+        <p>La copa detiene parte de la lluvia antes de que toque el suelo y retrasa lo que sí llega. Eso reduce el agua que corre por el asfalto hacia el drenaje y, con ello, los encharcamientos.</p>
+        <h4>Efecto sobre el consumo de energía</h4>
+        <p>Cuando el árbol está junto a una construcción, su sombra cambia cuánta energía gasta ese edificio. Un árbol de hoja caduca da sombra en verano y deja pasar el sol en invierno: ahorra en los dos extremos del año. Un árbol de hoja perenne puede tapar el sol de invierno y aumentar el gasto de calefacción. Por eso algunos valores aparecen en negativo.</p>
+        <h4>Lo que no aparece en la tabla</h4>
+        <p>i-Tree no pone cifra a todo. Este árbol además eleva el valor de los inmuebles a su alrededor, mejora la salud y el bienestar de quien vive cerca, baja la temperatura del aire en verano, da refugio a fauna urbana y sostiene el paisaje del barrio.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="bloque">
+  <div class="envoltura">
+    <div class="dos-columnas">
+      <div>
+        <span class="rotulo">Ficha técnica</span>
+        <h2>Qué especie es</h2>
+        <p class="guia">Clasificación validada contra el Sistema Nacional de Información sobre Biodiversidad.</p>
+        <dl class="tabla-datos" id="fTaxonomia"></dl>
+        <p class="aviso-especie" id="fExotica" style="display:none"></p>
+      </div>
+      <div>
+        <span class="rotulo">Trazabilidad</span>
+        <h2>Cómo llegó al registro</h2>
+        <p class="guia">Todo ejemplar entra por nominación y se incorpora mediante decreto. Este es su expediente público.</p>
+        <dl class="tabla-datos" id="fProcedencia"></dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque bloque--niebla">
+  <div class="envoltura">
+    <span class="rotulo">Observaciones</span>
+    <h2>Notas del dictamen</h2>
+    <p class="observacion" id="fObservaciones"></p>
+  </div>
+</section>
+
+<!-- Los cuatro enlaces vivían repartidos entre dos columnas y un pie de tabla,
+     con el mismo estilo pero sin relación visible entre ellos. Juntos al final
+     de la ficha se leen por lo que son: el expediente que la sostiene. -->
+<section class="bloque">
+  <div class="envoltura">
+    <span class="rotulo">Fuentes y documentos</span>
+    <h2>De dónde sale cada dato</h2>
+    <p class="guia">El decreto y el registro son la fuente oficial del ejemplar. Los otros dos abren sistemas externos a la Secretaría.</p>
+    <div class="enlaces enlaces--fuentes" id="fFuentes"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="hoja-pie" aria-hidden="true">
+  <p>Ficha generada desde el registro público de árboles patrimoniales de la Ciudad de México, que se actualiza de forma continua. Las cifras de servicios ambientales son estimaciones anuales calculadas con i-Tree y no sustituyen un dictamen técnico.</p>
+  <p>Secretaría del Medio Ambiente · sedema.cdmx.gob.mx/arboles-patrimoniales · Denuncias ante la PAOT: 55 5265 0780</p>
+</div>
+
+<!--#pie-->

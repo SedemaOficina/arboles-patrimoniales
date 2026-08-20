@@ -1,0 +1,378 @@
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<!--#encabezado-->
+
+<main id="contenido">
+<section class="portada" id="inicio">
+  <div class="envoltura">
+    <img class="sello" src="assets/img/marca/emblema-grande.png"
+         srcset="assets/img/marca/emblema-media.png 128w, assets/img/marca/emblema-grande.png 320w"
+         sizes="(max-width:700px) 96px, 132px"
+         alt="Árboles Patrimoniales de la Ciudad de México" width="320" height="319">
+    <span class="rotulo">Secretaría del Medio Ambiente · Ciudad de México</span>
+    <h1>Árboles<em>patrimoniales</em></h1>
+    <p class="entrada editorial" id="entradaPortada"></p>
+    <div class="acciones">
+      <a class="boton boton--solido" href="#listado" id="ctaPadron">Conoce el listado</a>
+    </div>
+
+    <div class="bosque">
+      <div class="bosque__titulo">
+        <span class="rotulo">Los ejemplares, a escala real</span>
+        <span class="rotulo" id="bosqueRango"></span>
+      </div>
+      <div class="bosque__pista" id="bosquePista" data-desliza="guia"></div>
+      <p class="bosque__nota" id="bosqueNota"></p>
+    </div>
+  </div>
+</section>
+
+<section class="cifras">
+  <div class="envoltura" id="cifras"></div>
+</section>
+
+<section class="seccion" id="que-es">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">Qué significa</span>
+      <h2>Un árbol declarado patrimonio se cuida distinto</h2>
+      <p>Un árbol se declara patrimonial por lo que es y por lo que ha visto: su edad, su tamaño, su especie, su belleza o el papel que juega en la memoria de un barrio. Al entrar a este registro deja de ser un árbol más de la calle. La norma ambiental pide tomar las medidas necesarias para su protección, su conservación y su mejora, y cualquier trabajo sobre él —incluida la poda de mantenimiento— pasa por dictamen técnico de la Secretaría del Medio Ambiente, que lo resuelve caso por caso.</p>
+    </div>
+    <div class="categorias" id="categorias"></div>
+  </div>
+</section>
+
+<section class="seccion seccion--niebla" id="listado">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">El listado</span>
+      <h2 id="tituloPadron">Los árboles patrimoniales</h2>
+      <p>Ordenados del más alto al más bajo. Cada ficha reúne su historia, su ubicación exacta, su estado y los beneficios ambientales que aporta a la ciudad cada año.</p>
+    </div>
+    <div class="padron-barra">
+      <div class="buscador">
+        <label class="buscador__etiqueta" for="buscaPadron">Buscar un ejemplar</label>
+        <input id="buscaPadron" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Nombre, especie, alcaldía o colonia">
+        <button type="button" class="buscador__borrar" id="buscaBorrar" hidden aria-label="Borrar la búsqueda">×</button>
+      </div>
+      <div class="filtros" id="filtros"></div>
+    </div>
+    <p class="padron-conteo" id="padronConteo" role="status" aria-live="polite"></p>
+    <div class="padron" id="listaPadron"></div>
+    <div class="datos-abiertos">
+      <div>
+        <h3 class="rotulo">Datos abiertos</h3>
+        <p>El listado completo, tal como lo publica el registro oficial. Puedes reutilizarlo citando la fuente.</p>
+      </div>
+      <div class="datos-abiertos__botones">
+        <button type="button" class="enlace" data-descarga="csv">Descargar CSV</button>
+        <button type="button" class="enlace" data-descarga="json">Descargar JSON</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="mapa">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">El mapa</span>
+      <h2>Dónde está cada uno</h2>
+      <p id="guiaMapa"></p>
+    </div>
+    <div class="mapa-filtros" id="mapaFiltros"></div>
+    <div class="mapa-zona">
+      <div class="mapa-marco">
+        <div class="mapa-lienzo" id="mapaLienzo"></div>
+      </div>
+      <div class="mapa-lista" id="mapaLista">
+        <div data-lista></div>
+      </div>
+    </div>
+    <p class="mapa-pie">Toca un punto del mapa o un renglón del listado para ver ese ejemplar.</p>
+    <div class="panel-datos" id="mapaPanel">
+      <div class="panel-datos__cabeza">
+        <span data-panel-titulo>Todo el listado</span>
+        <button type="button" data-panel-limpiar hidden>Ver todo</button>
+      </div>
+      <div class="panel-datos__lista" data-panel-lista></div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion seccion--oscura" id="servicios">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">Lo que hacen por la ciudad</span>
+      <h2>Trabajo que nadie les paga</h2>
+      <p id="entradaServicios"></p>
+    </div>
+    <div class="servicios" id="listaServicios"></div>
+    <p class="cobertura" id="coberturaServicios"></p>
+  </div>
+</section>
+
+
+<section class="seccion" id="proteccion">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">Cómo se protegen</span>
+      <h2>Lo que dice la ley</h2>
+      <p>La declaratoria patrimonial no es un reconocimiento honorífico: es un acto jurídico que cambia lo que se puede hacer con el árbol. Estas son las disposiciones que la sostienen. Si alguien poda, derriba o trasplanta uno de estos ejemplares sin autorización, comete una infracción.</p>
+    </div>
+
+    <span class="rotulo rotulo--grupo">De dónde viene la protección</span>
+    <div class="normas">
+      <div class="norma norma--eje">
+        <span class="rotulo">Constitución Política de la Ciudad de México · artículo 18, apartado A</span>
+        <p>La Ciudad reconoce el patrimonio histórico, cultural, inmaterial y material, natural, rural y urbano territorial como un bien común. <strong>Es la disposición de la que deriva todo el marco que sigue.</strong></p>
+        <cite>Constitución Política de la Ciudad de México, publicada el 5 de febrero de 2017.</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/constitucion" target="_blank" rel="noopener">Consultar la Constitución<span aria-hidden="true"> →</span></a>
+      </div>
+      <div class="norma norma--eje">
+        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículos 51 y 52</span>
+        <p>Las <strong>declaratorias</strong> son los instrumentos jurídicos que garantizan la salvaguardia de los bienes, expresiones y valores considerados patrimonio de la Ciudad.</p>
+        <cite>Ley de Patrimonio Cultural, Natural y Biocultural de la Ciudad de México, publicada en la Gaceta Oficial el 29 de octubre de 2020, con última reforma del 27 de octubre de 2022.</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
+      </div>
+      <div class="norma norma--eje">
+        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículo 13, fracción V</span>
+        <p>Corresponde a la Secretaría del Medio Ambiente <strong>registrar, catalogar y difundir el Patrimonio Natural de la Ciudad de México</strong>. La fracción II le encomienda además el Plan de Manejo del Patrimonio Natural. <strong>Este sitio web es el cumplimiento público de esa obligación.</strong></p>
+        <cite>La misma ley define, en su artículo 4, fracción XI, que cuando dice «Secretaría» se refiere a la Secretaría de Cultura; las atribuciones de la Secretaría del Medio Ambiente se enuncian por separado en el artículo 13.</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
+      </div>
+      <div class="norma norma--eje">
+        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículos 8, fracción I, y 56</span>
+        <p>La declaratoria la emite la <strong>Jefatura de Gobierno</strong> y se publica en la Gaceta Oficial. Cuando el bien es Patrimonio Natural, la Secretaría de Cultura debe pedir <strong>opinión a la Secretaría del Medio Ambiente</strong> (artículo 56, fracción IV, inciso b).</p>
+        <cite>El artículo 61 abre recurso de revisión dentro de los 15 días hábiles siguientes, que se resuelve en 30.</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
+      </div>
+    </div>
+
+    <span class="rotulo rotulo--grupo">Qué implica para el árbol y para ti</span>
+    <div class="normas">
+      <div class="norma">
+        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículos 46 y 47</span>
+        <p>Toda persona tiene derecho a <strong>identificar, conocer, acceder y disfrutar</strong> el patrimonio de la Ciudad.</p>
+        <cite>La Procuraduría Ambiental y del Ordenamiento Territorial recibe las denuncias en la materia (Ley Orgánica de la PAOT, artículo 16, fracción I). El artículo 63 de esta ley prevé la revocación de la declaratoria cuando se pierden los valores que la motivaron.</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
+      </div>
+      <div class="norma">
+        <span class="rotulo">Norma Ambiental NADF-001-RNAT-2015 · numeral 7.5</span>
+        <p>Los árboles que destacan por características biológicas, paisajísticas, históricas, culturales o sociales, o por su especie, tamaño, edad o belleza, deben recibir las medidas necesarias para su protección, conservación y mejora. <strong>No son susceptibles de ser derribados a cambio de una restitución</strong>, salvo en caso de representar un riesgo real y presente.</p>
+        <cite>Norma Ambiental para el Distrito Federal NADF-001-RNAT-2015, publicada en la Gaceta Oficial el 1 de abril de 2016. Este numeral remite a la Ley de Salvaguarda del Patrimonio Urbanístico Arquitectónico del Distrito Federal, abrogada por la Ley de Patrimonio Cultural, Natural y Biocultural en 2020: la remisión debe leerse hecha a esta última.</cite>
+        <a class="norma__fuente" href="http://data.sedema.cdmx.gob.mx/sedema/images/archivos/sedema/leyes-reglamentos/normas/locales/NADF-001-RNAT-2016.pdf" target="_blank" rel="noopener">Consultar la norma (PDF)<span aria-hidden="true"> →</span></a>
+      </div>
+      <div class="norma">
+        <span class="rotulo">Reglamento de impacto ambiental · artículo 139, fracción III</span>
+        <p>La autoridad <strong>niega</strong> la autorización cuando se pretende derribar árboles declarados patrimonio natural, cultural o biocultural, y árboles notables. Ninguna obra pública o privada puede invocar el impacto ambiental para removerlos.</p>
+        <cite>Reglamento publicado en la Gaceta Oficial de la Ciudad de México el 22 de mayo de 2026.</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/reglamentos?start=27#reglamento-de-impacto-ambiental-y-riesgo-de-la-ciudad-de-m%C3%A9xico" target="_blank" rel="noopener">Consultar el reglamento<span aria-hidden="true"> →</span></a>
+      </div>
+      <div class="norma">
+        <span class="rotulo">Ley Ambiental de la Ciudad de México · artículos 106 y 107</span>
+        <p>La Alcaldía no puede autorizar poda, derribo ni trasplante salvo en cuatro supuestos: riesgo real y presente para las personas o sus bienes, riesgo para el patrimonio urbanístico o arquitectónico, saneamiento del árbol, y afectación significativa a la infraestructura. Toda autorización exige <strong>dictamen técnico</strong>.</p>
+        <cite>Aplicable a cualquier árbol de la ciudad, patrimonial o no.</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1611-nueva-ley-31#ley-ambiental-de-la-ciudad-de-m%C3%A9xico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
+      </div>
+    </div>
+
+    <div class="cumplimiento">
+      <div>
+        <span class="rotulo">Ley Ambiental de la Ciudad de México · artículo 107</span>
+        <h3>Este sitio web es parte del cumplimiento de la ley</h3>
+        <p>El artículo 107 encomienda a la Secretaría del Medio Ambiente <strong>integrar el inventario del arbolado urbano dentro del Sistema de Información Ambiental</strong>. El registro de árboles patrimoniales forma parte de ese inventario, y este sitio es la vía por la que se publica: los mismos datos que alimentan el Sistema, abiertos y consultables por cualquier persona.</p>
+      </div>
+      <div class="cumplimiento__enlaces">
+        <a class="enlace" href="https://sedema.cdmx.gob.mx/" target="_blank" rel="noopener">Sistema de Información Ambiental</a>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1611-nueva-ley-31#ley-ambiental-de-la-ciudad-de-m%C3%A9xico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="seccion seccion--niebla" id="cuidado">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">Un malentendido común</span>
+      <h2>Patrimonial no quiere decir intocable</h2>
+      <p>Que un árbol esté declarado patrimonio no significa que no se le pueda tocar. Significa que no se le puede derribar por conveniencia. Un árbol viejo y de gran porte <strong>necesita mantenimiento</strong>: sin él, se vuelve frágil, peligroso y muere antes.</p>
+    </div>
+
+    <div class="cuidado">
+      <article class="cuidado__idea">
+        <h3>La poda bien hecha no lastima al árbol</h3>
+        <p>La norma que rige el arbolado de la ciudad lo dice sin rodeos: en el ámbito urbano los árboles requieren mantenimiento, y cuando la poda se ejecuta de forma adecuada <strong>se potencian los servicios ambientales y sociales que el árbol proporciona</strong>. Se poda para mejorar sus condiciones sanitarias, su estructura y su andamiaje, no para castigarlo.</p>
+        <cite>NADF-001-RNAT-2015, numeral 6.</cite>
+      </article>
+
+      <article class="cuidado__idea">
+        <h3>Por qué un árbol grande necesita que lo atiendan</h3>
+        <p>Una rama seca de veinte metros cae con la fuerza de un poste. Una plaga sin tratar se come el tronco desde dentro. Una copa desbalanceada se desgaja con la primera tormenta. Retirar madera muerta, tratar el muérdago y equilibrar la estructura <strong>alarga la vida del ejemplar y reduce el riesgo para quien pasa debajo</strong>.</p>
+        <cite>La norma reconoce cinco causas para podar: riesgo, estado fitosanitario, restauración de la estructura, afectación severa a la infraestructura y mantenimiento. NADF-001-RNAT-2015, numeral 6.3.</cite>
+      </article>
+
+      <article class="cuidado__idea">
+        <h3>Con límites estrictos</h3>
+        <p>La poda <strong>no puede superar el 25 % del follaje</strong>. Solo se rebasa ese límite en casos excepcionales de riesgo para las personas o los bienes, y con dictamen técnico individual que lo justifique. Los trabajos deben ser supervisados por <strong>personal técnico capacitado y acreditado</strong> de la Alcaldía o de la Secretaría.</p>
+        <cite>NADF-001-RNAT-2015, numeral 6.1.8.</cite>
+      </article>
+
+      <article class="cuidado__idea cuidado__idea--alerta">
+        <h3>Lo que sí daña: el desmoche</h3>
+        <p>Cortar la copa a la mitad, dejar muñones o «rebajar» el árbol no es poda: es desmoche. La propia norma advierte que <strong>los cortes de desmoche estimulan retoños vigorosos y débiles</strong>, aumentan la frecuencia de las podas y encarecen el mantenimiento. Un árbol desmochado queda más peligroso que antes, no menos.</p>
+        <cite>NADF-001-RNAT-2015, numeral 6.4.2.1.6. Los tipos de poda permitidos son limpieza, restauración, aclareo, elevación y reducción de copa.</cite>
+      </article>
+    </div>
+
+    <div class="cuidado__cierre">
+      <div>
+        <h3>Entonces, ¿qué está prohibido?</h3>
+        <p>Intervenir un árbol patrimonial <strong>sin autorización y sin dictamen técnico</strong>. Cambiarlo por otros árboles, es decir, derribarlo invocando la restitución que aplica al arbolado ordinario. Podarlo por encima de los límites de la norma o con técnicas que la norma no permite. Eso sí es una infracción, y se denuncia.</p>
+        <p>La declaratoria obliga a <strong>solicitar autorización de la autoridad competente ante cualquier modificación del estado del bien</strong>. En la práctica, eso somete a autorización cualquier intervención sobre el ejemplar, incluso la poda de mantenimiento. Cuidarlo es obligatorio; hacerlo por cuenta propia, no.</p>
+        <cite>Ley de Patrimonio Cultural, Natural y Biocultural de la Ciudad de México, artículo 62.</cite>
+      </div>
+      <div>
+        <h3>Si ves una poda que no se ve bien</h3>
+        <p>Repórtalo a la <strong>Procuraduría Ambiental y del Ordenamiento Territorial</strong>. Cuando el bien está declarado, avisar no es una opción: la ley lo pone como deber de quien se entera.</p>
+        <p class="cuidado__contacto">PAOT · <a href="tel:+525552650780">55 5265 0780</a> · <a href="https://www.paot.cdmx.gob.mx/" target="_blank" rel="noopener">paot.cdmx.gob.mx</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="postula">
+  <div class="envoltura">
+    <div class="encabezado">
+      <span class="rotulo">Postula un árbol</span>
+      <h2>¿Conoces un árbol que merezca ser patrimonio?</h2>
+      <p>Cualquier persona puede postular un árbol para que sea declarado patrimonio de la Ciudad de México. No hace falta ser especialista ni ser dueño del predio. La Secretaría del Medio Ambiente emite una convocatoria cada año para recibir las postulaciones.</p>
+    </div>
+
+    <div class="convocatoria" data-estado="cerrada">
+      <div class="convocatoria__estado">
+        <span class="convocatoria__semaforo" aria-hidden="true"></span>
+        <div>
+          <strong>La convocatoria está cerrada por ahora</strong>
+          <p>No se están recibiendo postulaciones. Cuando se abra la siguiente, se anunciará aquí y en los canales oficiales de la Secretaría.</p>
+        </div>
+      </div>
+      <div class="convocatoria__accion">
+        <button type="button" class="boton boton--solido" disabled aria-disabled="true">Convocatoria cerrada</button>
+        <a class="convocatoria__aviso" href="https://sedema.cdmx.gob.mx/" target="_blank" rel="noopener">Ver los avisos de la Secretaría<span aria-hidden="true"> →</span></a>
+      </div>
+    </div>
+
+    <div class="ruta">
+      <div class="ruta__cabeza">
+        <span class="ruta__paso">Antes de empezar</span>
+        <h3>Decide por cuál de las dos rutas va</h3>
+        <p>No es una formalidad: <strong>la ley define dos categorías distintas</strong>, con supuestos y requisitos propios. Elige antes de redactar la solicitud.</p>
+      </div>
+      <div class="ruta__opciones">
+        <article class="ruta__opcion">
+          <h4>Patrimonio Natural</h4>
+          <p class="ruta__quien">Es la ruta ordinaria</p>
+          <p>Cabe por el valor excepcional del ejemplar desde el punto de vista de la ciencia, la conservación o la belleza natural. La ley lo reconoce además como cubierta de vegetación y como monumento natural.</p>
+          <cite>Artículo 34; artículo 35, fracciones I y III.</cite>
+        </article>
+        <article class="ruta__opcion">
+          <h4>Patrimonio Biocultural</h4>
+          <p class="ruta__quien">Es la ruta de los pueblos y barrios originarios</p>
+          <p>Aplica a los ejemplares ligados a la vida de una comunidad: ahuehuetes de manantial, árboles de atrio, ejemplares vinculados a fiestas patronales o rutas de peregrinación. La ley lo define como el conjunto de saberes, usos y elementos de la diversidad biológica ligados a la práctica diaria y la cosmovisión de una comunidad, y admite los paisajes bioculturales y las tradiciones orales. La salvaguardia queda sujeta al <b>consentimiento libre y previo de la comunidad</b>.</p>
+          <cite>Artículos 36 y 37, fracciones V y IX; artículo 62, fracción VI.</cite>
+        </article>
+      </div>
+      <p class="ruta__nota">Si la comunidad no promueve directamente la declaratoria, conviene encuadrar por Patrimonio Natural y sumar la dimensión biocultural en el plan de manejo.</p>
+    </div>
+
+    <ol class="linea">
+      <li class="linea__hito">
+        <span class="linea__numero" aria-hidden="true">1</span>
+        <div class="linea__cuerpo">
+          <span class="linea__actor">Lo haces tú</span>
+          <h3>Confirma que el árbol califica</h3>
+          <p>No hay un mínimo de edad ni de tamaño. La norma define la categoría por sus atributos: ejemplares en espacios abiertos que destacan por características <strong>biológicas, paisajísticas, históricas, culturales o sociales</strong>, o que por su especie, tamaño, edad o belleza puedan considerarse notables, singulares o monumentales.</p>
+          <p class="paso__extra">La misma norma reconoce cuatro valores: <b>histórico</b>, cuando su presencia se relaciona con un evento relevante; <b>sociocultural</b>, cuando refleja la forma de vida de una comunidad; <b>científico</b>, por su valor botánico, taxonómico o medicinal; y <b>estético</b>, por su aporte al paisaje.</p>
+          <cite>NADF-001-RNAT-2015, numeral 7.5 y definiciones del numeral 4.</cite>
+        </div>
+      </li>
+
+      <li class="linea__hito">
+        <span class="linea__numero" aria-hidden="true">2</span>
+        <div class="linea__cuerpo">
+          <span class="linea__actor">Lo haces tú</span>
+          <h3>Verifica que puedes promoverlo</h3>
+          <p>La ley abre la promoción a cinco figuras. No hace falta ser especialista ni ser dueño del predio:</p>
+          <ul class="paso__lista">
+            <li>Una o varias <strong>Alcaldías</strong>.</li>
+            <li>Cualquier <strong>persona física o moral</strong>.</li>
+            <li>Cualquier <strong>pueblo, barrio originario o comunidad indígena residente</strong>.</li>
+            <li>La propia autoridad, <strong>de manera oficiosa</strong>.</li>
+            <li>El <strong>Congreso de la Ciudad de México</strong>, mediante exhorto.</li>
+          </ul>
+          <cite>Ley de Patrimonio Cultural, Natural y Biocultural de la Ciudad de México, artículo 54.</cite>
+        </div>
+      </li>
+
+      <li class="linea__hito">
+        <span class="linea__numero" aria-hidden="true">3</span>
+        <div class="linea__cuerpo">
+          <span class="linea__actor">Lo haces tú</span>
+          <h3>Presenta la solicitud ante la Secretaría de Cultura</h3>
+          <p>Por escrito, y ante la <strong>Secretaría de Cultura</strong>, no ante la Secretaría del Medio Ambiente. Debe traer:</p>
+          <ul class="paso__lista">
+            <li>Nombre y dirección de quien promueve.</li>
+            <li>Identificación oficial vigente.</li>
+            <li>Descripción del árbol o la zona, precisando si es público, colectivo o privado.</li>
+            <li>Los motivos que fundamentan la petición.</li>
+            <li>Cualquier otro elemento que la sustente.</li>
+          </ul>
+          <cite>Artículo 55.</cite>
+        </div>
+      </li>
+
+      <li class="linea__hito">
+        <span class="linea__numero" aria-hidden="true">4</span>
+        <div class="linea__cuerpo">
+          <span class="linea__actor">Lo hace la autoridad</span>
+          <h3>La Comisión integra el expediente y se dictamina en 60 días</h3>
+          <p>La solicitud se integra en expediente y pasa a la <strong>Comisión Interinstitucional del Patrimonio Cultural, Natural y Biocultural</strong>, que la remite a sus integrantes, al Consejo Consultivo y a las Alcaldías con interés territorial. Tratándose de patrimonio natural, la opinión técnica corresponde a la <strong>Secretaría del Medio Ambiente</strong>, que debe dictaminar en un plazo no mayor a <strong>60 días naturales</strong>.</p>
+          <p class="paso__extra">El dictamen debe allegarse de la opinión de organismos autónomos, instituciones académicas y las personas que habitan el territorio.</p>
+          <cite>Artículo 56, fracciones IV y V; artículo 21, fracción III.</cite>
+        </div>
+      </li>
+
+      <li class="linea__hito">
+        <span class="linea__numero" aria-hidden="true">5</span>
+        <div class="linea__cuerpo">
+          <span class="linea__actor">Lo hace la autoridad</span>
+          <h3>La Jefatura de Gobierno emite la Declaratoria</h3>
+          <p>Si procede, el dictamen viaja junto con el expediente y un <strong>plan de manejo</strong> a la Jefatura de Gobierno, que emite la Declaratoria y la publica en la <strong>Gaceta Oficial de la Ciudad de México</strong>. Desde ese momento el árbol es patrimonio y entra al listado.</p>
+          <cite>Artículo 57.</cite>
+        </div>
+      </li>
+    </ol>
+
+    <div class="postula-dudas">
+      <article class="paso">
+        <h3>¿Qué gana el árbol con la Declaratoria?</h3>
+        <ul class="paso__lista">
+          <li>Alguien queda <strong>responsable de preservarlo</strong>.</li>
+          <li>Cualquier intervención sobre él <strong>requiere autorización previa</strong>, incluida la poda de mantenimiento.</li>
+          <li>Un <strong>plan de manejo propio</strong>, elaborado con participación de la academia, especialistas y vecinos.</li>
+          <li>Acceso a <strong>beneficios fiscales</strong> y a programas de fomento y conservación de la Jefatura de Gobierno y de las Alcaldías.</li>
+          <li>Un <strong>emblema</strong> que lo identifica en la calle.</li>
+        </ul>
+        <cite>Artículo 62; artículo 60; artículo 56, fracción V, último párrafo. Existe además un Fondo destinado a la salvaguardia del patrimonio (artículos 43 a 45).</cite>
+        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
+      </article>
+    </div>
+
+    <p class="postula__pie">Quien resulte afectado puede interponer recurso de revisión dentro de los quince días hábiles siguientes a la publicación, y la Declaratoria es revocable si el árbol pierde los valores que le dieron origen (artículos 61 y 63). Todo lo anterior está en la <a href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Ley de Patrimonio Cultural, Natural y Biocultural de la Ciudad de México<span aria-hidden="true"> →</span></a>. Los plazos y requisitos son los que fija esa ley; la convocatoria anual es el mecanismo con el que la Secretaría organiza la recepción de postulaciones.</p>
+  </div>
+</section>
+
+</main>
+
+<!--#pie-->

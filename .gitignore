@@ -1,0 +1,11 @@
+# Vista previa local. Se regenera con:  fuente/construir/construir.sh
+# Duplica 28 MB de fotografías y no aporta nada al repositorio.
+prueba/
+
+# Ruido del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependencias de herramientas, si algún día se instalan aquí
+node_modules/
