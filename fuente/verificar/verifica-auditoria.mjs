@@ -541,8 +541,11 @@ console.log('\n══ AUDITORÍA INTEGRAL · correcciones ══');
   // --- responsivo ---
   // El tope bajó de 124 a 96 px al cambiar el titular: «ÁRBOLES PATRIMONIALES»
   // es más largo y a 124 px la segunda línea invadía la ilustración.
+  // El tope bajó de 104 a 84 px: la columna mide 1 180 px a cualquier ancho,
+  // así que la letra creciendo con el viewport metía el titular 270 px dentro
+  // de la ilustración, fuera de la zona que difumina la máscara.
   t('El titular de la portada entra completo en 320 px y no invade la ilustración',
-    /\.portada h1\{font-size:clamp\(34px,5\.4vw,104px\)/.test(cs9));
+    /\.portada h1\{font-size:clamp\(34px,5\.4vw,84px\)/.test(cs9));
   // La tira completa pide 1153 px y la envoltura no los tiene hasta los 1236 px
   // de ventana: por eso el tramo apretado llega hasta 1240, no hasta 1180.
   t('La marca se aprieta antes que recortarse, en 1024 y en 320',
@@ -664,8 +667,13 @@ console.log('\n══ MARCA E ILUSTRACIÓN ENTREGADAS ══');
     && /ficus-grande\.webp/.test(fs.readFileSync('estilos.css','utf8')));
   // Se escala con el ancho disponible: el término en vw es el que despeja la
   // franja de la ilustración; el tope solo evita que crezca sin fin.
+  const cssP = fs.readFileSync('estilos.css','utf8');
   t('El titular ya no se mete debajo de la ilustración',
-    /\.portada h1\{font-size:clamp\(34px,5\.4vw,104px\)/.test(fs.readFileSync('estilos.css','utf8')));
+    /\.portada h1\{font-size:clamp\(34px,5\.4vw,84px\)/.test(cssP));
+  // Y la ilustración se ancla al borde de la COLUMNA, no al del monitor: con
+  // right:0 quedaba a 690 px del titular en una pantalla de 2 560.
+  t('La ilustración se ancla a la columna, no al borde de la pantalla',
+    /\.portada::before\{[^}]*right:max\(0px, calc\(50% - 590px\)\)/.test(cssP));
 }
 
 console.log('\n══ AUDITORÍA · pasos 5 a 7 ══');

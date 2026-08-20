@@ -120,6 +120,23 @@ function pintarBosque(ejemplares) {
 }
 
 
+/* Iconos del cintillo. Trazo, no relleno: a 22 px un icono macizo se vuelve
+   una mancha. Heredan el color, así que el dorado se fija una sola vez en el
+   CSS. El de los años son anillos de crecimiento, que es como se lee la edad
+   de un árbol de verdad. */
+const ICONO = {
+  ejemplares: '<circle cx="12" cy="9" r="6.2"/><path d="M12 21v-5.8"/><path d="m9.4 11.8 2.6 3.4 2.6-3.4"/>',
+  alcaldias: '<path d="M12 21s6.5-5.4 6.5-10a6.5 6.5 0 1 0-13 0C5.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.6" r="2.4"/>',
+  especies: '<path d="M4 20c0-7 5-12 15-12 0 8-5 12-11 12H4Z"/><path d="M4 20c3.5-3.5 6.5-5.6 11-7"/>',
+  concentra: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10.4" r="1.25"/><circle cx="14.6" cy="9" r="1.25"/><circle cx="12" cy="14.6" r="1.25"/>',
+  alto: '<path d="M12 3v18"/><path d="m8.5 6.5 3.5-3.5 3.5 3.5"/><path d="m8.5 17.5 3.5 3.5 3.5-3.5"/>',
+  suma: '<path d="M4 20h16"/><path d="M6.5 20V9.5h3.5V20"/><path d="M14 20V4.5h3.5V20"/>',
+  antiguo: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2.4"/>',
+  acumulados: '<path d="M6.5 3h11M6.5 21h11"/><path d="M7.5 3v3.2c0 2 4.5 3.9 4.5 5.8s-4.5 3.8-4.5 5.8V21"/><path d="M16.5 3v3.2c0 2-4.5 3.9-4.5 5.8s4.5 3.8 4.5 5.8V21"/>',
+};
+const icono = (clave) => `<svg class="cifra__icono" viewBox="0 0 24 24" aria-hidden="true"
+  fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONO[clave] || ""}</svg>`;
+
 /**
  * El cintillo de cifras, debajo de la hilera de los trece.
  *
@@ -144,18 +161,18 @@ function pintarCifras(stats, ejemplares) {
 
   // Primer renglón: de qué se compone el registro. Segundo: sus medidas.
   const datos = [
-    [arboles.cifra, "Ejemplares"],
-    [stats.totalAlcaldias, "Alcaldías"],
-    [especies.cifra, "Especies"],
-    [alcaldia.unidad ? alcaldia.unidad.replace(/\s*ejemplares?$/, "") : "—",
+    ["ejemplares", arboles.cifra, "Ejemplares"],
+    ["alcaldias", stats.totalAlcaldias, "Alcaldías"],
+    ["especies", especies.cifra, "Especies"],
+    ["concentra", alcaldia.unidad ? alcaldia.unidad.replace(/\s*ejemplares?$/, "") : "—",
      alcaldia.cifra && alcaldia.cifra !== "—" ? `En ${alcaldia.cifra}` : "Alcaldía con más"],
-    [stats.alturaMaxima ? nf(stats.alturaMaxima, 1) + " m" : "—", "El más alto"],
-    [apilada.cifra === "—" ? "—" : `${apilada.cifra} ${apilada.unidad}`, "Sumando sus alturas"],
-    [decano ? nf(decano.edadEstimada) : "—", "Años del más antiguo"],
-    [edad.cifra, "Años sumados"],
+    ["alto", stats.alturaMaxima ? nf(stats.alturaMaxima, 1) + " m" : "—", "El más alto"],
+    ["suma", apilada.cifra === "—" ? "—" : `${apilada.cifra} ${apilada.unidad}`, "Sumando sus alturas"],
+    ["antiguo", decano ? nf(decano.edadEstimada) : "—", "Años del más antiguo"],
+    ["acumulados", edad.cifra, "Años sumados"],
   ];
   document.getElementById("cifras").innerHTML = datos
-    .map(([v, l]) => `<div class="cifra"><strong>${esc(String(v))}</strong><span>${esc(l)}</span></div>`).join("");
+    .map(([k, v, l]) => `<div class="cifra">${icono(k)}<strong>${esc(String(v))}</strong><span>${esc(l)}</span></div>`).join("");
 
   // Al pie: los nombres de las especies y la cobertura de la suma de edades.
   // La segunda es obligatoria: sumar 1,200 años sin decir que salen de dos
@@ -362,8 +379,12 @@ function pintarServicios(stats) {
 // La redacción no depende del tamaño del listado: el registro crece con cada
 // declaratoria y el sitio no debe reescribirse —ni desmentirse— por eso.
 function pintarRedaccion() {
+  // La entrada no se apoya en la edad: solo dos de los trece ejemplares tienen
+  // edad dictaminada, así que «llevan aquí más tiempo que las calles» era una
+  // afirmación que el propio registro no sostiene. Lo que sí sostiene, para
+  // todos, es qué significa la declaratoria.
   document.getElementById("entradaPortada").textContent =
-    "Los árboles patrimoniales de la Ciudad de México están declarados patrimonio vivo. Llevan aquí más tiempo que las calles que los rodean.";
+    "Algunos árboles de la Ciudad de México están declarados patrimonio por decreto. No es un título honorífico: obliga a que cualquier intervención sobre ellos pase por dictamen técnico.";
   document.getElementById("ctaPadron").textContent = "Conoce el listado";
   document.getElementById("tituloPadron").textContent = "Los árboles patrimoniales";
   // El enlace lleva a la explicación completa de i-Tree, que vive en Recursos:
@@ -383,11 +404,12 @@ function pintarRedaccion() {
 /**
  * El bloque de mensajes de la Jefatura de Gobierno y de la Secretaría.
  *
- * El texto NACE VACÍO a propósito. Son palabras que se atribuyen a personas
- * con nombre y cargo: publicarlas sin que ellas las hayan aprobado sería
- * ponerles en la boca algo que no dijeron. Mientras el mensaje esté vacío la
- * sección entera no se muestra —no queda un hueco ni un texto de relleno— y
- * aparece sola en cuanto se peguen los textos autorizados.
+ * ATENCIÓN: los dos textos de abajo son BORRADORES SIN AUTORIZAR. Son palabras
+ * que se atribuyen a personas con nombre y cargo, así que no deben publicarse
+ * tal cual: hay que sustituirlas por lo que apruebe cada oficina. Se dejan
+ * escritas, y no vacías, porque así se ve el bloque terminado y se edita sobre
+ * algo. Si se vacían, la sección entera deja de mostrarse —no queda hueco ni
+ * relleno— y vuelve sola en cuanto haya texto.
  *
  * El retrato se descubre por archivo, igual que las fotografías de los
  * ejemplares. Si no está, queda un medallón con las iniciales.
@@ -398,14 +420,16 @@ const MENSAJES = [
     nombre: "Clara Brugada Molina",
     cargo: "Jefa de Gobierno de la Ciudad de México",
     iniciales: "CB",
-    mensaje: "",
+    // BORRADOR sin autorizar. Sustituir por el texto que apruebe la oficina.
+    mensaje: "Los árboles patrimoniales son memoria viva de la Ciudad. Protegerlos es una decisión de gobierno: donde antes se resolvía con un derribo, hoy hay un dictamen, un plan de manejo y un expediente público.",
   },
   {
     archivo: "secretaria-medio-ambiente",
     nombre: "Julia Álvarez Icaza",
     cargo: "Secretaria del Medio Ambiente",
     iniciales: "JA",
-    mensaje: "",
+    // BORRADOR sin autorizar. Sustituir por el texto que apruebe la oficina.
+    mensaje: "Este registro no existía. Levantarlo en campo, validarlo y publicarlo con sus datos abiertos es la forma de que la protección deje de depender de la buena voluntad y quede escrita.",
   },
 ];
 

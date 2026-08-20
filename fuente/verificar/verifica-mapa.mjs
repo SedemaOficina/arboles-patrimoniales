@@ -272,10 +272,12 @@ const cu2 = fs.readFileSync('cuerpo.html','utf8');
 t('mensajes · la sección existe y nace oculta', /<section class="seccion seccion--niebla" id="mensaje" hidden>/.test(cu2));
 t('mensajes · nombra a las dos titulares',
   /Clara Brugada Molina/.test(lg) && /Julia Álvarez Icaza/.test(lg));
-// Publicar palabras atribuidas a una persona con nombre y cargo sin que las
-// haya aprobado sería ponerle en la boca algo que no dijo.
-t('mensajes · el texto nace vacío, a la espera de autorización',
-  (lg.match(/mensaje: "",/g)||[]).length===2);
+// Los textos son BORRADORES: se muestran para poder verlos y editarlos, pero
+// van marcados en el código como no autorizados. Si se vacían, la sección
+// entera deja de mostrarse en vez de dejar un hueco.
+t('mensajes · los borradores van marcados como no autorizados',
+  (lg.match(/BORRADOR sin autorizar/g)||[]).length===2);
+t('mensajes · hay texto en los dos', (lg.match(/mensaje: "[^"]{40,}"/g)||[]).length===2);
 t('mensajes · sin texto, la sección entera no se muestra',
   /if \(!conTexto\.length\) \{ seccion\.hidden = true; return; \}/.test(lg));
 t('mensajes · el retrato se descubre por archivo',

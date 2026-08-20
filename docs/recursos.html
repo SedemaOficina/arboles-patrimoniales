@@ -216,7 +216,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    La ilustracion entregada por la Secretaria trae fondo transparente, asi que
    se funde con el papel sin necesidad de mascara de color. */
 .portada{background:var(--papel);color:var(--tinta);position:relative;overflow:hidden;padding:38px 0 0}
-.portada::before{content:"";position:absolute;top:0;right:0;width:min(52vw,680px);height:clamp(380px,52vw,600px);
+/* CUIDADO con «right:0»: la ilustración se pegaba al borde del MONITOR, no al
+   de la columna de contenido. En una pantalla de 2 560 px eso la dejaba a casi
+   setecientos pixeles del titular, flotando sola en un mar de crema. Se ancla
+   al borde derecho de la envoltura —1 180 px centrados— y en pantallas
+   estrechas vuelve a pegarse al borde, que ahí sí coinciden. */
+.portada::before{content:"";position:absolute;top:0;right:max(0px, calc(50% - 590px));
+  width:min(52vw,680px);height:clamp(380px,52vw,600px);
   background:url("assets/img/portada/ficus-grande.webp") no-repeat right bottom/contain;
   opacity:.95;pointer-events:none;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%),linear-gradient(180deg,#000 0,#000 74%,transparent 99%);
@@ -253,7 +259,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    de .96 el acento subía hasta el rótulo institucional y se encimaba con él.
    El espacio se da con relleno, no con margen, para que sea proporcional al
    tamaño del titular en toda la escala del clamp. */
-.portada h1{font-size:clamp(34px,5.4vw,104px);line-height:.96;letter-spacing:0;margin:10px 0 0;
+/* El tope baja de 104 a 84 px. La columna mide 1 180 px a cualquier ancho de
+   pantalla y la ilustración ocupa sus 680 px derechos, así que el titular
+   siempre entra un poco en ella —el degradado de la máscara lo disimula—. Pero
+   la letra seguía creciendo con el viewport mientras la columna no: a 104 px
+   «PATRIMONIALES» se metía 270 px dentro del dibujo, ya fuera de la zona
+   difuminada, y el titular se leía encima del follaje. A 84 px la invasión se
+   queda donde estaba a 1 440, que es donde el diseño se resolvió. */
+.portada h1{font-size:clamp(34px,5.4vw,84px);line-height:.96;letter-spacing:0;margin:10px 0 0;
   padding-top:.16em;color:var(--jacaranda)}
 .portada h1 em{font-style:normal;display:block;color:var(--jacaranda);margin-top:.04em}
 .entrada{max-width:560px;margin:18px 0 0;color:var(--tinta-suave)}
@@ -271,33 +284,49 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* --- eje del tiempo: elemento distintivo --- */
 
 /* --- cintillo de cifras --- */
-.cifras{background:var(--tinta-jacaranda);border-top:1px solid rgba(199,159,202,.24);color:#fff}
+/* --- cintillo de cifras --- */
+/* Era una tabla oscura: ocho celdas separadas por filetes grises, sin título,
+   sin jerarquía y sin nada que la distinguiera de una hoja de cálculo puesta
+   en negativo. Ahora la banda tiene encabezado propio, cada cifra lleva su
+   icono de trazo y los filetes desaparecen: lo que separa a una cifra de otra
+   es el aire, no una línea. El emblema del programa se asoma al fondo, muy
+   tenue, para que la banda pertenezca al sitio y no parezca pegada. */
+.cifras{background:var(--tinta-jacaranda);color:#fff;position:relative;overflow:hidden;
+  background-image:radial-gradient(680px 300px at 88% 0%,rgba(178,142,92,.16),transparent 70%),
+    radial-gradient(520px 260px at 6% 100%,rgba(141,73,146,.20),transparent 68%)}
+/* Marca de agua: el emblema sangrado por la derecha, casi invisible. Se apaga
+   en pantallas angostas, donde solo estorbaría detrás del texto. */
+.cifras::after{content:"";position:absolute;right:-60px;top:50%;transform:translateY(-50%);
+  width:340px;height:340px;background:url("assets/img/marca/emblema-grande.png") no-repeat center/contain;
+  opacity:.05;pointer-events:none}
+@media(max-width:1100px){.cifras::after{display:none}}
+
+.cifras__cabeza{display:flex;align-items:center;gap:18px;padding-top:34px;position:relative;z-index:1}
+.cifras__cabeza .rotulo{color:var(--dorado-luz);flex:0 0 auto}
+.cifras__filete{flex:1;height:1px;background:linear-gradient(90deg,rgba(178,142,92,.55),rgba(178,142,92,0))}
+
 /* Cuatro columnas fijas, no auto-fit. Con ocho cifras y columnas elásticas
-   caben siete en el primer renglón y la octava queda sola, con una banda vacía
-   del ancho de la pantalla a su lado. Cuatro por renglón dan dos filas
-   parejas: arriba de qué se compone el registro, abajo cuánto mide. */
-/* Se apunta al id y no a «.cifras .envoltura»: la banda tiene DOS envolturas
-   —las cifras y su pie— y la regla genérica convertía también el pie en una
-   rejilla de cuatro, dejándolo encajonado en la primera columna. */
-#cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(199,159,202,.22)}
-/* En una sola columna las ocho cifras hacían una banda de metro y medio que
-   había que recorrer entera para llegar a la siguiente sección. Dos columnas
-   se sostienen hasta pantallas muy angostas: la cifra es corta y el rótulo
-   puede partirse en dos renglones sin perder sentido. */
-@media(max-width:900px){#cifras{grid-template-columns:repeat(2,1fr)}
-  .cifra{padding:20px 16px}
-  .cifra span{font-size:11px;letter-spacing:.07em}}
-.cifra{background:var(--tinta-jacaranda);padding:26px 20px}
+   caben siete en el primer renglón y la octava queda sola. */
+#cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:34px 28px;
+  padding:30px 0 34px;position:relative;z-index:1}
+@media(max-width:900px){#cifras{grid-template-columns:repeat(2,1fr);gap:26px 22px;padding:24px 0 26px}}
+
+.cifra{display:block}
+.cifra__icono{display:block;width:24px;height:24px;color:var(--dorado);opacity:.9;margin-bottom:12px}
 /* La cifra no se parte: «330 m» quebraba en dos renglones y la unidad quedaba
    sola debajo del número, leyéndose como otra cifra. */
-.cifra strong{display:block;font-family:var(--display);font-size:clamp(30px,3vw,40px);line-height:1;
-  color:var(--dorado-luz);white-space:nowrap}
-.cifra span{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:8px;font-weight:600}
+.cifra strong{display:block;font-family:var(--display);font-size:clamp(30px,3vw,42px);line-height:1;
+  color:var(--dorado-luz);white-space:nowrap;letter-spacing:.01em}
+.cifra span{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.68);margin-top:9px;font-weight:600;line-height:1.35}
+@media(max-width:900px){.cifra__icono{width:21px;height:21px;margin-bottom:9px}
+  .cifra span{font-size:11px;letter-spacing:.07em}}
+
 /* Pie del cintillo: los nombres de las especies y la cobertura de la suma de
-   edades. Va dentro de la banda oscura, en cuerpo pequeño: no compite con las
-   cifras pero viaja pegado a ellas, que es donde la salvedad tiene sentido. */
-.cifras__pie{margin:0;background:var(--tinta-jacaranda);color:rgba(255,255,255,.6);
-  font-size:12.5px;line-height:1.6;padding:0 0 22px;display:grid;gap:4px}
+   edades. Va dentro de la banda, en cuerpo pequeño: no compite con las cifras
+   pero viaja pegado a ellas, que es donde la salvedad tiene sentido. */
+.cifras__pie{margin:0;color:rgba(255,255,255,.6);position:relative;z-index:1;
+  font-size:12.5px;line-height:1.6;padding:0 0 30px;display:grid;gap:4px}
 .cifras__pie[hidden]{display:none}
 .cifras__pie::before{content:"";display:block;height:1px;background:rgba(199,159,202,.22);margin-bottom:16px}
 
