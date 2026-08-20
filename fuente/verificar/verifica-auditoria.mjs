@@ -131,10 +131,20 @@ t('El ensamblador incrusta el perímetro en la versión de una sola pieza',
   && /GEO_CDMX/.test(fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8')));
 
 console.log('\n══ SERVICIOS AMBIENTALES · lo que no se pudo estimar ══');
-t('Un servicio sin cifra se explica como cálculo, no como hueco de captura',
-  /No se pudo estimar este servicio/.test(ind) && /const ts = /.test(ind));
-t('Lluvia, escurrimiento, carbono y CO₂ usan esa redacción',
-  (ind.match(/texto: ts\(/g)||[]).length===4);
+// Cambio de criterio: un servicio sin cifra ya NO se explica, se omite. Cuatro
+// o cinco tarjetas con raya seguidas convertían el panel en un inventario de
+// lo que falta y el ejemplar quedaba descrito por sus ausencias.
+t('El panel no pinta tarjetas sin cifra',
+  /return tarjetas\.filter\(\(c\) => c\.cifra !== RAYA\);/.test(ind));
+t('Ya no queda texto de hueco en el panel',
+  !/No se pudo estimar este servicio/.test(ind)
+  && !/no tiene el dato registrado/.test(ind)
+  && !/No fue posible determinar su edad/.test(ind));
+// La identidad del ejemplar nunca cae en el filtro: no son medidas.
+t('Ejemplar, especie y ubicación siempre se pintan',
+  /cifra: e\.nombreAsignado \|\| "Sin nombre asignado"/.test(ind)
+  && /cifra: e\.especie \|\| "Por determinar"/.test(ind)
+  && /cifra: e\.alcaldia \|\| "Por determinar"/.test(ind));
 const fcuerpo=fs.readFileSync('ficha-cuerpo.html','utf8');
 const fdc=fs.readFileSync('ficha-dc-cuerpo.html','utf8');
 t('La ficha avisa cuáles renglones no se pudieron estimar',
@@ -181,26 +191,22 @@ console.log('\n══ POSTULACIÓN · secuencia, no rejilla ══');
       (s.match(/class="linea__actor"/g)||[]).length===5
       && (s.match(/Lo haces tú/g)||[]).length===3
       && (s.match(/Lo hace la autoridad/g)||[]).length===2);
-    t(nom+' · la decisión de ruta va antes de la secuencia',
-      s.indexOf('class="ruta"')>0 && s.indexOf('class="ruta"')<s.indexOf('class="linea"'));
-    // Por decisión editorial, el bloque de rutas explica la diferencia legal y
-    // no reparte competencias: nombrar dependencias ahí generaba lecturas
-    // sobre quién manda antes de que la persona sepa qué está postulando.
-    t(nom+' · las dos rutas se distinguen por ley, sin repartir competencias',
-      /Patrimonio Natural/.test(s) && /Patrimonio Biocultural/.test(s)
-      && /consentimiento libre y previo/.test(s)
-      && /Artículos 36 y 37, fracciones V y IX/.test(s)
-      && !/Dictamina la/.test(s)
-      && !/Secretaría de Pueblos y Barrios Originarios/.test(s));
-    t(nom+' · lo que no es un paso quedó sin número',
-      /class="postula-dudas"/.test(s)
-      && /¿Qué gana el árbol con la Declaratoria\?/.test(s));
+    // El bloque de decisión de ruta —Patrimonio Natural frente a Patrimonio
+    // Biocultural— y el de «¿Qué gana el árbol con la Declaratoria?» se
+    // retiraron por decisión editorial: la sección explica cómo se postula, y
+    // el encuadre entre las dos categorías se resuelve al recibir la
+    // solicitud, no en la página.
+    t(nom+' · sin el bloque de decisión de ruta',
+      !/class="ruta"/.test(s) && !/Patrimonio Biocultural/.test(s)
+      && !/consentimiento libre y previo/.test(s));
+    t(nom+' · sin el bloque de qué gana el árbol',
+      !/class="postula-dudas"/.test(s) && !/¿Qué gana el árbol con la Declaratoria\?/.test(s));
     t(nom+' · el bloque de predio privado se retiró por completo',
       !/titularidad del predio/.test(s) && !/Artículo 52 y artículo 56, fracción II/.test(s));
-    t(nom+' · ninguna cita normativa se perdió al reordenar',
+    // Las citas que sostienen los cinco hitos de la secuencia siguen ahí. Las
+    // de los bloques retirados se fueron con ellos.
+    t(nom+' · los hitos conservan su cita normativa',
       ['artículo 54','Artículo 55','Artículo 56, fracciones IV y V','Artículo 57',
-       'Artículo 62; artículo 60',
-       'Artículo 34; artículo 35, fracciones I y III','artículo 62, fracción VI',
        '60 días naturales'].every(c=>s.includes(c)));
   }
   t('El hilo conductor se dibuja y se detiene en el último hito',
@@ -684,10 +690,12 @@ console.log('\n══ AUDITORÍA · pasos 5 a 7 ══');
   t('Y los h3 que son rótulos la llevan en el marcado',
     /<h3 class="rotulo">/.test(fs.readFileSync('parciales/pie.html','utf8')));
   // P5
+  // El bloque de rutas se retiró; el punto de corte compartido lo siguen
+  // sosteniendo las rejillas que quedan.
   t('P5.1 · las rejillas de dos columnas colapsan todas en 860 px',
-    /@media\(max-width:860px\)\{\.ruta__opciones/.test(cs)
-    && /@media\(max-width:860px\)\{\.cumplimiento/.test(cs)
-    && !/@media\(max-width:720px\)\{\.ruta__opciones/.test(cs));
+    /@media\(max-width:860px\)\{\.cumplimiento/.test(cs)
+    && /@media\(max-width:860px\)\{\.dos-columnas/.test(cs)
+    && !/\.ruta__opciones/.test(cs));
   t('P5.2 · el h3 crece con la página, como la entrada de sección',
     /h3\{font-size:clamp\(19px,1\.7vw,24px\)/.test(cs));
 }
@@ -704,10 +712,21 @@ console.log('\n══ ORGANIZACIÓN DEL PROYECTO ══');
     cuerpos.every(c=>{ const s2=fs.readFileSync(c,'utf8');
       return !/<header class="barra">/.test(s2) && !/<footer class="pie">/.test(s2)
         && /<!--#encabezado-->/.test(s2) && /<!--#pie-->/.test(s2); }));
-  t('El pie compartido trae las notas, ocultas hasta que se llenan',
-    /id="pieFino" hidden/.test(pie) && /id="notas"/.test(pie) && /id="procedencia"/.test(pie));
-  t('Y el guion tolera que no existan, que es lo que rompía la portada',
-    /if \(!cajaNotas \|\| !cajaProc\) return;/.test(fs.readFileSync('logica.js','utf8')));
+  // El bloque fino del pie se retiró: volcaba catorce renglones tal como venían
+  // de la hoja de cálculo, en todas las páginas. Ese contenido, redactado y sin
+  // repeticiones, vive ahora en la metodología de Recursos.
+  t('El pie ya no publica notas ni procedencia',
+    !/pieFino/.test(pie) && !/id="notas"/.test(pie) && !/id="procedencia"/.test(pie)
+    && !/pintarPie/.test(fs.readFileSync('logica.js','utf8')));
+  const met = fs.readFileSync('recursos-cuerpo.html','utf8');
+  t('Las advertencias de i-Tree se conservan, redactadas, en Recursos',
+    /descomposición de su madera muerta/.test(met)
+    && /no se mide: se calcula/.test(met)
+    && /mayor consumo/.test(met));
+  t('La convención de campos vacíos y S\/D también', /«sin determinar»/.test(met));
+  t('Y las abreviaturas, sin repetir lo que ya dice la tarjeta de i-Tree',
+    /class="abreviaturas"/.test(met)
+    && !/investigaciones del Servicio Forestal del USDA/.test(met));
   t('Los ensambladores escriben según el destino',
     ['construir/armar.js','construir/armar-ficha.js','construir/armar-dc.js','construir/armar-recursos.js']
       .every(a=>/DESTINO === 'produccion'/.test(fs.readFileSync(a,'utf8'))));

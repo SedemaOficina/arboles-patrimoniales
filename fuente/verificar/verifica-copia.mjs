@@ -49,7 +49,11 @@ const rec = fs.readFileSync(PRUEBA+'recursos-vista-previa.html','utf8');
 t('portada · sin video incrustado', !/youtube-nocookie\.com\/embed/.test(p));
 t('recursos · video institucional incrustado', /youtube-nocookie\.com\/embed\/-CK1wiS2m3Q/.test(rec));
 t('portada · el video usa dominio sin cookies', !/youtube\.com\/embed/.test(p));
-t('recursos · enlace de respaldo al video', /watch\?v=-CK1wiS2m3Q/.test(rec));
+// El pie del video se retiró; el reproductor se queda solo. El canal de la
+// Secretaría sigue enlazado desde el pie del sitio.
+t('recursos · sin el pie de respaldo del video', !/watch\?v=-CK1wiS2m3Q/.test(rec));
+t('recursos · el marco sigue anunciando su contenido',
+  /title="El ahuehuete de Santa Catarina/.test(rec));
 t('portada · el respaldo del logotipo imita el lockup oficial', /marca__gob/.test(p)&&/marca__dep/.test(p)&&/Capital de la Transformación/.test(p));
 const d=fs.readFileSync(PRUEBA+'portada.dc.html','utf8');
 t('recursos.dc · mismo video', /youtube-nocookie\.com\/embed\/-CK1wiS2m3Q/.test(fs.readFileSync(PRUEBA+'recursos.dc.html','utf8')));

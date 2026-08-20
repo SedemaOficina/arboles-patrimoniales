@@ -275,8 +275,6 @@ class Component extends DCLogic {
       coberturaServicios: incompletos === 0
         ? `Las cuatro cifras están calculadas con el dato de los ${n} ejemplares del registro.`
         : "Algunas cifras se calculan con menos ejemplares de los que integran el registro; cada tarjeta lo indica.",
-      notas: (meta.notasAlPie || []).map((t) => String(t).replace(/^[\s·]+/, "")),
-      procedencia: `${n} ejemplares. ${origen} Las cifras de beneficios ambientales se estiman con i-Tree a partir de las medidas de campo de cada árbol.`,
       hayAvisoDato: !!meta.degradado,
       avisoDato: (meta.alertas || []).filter((a) => a.indexOf("No fue posible actualizar") === 0)[0] || "",
     };

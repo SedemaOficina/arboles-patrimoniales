@@ -316,22 +316,11 @@ function pintarServicios(stats) {
     : `Algunas cifras se calculan con menos ejemplares de los que integran el registro; cada tarjeta lo indica.`;
 }
 
-/* El pie es un parcial compartido por las tres páginas. Solo la portada llena
-   las notas metodológicas y la procedencia, así que el bloque nace oculto y se
-   muestra al llenarlo. Buscar los elementos sin comprobar que existen tiraba
-   la portada entera al extraer el pie a un parcial. */
-function pintarPie(meta) {
-  const cajaNotas = document.getElementById("notas");
-  const cajaProc = document.getElementById("procedencia");
-  if (!cajaNotas || !cajaProc) return;
-  const notas = (meta.notasAlPie || []).map((n) => `<li>${esc(n.replace(/^[\s·]+/, ""))}</li>`).join("");
-  cajaNotas.innerHTML = notas || "<li>El registro no incluye notas metodológicas.</li>";
-  const origen = { csv: "Datos leídos en vivo del registro oficial.", cache: "Datos del registro oficial, guardados en tu navegador durante la última hora.", "cache-stale": "El registro oficial no respondió. Se muestran los últimos datos disponibles." }[meta.origen] || "";
-  cajaProc.textContent =
-    `${meta.totalEjemplares} ejemplares. ${origen} Las cifras de beneficios ambientales se estiman con i-Tree a partir de las medidas de campo de cada árbol.`;
-  const fino = document.getElementById("pieFino");
-  if (fino) fino.hidden = false;
-}
+/* El pie ya no publica las notas metodológicas ni la procedencia. Volcaba
+   catorce renglones tal como venían de la hoja de cálculo —encabezados,
+   marcas de asterisco y abreviaturas sueltas— en todas las páginas del sitio.
+   Ese contenido, redactado y sin repeticiones, vive ahora en la sección de
+   metodología de Recursos. */
 
 // La redacción no depende del tamaño del listado: el registro crece con cada
 // declaratoria y el sitio no debe reescribirse —ni desmentirse— por eso.
@@ -360,5 +349,4 @@ export function pintarPortada({ ejemplares, meta, stats }) {
   pintarPadron(ejemplares, stats);
   pintarMapa(ejemplares);
   pintarServicios(stats);
-  pintarPie(meta);
 }

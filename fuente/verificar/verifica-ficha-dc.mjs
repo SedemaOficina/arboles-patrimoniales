@@ -48,13 +48,11 @@ t('Taxonomía completa en la ficha',v.taxonomia.length>=8,`${v.taxonomia.length}
 // Queda un solo enlace externo: el SNIB. Se retiraron «Fuente del registro»
 // —el mismo enlace de iNaturalist en los trece— y «Cálculo i-Tree», que no
 // guardaba una dirección sino el texto «MyTree».
-t('Un solo enlace externo, el del SNIB',
-  v.enlaces.length===1 && v.enlaces[0].texto.startsWith('Ejemplar en el SNIB'),
+// La ficha ya no publica enlaces externos por ejemplar: «Fuente del registro»,
+// «Cálculo i-Tree» y «Ejemplar en el SNIB» guardaban el MISMO valor en los
+// trece, así que ninguno llevaba a información de ese árbol.
+t('Sin enlaces externos por ejemplar', v.enlaces.length===0,
   JSON.stringify(v.enlaces.map(e=>e.texto)));
-// Este ejemplar de prueba no trae dirección del SNIB: la tarjeta debe salir
-// apagada y decirlo, no enlazar a ninguna parte.
-t('Sin dirección, la tarjeta se apaga y lo dice',
-  !v.enlaces[0].hay && v.enlaces[0].url==='#' && /no disponible$/.test(v.enlaces[0].texto));
 t('Trazabilidad con nominación',v.procedencia[0].valor==='Vecinos de la colonia');
 
 console.log('\n══ FICHA · ejemplar sin ningún dato ══');

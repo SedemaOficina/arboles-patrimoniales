@@ -135,7 +135,7 @@
           <span class="pend__marca"></span>
           <div>
             <h3>Título real del video</h3>
-            <p>Título y canal incorporados: «El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol», del canal oficial de la Secretaría.</p>
+            <p>Título y canal incorporados. Por decisión tuya, el título y el pie de respaldo <b>ya no se muestran</b> junto al reproductor: el título vive solo en el atributo del marco, que es lo que anuncia el contenido a un lector de pantalla.</p>
           </div>
           <span class="pend__quien" data-q="listo">Hecho</span>
         </article>
@@ -144,7 +144,29 @@
           <span class="pend__marca"></span>
           <div>
             <h3>El título del video no cuadra con el registro</h3>
-            <p>El video habla de «el ahuehuete de Santa Catarina, en Azcapotzalco». En el registro, Santa Catarina es un <i>Fraxinus uhdei</i> —un fresno, no un ahuehuete— y está en Coyoacán, no en Azcapotzalco. El ahuehuete de Azcapotzalco es Viejo del Agua. Son dos discrepancias, especie y alcaldía: o el video trata de otro ejemplar, o el registro tiene un error. Hay que resolverlo antes de publicar, porque el video queda a un lado del listado que lo contradice.</p>
+            <p>El video habla de «el ahuehuete de Santa Catarina, en Azcapotzalco». En el registro, Santa Catarina es un <i>Fraxinus uhdei</i> —un fresno, no un ahuehuete— y está en Coyoacán, no en Azcapotzalco. El ahuehuete de Azcapotzalco es Viejo del Agua. Son dos discrepancias, especie y alcaldía: o el video trata de otro ejemplar, o el registro tiene un error.</p>
+            <cite>Retirar el título de la vista bajó la urgencia —ya no se lee la contradicción a un lado del listado— pero no la cierra: el título sigue en el atributo del marco y el video sigue estando en la página.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Los PDF de los decretos</h3>
+            <p>La hoja no guarda una dirección en el campo del decreto: guarda el <b>nombre del archivo</b>, del estilo <code>DECRETO JUARISTA.pdf</code>. Publicado tal cual, el navegador lo buscaba en la raíz del sitio, donde no hay ningún PDF, y devolvía 404. Ya se corrigió la resolución del enlace, pero <b>los archivos no existen</b>: mientras no estén, cada tarjeta se apaga sola y dice que el documento aún no está publicado.</p>
+            <p>Deja los PDF en <code>fuente/decretos/</code> con el nombre <b>exacto</b> que trae la hoja —acentos, mayúsculas y espacios incluidos—. La lista de los once nombres que el registro espera hoy está en <code>fuente/decretos/LEEME.txt</code>.</p>
+            <cite>Si algún decreto ya está publicado en línea, basta con capturar su dirección completa en la hoja: la ficha la respeta y no busca archivo local.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Los nombres de los créditos</h3>
+            <p>La sección de créditos de Recursos ya está montada, con las atribuciones de terceros escritas y verificadas —cartografía, tipografías, biblioteca de mapas, i-Tree, CONABIO y UICN—. Faltan <b>cinco campos de autoría</b>, marcados en la página con un punto dorado: concepto y contenidos, diseño e identidad visual, desarrollo y publicación, fotografía de los ejemplares e ilustraciones de las especies.</p>
+            <cite>Esos nombres no se pueden inferir del proyecto. Dímelos y los coloco.</cite>
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
@@ -230,12 +252,15 @@
           <tr><td>Categoría patrimonial</td><td><b>11 de 13</b></td><td>Sabino de San Juan y Eugenio. El sitio explica que su decreto se emitió antes de que la Secretaría lanzara el programa del que se derivaron las categorías. Si ya procede clasificarlos, asígnalas.</td></tr>
           <tr><td>Lluvia interceptada</td><td class="ok">Cerrado</td><td>5 de 13 con cifra. En los otros 8 no se pudo estimar. Celda vacía equivale a <b>no determinado</b>: la ficha lo declara renglón por renglón, no lo deja en blanco.</td></tr>
           <tr><td>Reducción de escurrimientos</td><td class="ok">Cerrado</td><td>Mismos 5 con cifra y mismos 8 no determinados, con la misma declaración en la ficha.</td></tr>
-          <tr><td>Extensión promedio de copa</td><td class="ok">Corregido</td><td>La fórmula de la hoja calculaba <code>largo + ancho ÷ 2</code> en lugar de <code>(largo + ancho) ÷ 2</code>. Afectaba a los trece ejemplares: Viejo del Agua publicaba 39 m donde el promedio real es 27, y Santa Catarina 39 con los dos ejes en 26. Corregido en el origen. La vista previa seguirá mostrando el valor viejo hasta que se vuelva a ensamblar con los datos frescos; la versión de Claude Design ya lo lee corregido.</td></tr>
+          <tr><td>Extensión promedio de copa</td><td class="ok">Corregido</td><td>La fórmula de la hoja calculaba <code>largo + ancho ÷ 2</code> en lugar de <code>(largo + ancho) ÷ 2</code>. Afectaba a los trece ejemplares: Viejo del Agua publicaba 39 m donde el promedio real es 27, y Santa Catarina 39 con los dos ejes en 26. Corregido en el origen. <b>La copia congelada sigue trayendo el valor viejo</b>: Viejo del Agua publica hoy 39 m con ejes de 30 y 24, cuyo promedio real es 27. Se cierra cuando me pases el CSV actualizado y regenere <code>registro.json</code>.</td></tr>
           <tr><td>Copa de Río Magdalena</td><td><b>Verificar</b></td><td>106 m en un eje contra 15 en el otro, para un ejemplar de 26.6 m de altura. Una copa cuatro veces más ancha que alto el árbol no es plausible. En la vista desde arriba se ve como una astilla, y así se queda hasta que se confirme el dato: el sitio no maquilla lo que no cuadra.</td></tr>
           <tr><td>Lluvia vs. escurrimientos</td><td><b>Revisar</b></td><td>Este sí sigue abierto, y no tiene que ver con los datos que faltan sino con los que están: 911,487 L contra 1,258 L en los <b>mismos 5 ejemplares</b> que sí traen cifra. Tres órdenes de magnitud de diferencia. Si el cálculo es correcto conviene explicarlo en el sitio; si no, uno de los dos campos está mal capturado.</td></tr>
           <tr><td>Carbono y CO₂ por año</td><td><b>Revisar</b></td><td>Doce de trece ejemplares reportan entre <b>1 y 3 kg de carbono al año</b>; el decimotercero, Glorieta de Ahuehuetes, reporta <b>49 kg</b>. Y el que menos reporta es Viejo del Agua, que tiene el tronco más grueso del padrón: 440 cm de diámetro. Un árbol de ese porte capturando 1 kg al año no es plausible, y la cifra más alta no corresponde al árbol más grande. Parece un problema de unidad o de columna en la corrida de i-Tree, no un resultado. El sitio publica lo que dice el registro: no inventa ni corrige cifras técnicas.</td></tr>
           <tr><td>Erratas de captura</td><td class="ok">Corregido</td><td>«numero 28» sin acento en Eugenio, «Peréz» por Pérez en Río Magdalena, «Villalongin» sin acento en Juarista, «baqueta» por banqueta y «calle fresas» en minúscula en Laureano. Corregidas en la copia congelada para que el sitio no publique faltas de ortografía. <b>El arreglo de fondo va en la hoja</b>: este archivo se regenera desde ella y las erratas volverían.</td></tr>
-          <tr><td>Enlace al SNIB</td><td><b>Verificar</b></td><td>Las direcciones del SNIB capturadas en el registro empiezan con <code>http://</code>, no <code>https://</code>. Como son enlaces y no recursos incrustados, el sitio funciona; pero al abrirlos el navegador puede advertir que la conexión no es segura. Conviene comprobar si el SNIB sirve por HTTPS y, de ser así, actualizar la columna.</td></tr>
+          <tr><td>Enlace al SNIB</td><td><b>Sin capturar</b></td><td>Los trece ejemplares comparten <b>la misma dirección del SNIB</b>, con el identificador <code>84deb4b8…</code>. No es un enlace por ejemplar: es un valor copiado trece veces, así que llevaba a todos al mismo registro. Por eso se retiró la tarjeta de la ficha. Si se captura el identificador real de cada ejemplar, la tarjeta se restituye en una línea.</td></tr>
+          <tr><td>Fuente del registro</td><td><b>Sin capturar</b></td><td>Mismo caso: los trece traen la misma observación de iNaturalist, <code>observations/16695761</code>. Tarjeta retirada de la ficha.</td></tr>
+          <tr><td>Cálculo i-Tree</td><td><b>Sin capturar</b></td><td>La columna guarda el texto <code>MyTree</code> —el nombre de la herramienta— en los trece, no una dirección. Tarjeta retirada de la ficha. La explicación de qué es i-Tree vive en la metodología de Recursos, que es donde corresponde.</td></tr>
+          <tr><td>Decreto duplicado</td><td><b>Verificar</b></td><td><code>DECRETO VIEJO DL AGUA LAUREANO.pdf</code> está capturado en <b>dos ejemplares</b>: Viejo del Agua y Laureano. Si son dos declaratorias distintas, cada una necesita su archivo y su propio nombre en la hoja. De paso: el nombre trae «DL» por «DEL».</td></tr>
           <tr><td>Observaciones</td><td class="ok">Cerrado</td><td>Ningún ejemplar tiene, y es válido que así sea: el campo recoge incidencias, no es obligatorio. El bloque de la ficha aparece solo cuando hay texto, de modo que hoy no se ve y el día que se capture una observación aparece solo.</td></tr>
           <tr><td>«Mas de 40»</td><td class="ok">Resuelto</td><td>El sitio le restituye el acento al mostrarlo. Aun así conviene corregirlo en la fuente.</td></tr>
           <tr><td>Código postal</td><td class="ok">Resuelto</td><td>El sitio rellena el cero inicial. Corregir en la fuente cuando se pueda.</td></tr>

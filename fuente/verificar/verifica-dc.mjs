@@ -36,9 +36,10 @@ t('Tres servicios, sin valoración económica', v.servicios.length === 3 && !v.s
 t('Carbono cierra la serie con separador de miles', /Carbono/.test(v.servicios[2].texto) && v.servicios[2].valor === '39,780', `${v.servicios[2].texto} = ${v.servicios[2].valor}`);
 t('Ningún servicio marcado incompleto', v.servicios.every(s=>!s.incompleto));
 t('Cobertura consolidada declarada', /los 13 ejemplares/.test(v.coberturaServicios), v.coberturaServicios);
-t('Las 6 notas al pie llegan al pie', v.notas.length===6, `${v.notas.length}`);
-t('Las notas no arrastran viñeta del CSV', v.notas.every(n=>!/^[·\s]/.test(n)));
-t('Procedencia declara origen del dato', /Datos leídos en vivo/.test(v.procedencia));
+// El pie dejó de publicar las notas de la hoja y la procedencia: ese contenido
+// vive redactado en la metodología de Recursos.
+t('El pie ya no recibe notas ni procedencia',
+  v.notas === undefined && v.procedencia === undefined);
 t('Sin aviso de dato degradado', v.hayAvisoDato === false);
 
 // filtro activo
@@ -58,7 +59,9 @@ c.state={estado:'listo',ejemplares:datos.ejemplares,stats:datos.stats,filtro:'',
   meta:{...datos.meta,origen:'cache-stale',degradado:true,alertas:['No fue posible actualizar el registro (timeout). Se muestran datos guardados del 18/08/2026.']}};
 const v5=c.renderVals();
 t('Dato degradado se avisa al usuario', v5.hayAvisoDato===true && /No fue posible actualizar/.test(v5.avisoDato));
-t('La procedencia cambia con el origen', /no respondió/.test(v5.procedencia), v5.procedencia.slice(0,70));
+// El aviso de dato degradado sigue existiendo —es lo que la persona necesita
+// saber—; la línea de procedencia del pie ya no.
+t('Sin línea de procedencia en el pie', v5.procedencia === undefined);
 
 console.log(`\nRESULTADO: ${ok} aprobadas · ${mal} fallidas`);
 if(mal) process.exitCode=1;

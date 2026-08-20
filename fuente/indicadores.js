@@ -106,17 +106,21 @@ export function indicadoresEjemplar(e, totalPadron) {
   const s = S(e);
   const alt = num(e.morfologia && e.morfologia.altura_m);
   const anio = e.edadEstimada != null ? ANIO_ACTUAL - Math.round(e.edadEstimada) : null;
-  const sinDato = "Este ejemplar no tiene el dato registrado.";
-  // Los servicios ambientales no son un dato que se capture: son un cálculo.
-  // Cuando falta, falta el cálculo, y decirlo así evita que se lea como un
-  // hueco administrativo.
-  const sinCalculo = "No se pudo estimar este servicio para el ejemplar con la información disponible.";
-  const v = (x, dec = 0) => (num(x) === null ? "—" : fmt(x, dec));
-  const t = (x, texto) => (num(x) === null ? sinDato : texto);
-  const ts = (x, texto) => (num(x) === null ? sinCalculo : texto);
+  /* Las tarjetas sin cifra NO se pintan.
+     Antes se mostraban con una raya y una frase explicando el hueco. Cuatro o
+     cinco de esas seguidas convertían el panel en un inventario de lo que
+     falta, y el ejemplar quedaba descrito por sus ausencias. Quien mira el
+     panel quiere saber lo que SÍ se sabe del árbol; lo que no se pudo
+     determinar se explica en la ficha y en la metodología, no aquí.
+     La marca es la raya: v() la devuelve exactamente cuando el número es nulo,
+     y al final se filtran las tarjetas que la traen. Las tres primeras
+     —ejemplar, especie y ubicación— no son medidas y siempre tienen texto,
+     así que nunca caen en el filtro. */
+  const RAYA = "—";
+  const v = (x, dec = 0) => (num(x) === null ? RAYA : fmt(x, dec));
   const u = (x, texto) => (num(x) === null ? "" : texto);
 
-  return [
+  const tarjetas = [
     { clave: "arboles", titulo: "Ejemplar seleccionado", cifra: e.nombreAsignado || "Sin nombre asignado",
       unidad: e.nombreComun || "", texto: e.especie || "Especie por determinar",
       nota: "", largo: true, italica: true },
@@ -126,7 +130,7 @@ export function indicadoresEjemplar(e, totalPadron) {
       nota: e.conservacion && e.conservacion.esExotica ? "Especie no originaria de la Cuenca de México" : "", largo: true, italica: true },
 
     { clave: "altura", titulo: "Altura", cifra: v(alt, 1), unidad: u(alt, "metros"),
-      texto: t(alt, `Medida en campo durante el dictamen técnico. Equivale a ${Math.round((alt || 0) / 1.7)} personas de 1.70 m una sobre otra.`),
+      texto: `Medida en campo durante el dictamen técnico. Equivale a ${Math.round((alt || 0) / 1.7)} personas de 1.70 m una sobre otra.`,
       nota: "" },
 
     { clave: "alcaldia", titulo: "Dónde está", cifra: e.alcaldia || "Por determinar",
@@ -135,23 +139,24 @@ export function indicadoresEjemplar(e, totalPadron) {
       nota: "", largo: true },
 
     { clave: "edad", titulo: "Edad estimada", cifra: v(e.edadEstimada), unidad: u(e.edadEstimada, "años"),
-      texto: e.edadEstimada == null
-        ? "No fue posible determinar su edad con los elementos técnicos disponibles."
+      texto: e.edadEstimada == null ? ""
         : `Germinó alrededor del año ${anio}, unas ${Math.round(e.edadEstimada / 25)} generaciones humanas atrás.`,
       nota: "" },
 
     { clave: "lluvia", titulo: "Lluvia interceptada", cifra: v(s.precipitacionInterceptada_L), unidad: u(s.precipitacionInterceptada_L, "litros al año"),
-      texto: ts(s.precipitacionInterceptada_L, "Capturada por su copa antes de tocar el suelo."), nota: "" },
+      texto: "Capturada por su copa antes de tocar el suelo.", nota: "" },
 
     { clave: "escurrimiento", titulo: "Reducción de escurrimientos", cifra: v(s.escorrentiaReducida_L), unidad: u(s.escorrentiaReducida_L, "litros al año"),
-      texto: ts(s.escorrentiaReducida_L, "Agua que este ejemplar evita que corra por la calle."), nota: "" },
+      texto: "Agua que este ejemplar evita que corra por la calle.", nota: "" },
 
     { clave: "carbono", titulo: "Carbono secuestrado", cifra: v(s.carbonoSecuestrado_kg, 2), unidad: u(s.carbonoSecuestrado_kg, "kg al año"),
-      texto: ts(s.carbonoSecuestrado_kg, "Almacenado en su tronco, sus ramas y sus raíces."), nota: "" },
+      texto: "Almacenado en su tronco, sus ramas y sus raíces.", nota: "" },
 
     { clave: "co2", titulo: "Absorción de CO₂ equivalente", cifra: v(s.co2Absorbido_kg, 2), unidad: u(s.co2Absorbido_kg, "kg al año"),
-      texto: ts(s.co2Absorbido_kg, "Gases de efecto invernadero que retira del aire cada año."), nota: "" },
+      texto: "Gases de efecto invernadero que retira del aire cada año.", nota: "" },
   ];
+
+  return tarjetas.filter((c) => c.cifra !== RAYA);
 }
 
 export function indicadores({ lista, seleccionado, totalPadron }) {

@@ -414,7 +414,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* --- patrimonial no es intocable --- */
 .cuidado{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
 .cuidado__idea{background:var(--blanco);border:var(--borde);border-left:3px solid var(--verde-vivo);padding:24px 26px}
+/* La tarjeta de alerta ocupa el renglón completo. Con cuatro tarjetas en una
+   rejilla de tres columnas, la cuarta quedaba sola con dos huecos a su lado y
+   el bloque se leía como si faltara algo. A ancho completo, además, el aviso
+   sobre el desmoche —el único en rojo— cierra la sección con el peso que le
+   corresponde. En una columna la regla no aplica: ahí ya van todas iguales. */
 .cuidado__idea--alerta{border-left-color:var(--alerta)}
+@media(min-width:820px){.cuidado__idea--alerta{grid-column:1 / -1}}
 .cuidado__idea h3{font-size:19px;line-height:1.2;margin:0 0 11px;color:var(--verde-bosque)}
 .cuidado__idea--alerta h3{color:var(--alerta)}
 .cuidado__idea p{margin:0;font-size:15.5px;line-height:1.62;color:var(--tinta-suave)}
@@ -467,25 +473,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    su hilo conductor, y al final lo que no es un paso, sin número. */
 .paso{position:relative;background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:26px 24px 22px}
 
-/* --- decisión previa: por cuál ruta va --- */
-.ruta{margin-top:34px;background:var(--niebla);border:1px solid rgba(141,73,146,.22);padding:26px 26px 22px}
-.ruta__cabeza{max-width:70ch}
-.ruta__paso{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:#fff;background:var(--jacaranda);padding:4px 10px;border-radius:2px}
-.ruta__cabeza h3{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.12;
-  color:var(--tinta-jacaranda);margin:12px 0 8px}
-.ruta__cabeza p{margin:0;font-size:15.5px;line-height:1.6;color:var(--tinta-suave)}
-.ruta__opciones{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
-@media(max-width:860px){.ruta__opciones{grid-template-columns:1fr}}
-.ruta__opcion{background:var(--blanco);border:1px solid rgba(141,73,146,.2);padding:20px 22px 18px}
-.ruta__opcion h4{font-family:var(--display);font-weight:400;font-size:20px;line-height:1.1;
-  color:var(--jacaranda);margin:0 0 6px;letter-spacing:.01em}
-.ruta__quien{margin:0 0 10px!important;padding-bottom:10px;border-bottom:1px dashed rgba(42,22,48,.16);
-  font-size:13.5px!important;color:var(--gris)!important}
-.ruta__quien b{color:var(--tinta-jacaranda);font-weight:700}
-.ruta__opcion p{margin:0;font-size:15px;line-height:1.6;color:var(--tinta-suave)}
-.ruta__opcion cite{display:block;margin-top:12px;font-family:var(--editorial);font-style:italic;font-size:13px;color:var(--gris)}
-.ruta__nota{margin:18px 0 0;font-size:14px;line-height:1.6;color:var(--gris);max-width:78ch;font-style:italic}
+/* Los estilos del bloque de decisión entre las dos categorías de patrimonio
+   se retiraron junto con el bloque, por decisión editorial. */
 
 /* --- la secuencia: un solo hilo, cinco hitos --- */
 .linea{list-style:none;margin:26px 0 0;padding:0;position:relative}
@@ -514,23 +503,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   .linea__cuerpo{padding:18px 18px 16px}
   .linea__cuerpo h3{font-size:17px}}
 
-/* --- lo que no es un paso --- */
-/* auto-fit: con una sola tarjeta ocupa el ancho completo en vez de quedar
-   media caja colgando. */
-.postula-dudas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:16px;margin-top:26px}
-.postula-dudas .paso{border-top-color:var(--corteza-luz)}
-/* Especificidad por encima de «.paso h3», que se declara más abajo. */
-.postula-dudas .paso h3{font-size:17px;font-family:var(--display);font-weight:400;letter-spacing:.01em;
-  text-transform:none;color:var(--tinta-jacaranda);margin:0 0 12px;padding-right:0;line-height:1.2}
+/* Los estilos del recuadro de beneficios de la declaratoria se retiraron
+   junto con el recuadro. */
 
 .paso p{margin:0;font-size:15.5px;line-height:1.6;color:var(--tinta-suave)}
 .paso__lista{margin:0;padding-left:18px;font-size:15px;line-height:1.6;color:var(--tinta-suave)}
 .paso__lista li{margin-bottom:7px}
 .paso__lista li:last-child{margin-bottom:0}
 .paso cite{display:block;margin-top:14px;font-family:var(--editorial);font-style:italic;font-size:13.5px;color:var(--gris)}
-.postula__pie{margin:26px 0 0;font-size:14.5px;line-height:1.6;color:var(--tinta-suave);max-width:78ch}
-.postula__pie a{color:var(--jacaranda-hondo);font-weight:700;text-decoration:none;border-bottom:1.5px solid rgba(122,62,127,.35)}
-.postula__pie a:hover{color:var(--jacaranda);border-bottom-color:var(--jacaranda)}
 
 /* El artículo 107 no es una norma más de la lista: es la que obliga a que este
    sitio exista. Va destacada al cierre del marco jurídico. */
@@ -566,11 +546,11 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    quedaban blancos de 15 px de alto. Se les da altura de toque sin cambiar su
    aspecto, y en pantallas de dedo se separan entre sí. */
 .norma__fuente,.migas a,.visita__mapa,.recurso__nota a,.nota-asterisco a,
-.cuidado__contacto a,.pie__lista a,.video__pie a,.postula__pie a{
+.cuidado__contacto a,.pie__lista a{
   display:inline-block;min-height:24px;line-height:24px}
 @media(pointer:coarse){
   .norma__fuente,.migas a,.visita__mapa,.recurso__nota a,.nota-asterisco a,
-  .cuidado__contacto a,.pie__lista a,.video__pie a,.postula__pie a{min-height:32px;line-height:32px}
+  .cuidado__contacto a,.pie__lista a{min-height:32px;line-height:32px}
   .pie__lista li{margin-bottom:2px}
 }
 
@@ -661,8 +641,25 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   margin-left:8px;border-radius:50%;background:var(--dorado);vertical-align:middle}
 .creditos__titulo{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;
   font-size:20px;line-height:1.1;margin:0 0 18px;color:var(--tinta-jacaranda)}
+/* Las referencias de cita se leen y se copian: van en un cuerpo algo menor,
+   con interlínea holgada y selección cómoda. No van en monoespaciada —no son
+   código— pero sí en un tono distinto del texto corrido, para que se vea
+   dónde empieza y dónde termina lo que hay que copiar. */
+.cita{margin:0;font-size:14px;line-height:1.7;color:var(--tinta-suave);
+  background:var(--papel);border-left:2px solid var(--dorado);padding:12px 14px}
 .creditos__cierre{margin:26px 0 0;font-size:14px;line-height:1.6;color:var(--gris);max-width:78ch}
 .recurso__descargas{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+/* Advertencias de lectura: viñetas cortas dentro de la tarjeta de recurso, sin
+   la sangría de una lista de documento. */
+.recurso__lista{margin:0;padding-left:18px}
+.recurso__lista li{margin-bottom:10px;font-size:15px;line-height:1.6;color:var(--tinta-suave)}
+.recurso__lista li:last-child{margin-bottom:0}
+/* Abreviaturas: el símbolo a la izquierda, en columna fija, para que la
+   pareja se lea de corrido sin buscar dónde empieza cada una. */
+.abreviaturas{margin:0;display:grid;gap:9px}
+.abreviaturas div{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:baseline}
+.abreviaturas dt{margin:0;font-weight:700;font-size:14px;color:var(--tinta-jacaranda)}
+.abreviaturas dd{margin:0;font-size:14.5px;line-height:1.4;color:var(--tinta-suave)}
 @media(max-width:560px){
   .creditos__bloque{padding:18px 18px}
   .creditos__lista div{grid-template-columns:1fr;gap:2px}
@@ -694,9 +691,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   border-bottom:1.5px solid rgba(122,62,127,.35);padding-bottom:1px}
 .visita__mapa:hover{color:var(--jacaranda);border-bottom-color:var(--jacaranda)}
 
-.video__titulo{margin:16px 0 0;font-family:var(--editorial);font-size:19px;line-height:1.4;color:var(--tinta)}
-.video__pie{margin:8px 0 0;font-size:13px;color:var(--gris)}
-.video__pie a{color:var(--jacaranda-hondo);font-weight:600}
+/* El título y el pie del video se retiraron: el reproductor ya anuncia su
+   contenido y el canal vive en el pie del sitio. */
 
 /* --- pie institucional SEDEMA --- */
 .pie{background:var(--tinta-jacaranda);color:rgba(255,255,255,.74);padding:60px 0 34px;font-size:14px}
@@ -712,25 +708,19 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .pie__emblema{display:block;width:64px;height:64px;margin:0 0 16px;
   background:var(--blanco);border-radius:50%;padding:5px;box-sizing:content-box}
 .pie__dir{margin:0;line-height:1.7;font-size:13.5px;color:rgba(255,255,255,.8)}
-.pie__lista,.lista-notas{margin:0;padding:0;list-style:none}
+.pie__lista{margin:0;padding:0;list-style:none}
 .pie__lista li{margin-bottom:11px;line-height:1.55;font-size:13.5px}
 .pie__lista--mapa li{margin-bottom:8px}
 .pie__lista b{color:#fff}
-.lista-notas li{margin-bottom:12px;line-height:1.55;font-size:13px;padding-left:14px;border-left:1px solid rgba(199,159,202,.3)}
 .pie__redes{display:flex;gap:10px;list-style:none;margin:22px 0 0;padding:0}
 .pie__redes li{margin:0}
 .pie__redes a{display:grid;place-items:center;width:36px;height:36px;border:1px solid rgba(199,159,202,.34);border-radius:2px;transition:background .16s,border-color .16s}
 .pie__redes a:hover{background:var(--jacaranda);border-color:var(--jacaranda)}
 .pie__redes svg{width:17px;height:17px;fill:rgba(255,255,255,.88)}
 .pie__redes a:hover svg{fill:#fff}
-.pie__fino{display:grid;grid-template-columns:1.4fr 1fr;gap:44px;margin-top:44px;padding-top:30px;border-top:1px solid rgba(199,159,202,.2)}
-@media(max-width:820px){.pie__fino{grid-template-columns:1fr;gap:30px}}
-.pie__fino p{margin:0;font-size:13px;line-height:1.6;color:rgba(255,255,255,.66)}
-.pie__fino details>summary{cursor:pointer;list-style:none;font-size:13px;color:var(--jacaranda-luz);font-weight:600;margin-top:4px}
-.pie__fino details>summary::-webkit-details-marker{display:none}
-.pie__fino details>summary::after{content:" ▾"}
-.pie__fino details[open]>summary::after{content:" ▴"}
-.pie__fino details[open]>summary{margin-bottom:14px}
+/* Los estilos del bloque fino del pie —notas metodológicas y procedencia—
+   se retiraron con el bloque. Ese contenido vive ahora, redactado, en la
+   sección de metodología de Recursos. */
 .pie__cierre{margin-top:38px;padding-top:22px;border-top:1px solid rgba(199,159,202,.22);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12.5px;color:rgba(255,255,255,.52)}
 
 /* --- estados --- */
@@ -1713,7 +1703,7 @@ body.sin-desplazamiento{overflow:hidden}
       <a href="#datos">Datos abiertos</a>
       <a href="#metodologia">Metodología</a>
       <a href="#directorio">A quién acudir</a>
-      <a href="#creditos">Créditos</a>
+      <a href="#creditos">Créditos y cómo citar</a>
     </nav>
   </div>
 </section>
@@ -1732,11 +1722,6 @@ body.sin-desplazamiento{overflow:hidden}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
-    <p class="video__titulo">El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol</p>
-    <p class="video__pie">Si el reproductor no carga, puedes verlo en
-      <a href="https://www.youtube.com/watch?v=-CK1wiS2m3Q" target="_blank" rel="noopener">YouTube</a>.
-      Hay más videos en el canal de la Secretaría:
-      <a href="https://www.youtube.com/@sedema-ciudaddemexico8374" target="_blank" rel="noopener">@sedema-ciudaddemexico8374</a>.</p>
   </div>
 </section>
 
@@ -1801,9 +1786,14 @@ body.sin-desplazamiento{overflow:hidden}
       </article>
       <article class="recurso">
         <h3>Perímetro de la Ciudad de México</h3>
-        <p>Geometría oficial de la entidad, clave geoestadística 09, tomada del Marco Geoestadístico del Instituto Nacional de Estadística y Geografía. Es la que recorta los mapas de este sitio.</p>
-        <p class="recurso__nota">Formato GeoJSON, simplificado a 20 metros de tolerancia.</p>
-        <a class="norma__fuente" href="https://www.inegi.org.mx/temas/mg/" target="_blank" rel="noopener">Marco Geoestadístico del INEGI<span aria-hidden="true"> →</span></a>
+        <p>Geometría oficial de la entidad, clave geoestadística 09, tomada del Marco Geoestadístico del Instituto Nacional de Estadística y Geografía. Es la misma que recorta los mapas de este sitio.</p>
+        <p class="recurso__nota">Coordenadas geográficas WGS 84 (EPSG:4326), simplificadas a 20 metros de tolerancia. El comprimido del shapefile incluye los archivos .shp, .shx, .dbf, .prj y .cpg.</p>
+        <p class="recurso__descargas">
+          <a class="enlace" href="assets/geo/descargas/perimetro-cdmx.geojson" download>GeoJSON</a>
+          <a class="enlace" href="assets/geo/descargas/perimetro-cdmx.kml" download>KML</a>
+          <a class="enlace" href="assets/geo/descargas/perimetro-cdmx-shp.zip" download>Shapefile (ZIP)</a>
+        </p>
+        <p class="recurso__nota"><a href="https://www.inegi.org.mx/temas/mg/" target="_blank" rel="noopener">Marco Geoestadístico del INEGI<span aria-hidden="true"> →</span></a></p>
       </article>
       <article class="recurso">
         <h3>Clasificación taxonómica</h3>
@@ -1827,6 +1817,33 @@ body.sin-desplazamiento{overflow:hidden}
         <p>A partir de la especie, la altura, el diámetro del tronco y el tamaño de la copa —los datos que se levantan en campo durante el dictamen— i-Tree estima cuánto carbono retira del aire cada año, cuánta lluvia intercepta su copa, cuánta agua evita que corra por el asfalto, qué contaminantes retiene y cómo afecta el consumo de energía de las construcciones cercanas.</p>
         <p class="recurso__nota">Son <strong>estimaciones anuales</strong> basadas en modelos, no mediciones directas, y no sustituyen un dictamen técnico. Los valores de este sitio se calcularon con la herramienta <strong>MyTree</strong> de esa familia.</p>
         <a class="norma__fuente" href="https://www.itreetools.org/" target="_blank" rel="noopener">Sitio oficial de i-Tree<span aria-hidden="true"> →</span></a>
+      </article>
+      <article class="recurso">
+        <h3>Cómo leer las cifras de i-Tree</h3>
+        <p>Tres advertencias que la propia herramienta hace y que conviene tener presentes al comparar ejemplares:</p>
+        <ul class="recurso__lista">
+          <li>En árboles muy grandes, el <strong>carbono secuestrado</strong> en un año puede quedar por debajo de lo que el propio árbol libera con la descomposición de su madera muerta y con las labores de mantenimiento. Una cifra baja no significa que el árbol aporte poco.</li>
+          <li>La <strong>absorción de CO<sub>2</sub> equivalente</strong> no se mide: se calcula a partir del carbono almacenado en los tejidos del árbol.</li>
+          <li>En las cifras de <strong>energía</strong>, un valor positivo indica ahorro o emisiones evitadas y uno negativo, mayor consumo: la sombra que refresca en verano también puede aumentar la demanda de calefacción en invierno.</li>
+        </ul>
+      </article>
+      <article class="recurso">
+        <h3>Cómo se leen los campos vacíos</h3>
+        <p>Un campo <strong>vacío</strong> significa que el dato no aplica en el contexto de ese ejemplar.</p>
+        <p><strong>S/D</strong>, «sin determinar», significa que no fue posible establecerlo: faltaban elementos técnicos, la información disponible era ambigua o las condiciones del sitio no lo permitieron al momento del registro.</p>
+        <p class="recurso__nota">En la nominación de un ejemplar, la persona promovente puede ser la representante de una comunidad.</p>
+      </article>
+      <article class="recurso">
+        <h3>Abreviaturas</h3>
+        <dl class="abreviaturas">
+          <div><dt>CO<sub>2</sub></dt><dd>Dióxido de carbono</dd></div>
+          <div><dt>PM<sub>2.5</sub></dt><dd>Partículas de 2.5 micras o menos</dd></div>
+          <div><dt>kg</dt><dd>Kilogramos</dd></div>
+          <div><dt>g</dt><dd>Gramos</dd></div>
+          <div><dt>L</dt><dd>Litros</dd></div>
+          <div><dt>kWh</dt><dd>Kilovatios hora</dd></div>
+          <div><dt>DAP</dt><dd>Diámetro del tronco a la altura del pecho</dd></div>
+        </dl>
       </article>
       <article class="recurso">
         <h3>Categoría de riesgo UICN</h3>
@@ -1935,6 +1952,27 @@ body.sin-desplazamiento{overflow:hidden}
       </article>
     </div>
 
+
+    <h3 class="creditos__titulo">Cómo citar este sitio</h3>
+    <div class="creditos">
+      <div class="creditos__bloque">
+        <h3 class="rotulo">El sitio completo</h3>
+        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Árboles patrimoniales de la Ciudad de México</i> [sitio web]. Ciudad de México: Gobierno de la Ciudad de México. Disponible en: https://sedemaoficina.github.io/arboles-patrimoniales/ [consultado el día de la consulta].</p>
+      </div>
+      <div class="creditos__bloque">
+        <h3 class="rotulo">La ficha de un ejemplar</h3>
+        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. «Nombre del ejemplar», en <i>Árboles patrimoniales de la Ciudad de México</i> [sitio web]. Disponible en: https://sedemaoficina.github.io/arboles-patrimoniales/ficha.html#ficha-nombre-del-ejemplar [consultado el día de la consulta].</p>
+      </div>
+      <div class="creditos__bloque">
+        <h3 class="rotulo">El listado en datos abiertos</h3>
+        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Registro de árboles patrimoniales de la Ciudad de México</i> [conjunto de datos]. Disponible en: https://sedemaoficina.github.io/arboles-patrimoniales/datos/arboles-patrimoniales-cdmx.csv [consultado el día de la consulta].</p>
+      </div>
+      <div class="creditos__bloque">
+        <h3 class="rotulo">Qué incluir siempre</h3>
+        <p>La <b>fecha de consulta</b> es indispensable: el registro se actualiza de forma continua y las cifras de un ejemplar pueden cambiar entre una consulta y otra. Si citas una cifra de servicios ambientales, señala que es una <b>estimación calculada con i-Tree</b> y no una medición directa.</p>
+        <p class="recurso__nota">El contenido propio de este sitio puede reutilizarse citando la fuente. Las obras de terceros conservan la licencia de su autor.</p>
+      </div>
+    </div>
     <p class="creditos__cierre">El contenido propio de este sitio —textos, datos del registro y diseño— puede reutilizarse citando como fuente a la Secretaría del Medio Ambiente de la Ciudad de México. Las obras de terceros conservan la licencia de su autor.</p>
   </div>
 </section>
@@ -2001,21 +2039,6 @@ body.sin-desplazamiento{overflow:hidden}
       </div>
     </div>
 
-    <!-- Notas metodológicas y procedencia. Las llena el guion de la portada;
-         en las demás páginas el bloque se retira solo por estar vacío. -->
-    <div class="pie__fino" id="pieFino" hidden>
-      <div>
-        <h3 class="rotulo">Sobre las cifras de este registro</h3>
-        <details>
-          <summary>Ver las notas metodológicas del registro</summary>
-          <ul id="notas" class="lista-notas"></ul>
-        </details>
-      </div>
-      <div>
-        <h3 class="rotulo">Procedencia de los datos</h3>
-        <p id="procedencia"></p>
-      </div>
-    </div>
 
     <div class="pie__cierre">
       <span>Gobierno de la Ciudad de México · Secretaría del Medio Ambiente</span>

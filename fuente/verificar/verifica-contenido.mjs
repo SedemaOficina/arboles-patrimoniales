@@ -26,9 +26,14 @@ for(const f of [PRUEBA+'portada.dc.html',PRUEBA+'portada-vista-previa.html']){
   t(f+' · el plan de manejo viaja con el dictamen', /plan de manejo/.test(s));
   // El bloque de predio privado se retiró por decisión editorial.
   t(f+' · el bloque de predio privado ya no está', !/titularidad del predio/.test(s));
-  t(f+' · qué gana el árbol con la declaratoria', /Qué gana el árbol/.test(s)&&/requiere autorización previa/.test(s)&&/beneficios fiscales/.test(s));
-  t(f+' · recurso de revisión y revocación', /quince días hábiles/.test(s)&&/revocable/.test(s));
-  t(f+' · el artículo 62 aparece en el bloque de cuidado', /cualquier modificación del estado del bien/.test(s.replace(/<[^>]+>/g,'')));
+  // Por decisión editorial se retiró el bloque «¿Qué gana el árbol con la
+  // Declaratoria?», el párrafo de recurso de revisión y revocación, y el
+  // párrafo del artículo 62 en el bloque de cuidado: la sección de postulación
+  // quedó centrada en cómo se postula, no en el articulado.
+  t(f+' · sin el bloque de qué gana el árbol', !/Qué gana el árbol/.test(s));
+  t(f+' · sin el párrafo de recurso y revocación', !/quince días hábiles/.test(s));
+  t(f+' · sin el párrafo del artículo 62 en el bloque de cuidado',
+    !/cualquier modificación del estado del bien/.test(s.replace(/<[^>]+>/g,'')));
   t(f+' · los cinco requisitos del artículo 55', /Artículo 55/.test(s)&&/Identificación oficial vigente/.test(s));
   t(f+' · aclara que va a la Secretaría de Cultura', /no ante la Secretaría del Medio Ambiente/.test(s));
   // El plazo y el emblema se retiraron de esa tarjeta; el plazo sigue en la
@@ -39,7 +44,10 @@ for(const f of [PRUEBA+'portada.dc.html',PRUEBA+'portada-vista-previa.html']){
   // La cuenta creció al destacar el artículo 107 y al enlazar la metodología.
   // Lo que importa es que ningún instrumento se quede sin liga, no la cifra.
   t(f+' · al menos nueve enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=9, String((s.match(/class="norma__fuente"/g)||[]).length));
-  t(f+' · la sección de propuestas enlaza la ley', /class="postula__pie"[\s\S]{0,600}1471-leydepatrimonio/.test(s));
+  // El pie de la sección de propuestas se retiró. La ley se sigue enlazando
+  // desde el bloque de normativa, que es donde vive el marco jurídico.
+  t(f+' · sin el pie de la sección de propuestas', !/class="postula__pie"/.test(s));
+  t(f+' · la ley se sigue enlazando desde la normativa', /1471-leydepatrimonio/.test(s));
   t(f+' · enlaza la Constitución', /data\.consejeria\.cdmx\.gob\.mx\/index\.php\/leyes\/constitucion/.test(s));
   t(f+' · enlaza la Ley de Patrimonio', /1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico/.test(s));
   t(f+' · enlaza la NADF-001 en PDF', /NADF-001-RNAT-2016\.pdf/.test(s));

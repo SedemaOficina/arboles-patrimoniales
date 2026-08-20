@@ -23,7 +23,7 @@ t('Lluvia encabeza los servicios',v.servicios[0].valor==='911,487',v.servicios[0
 t('Sin valoración económica entre los servicios',!v.servicios.some(x=>/Valor|beneficio/i.test(x.texto))&&v.servicios.length===3,v.servicios.map(x=>x.texto).join(' | '));
 t('Cobertura parcial marcada en lluvia',v.servicios[0].incompleto===true&&/5 de 13/.test(v.servicios[0].cobertura),v.servicios[0].cobertura);
 t('CO2 y carbono con dato completo',v.servicios[1].incompleto===false&&v.servicios[2].incompleto===false);
-t('Las 14 notas al pie llegan al pie',v.notas.length===14,String(v.notas.length));
+t('El pie ya no recibe las notas de la hoja',v.notas===undefined);
 t('El filtro del mapa abre en «Todos», sin cifra',v.filtros[0].etiqueta==='Todos',v.filtros[0].etiqueta);
 t('Alcaldía normalizada a nombre oficial',v.fichas.some(f=>/Miguel Hidalgo/.test(f.meta)),v.fichas[0].meta);
 // Auditoría P3.2/P3.3: las tres variantes de SITUACIÓN colapsaron en una sola

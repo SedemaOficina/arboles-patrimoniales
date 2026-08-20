@@ -130,8 +130,11 @@ t('ficha · sigue el mapa del ejemplar', /pintarMapaEjemplar\(e\)/.test(fl));
 
 
 console.log('══ FICHA · fuentes y decreto ══');
-t('fuentes · quedan dos tarjetas', /\["Consultar el decreto"[\s\S]{0,400}?\["Ejemplar en el SNIB"/.test(fl)
-  && !/"Fuente del registro"/.test(fl) && !/"Cálculo i-Tree"/.test(fl));
+t('fuentes · queda una tarjeta, la del decreto',
+  /\["Consultar el decreto"/.test(fl)
+  && !/"Fuente del registro"/.test(fl) && !/"Cálculo i-Tree"/.test(fl)
+  && !/"Ejemplar en el SNIB"/.test(fl));
+t('fuentes · nada lee ya urlSNIB', !/e\.urlSNIB/.test(fl) && !/e\.urlSNIB/.test(fdc));
 t('fuentes · nada lee urlOrigen ni linkITree',
   !/e\.urlOrigen/.test(fl) && !/e\.linkITree/.test(fl)
   && !/e\.urlOrigen/.test(fdc) && !/e\.linkITree/.test(fdc));
@@ -168,7 +171,7 @@ console.log('══ RECURSOS · créditos ══');
 const rec = fs.readFileSync('recursos-cuerpo.html','utf8');
 const pie = fs.readFileSync('parciales/pie.html','utf8');
 t('créditos · hay sección con ancla propia', /id="creditos"/.test(rec));
-t('créditos · el índice de Recursos la lista', /href="#creditos">Créditos<\/a>/.test(rec));
+t('créditos · el índice de Recursos la lista', /href="#creditos">Créditos y cómo citar<\/a>/.test(rec));
 t('créditos · el mapa del sitio del pie la enlaza', /__RECURSOS__#creditos/.test(pie));
 t('créditos · acredita las obras de terceros que sí usa el sitio',
   ['OpenStreetMap','CARTO','INEGI','Leaflet','Anton','Fraunces','Source Sans 3','i-Tree','CONABIO','UICN']

@@ -513,21 +513,20 @@ function rutaDecreto(valor) {
 /**
  * Las fuentes del ejemplar, al final de la ficha.
  *
- * Quedan dos. Se retiraron «Fuente del registro» y «Cálculo i-Tree»: la
- * primera apuntaba a la misma observación de iNaturalist en los trece
- * ejemplares, y la segunda no guardaba una dirección sino el texto «MyTree»,
- * el nombre de la herramienta. Ninguna de las dos llevaba a información de
- * ESE árbol, que es lo único que justifica un enlace en su ficha.
+ * Queda una: el decreto. Se retiraron «Fuente del registro», «Cálculo i-Tree»
+ * y «Ejemplar en el SNIB» porque las tres guardaban el MISMO valor en los
+ * trece ejemplares —la misma observación de iNaturalist, el texto «MyTree» y
+ * el mismo identificador del SNIB—, de modo que ninguna llevaba a información
+ * de ESE árbol, que es lo único que justifica un enlace en su ficha.
  *
- * Se distingue lo propio de la Secretaría de lo que abre un sistema ajeno:
- * antes los botones se veían iguales y no anticipaban a dónde llevan.
+ * La clase enlace--externa se conserva por si vuelve a haber una fuente ajena
+ * con dirección propia por ejemplar.
  */
 function pintarFuentes(e) {
   const caja = document.getElementById("fFuentes");
   if (!caja) return;
   const fuentes = [
     ["Consultar el decreto", rutaDecreto(e.linkDecreto), "propia", "El acuerdo publicado que lo declara patrimonial"],
-    ["Ejemplar en el SNIB", e.urlSNIB, "externa", "Sistema Nacional de Información sobre Biodiversidad"],
   ];
   caja.innerHTML = fuentes.map(([t2, url, tipo, pie]) => url
     ? `<a class="enlace enlace--fuente enlace--${tipo}" href="${esc(url)}" target="_blank" rel="noopener">
