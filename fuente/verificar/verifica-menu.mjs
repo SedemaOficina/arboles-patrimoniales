@@ -77,8 +77,33 @@ t('menu.js · un arrastre no abre la ficha del árbol donde se soltó',
 t('menu.js · el arrastre se engancha con los demás controles', /activarArrastre\(p\)/.test(m));
 t('css · la hilera se ve asible', /\.bosque__pista\{cursor:grab\}/.test(css));
 
-// La portada arrancaba 226 px por debajo del filete: demasiado aire.
-t('css · la portada no vuelve al relleno de 64 px', /\.portada\{[^}]*padding:38px 0 0\}/.test(css));
+// La portada arrancaba 226 px por debajo del filete: demasiado aire. El relleno
+// se recortó de 64 a 38 px. Hoy vive en --aire-portada porque el sello, que
+// antes encabezaba la sección, se posa sobre la acuarela y ya no está en el
+// flujo: el primer renglón arranca en 58 px en pantalla ancha en lugar de los
+// 182 px que sumaban relleno más sello. La guarda comprueba el propósito —que
+// nadie devuelva el hueco— no la cadena literal de entonces.
+t('css · la portada no vuelve al relleno de 64 px',
+  /\.portada\{--aire-portada:38px;/.test(css) && /padding:var\(--aire-portada\) 0 0\}/.test(css));
+const aireAncho = /@media\(min-width:1000px\)\{\s*\.portada\{--aire-portada:(\d+)px\}/.exec(css);
+t('css · el aire de la portada en pantalla ancha se queda por debajo de los 64 px de antes',
+  !!aireAncho && Number(aireAncho[1]) < 64);
+
+// El sello firma la acuarela; si vuelve al flujo, reaparecen los 144 px y la
+// portada vuelve a decir tres veces el mismo nombre en 150 px de alto.
+t('css · el sello se posa sobre la ilustración, no encabeza la portada',
+  /\.portada \.envoltura>\.sello\{position:absolute/.test(css));
+// La posición se cuelga del alto de la caja de la ilustración para que suba y
+// baje con ella. Un top en pixeles fijos se despega en cuanto cambia el clamp.
+t('css · la posición del sello se calcula a partir del alto de la ilustración',
+  /\.portada \.envoltura>\.sello\{[^}]*top:calc\(clamp\(380px,52vw,600px\)/.test(css));
+// Entre 901 y 999 px el hueco pálido del ángulo inferior derecho mide 84 px:
+// no sostiene un disco de 128. El sello vuelve al flujo por debajo de 1000 px.
+t('css · el sello sobre la acuarela solo aplica de 1000 px en adelante',
+  /@media\(min-width:1000px\)\{[\s\S]{0,400}\.portada \.envoltura>\.sello\{position:absolute/.test(css));
+// En esa franja el parrafo de entrada se metia debajo del follaje.
+t('css · la entrada se acorta en la franja de 901 a 999 px',
+  /@media\(min-width:901px\) and \(max-width:999px\)\{\.entrada\{max-width:400px\}\}/.test(css));
 t('css · el sello no vuelve a separarse 22 px', /\.sello\{display:block;width:132px;height:auto;margin:0 0 12px\}/.test(css));
 
 const portada = fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');

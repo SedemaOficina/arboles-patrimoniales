@@ -59,5 +59,25 @@ for (const n of ['chico','media','grande'])
   for (const e of ['png','webp'])
     t(`assets · logo-institucional-${n}.${e} entregado`, fs.existsSync(`assets/img/marca/logo-institucional-${n}.${e}`));
 
+// LA VISTA PREVIA AL COMPARTIR.
+// WhatsApp guarda la miniatura por DIRECCIÓN, no por contenido: durante
+// semanas siguió mostrando «GUARDIANES DEL TIEMPO» aunque el archivo ya se
+// había redibujado. El sufijo ?v= es lo único que obliga al servicio a
+// descargarla otra vez. Si alguien lo quita, el problema vuelve en silencio.
+for (const f of paginas) {
+  const s = fs.readFileSync(f, 'utf8');
+  t(f + ' · og:image lleva el sufijo de versión que rompe la caché de WhatsApp',
+    /<meta property="og:image" content="[^"]+\/compartir\.jpg\?v=\d+">/.test(s));
+  t(f + ' · twitter:image lleva el mismo sufijo',
+    /<meta name="twitter:image" content="[^"]+\/compartir\.jpg\?v=\d+">/.test(s));
+  t(f + ' · la tarjeta declara las medidas que piden los servicios',
+    /<meta property="og:image:width" content="1200">/.test(s) &&
+    /<meta property="og:image:height" content="630">/.test(s));
+}
+// La tarjeta ya no puede anunciar el nombre anterior del sitio.
+t('fuente · compartir.jpg fue redibujado con el nombre vigente',
+  fs.existsSync('assets/img/portada/compartir.jpg') &&
+  fs.statSync('assets/img/portada/compartir.jpg').size !== 174182);
+
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal?1:0);

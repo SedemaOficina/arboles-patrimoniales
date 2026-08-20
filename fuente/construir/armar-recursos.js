@@ -71,14 +71,14 @@ const html = `<!DOCTYPE html>
 <meta property="og:title" content="Recursos · Árboles patrimoniales de la Ciudad de México">
 <meta property="og:description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México.">
 <meta property="og:url" content="${SITIO.url(NOMBRES.recursos)}">
-<meta property="og:image" content="${SITIO.url('assets/img/portada/compartir.jpg')}">
+<meta property="og:image" content="${SITIO.urlTarjeta()}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Árboles patrimoniales de la Ciudad de México">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Recursos · Árboles patrimoniales de la Ciudad de México">
 <meta name="twitter:description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México.">
-<meta name="twitter:image" content="${SITIO.url('assets/img/portada/compartir.jpg')}">
+<meta name="twitter:image" content="${SITIO.urlTarjeta()}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">

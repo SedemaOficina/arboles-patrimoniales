@@ -934,8 +934,11 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
   // ignore la versión publicada, y la imagen para compartir no resuelve.
   t('El canonical apunta a donde el sitio está de verdad',
     /rel="canonical" href="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/"/.test(pv));
+  // Absoluta y del mismo origen, y con el sufijo de versión: WhatsApp guarda
+  // la miniatura por dirección, así que sin ?v= el reenvío sigue mostrando la
+  // tarjeta anterior por semanas.
   t('La imagen para compartir es absoluta y del mismo origen',
-    /og:image" content="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/assets\/img\/portada\/compartir\.jpg"/.test(pv));
+    /og:image" content="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/assets\/img\/portada\/compartir\.jpg\?v=\d+"/.test(pv));
 }
 
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);

@@ -17,4 +17,27 @@ const PORDEFECTO = "https://sedemaoficina.github.io/arboles-patrimoniales/";
 const crudo = process.env.BASE_SITIO || PORDEFECTO;
 const BASE = crudo.endsWith("/") ? crudo : crudo + "/";
 
-module.exports = { BASE, url: (ruta = "") => BASE + String(ruta).replace(/^\//, "") };
+/**
+ * VERSION_TARJETA · el número que obliga a WhatsApp a volver a mirar.
+ *
+ * WhatsApp, Facebook y Telegram guardan la vista previa de un enlace la
+ * primera vez que alguien lo comparte y la reutilizan durante semanas. La
+ * guardan por DIRECCIÓN, no por contenido: si el archivo cambia pero la
+ * dirección no, el reenvío sigue mostrando la imagen vieja. Por eso la
+ * portada anunciaba «GUARDIANES DEL TIEMPO» mucho después de que el sitio
+ * dejara de llamarse así.
+ *
+ * Al subir este número la dirección deja de ser la misma y el servicio
+ * descarga la imagen otra vez. SE SUBE CADA VEZ QUE SE REDIBUJE compartir.jpg.
+ */
+const VERSION_TARJETA = 2;
+
+const url = (ruta = "") => BASE + String(ruta).replace(/^\//, "");
+
+module.exports = {
+  BASE,
+  VERSION_TARJETA,
+  url,
+  // La imagen para compartir se pide siempre por aquí, nunca con url() a secas.
+  urlTarjeta: () => url("assets/img/portada/compartir.jpg") + "?v=" + VERSION_TARJETA,
+};
