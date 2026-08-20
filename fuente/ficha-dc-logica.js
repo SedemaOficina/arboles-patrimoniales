@@ -67,7 +67,10 @@ class Component extends DCLogic {
     this._mapa = L.map(lienzo, { center: centro, zoom: 17, scrollWheelZoom: false,
       zoomControl: true, attributionControl: false,
       maxBounds: L.latLngBounds(this.LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 10 });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(this._mapa);
+    // Misma base limpia que el mapa general: calles y nombres, sin la
+  // simbología de puntos de interés que compite con el pin del ejemplar.
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    { maxZoom: 19, subdomains: "abcd" }).addTo(this._mapa);
     // Mismo recorte que el mapa general de la portada.
     if (this._GEO) {
       L.geoJSON(this._GEO, { interactive: false,
@@ -341,7 +344,7 @@ class Component extends DCLogic {
       enlaceMapa: e.coords
         ? `https://www.google.com/maps/search/?api=1&query=${e.coords.lat},${e.coords.lng}` : "#",
       mapaPie: e.coords
-        ? "Toca el mapa para acercarte. Cartografía base © colaboradores de OpenStreetMap." : "",
+        ? "Cartografía base © colaboradores de OpenStreetMap · teselas de CARTO." : "",
       grupos,
       taxonomia, enlaces, procedencia,
       esExotica: Boolean(e.conservacion.esExotica),

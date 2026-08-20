@@ -10,7 +10,22 @@ import { indicadores } from "./indicadores.js";
 import { GEO_CDMX } from "./geo-cdmx.js";
 import { montarPrimeraFoto } from "./fotos.js";
 
-const TESELAS = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+/**
+ * Cartografía base.
+ *
+ * La de OpenStreetMap trae todos sus puntos de interés: farmacias, cimas,
+ * gasolineras, cajeros. Sobre un mapa cuyo único trabajo es decir DÓNDE ESTÁ
+ * UN ÁRBOL, esa simbología compite con los marcadores propios y no aporta:
+ * nadie llega a un ahuehuete guiándose por una cruz de farmacia.
+ *
+ * Positron conserva lo que sí sirve para ubicarse —trazado de calles y sus
+ * nombres, colonias, cuerpos de agua— y retira el resto. Además su gris claro
+ * convive con el crema y el morado del sitio, donde el verde y el rosa de OSM
+ * peleaban con los marcadores.
+ *
+ * El sufijo {r} pide la versión de doble densidad en pantallas que la admiten.
+ */
+const TESELAS = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 
 /** Máscara que apaga todo lo que queda fuera de la Ciudad de México y dibuja
  *  su perímetro oficial. Cartografía: INEGI, CVEGEO 09.
@@ -20,7 +35,9 @@ export const MASCARA_CDMX = GEO_CDMX;
 /** Límites de la Ciudad de México: el mapa no se puede arrastrar más allá. */
 export const LIMITES_CDMX = [[18.98, -99.43], [19.66, -98.87]];
 
-const ATRIBUCION = 'Cartografía base © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+// La atribución es obligatoria: los datos siguen siendo de OpenStreetMap y el
+// dibujo de las teselas es de CARTO.
+const ATRIBUCION = 'Cartografía base © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · teselas de <a href="https://carto.com/attributions">CARTO</a>';
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const nf = (n, d = 1) => (n === null || n === undefined || !isFinite(n) ? "—" : Number(n).toLocaleString("es-MX", { maximumFractionDigits: d }));
@@ -79,7 +96,7 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
   if (typeof L !== "undefined" && conCoords.length) {
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
-    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 19, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
+    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 19, subdomains: "abcd", bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
     ponerMascara(mascara);
     // El aviso vive sobre el lienzo: bajo los filtros pasaba desapercibido.

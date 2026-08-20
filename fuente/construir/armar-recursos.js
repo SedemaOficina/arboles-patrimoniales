@@ -5,6 +5,8 @@
    Sin variable, escribe en prueba, que es lo que se usa a diario. */
 process.chdir(__dirname + '/..');
 const DESTINO = process.env.DESTINO === 'produccion' ? 'produccion' : 'prueba';
+// La dirección pública vive en un solo archivo: ver sitio.js.
+const SITIO = require('./sitio.js');
 // La carpeta publicada se llama docs/ porque es el nombre que GitHub Pages
 // reconoce para servir un sitio desde una subcarpeta de la rama principal.
 const CARPETA = DESTINO === 'produccion' ? 'docs' : 'prueba';
@@ -67,7 +69,7 @@ const html = `<!DOCTYPE html>
 <meta property="og:locale" content="es_MX">
 <meta property="og:title" content="Recursos · Árboles patrimoniales de la Ciudad de México">
 <meta property="og:description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México.">
-<meta property="og:image" content="https://sedema.cdmx.gob.mx/arboles-patrimoniales/assets/img/portada/compartir.jpg">
+<meta property="og:image" content="${SITIO.url('assets/img/portada/compartir.jpg')}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

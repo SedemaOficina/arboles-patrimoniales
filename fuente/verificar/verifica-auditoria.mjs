@@ -744,5 +744,38 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
     /export function activarDeslizador/.test(mn) && /deslizador__paso/.test(cs));
 }
 
+
+console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
+{
+  const mpj = fs.readFileSync('mapa.js','utf8');
+  const flj = fs.readFileSync('ficha-logica.js','utf8');
+  const fdj = fs.readFileSync('ficha-dc-logica.js','utf8');
+  // La base de OSM trae farmacias, cimas y gasolineras: compiten con los
+  // marcadores propios en un mapa cuyo único trabajo es ubicar un árbol.
+  t('El mapa general usa una base sin puntos de interés',
+    /basemaps\.cartocdn\.com\/light_all/.test(mpj) && !/tile\.openstreetmap\.org/.test(mpj));
+  t('El mapa de la ficha usa la misma base',
+    /basemaps\.cartocdn\.com\/light_all/.test(flj) && /basemaps\.cartocdn\.com\/light_all/.test(fdj));
+  t('Pide teselas de doble densidad', /\{r\}\.png/.test(mpj));
+  t('Declara los subdominios que CARTO necesita', /subdomains: "abcd"/.test(mpj));
+  // La atribución no es opcional: los datos son de OSM y el dibujo de CARTO.
+  t('Atribuye a OpenStreetMap y a CARTO',
+    /openstreetmap\.org\/copyright/.test(mpj) && /carto\.com\/attributions/.test(mpj));
+  t('Y también en el pie del mapa de la ficha', /teselas de CARTO/.test(flj));
+
+  const pv = fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
+  const sitio = fs.readFileSync('construir/sitio.js','utf8');
+  t('La dirección pública vive en un solo archivo', /BASE_SITIO/.test(sitio) && /module\.exports/.test(sitio));
+  t('Y ningún armador la trae escrita a mano',
+    ['armar.js','armar-ficha.js','armar-recursos.js','armar-dc.js']
+      .every((f) => !/sedema\.cdmx\.gob\.mx\/arboles-patrimoniales/.test(fs.readFileSync('construir/'+f,'utf8'))));
+  // Un canonical hacia un dominio que aún no existe le dice al buscador que
+  // ignore la versión publicada, y la imagen para compartir no resuelve.
+  t('El canonical apunta a donde el sitio está de verdad',
+    /rel="canonical" href="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/"/.test(pv));
+  t('La imagen para compartir es absoluta y del mismo origen',
+    /og:image" content="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/assets\/img\/portada\/compartir\.jpg"/.test(pv));
+}
+
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal?1:0);

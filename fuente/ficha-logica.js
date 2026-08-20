@@ -317,7 +317,7 @@ function pintarMapaEjemplar(e) {
     if (pie) pie.textContent = "";
     return;
   }
-  if (pie) pie.textContent = "Cartografía base © colaboradores de OpenStreetMap.";
+  if (pie) pie.textContent = "Cartografía base © colaboradores de OpenStreetMap · teselas de CARTO.";
 
   const centro = [e.coords.lat, e.coords.lng];
   if (typeof L === "undefined") {
@@ -338,7 +338,10 @@ function pintarMapaEjemplar(e) {
     dragging: false, doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false,
     maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 10,
   });
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(mapaFicha);
+  // Misma base limpia que el mapa general: calles y nombres, sin la
+  // simbología de puntos de interés que compite con el pin del ejemplar.
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    { maxZoom: 19, subdomains: "abcd" }).addTo(mapaFicha);
   // Mismo recorte que el mapa general: al alejarse, la Ciudad se distingue del
   // resto de la zona metropolitana en vez de perderse entre municipios.
   L.geoJSON(GEO_CDMX, {
