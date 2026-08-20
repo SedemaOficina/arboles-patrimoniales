@@ -902,19 +902,11 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    mano prometía algo que ya no ocurre. */
 .mapa-caja__lienzo{cursor:default}
 
-/* Coordenadas de uso técnico. Se conservan por transparencia de datos
-   abiertos, plegadas: quien quiere llegar no navega en UTM. */
-.datos-tecnicos{margin:14px 0 0;border-top:1px solid rgba(42,22,48,.12);padding-top:12px}
-.datos-tecnicos summary{cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.04em;
-  color:var(--jacaranda-hondo);list-style:none;display:flex;align-items:center;gap:8px}
-.datos-tecnicos summary::-webkit-details-marker{display:none}
-.datos-tecnicos summary::before{content:"+";display:inline-flex;align-items:center;justify-content:center;
-  width:18px;height:18px;flex:none;border:1px solid rgba(141,73,146,.4);border-radius:2px;
-  font-size:13px;line-height:1;color:var(--jacaranda)}
-.datos-tecnicos[open] summary::before{content:"−"}
-.datos-tecnicos summary:hover{color:var(--jacaranda)}
-.datos-tecnicos .tabla-datos{margin-top:10px}
-.datos-tecnicos dd{font-variant-numeric:tabular-nums}
+/* El desplegable «Coordenadas para uso técnico» se retiró de la ficha: la
+   latitud y la longitud ya están resueltas por el mapa y por el botón que
+   abre la ruta, y el UTM es dato de catastro que nadie usa para visitar un
+   árbol. Si vuelve a hacer falta un desplegable en la ficha, se reconstruye
+   aquí. */
 
 /* Única llamada a la acción ciudadana del bloque: se separa de la ficha de
    datos en vez de competir con ella como un párrafo de guía más. */

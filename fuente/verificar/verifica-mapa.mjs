@@ -111,5 +111,22 @@ t('escala · el dato sigue existiendo para lector de pantalla',
   /<b class="vo">Figura humana de referencia: 1\.70 metros<\/b>/.test(fl));
 t('escala · nada cuelga bajo el lienzo', !/\.escala__persona b\{[^}]*bottom:-/.test(css));
 
+
+console.log('══ FICHA · sin coordenadas de catastro ══');
+const fc = fs.readFileSync('ficha-cuerpo.html','utf8');
+const fdc = fs.readFileSync('ficha-dc-logica.js','utf8');
+t('ficha · no queda el desplegable de uso técnico',
+  !/fUbicacionTecnica/.test(fc) && !/fUbicacionTecnica/.test(fl) && !/datos-tecnicos/.test(css));
+// Se busca en el código, no en los comentarios: el comentario que explica por
+// qué se retiró el dato menciona la palabra y no debe hacer fallar la prueba.
+const sinComentarios = (txt) => txt.replace(/\/\*[\s\S]*?\*\//g,'').replace(/^\s*\/\/.*$/gm,'');
+t('ficha · no se publica el UTM',
+  !/UTM/.test(sinComentarios(fl)) && !/UTM/.test(sinComentarios(fdc)) && !/UTM/.test(fc));
+t('ficha · tampoco el par de latitud y longitud suelto',
+  !/coords\.lat\.toFixed\(6\)/.test(fl));
+// Lo que sí debe quedar: el mapa y el botón que traza la ruta.
+t('ficha · sigue el botón que abre la ruta', /google\.com\/maps\/search/.test(fl));
+t('ficha · sigue el mapa del ejemplar', /pintarMapaEjemplar\(e\)/.test(fl));
+
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

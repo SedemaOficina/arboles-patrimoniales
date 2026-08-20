@@ -304,10 +304,11 @@ function pintarUbicacion(e) {
   const linea2 = [u.colonia ? `colonia ${u.colonia}` : null, u.cp ? `C.P. ${u.cp}` : null, e.alcaldia].filter(Boolean).join(", ");
   document.getElementById("fDomicilio").textContent = [calle, linea2].filter(Boolean).join(", ") || "Domicilio por capturar";
 
-  // Lo que sirve para llegar va a la vista. Las coordenadas UTM son dato de
-  // catastro —quien quiere llegar no navega en UTM— pero se conservan por
-  // transparencia: bajan a un desplegable, no al mismo nivel que las
-  // referencias de calle.
+  // La ficha solo trae lo que sirve para llegar. Las coordenadas UTM son dato
+  // de catastro: quien visita el árbol no navega en UTM, y el par de latitud y
+  // longitud ya está resuelto por el mapa y por el botón «Abrir en Google
+  // Maps», que lleva a la ruta sin pedirle a nadie que copie doce decimales.
+  // Quien necesite la cifra exacta la obtiene del registro, no de la ficha.
   const filas = [
     ["Entre calles", u.entreCalles.length ? u.entreCalles.join(" y ") : null],
     ["Referencias", u.referencias],
@@ -315,16 +316,6 @@ function pintarUbicacion(e) {
   ];
   document.getElementById("fUbicacion").innerHTML = filas
     .map(([t, v]) => `<div class="dato-linea"><dt>${t}</dt><dd>${esc(v || "Sin determinar")}</dd></div>`).join("");
-
-  const tec = document.getElementById("fUbicacionTecnica");
-  if (tec) {
-    const geo = e.coords ? `${e.coords.lat.toFixed(6)}, ${e.coords.lng.toFixed(6)}` : null;
-    tec.innerHTML = `<summary>Coordenadas para uso técnico</summary>
-      <dl class="tabla-datos">
-        <div class="dato-linea"><dt>Latitud y longitud</dt><dd>${esc(geo || "Sin determinar")}</dd></div>
-        <div class="dato-linea"><dt>UTM WGS 84</dt><dd>${esc(e.utm || "Sin determinar")}</dd></div>
-      </dl>`;
-  }
 
   // El botón vive debajo del mapa: quien ya vio dónde está el árbol es quien
   // quiere trazar la ruta. Al pie de la tabla quedaba lejos de esa intención.

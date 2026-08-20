@@ -229,7 +229,6 @@ class Component extends DCLogic {
       this.fila("Entre calles", u.entreCalles.length ? u.entreCalles.join(" y ") : null),
       this.fila("Referencias", u.referencias),
       this.fila("Tipo de ubicación", u.tipo),
-      this.fila("Coordenadas UTM WGS 84", e.utm),
     ];
 
     // --- galería fotográfica ---
