@@ -135,7 +135,7 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
     mapa.addControl(new Ubicar());
 
     // Volver a la vista de los trece. Con el botón de ubicación el mapa se
-    // acerca a una zona y el resto del padrón sale de cuadro: sin una salida
+    // acerca a una zona y el resto del listado sale de cuadro: sin una salida
     // explícita la única forma de recuperar el conjunto era alejar a mano.
     const encuadreCompleto = () =>
       mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
@@ -586,9 +586,17 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
   function pintarPanel(vis) {
     if (!panel) return;
     const sel = estado.activo ? ejemplares.find((e) => e.slug === estado.activo) : null;
+    /* Sin ejemplar elegido el panel NO se muestra.
+       Antes traía el resumen del registro entero —cuántos son, cuántas especies,
+       cuánto suman de alto—, que es exactamente lo que el cintillo de la
+       portada ya dijo mil pixeles antes. Repetirlo aquí obligaba a leer dos
+       veces lo mismo y dejaba el panel ocupado con algo que nadie vino a
+       buscar al mapa. Ahora el panel solo aparece cuando responde a un acto de
+       la persona: elegir un árbol. */
+    if (!sel) { panel.hidden = true; return; }
+    panel.hidden = false;
     const datos = indicadores({ lista: vis, seleccionado: sel, totalPadron: ejemplares.length });
-    panel.querySelector("[data-panel-titulo]").textContent = sel
-      ? "Este ejemplar" : (vis.length === ejemplares.length ? "Todo el listado" : "Selección actual");
+    panel.querySelector("[data-panel-titulo]").textContent = "Este ejemplar";
     const limpiar = panel.querySelector("[data-panel-limpiar]");
     if (limpiar) limpiar.hidden = !sel;
     panel.querySelector("[data-panel-lista]").innerHTML = datos.map((d) => `

@@ -283,10 +283,34 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 /* --- cintillo de cifras --- */
 .cifras{background:var(--tinta-jacaranda);border-top:1px solid rgba(199,159,202,.24);color:#fff}
-.cifras .envoltura{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:1px;background:rgba(199,159,202,.22)}
+/* Cuatro columnas fijas, no auto-fit. Con ocho cifras y columnas elásticas
+   caben siete en el primer renglón y la octava queda sola, con una banda vacía
+   del ancho de la pantalla a su lado. Cuatro por renglón dan dos filas
+   parejas: arriba de qué se compone el registro, abajo cuánto mide. */
+/* Se apunta al id y no a «.cifras .envoltura»: la banda tiene DOS envolturas
+   —las cifras y su pie— y la regla genérica convertía también el pie en una
+   rejilla de cuatro, dejándolo encajonado en la primera columna. */
+#cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(199,159,202,.22)}
+/* En una sola columna las ocho cifras hacían una banda de metro y medio que
+   había que recorrer entera para llegar a la siguiente sección. Dos columnas
+   se sostienen hasta pantallas muy angostas: la cifra es corta y el rótulo
+   puede partirse en dos renglones sin perder sentido. */
+@media(max-width:900px){#cifras{grid-template-columns:repeat(2,1fr)}
+  .cifra{padding:20px 16px}
+  .cifra span{font-size:11px;letter-spacing:.07em}}
 .cifra{background:var(--tinta-jacaranda);padding:26px 20px}
-.cifra strong{display:block;font-family:var(--display);font-size:40px;line-height:1;color:var(--dorado-luz)}
+/* La cifra no se parte: «330 m» quebraba en dos renglones y la unidad quedaba
+   sola debajo del número, leyéndose como otra cifra. */
+.cifra strong{display:block;font-family:var(--display);font-size:clamp(30px,3vw,40px);line-height:1;
+  color:var(--dorado-luz);white-space:nowrap}
 .cifra span{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:8px;font-weight:600}
+/* Pie del cintillo: los nombres de las especies y la cobertura de la suma de
+   edades. Va dentro de la banda oscura, en cuerpo pequeño: no compite con las
+   cifras pero viaja pegado a ellas, que es donde la salvedad tiene sentido. */
+.cifras__pie{margin:0;background:var(--tinta-jacaranda);color:rgba(255,255,255,.6);
+  font-size:12.5px;line-height:1.6;padding:0 0 22px;display:grid;gap:4px}
+.cifras__pie[hidden]{display:none}
+.cifras__pie::before{content:"";display:block;height:1px;background:rgba(199,159,202,.22);margin-bottom:16px}
 
 /* --- secciones --- */
 .seccion{padding:88px 0}

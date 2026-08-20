@@ -180,5 +180,46 @@ t('créditos · los campos de autoría quedan marcados como pendientes',
   (rec.match(/data-pendiente/g)||[]).length>=5);
 t('créditos · lo pendiente se distingue a la vista', /\.creditos__lista dd\[data-pendiente\]/.test(css));
 
+
+console.log('══ CINTILLO Y PANEL ══');
+const lg = fs.readFileSync('logica.js','utf8');
+const cu = fs.readFileSync('cuerpo.html','utf8');
+const port = fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
+
+// El panel del mapa dejó de repetir el resumen del registro: eso vive ahora en
+// el cintillo, junto al dibujo de los trece.
+t('panel · sin ejemplar elegido, no se muestra',
+  /if \(!sel\) \{ panel\.hidden = true; return; \}/.test(src) && /panel\.hidden = false;/.test(src));
+t('panel · su único título es «Este ejemplar»',
+  /textContent = "Este ejemplar";/.test(src)
+  && !/Todo el listado/.test(src) && !/Selección actual/.test(src));
+
+// Las sumas NO se recalculan en el cintillo: se piden a la función que ya las
+// hacía y que declara sobre cuántos ejemplares está calculado cada valor.
+t('cintillo · reutiliza indicadoresPadron en vez de rehacer la aritmética',
+  /const agregado = indicadoresPadron\(ejemplares, ejemplares\.length\)/.test(lg));
+t('cintillo · el ensamblador expone indicadoresPadron',
+  /envolver\('indicadores\.js',\['indicadores','indicadoresPadron'\]\)/
+    .test(fs.readFileSync('construir/armar.js','utf8'))
+  && /window\.indicadoresPadron=/.test(port));
+t('cintillo · lleva las ocho cifras', (lg.match(/^\s{4}\[/gm)||[]).length>=8);
+for (const r of ['Ejemplares','Alcaldías','Especies','En \\$\\{alcaldia\\.cifra\\}',
+                 'El más alto','Sumando sus alturas','Años del más antiguo','Años sumados']) {
+  t(`cintillo · rótulo «${r.replace(/\\\\/g,'')}»`, new RegExp(r).test(lg));
+}
+t('cintillo · cuatro columnas fijas, no auto-fit',
+  /#cifras\{display:grid;grid-template-columns:repeat\(4,1fr\)/.test(css)
+  && !/\.cifras \.envoltura\{display:grid/.test(css));
+t('cintillo · la cifra no se parte en dos renglones',
+  /\.cifra strong\{[^}]*white-space:nowrap/.test(css));
+
+// La salvedad es obligatoria: 1,200 años salen de dos ejemplares de trece.
+t('cintillo · el pie declara la cobertura de la suma de edades',
+  /Los años sumados salen de \$\{/.test(lg) && /edad dictaminada/.test(lg));
+t('cintillo · el pie nombra las especies', /Las especies del registro: \$\{especies\.nota\}/.test(lg));
+t('cintillo · el pie se oculta si no hay nada que decir',
+  /pie\.hidden = renglones\.length === 0;/.test(lg));
+t('cintillo · el pie existe en el cuerpo', /id="cifrasPie"/.test(cu));
+
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

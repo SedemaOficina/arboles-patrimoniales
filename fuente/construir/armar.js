@@ -59,7 +59,7 @@ const envolver=(archivo,expuestos)=>{
   }
   return `;(function(){\n${src}\n${expuestos.map(n=>`window.${n}=${n};`).join('')}\n})();`;
 };
-const ind=envolver('indicadores.js',['indicadores']);
+const ind=envolver('indicadores.js',['indicadores','indicadoresPadron']);
 // El perímetro de la Ciudad viaja dentro del script: la versión anterior lo
 // pedía con fetch a assets/geo y se quedaba sin recorte al abrir el archivo
 // con doble clic o al publicar sin esa carpeta.

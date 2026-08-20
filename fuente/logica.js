@@ -120,16 +120,59 @@ function pintarBosque(ejemplares) {
 }
 
 
+/**
+ * El cintillo de cifras, debajo de la hilera de los trece.
+ *
+ * Recoge lo que antes vivía en el panel del mapa en su modo agregado —cuántos
+ * son, cuántas especies, cuánto suman de alto, cuál alcaldía concentra más y
+ * cuántos años acumulan—. Ese panel repetía debajo del mapa un resumen que la
+ * persona ya había leído arriba, y obligaba a bajar hasta el mapa para
+ * enterarse del tamaño del registro. Aquí queda junto al dibujo de los trece,
+ * que es donde la pregunta «¿cuántos son y qué tan grandes?» se hace sola.
+ *
+ * Las sumas NO se recalculan aquí: se piden a indicadoresPadron, que es la
+ * función que ya sabía hacerlas y que declara sobre cuántos ejemplares está
+ * calculado cada valor. Duplicar esa aritmética habría abierto la puerta a que
+ * el cintillo y el resto del sitio dijeran cifras distintas.
+ */
 function pintarCifras(stats, ejemplares) {
   const decano = ejemplares.filter((e) => e.edadEstimada != null).sort((a, b) => b.edadEstimada - a.edadEstimada)[0];
+  const agregado = indicadoresPadron(ejemplares, ejemplares.length);
+  const de = (clave) => agregado.find((d) => d.clave === clave) || {};
+  const arboles = de("arboles"), especies = de("especies"), apilada = de("altura"),
+        alcaldia = de("alcaldia"), edad = de("edad");
+
+  // Primer renglón: de qué se compone el registro. Segundo: sus medidas.
   const datos = [
+    [arboles.cifra, "Ejemplares"],
     [stats.totalAlcaldias, "Alcaldías"],
-    [stats.totalEspecies, "Especies"],
-    [decano ? nf(decano.edadEstimada) : "—", "Años del más antiguo"],
+    [especies.cifra, "Especies"],
+    [alcaldia.unidad ? alcaldia.unidad.replace(/\s*ejemplares?$/, "") : "—",
+     alcaldia.cifra && alcaldia.cifra !== "—" ? `En ${alcaldia.cifra}` : "Alcaldía con más"],
     [stats.alturaMaxima ? nf(stats.alturaMaxima, 1) + " m" : "—", "El más alto"],
+    [apilada.cifra === "—" ? "—" : `${apilada.cifra} ${apilada.unidad}`, "Sumando sus alturas"],
+    [decano ? nf(decano.edadEstimada) : "—", "Años del más antiguo"],
+    [edad.cifra, "Años sumados"],
   ];
   document.getElementById("cifras").innerHTML = datos
-    .map(([v, l]) => `<div class="cifra"><strong>${v}</strong><span>${l}</span></div>`).join("");
+    .map(([v, l]) => `<div class="cifra"><strong>${esc(String(v))}</strong><span>${esc(l)}</span></div>`).join("");
+
+  // Al pie: los nombres de las especies y la cobertura de la suma de edades.
+  // La segunda es obligatoria: sumar 1,200 años sin decir que salen de dos
+  // ejemplares de trece daría a entender que los trece están dictaminados.
+  const pie = document.getElementById("cifrasPie");
+  if (pie) {
+    const renglones = [
+      especies.nota ? `Las especies del registro: ${especies.nota}.` : "",
+      alcaldia.cifra && alcaldia.cifra !== "—"
+        ? `${alcaldia.cifra} es la alcaldía que más reúne.` : "",
+      // Sumar 1,200 años sin decir de cuántos ejemplares salen daría a
+      // entender que los trece están dictaminados. Solo dos lo están.
+      edad.nota ? `Los años sumados salen de ${(edad.nota.match(/(\d+ de \d+)/) || [, "pocos"])[1]} ejemplares con edad dictaminada.` : "",
+    ].filter(Boolean);
+    pie.innerHTML = renglones.map((r) => `<span>${esc(r)}</span>`).join("");
+    pie.hidden = renglones.length === 0;
+  }
 }
 
 function pintarCategorias(stats) {

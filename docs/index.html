@@ -283,10 +283,34 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 /* --- cintillo de cifras --- */
 .cifras{background:var(--tinta-jacaranda);border-top:1px solid rgba(199,159,202,.24);color:#fff}
-.cifras .envoltura{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:1px;background:rgba(199,159,202,.22)}
+/* Cuatro columnas fijas, no auto-fit. Con ocho cifras y columnas elásticas
+   caben siete en el primer renglón y la octava queda sola, con una banda vacía
+   del ancho de la pantalla a su lado. Cuatro por renglón dan dos filas
+   parejas: arriba de qué se compone el registro, abajo cuánto mide. */
+/* Se apunta al id y no a «.cifras .envoltura»: la banda tiene DOS envolturas
+   —las cifras y su pie— y la regla genérica convertía también el pie en una
+   rejilla de cuatro, dejándolo encajonado en la primera columna. */
+#cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(199,159,202,.22)}
+/* En una sola columna las ocho cifras hacían una banda de metro y medio que
+   había que recorrer entera para llegar a la siguiente sección. Dos columnas
+   se sostienen hasta pantallas muy angostas: la cifra es corta y el rótulo
+   puede partirse en dos renglones sin perder sentido. */
+@media(max-width:900px){#cifras{grid-template-columns:repeat(2,1fr)}
+  .cifra{padding:20px 16px}
+  .cifra span{font-size:11px;letter-spacing:.07em}}
 .cifra{background:var(--tinta-jacaranda);padding:26px 20px}
-.cifra strong{display:block;font-family:var(--display);font-size:40px;line-height:1;color:var(--dorado-luz)}
+/* La cifra no se parte: «330 m» quebraba en dos renglones y la unidad quedaba
+   sola debajo del número, leyéndose como otra cifra. */
+.cifra strong{display:block;font-family:var(--display);font-size:clamp(30px,3vw,40px);line-height:1;
+  color:var(--dorado-luz);white-space:nowrap}
 .cifra span{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:8px;font-weight:600}
+/* Pie del cintillo: los nombres de las especies y la cobertura de la suma de
+   edades. Va dentro de la banda oscura, en cuerpo pequeño: no compite con las
+   cifras pero viaja pegado a ellas, que es donde la salvedad tiene sentido. */
+.cifras__pie{margin:0;background:var(--tinta-jacaranda);color:rgba(255,255,255,.6);
+  font-size:12.5px;line-height:1.6;padding:0 0 22px;display:grid;gap:4px}
+.cifras__pie[hidden]{display:none}
+.cifras__pie::before{content:"";display:block;height:1px;background:rgba(199,159,202,.22);margin-bottom:16px}
 
 /* --- secciones --- */
 .seccion{padding:88px 0}
@@ -1727,6 +1751,7 @@ body.sin-desplazamiento{overflow:hidden}
 
 <section class="cifras">
   <div class="envoltura" id="cifras"></div>
+  <div class="envoltura"><p class="cifras__pie" id="cifrasPie" hidden></p></div>
 </section>
 
 <section class="seccion" id="que-es">
@@ -3068,7 +3093,7 @@ function indicadores({ lista, seleccionado, totalPadron }) {
     : indicadoresPadron(lista, totalPadron);
 }
 
-window.indicadores=indicadores;
+window.indicadores=indicadores;window.indicadoresPadron=indicadoresPadron;
 })();
 ;(function(){
 /**
@@ -3226,7 +3251,7 @@ function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSelecciona
     mapa.addControl(new Ubicar());
 
     // Volver a la vista de los trece. Con el botón de ubicación el mapa se
-    // acerca a una zona y el resto del padrón sale de cuadro: sin una salida
+    // acerca a una zona y el resto del listado sale de cuadro: sin una salida
     // explícita la única forma de recuperar el conjunto era alejar a mano.
     const encuadreCompleto = () =>
       mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
@@ -3677,9 +3702,17 @@ function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSelecciona
   function pintarPanel(vis) {
     if (!panel) return;
     const sel = estado.activo ? ejemplares.find((e) => e.slug === estado.activo) : null;
+    /* Sin ejemplar elegido el panel NO se muestra.
+       Antes traía el resumen del registro entero —cuántos son, cuántas especies,
+       cuánto suman de alto—, que es exactamente lo que el cintillo de la
+       portada ya dijo mil pixeles antes. Repetirlo aquí obligaba a leer dos
+       veces lo mismo y dejaba el panel ocupado con algo que nadie vino a
+       buscar al mapa. Ahora el panel solo aparece cuando responde a un acto de
+       la persona: elegir un árbol. */
+    if (!sel) { panel.hidden = true; return; }
+    panel.hidden = false;
     const datos = indicadores({ lista: vis, seleccionado: sel, totalPadron: ejemplares.length });
-    panel.querySelector("[data-panel-titulo]").textContent = sel
-      ? "Este ejemplar" : (vis.length === ejemplares.length ? "Todo el listado" : "Selección actual");
+    panel.querySelector("[data-panel-titulo]").textContent = "Este ejemplar";
     const limpiar = panel.querySelector("[data-panel-limpiar]");
     if (limpiar) limpiar.hidden = !sel;
     panel.querySelector("[data-panel-lista]").innerHTML = datos.map((d) => `
@@ -3924,16 +3957,59 @@ function pintarBosque(ejemplares) {
 }
 
 
+/**
+ * El cintillo de cifras, debajo de la hilera de los trece.
+ *
+ * Recoge lo que antes vivía en el panel del mapa en su modo agregado —cuántos
+ * son, cuántas especies, cuánto suman de alto, cuál alcaldía concentra más y
+ * cuántos años acumulan—. Ese panel repetía debajo del mapa un resumen que la
+ * persona ya había leído arriba, y obligaba a bajar hasta el mapa para
+ * enterarse del tamaño del registro. Aquí queda junto al dibujo de los trece,
+ * que es donde la pregunta «¿cuántos son y qué tan grandes?» se hace sola.
+ *
+ * Las sumas NO se recalculan aquí: se piden a indicadoresPadron, que es la
+ * función que ya sabía hacerlas y que declara sobre cuántos ejemplares está
+ * calculado cada valor. Duplicar esa aritmética habría abierto la puerta a que
+ * el cintillo y el resto del sitio dijeran cifras distintas.
+ */
 function pintarCifras(stats, ejemplares) {
   const decano = ejemplares.filter((e) => e.edadEstimada != null).sort((a, b) => b.edadEstimada - a.edadEstimada)[0];
+  const agregado = indicadoresPadron(ejemplares, ejemplares.length);
+  const de = (clave) => agregado.find((d) => d.clave === clave) || {};
+  const arboles = de("arboles"), especies = de("especies"), apilada = de("altura"),
+        alcaldia = de("alcaldia"), edad = de("edad");
+
+  // Primer renglón: de qué se compone el registro. Segundo: sus medidas.
   const datos = [
+    [arboles.cifra, "Ejemplares"],
     [stats.totalAlcaldias, "Alcaldías"],
-    [stats.totalEspecies, "Especies"],
-    [decano ? nf(decano.edadEstimada) : "—", "Años del más antiguo"],
+    [especies.cifra, "Especies"],
+    [alcaldia.unidad ? alcaldia.unidad.replace(/\s*ejemplares?$/, "") : "—",
+     alcaldia.cifra && alcaldia.cifra !== "—" ? `En ${alcaldia.cifra}` : "Alcaldía con más"],
     [stats.alturaMaxima ? nf(stats.alturaMaxima, 1) + " m" : "—", "El más alto"],
+    [apilada.cifra === "—" ? "—" : `${apilada.cifra} ${apilada.unidad}`, "Sumando sus alturas"],
+    [decano ? nf(decano.edadEstimada) : "—", "Años del más antiguo"],
+    [edad.cifra, "Años sumados"],
   ];
   document.getElementById("cifras").innerHTML = datos
-    .map(([v, l]) => `<div class="cifra"><strong>${v}</strong><span>${l}</span></div>`).join("");
+    .map(([v, l]) => `<div class="cifra"><strong>${esc(String(v))}</strong><span>${esc(l)}</span></div>`).join("");
+
+  // Al pie: los nombres de las especies y la cobertura de la suma de edades.
+  // La segunda es obligatoria: sumar 1,200 años sin decir que salen de dos
+  // ejemplares de trece daría a entender que los trece están dictaminados.
+  const pie = document.getElementById("cifrasPie");
+  if (pie) {
+    const renglones = [
+      especies.nota ? `Las especies del registro: ${especies.nota}.` : "",
+      alcaldia.cifra && alcaldia.cifra !== "—"
+        ? `${alcaldia.cifra} es la alcaldía que más reúne.` : "",
+      // Sumar 1,200 años sin decir de cuántos ejemplares salen daría a
+      // entender que los trece están dictaminados. Solo dos lo están.
+      edad.nota ? `Los años sumados salen de ${(edad.nota.match(/(\d+ de \d+)/) || [, "pocos"])[1]} ejemplares con edad dictaminada.` : "",
+    ].filter(Boolean);
+    pie.innerHTML = renglones.map((r) => `<span>${esc(r)}</span>`).join("");
+    pie.hidden = renglones.length === 0;
+  }
 }
 
 function pintarCategorias(stats) {
