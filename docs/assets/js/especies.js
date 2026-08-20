@@ -86,11 +86,30 @@ export const PERFILES = {
  * la escala por altura siga siendo verdadera.
  */
 export const ILUSTRACIONES = {
-  taxodium: "assets/img/especies/taxodium-grande.webp",   // Taxodium mucronatum · ahuehuete
-  fraxinus: "assets/img/especies/fraxinus-grande.webp",   // Fraxinus uhdei · fresno mexicano
-  ficus:    "assets/img/especies/ficus-grande.webp",      // Ficus microcarpa · laurel de la India
+  taxodium: "assets/img/especies/taxodium-media.webp",   // Taxodium mucronatum · ahuehuete
+  fraxinus: "assets/img/especies/fraxinus-media.webp",   // Fraxinus uhdei · fresno mexicano
+  ficus:    "assets/img/especies/ficus-media.webp",      // Ficus microcarpa · laurel de la India
   generico: null,
 };
+
+/* La versión de doble densidad. La ilustración se dibuja entre 170 y 375 px de
+   ancho, así que la de 1 400 px no aporta detalle a nadie: eran 1 300 KB de la
+   portada gastados en pixeles que ningún monitor llega a enseñar. El archivo
+   base es ahora el de tamaño medio y el grande viaja en srcset, para que solo
+   lo pidan las pantallas que sí lo aprovechan. */
+export const ILUSTRACIONES_2X = {
+  taxodium: "assets/img/especies/taxodium-grande.webp",
+  fraxinus: "assets/img/especies/fraxinus-grande.webp",
+  ficus:    "assets/img/especies/ficus-grande.webp",
+  generico: null,
+};
+
+/** Atributo srcset para la ilustración de una especie, o cadena vacía. */
+export function srcsetIlustracion(especie) {
+  const clave = perfilDe(especie).clave;
+  const media = ILUSTRACIONES[clave], grande = ILUSTRACIONES_2X[clave];
+  return media && grande ? `${media} 1x, ${grande} 2x` : "";
+}
 
 /* Proporción ancho/alto de cada ilustración, medida sobre el archivo ya
    recortado a su contorno. Permite reservar el ancho correcto sin esperar a

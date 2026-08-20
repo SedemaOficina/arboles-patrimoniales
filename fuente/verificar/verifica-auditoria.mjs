@@ -209,6 +209,117 @@ console.log('\n══ POSTULACIÓN · secuencia, no rejilla ══');
     /\.linea::before\{content:""/.test(cs2) && /bottom:22px/.test(cs2));
 }
 
+
+
+console.log('\n══ AUDITORÍA 360 · lo que se corrigió, para que no vuelva ══');
+{
+  const loader = fs.readFileSync('patrimoniales-loader.js','utf8');
+  const est = fs.readFileSync('estilos.css','utf8');
+  const af = fs.readFileSync('construir/armar-ficha.js','utf8');
+  const ar = fs.readFileSync('construir/armar-recursos.js','utf8');
+  const adc = fs.readFileSync('construir/armar-dc.js','utf8');
+  const pied = fs.readFileSync('parciales/pie-design.html','utf8');
+  const fl = fs.readFileSync('ficha-logica.js','utf8');
+  const reg = JSON.parse(fs.readFileSync('datos/registro.json','utf8'));
+
+  /* Una celda con fecha se convertía en un entero de siete dígitos: la ficha
+     de la Glorieta llegó a publicar «12,052,025 kg de CO2 al año». */
+  t('datos · una celda con forma de fecha no se convierte en número',
+    /if \(esFecha\(s0\)\) return null;/.test(loader) && /export function esFecha/.test(loader));
+  t('datos · ni dos grupos de dígitos separados por letras',
+    /if \(\/\\d\[\^\\d\.,\]\+\\d\/\.test\(s\)\) return null;/.test(loader));
+  t('datos · no queda ningún valor con forma de fecha en el registro',
+    (reg.ejemplares||reg).every((e) => Object.values(e.serviciosAmbientales||{})
+      .every((v) => !(typeof v === 'number' && Number.isInteger(v) && Math.abs(v) >= 1e6))));
+
+  /* La galería sondeaba los originales para contarlos: 2.9 MB por ficha. */
+  t('peso · el censo de fotos no descarga los originales',
+    /existeImagen\(rutaMiniatura\(id, n, e\)\)/.test(fs.readFileSync('fotos.js','utf8')));
+  t('peso · las ilustraciones sirven el tamaño medio, con 2x en srcset',
+    /taxodium-media\.webp/.test(fs.readFileSync('especies.js','utf8'))
+    && /export function srcsetIlustracion/.test(fs.readFileSync('especies.js','utf8')));
+  t('peso · el fondo de la portada también',
+    /image-set\(url\("assets\/img\/portada\/ficus-media\.webp"\) 1x/.test(est));
+
+  /* El dorado de marca daba 2.57-2.98:1 y el foco es un elemento de interfaz. */
+  t('accesibilidad · el anillo de foco tiene color propio, con contraste',
+    /--foco:#8F6E3E/.test(est) && /:focus-visible\{outline:3px solid var\(--foco\)/.test(est));
+  t('accesibilidad · el renglón de datos se apila en pantallas angostas',
+    /@media\(max-width:520px\)\{\n\s*\.dato-linea\{display:block\}/.test(est));
+
+  /* Un canonical que apunta a otra página impide indexar esta. */
+  t('metadatos · la ficha compone los suyos con el ejemplar',
+    /<link rel="canonical" href="\$\{_urlFicha\}">/.test(af)
+    && /<title>\$\{_esc\(_titulo\)\}<\/title>/.test(af));
+  t('metadatos · Recursos tiene canonical, og:url y twitter completos',
+    /<link rel="canonical" href="\$\{SITIO\.url\(NOMBRES\.recursos\)\}">/.test(ar)
+    && /twitter:image/.test(ar));
+
+  /* La expresión sin anclar daba esPortada=true en las tres páginas DC. */
+  t('Design · esPortada solo es cierto en la portada',
+    /\/\^dc-cuerpo\\\.html\$\/\.test\(cuerpo\)/.test(adc));
+  t('Design · su pie usa los mismos testigos que el del sitio',
+    (pied.match(/__PORTADA__/g)||[]).length >= 8 && !/href="#inicio"/.test(pied));
+
+  /* Nueve fichas publicaban «1 kg/año» de carbono con cero decimales fijos. */
+  t('cifras · los decimales los decide la magnitud',
+    /const decimales = \(v\) => \(Math\.abs\(v\) < 10 \? 2 : Math\.abs\(v\) < 100 \? 1 : 0\);/.test(fl));
+  t('cifras · el pie de cobertura cuenta bien las tarjetas',
+    !/Las cuatro cifras/.test(fs.readFileSync('logica.js','utf8'))
+    && !/Las cuatro cifras/.test(fs.readFileSync('dc-logica.js','utf8')));
+
+  t('marcado · no quedan restos del panel retirado',
+    !/panel-datos/.test(fs.readFileSync('cuerpo.html','utf8'))
+    && !/panel-datos/.test(fs.readFileSync('dc-cuerpo.html','utf8')));
+}
+
+console.log('\n══ ENSAMBLADO · las listas de exposición no pueden quedarse cortas ══');
+/* Los ensambladores encierran cada módulo en un IIFE y publican en window una
+   lista de nombres ESCRITA A MANO. Tres veces ya se ha importado un símbolo
+   nuevo sin añadirlo a esa lista, y el fallo no aparece al construir: aparece
+   en el navegador, con la mitad de la página en blanco y un ReferenceError.
+   Esta prueba cruza lo que cada módulo IMPORTA con lo que el ensamblador
+   EXPONE, y falla antes de llegar al navegador. */
+{
+  const leer = (f) => fs.readFileSync(f, 'utf8');
+  // Qué importa cada consumidor de cada módulo inlineado.
+  const escapar = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const importados = (archivo, modulo) => {
+    const src = leer(archivo);
+    const re = new RegExp('import\\s*\\{([^}]*)\\}\\s*from\\s*"\\./' + escapar(modulo) + '"', 'g');
+    const fuera = [];
+    let m;
+    while ((m = re.exec(src))) fuera.push(...m[1].split(',').map((x) => x.trim()).filter(Boolean));
+    return fuera;
+  };
+  const expuestos = (ensamblador, modulo) => {
+    const src = leer(ensamblador);
+    const lista = new RegExp("envolver\\('" + escapar(modulo) + "',\\[([^\\]]*)\\]").exec(src);
+    if (lista) return lista[1].split(',').map((x) => x.trim().replace(/['"]/g, ''));
+    // armar-ficha.js escribe la lista a mano, con window.X=X
+    return [...src.matchAll(/window\.(\w+)\s*=/g)].map((m) => m[1]);
+  };
+
+  const casos = [
+    // Cada ensamblador se cruza con LOS MÓDULOS QUE ÉL INLINEA, no con todos:
+    // armar.js arma la portada (logica.js + mapa.js) y armar-ficha.js la ficha.
+    ['construir/armar.js',       'especies.js',    ['logica.js']],
+    ['construir/armar.js',       'fotos.js',       ['logica.js', 'mapa.js']],
+    ['construir/armar.js',       'indicadores.js', ['logica.js']],
+    ['construir/armar.js',       'leaflet-diferido.js', ['logica.js']],
+    ['construir/armar-ficha.js', 'especies.js',    ['ficha-logica.js']],
+    ['construir/armar-ficha.js', 'fotos.js',       ['ficha-logica.js']],
+    ['construir/armar-ficha.js', 'leaflet-diferido.js', ['ficha-logica.js']],
+  ];
+  for (const [ens, mod, consumidores] of casos) {
+    const publica = expuestos(ens, mod);
+    const pide = [...new Set(consumidores.flatMap((c) => importados(c, mod)))];
+    const faltan = pide.filter((n) => !publica.includes(n));
+    t(`${ens.split('/').pop()} publica todo lo que se le pide de ${mod}`,
+      faltan.length === 0, faltan.join(', '));
+  }
+}
+
 console.log('\n══ FICHA · el recuadro morado es ahora el mapa del ejemplar ══');
 {
   const fv=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8'),
@@ -567,9 +678,18 @@ console.log('\n══ FOTOGRAFÍAS POR CARPETA ══');
     && /\$\{CARPETA_FOTOS\}\/\$\{id\}\/\$\{numeroFoto\(n\)\}\.\$\{ext\}/.test(ft));
   t('Numeración a dos dígitos', /padStart\(2, "0"\)/.test(ft));
   t('Se detiene en el primer hueco y tiene tope',
-    /if \(!\(await existeImagen\(u\)\)\) break;/.test(ft) && /TOPE_FOTOS = 12/.test(ft));
+    /for \(const hay of presentes\) \{\n\s*if \(!hay\) break;/.test(ft) && /TOPE_FOTOS = 12/.test(ft));
   t('La extensión la fija la primera foto de la carpeta',
-    /for \(const e of EXTENSIONES\)[\s\S]{0,120}?ext = e; break;/.test(ft));
+    /const ext = halladas\.find\(Boolean\) \|\| null;/.test(ft));
+  /* El censo se hace contra la MINIATURA: existeImagen usa <img>, que descarga
+     el archivo entero para responder si existe. Sondeando los originales, una
+     ficha de diez fotografías bajaba 2.9 MB solo para contarlas. */
+  t('El censo de fotos sondea la miniatura, no el original',
+    /const sonda = \(n, e\) => existeImagen\(rutaMiniatura\(id, n, e\)\)/.test(ft));
+  t('Y con respaldo al original si la carpeta no tiene miniaturas',
+    /\.then\(\(hay\) => hay \|\| existeImagen\(rutaFoto\(id, n, e\)\)\)/.test(ft));
+  t('Los sondeos van en paralelo, no encadenados con await',
+    (ft.match(/await Promise\.all\(/g)||[]).length >= 2);
   t('El sondeo quita hidden y lazy: si no, la imagen nunca se carga',
     /img\.hidden = false;\s*\n\s*img\.removeAttribute\("loading"\);/.test(ft));
   t('La tarjeta y el renglón del mapa piden la foto por identificador',

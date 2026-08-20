@@ -273,7 +273,7 @@ class Component extends DCLogic {
       alBuscar: (ev) => this.setState({ busqueda: ev && ev.target ? ev.target.value : "" }),
       alBorrarBusqueda: () => this.setState({ busqueda: "" }),
       coberturaServicios: incompletos === 0
-        ? `Las cuatro cifras están calculadas con el dato de los ${n} ejemplares del registro.`
+        ? `Las tres cifras están calculadas con el dato de los ${n} ejemplares del registro.`
         : "Algunas cifras se calculan con menos ejemplares de los que integran el registro; cada tarjeta lo indica.",
       hayAvisoDato: !!meta.degradado,
       avisoDato: (meta.alertas || []).filter((a) => a.indexOf("No fue posible actualizar") === 0)[0] || "",

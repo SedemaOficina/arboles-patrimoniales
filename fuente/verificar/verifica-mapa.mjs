@@ -285,5 +285,38 @@ t('mensajes · el retrato se descubre por archivo',
 t('mensajes · sin retrato queda el medallón de iniciales',
   /class="mensaje__iniciales"/.test(lg) && /\.mensaje__retrato--foto \.mensaje__iniciales\{display:none\}/.test(css));
 
+
+console.log('══ LEAFLET DIFERIDO ══');
+const dif = fs.readFileSync('leaflet-diferido.js','utf8');
+const armar = fs.readFileSync('construir/armar.js','utf8');
+const armarF = fs.readFileSync('construir/armar-ficha.js','utf8');
+const fl2 = fs.readFileSync('ficha-logica.js','utf8');
+// 158 KB que no sirven hasta llegar al mapa, tres pantallas más abajo.
+t('diferido · ninguna página carga Leaflet por etiqueta',
+  !/<script src="\.\/vendor\/leaflet\.js">/.test(armar)
+  && !/<script src="\.\/vendor\/leaflet\.js">/.test(armarF));
+t('diferido · y ninguna salida lo trae en el <head>',
+  !/<script src="\.\/vendor\/leaflet\.js"><\/script>/.test(port)
+  && !/<script src="\.\/vendor\/leaflet\.js"><\/script>/.test(fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8')));
+t('diferido · se descarga al acercarse el contenedor',
+  /new IntersectionObserver/.test(dif) && /rootMargin: MARGEN_ANTICIPACION/.test(dif));
+t('diferido · con margen de anticipación, no justo al verse',
+  /MARGEN_ANTICIPACION = "400px"/.test(dif));
+// Dos llamadas simultáneas no deben disparar dos descargas.
+t('diferido · una sola descarga aunque se pida dos veces',
+  /if \(promesa\) return promesa;/.test(dif));
+t('diferido · si ya está cargado, no vuelve a pedirlo',
+  /if \(typeof window !== "undefined" && window\.L\) return Promise\.resolve\(window\.L\);/.test(dif));
+// Sin IntersectionObserver el mapa tiene que seguir apareciendo.
+t('diferido · sin IntersectionObserver carga de inmediato',
+  /if \(typeof IntersectionObserver === "undefined"\) \{ arrancar\(\); return; \}/.test(dif));
+// Si la descarga falla, el aviso ya escrito debe pintarse igual.
+t('diferido · si falla la descarga se pinta el aviso, no un recuadro gris',
+  /cuandoSeAcerque\(lienzo, montar, montar\)/.test(lg)
+  && /cuandoSeAcerque\(lienzo, \(\) => dibujarMapaEjemplar/.test(fl2));
+t('diferido · el ensamblador lo expone en las dos páginas',
+  /envolver\('leaflet-diferido\.js',\['cargarLeaflet','cuandoSeAcerque'\]\)/.test(armar)
+  && /window\.cuandoSeAcerque=cuandoSeAcerque/.test(armarF));
+
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

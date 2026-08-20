@@ -7,13 +7,21 @@
 <meta name="description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México. Secretaría del Medio Ambiente.">
 <meta name="author" content="Secretaría del Medio Ambiente de la Ciudad de México">
 <meta name="theme-color" content="#8D4992">
+<link rel="canonical" href="https://sedemaoficina.github.io/arboles-patrimoniales/recursos.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Árboles patrimoniales de la Ciudad de México · Secretaría del Medio Ambiente">
 <meta property="og:locale" content="es_MX">
 <meta property="og:title" content="Recursos · Árboles patrimoniales de la Ciudad de México">
 <meta property="og:description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México.">
+<meta property="og:url" content="https://sedemaoficina.github.io/arboles-patrimoniales/recursos.html">
 <meta property="og:image" content="https://sedemaoficina.github.io/arboles-patrimoniales/assets/img/portada/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Árboles patrimoniales de la Ciudad de México">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Recursos · Árboles patrimoniales de la Ciudad de México">
+<meta name="twitter:description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México.">
+<meta name="twitter:image" content="https://sedemaoficina.github.io/arboles-patrimoniales/assets/img/portada/compartir.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -50,7 +58,10 @@
   --papel:#FEF7E4;             /* superficie clara: la crema del logotipo */
   --papel-hondo:#F7EDD6;       /* alterna para franjas y tarjetas */
   --blanco:#FFFDF7;            /* tarjetas sobre papel */
-  --dorado:#B28E5C;            /* patrimonio y decretos, sobre fondo claro */
+  --dorado:#B28E5C;
+  /* Solo para el anillo de foco: el dorado de marca no llega a 3:1 sobre las
+     superficies claras y el foco es un elemento de interfaz, no un adorno. */
+  --foco:#8F6E3E;            /* patrimonio y decretos, sobre fondo claro */
   --dorado-luz:#D9BC91;        /* el acento del fondo profundo: 9.26:1 sobre #2A1630 */
   /* Degradado de las superficies profundas: portada de ficha, cabecera de
      tarjeta, marcos de imagen. Antes eran verdes sueltos de la paleta anterior. */
@@ -80,7 +91,13 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
 .envoltura{max-width:var(--ancho);margin:0 auto;padding:0 28px}
 a{color:var(--jacaranda);text-decoration-thickness:1px;text-underline-offset:3px}
-:focus-visible{outline:3px solid var(--dorado);outline-offset:3px;border-radius:2px}
+/* El anillo de foco tiene su propio color, no el dorado de la marca.
+   El dorado #B28E5C da entre 2.57 y 2.98:1 sobre las cinco superficies claras
+   del sitio —niebla, verde niebla, papel, papel hondo y blanco—, por debajo
+   del 3.0:1 que WCAG 2.1 exige a un indicador de foco (SC 1.4.11). Es decir:
+   fallaba en el 80 % de la página y solo cumplía sobre los bloques oscuros.
+   El nuevo tono conserva el registro dorado y llega a 4.4:1 sobre el papel. */
+:focus-visible{outline:3px solid var(--foco);outline-offset:3px;border-radius:2px}
 
 /* --- tipografía --- */
 /* Auditoria P4.1. El h3 cargaba once tratamientos: unos eran titulos de bloque
@@ -223,7 +240,16 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    estrechas vuelve a pegarse al borde, que ahí sí coinciden. */
 .portada::before{content:"";position:absolute;top:0;right:max(0px, calc(50% - 590px));
   width:min(52vw,680px);height:clamp(380px,52vw,600px);
-  background:url("assets/img/portada/ficus-grande.webp") no-repeat right bottom/contain;
+  /* image-set: el archivo de 1 400 px pesa 751 KB y se dibuja a 349 CSS px.
+     El de tamaño medio —249 KB— basta para densidad sencilla; el grande solo
+     lo piden las pantallas que lo aprovechan. Se deja url() detrás como
+     respaldo para los navegadores sin image-set. */
+  background:url("assets/img/portada/ficus-media.webp") no-repeat right bottom/contain;
+  background-image:-webkit-image-set(url("assets/img/portada/ficus-media.webp") 1x,
+    url("assets/img/portada/ficus-grande.webp") 2x);
+  background-image:image-set(url("assets/img/portada/ficus-media.webp") 1x,
+    url("assets/img/portada/ficus-grande.webp") 2x);
+  background-repeat:no-repeat;background-position:right bottom;background-size:contain;
   opacity:.95;pointer-events:none;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%),linear-gradient(180deg,#000 0,#000 74%,transparent 99%);
   -webkit-mask-composite:source-in;
@@ -620,7 +646,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   font-size:14px;font-weight:700;padding:11px 18px;border-radius:0 0 3px 3px;text-decoration:none;
   transition:top .16s}
 .saltar:focus{top:0}
-.saltar:focus-visible{outline:3px solid var(--dorado);outline-offset:2px}
+.saltar:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
 
 /* Un enlace de texto suelto mide lo que mide su renglón: en un teléfono
    quedaban blancos de 15 px de alto. Se les da altura de toque sin cambiar su
@@ -694,7 +720,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   background:var(--blanco);border:1px solid rgba(141,73,146,.28);border-radius:2px;padding:9px 15px;
   transition:background .14s,color .14s,border-color .14s}
 .recursos-indice a:hover{background:var(--jacaranda);color:#fff;border-color:var(--jacaranda)}
-.recursos-indice a:focus-visible{outline:3px solid var(--dorado);outline-offset:2px}
+.recursos-indice a:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
 
 .recursos-lista{list-style:none;margin:0;padding:0;display:grid;gap:1px;
   background:rgba(42,22,48,.12);border:1px solid rgba(42,22,48,.12)}
@@ -991,7 +1017,21 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .domicilio{font-family:var(--editorial);font-size:20px;line-height:1.45;margin:0 0 20px}
 .dato-linea{display:flex;gap:14px;padding:11px 0;border-top:1px solid rgba(42,22,48,.1);font-size:14.5px}
 .dato-linea dt{flex:0 0 148px;color:var(--gris);font-weight:600}
-.dato-linea dd{margin:0;flex:1}
+/* min-width:0 y corte de palabra: sin ellos, el identificador del registro
+   —una cadena de 26 caracteres sin espacios— fija el ancho mínimo del renglón
+   y estira el documento 22 px a 360 px de ventana, que es el iPhone SE y buena
+   parte del parque Android de gama baja. */
+.dato-linea dd{margin:0;flex:1;min-width:0;overflow-wrap:anywhere}
+/* En pantallas angostas el rótulo y el dato se apilan.
+   Con el rótulo fijo en 148 px, más el hueco y el ancho mínimo del dato, el
+   renglón pedía 382 px en una ventana de 360 y estiraba el documento 22 px:
+   360 px es el iPhone SE y buena parte del parque Android de gama baja.
+   Apilados, el dato dispone del ancho completo y de paso se lee mejor. */
+@media(max-width:520px){
+  .dato-linea{display:block}
+  .dato-linea dt{margin-bottom:3px}
+  .identificador{white-space:normal;overflow-wrap:anywhere;overflow-x:visible}
+}
 /* Antes era un recuadro morado que decía dónde estaba el árbol. Ahora lo
    enseña: un mapa con un solo punto, el del ejemplar. El botón de Google Maps
    se fue a la columna de datos, debajo de las coordenadas, que es donde

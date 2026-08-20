@@ -1,8 +1,9 @@
 /* Árboles patrimoniales · lógica de la portada.
    Consume la estructura que emite patrimoniales-loader.js v2. */
 
-import { svgSilueta, ilustracionDe, perfilDe, PROPORCION_ILUSTRACION } from "./especies.js";
+import { svgSilueta, ilustracionDe, perfilDe, PROPORCION_ILUSTRACION, srcsetIlustracion } from "./especies.js";
 import { crearMapa } from "./mapa.js";
+import { cuandoSeAcerque } from "./leaflet-diferido.js";
 import { montarPrimeraFoto } from "./fotos.js";
 
 /* Los enlaces entre la portada y la ficha son a ARCHIVOS distintos, no anclas
@@ -59,7 +60,9 @@ function arbolDibujado(e, alturaPx, anchoMax) {
     // horizontal antes que deformar un ejemplar para que quepa.
     const ancho = alturaPx * razon;
     const alto = alturaPx;
-    return `<img class="ilustracion-arbol" src="${ilu}" alt="" loading="lazy" width="${ancho.toFixed(0)}" height="${alto.toFixed(0)}" style="width:${ancho.toFixed(1)}px;height:${alto.toFixed(1)}px">`;
+    // srcset: la de tamaño medio basta para los 170-375 px a los que se
+    // dibuja; la grande solo la piden las pantallas de doble densidad.
+    return `<img class="ilustracion-arbol" src="${ilu}" srcset="${srcsetIlustracion(e.especie)}" alt="" loading="lazy" width="${ancho.toFixed(0)}" height="${alto.toFixed(0)}" style="width:${ancho.toFixed(1)}px;height:${alto.toFixed(1)}px">`;
   }
   return svgSilueta(e.especie, alturaPx, e.morfologia.extensionCopa_m, e.morfologia.altura_m, { anchoMax });
 }
@@ -344,7 +347,13 @@ function pintarMapa(ejemplares) {
   guia.textContent = conCoords === ejemplares.length ? ""
     : `${conCoords} de los ${ejemplares.length} ejemplares tienen coordenadas capturadas. Los demás aparecen en el listado con su domicilio.`;
   guia.hidden = !guia.textContent;
-  crearMapa({ contenedor: lienzo, lista, filtros, ejemplares });
+  /* El mapa no se construye al cargar la página: se construye cuando la
+     persona se acerca a él, que es también cuando termina de descargarse
+     Leaflet. Si la descarga falla, crearMapa recibe el mundo sin L y pinta su
+     propio aviso —el listado de al lado sigue siendo la vía completa al mismo
+     contenido—. */
+  const montar = () => crearMapa({ contenedor: lienzo, lista, filtros, ejemplares });
+  cuandoSeAcerque(lienzo, montar, montar);
 }
 
 
@@ -366,7 +375,7 @@ function pintarServicios(stats) {
 
   const incompletos = datos.filter(([s]) => !s.completo).length;
   document.getElementById("coberturaServicios").textContent = incompletos === 0
-    ? `Las cuatro cifras están calculadas con el dato de los ${stats.totalEjemplares} ejemplares del registro.`
+    ? `Las tres cifras están calculadas con el dato de los ${stats.totalEjemplares} ejemplares del registro.`
     : `Algunas cifras se calculan con menos ejemplares de los que integran el registro; cada tarjeta lo indica.`;
 }
 

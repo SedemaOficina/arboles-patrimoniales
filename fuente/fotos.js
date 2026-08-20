@@ -82,19 +82,32 @@ export async function descubrirFotos(id, opciones = {}) {
   const tope = opciones.tope || TOPE_FOTOS;
   const credito = opciones.credito || null;
 
-  // 1. La extensión de la carpeta la fija la primera foto.
-  let ext = null;
-  for (const e of EXTENSIONES) {
-    if (await existeImagen(rutaFoto(id, 1, e))) { ext = e; break; }
-  }
+  /* El sondeo va contra la MINIATURA, no contra la fotografía completa.
+     `existeImagen` usa <img>, que descarga el archivo entero para responder si
+     existe. Sondeando los originales, abrir una ficha de diez fotografías
+     bajaba los diez a tamaño completo —2.9 MB— solo para contarlos, y de esos
+     diez la galería enseña uno. Con la miniatura el mismo censo cuesta 0.4 MB
+     y el visor pide el original únicamente de la foto que se está viendo.
+     Si la carpeta no tiene miniaturas generadas, se cae al original: vale más
+     una galería pesada que una galería vacía. */
+  const sonda = (n, e) => existeImagen(rutaMiniatura(id, n, e)).then((hay) => hay || existeImagen(rutaFoto(id, n, e)));
+
+  // 1. La extensión de la carpeta la fija la primera foto. Las cinco
+  //    extensiones se prueban EN PARALELO: son excluyentes entre sí, así que
+  //    encadenarlas con await solo sumaba viajes de ida y vuelta.
+  const halladas = await Promise.all(EXTENSIONES.map((e) => sonda(1, e).then((hay) => (hay ? e : null))));
+  const ext = halladas.find(Boolean) || null;
   if (!ext) return [];
 
-  // 2. El resto se pide con esa extensión hasta el primer hueco.
+  // 2. El resto se pide con esa extensión hasta el primer hueco. También en
+  //    paralelo, en tandas del tamaño del tope: el corte lo decide después el
+  //    primer hueco, no el orden de llegada.
+  const presentes = await Promise.all(
+    Array.from({ length: tope - 1 }, (_, i) => sonda(i + 2, ext)));
   const urls = [rutaFoto(id, 1, ext)];
-  for (let n = 2; n <= tope; n++) {
-    const u = rutaFoto(id, n, ext);
-    if (!(await existeImagen(u))) break;
-    urls.push(u);
+  for (const hay of presentes) {
+    if (!hay) break;
+    urls.push(rutaFoto(id, urls.length + 1, ext));
   }
 
   return urls.map((url, i) => ({

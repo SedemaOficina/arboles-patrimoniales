@@ -280,7 +280,9 @@ class Component extends DCLogic {
         const neg = hay && v < 0;
         return {
           texto, unidad: hay ? unidad : "",
-          valor: hay ? this.nf(v, 0) : "Sin dato",
+          // Mismo criterio que la ficha del sitio: los decimales los decide la
+          // magnitud. Con cero fijos, nueve fichas decían todas «1 kg/año».
+          valor: hay ? this.nf(v, Math.abs(v) < 10 ? 2 : Math.abs(v) < 100 ? 1 : 0) : "Sin dato",
           negativo: neg,
           clase: "grupo__fila" + (hay ? (neg ? " grupo__fila--neg" : "") : " grupo__fila--sin"),
         };

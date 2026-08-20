@@ -97,7 +97,7 @@ const armar = (salida, cuerpo, logica, conMapa) => {
 <x-dc>
 ${HELMET(conMapa)}
 
-${incluir(fs.readFileSync(cuerpo, 'utf8').trim(), {pie:'pie-design', esPortada:/dc-cuerpo/.test(cuerpo)})}
+${incluir(fs.readFileSync(cuerpo, 'utf8').trim(), {pie:'pie-design', esPortada:/^dc-cuerpo\.html$/.test(cuerpo)})}
 
 </x-dc>
 <script type="text/x-dc" data-dc-script>

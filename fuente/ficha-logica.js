@@ -1,4 +1,5 @@
-import { svgSilueta, svgPersona, perfilDe, ilustracionDe, PROPORCION_ILUSTRACION, PERSONA } from "./especies.js";
+import { svgSilueta, svgPersona, perfilDe, ilustracionDe, PROPORCION_ILUSTRACION, PERSONA, srcsetIlustracion } from "./especies.js";
+import { cuandoSeAcerque } from "./leaflet-diferido.js";
 import { GEO_CDMX } from "./geo-cdmx.js";
 import { descubrirFotos } from "./fotos.js";
 
@@ -132,7 +133,7 @@ function pintarGaleria(e) {
     const iluF = ilustracionDe(e.especie);
     const razonF = PROPORCION_ILUSTRACION[perfilDe(e.especie).clave] || 1;
     cont.innerHTML = `<div class="sin-foto">
-      ${iluF ? `<img class="ilustracion-arbol" src="${iluF}" alt="Ilustración de referencia de ${esc(p.nombre)}" style="height:250px;width:${(250 * razonF).toFixed(0)}px">`
+      ${iluF ? `<img class="ilustracion-arbol" src="${iluF}" srcset="${srcsetIlustracion(e.especie)}" alt="Ilustración de referencia de ${esc(p.nombre)}" style="height:250px;width:${(250 * razonF).toFixed(0)}px">`
              : svgSilueta(e.especie, 230, e.morfologia.extensionCopa_m, e.morfologia.altura_m)}
       <p>Silueta de referencia · ${esc(p.nombre)}<br><em>${esc(e.especie || "")}</em></p>
     </div>`;
@@ -243,7 +244,7 @@ function pintarEscala(e) {
     let arbol;
     if (ilu) {
       const razon = PROPORCION_ILUSTRACION[perfilDe(e.especie).clave] || 1;
-      arbol = `<img class="ilustracion-arbol" src="${ilu}" alt="Ilustración de referencia de ${esc(perfilDe(e.especie).nombre)}" loading="lazy" style="width:${(h * razon).toFixed(1)}px;height:${h.toFixed(1)}px">`;
+      arbol = `<img class="ilustracion-arbol" src="${ilu}" srcset="${srcsetIlustracion(e.especie)}" alt="Ilustración de referencia de ${esc(perfilDe(e.especie).nombre)}" loading="lazy" style="width:${(h * razon).toFixed(1)}px;height:${h.toFixed(1)}px">`;
     } else {
       arbol = svgSilueta(e.especie, h, copa, alt);
     }
@@ -350,6 +351,14 @@ function pintarMapaEjemplar(e) {
   if (pie) pie.textContent = "Cartografía base © colaboradores de OpenStreetMap · teselas de CARTO.";
 
   const centro = [e.coords.lat, e.coords.lng];
+  /* Leaflet se descarga cuando el recuadro se acerca a la pantalla: en la
+     ficha está por debajo de la galería y de la tabla de medidas, así que la
+     mayoría de las visitas llegan a él con la biblioteca ya lista. */
+  cuandoSeAcerque(lienzo, () => dibujarMapaEjemplar(e, lienzo, centro),
+    () => dibujarMapaEjemplar(e, lienzo, centro));
+}
+
+function dibujarMapaEjemplar(e, lienzo, centro) {
   if (typeof L === "undefined") {
     // Sin Leaflet el recuadro no puede dibujar nada: se dice, no se deja en gris.
     lienzo.innerHTML = `<p class="mapa-caja__vacio">El mapa no pudo cargarse. Usa el botón de Google Maps para ubicar el ejemplar.</p>`;
@@ -431,17 +440,26 @@ function pintarServicios(e) {
   document.getElementById("fServicios").innerHTML = grupos.map(([titulo, filas], i) => {
     let hayNeg = false, haySin = false;
     const enGrande = filas.length <= 2;
+    /* Los decimales se eligen por la MAGNITUD del valor, no por la columna.
+       Con cero decimales fijos, nueve de las trece fichas publicaban «1 kg/año»
+       de carbono: 0.79, 0.87, 0.94, 1.03, 1.13, 1.23 y 1.27 se redondeaban
+       todos a 1, borrando una diferencia real de 1.6 veces entre el mayor y el
+       menor. Y el CSV de datos abiertos sí trae los decimales, así que la ficha
+       contradecía al dato publicado. Por debajo de diez se muestran dos
+       decimales; entre diez y cien, uno; de cien en adelante, ninguno: ahí el
+       decimal ya no informa y el separador de miles hace el trabajo. */
+    const decimales = (v) => (Math.abs(v) < 10 ? 2 : Math.abs(v) < 100 ? 1 : 0);
     const html = filas.map(([t, v, u]) => {
       const hay = typeof v === "number" && isFinite(v);
       if (!hay) haySin = true;
       const neg = hay && v < 0; if (neg) hayNeg = true;
       if (enGrande) {
         return `<div class="cifra-serv${hay ? (neg ? " cifra-serv--neg" : "") : " cifra-serv--sin"}">`
-          + `<b>${hay ? `${nf(v, 0)}<u>${u}</u>` : '<span class="sin-dato">Sin dato</span>'}</b>`
+          + `<b>${hay ? `${nf(v, decimales(v))}<u>${u}</u>` : '<span class="sin-dato">Sin dato</span>'}</b>`
           + `<span>${t}</span></div>`;
       }
       return `<div class="grupo__fila${hay ? (neg ? " grupo__fila--neg" : "") : " grupo__fila--sin"}"><span>${t}</span>`
-        + `<b>${hay ? `${nf(v, 0)}<u>${u}</u>` : '<span class="sin-dato">Sin dato</span>'}</b></div>`;
+        + `<b>${hay ? `${nf(v, decimales(v))}<u>${u}</u>` : '<span class="sin-dato">Sin dato</span>'}</b></div>`;
     }).join("");
     const notas = [];
     if (haySin) notas.push('Los renglones marcados como "Sin dato" no se pudieron estimar para este ejemplar con la información disponible.');

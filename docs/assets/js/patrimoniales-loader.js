@@ -216,12 +216,47 @@ export function acentuar(v) {
  * "12,345.67" -> 12345.67   |   "1.234,56" -> 1234.56   |   "$1,890.50" -> 1890.5
  * "154.00; 161.00" -> 154 (toma el primer valor de una lista con ';')
  */
+/**
+ * ¿La celda tiene forma de fecha?
+ *
+ * Cubre las tres formas que aparecen en una hoja de cálculo en español:
+ *   12/05/2025   12-05-2025   2025-05-12
+ * y sus variantes de uno o dos dígitos y de año de dos cifras. No pretende
+ * validar la fecha —de eso se encarga parseFecha—, solo distinguirla de una
+ * medición para que no acabe convertida en un entero de siete dígitos.
+ */
+export function esFecha(texto) {
+  const t = String(texto == null ? "" : texto).trim();
+  return /^\d{1,4}[\/.-]\d{1,2}[\/.-]\d{2,4}$/.test(t);
+}
+
 export function toNumber(v) {
   const s0 = clean(v);
   if (s0 === null) return null;
 
+  /* Una FECHA no es un número.
+     Al limpiar «todo lo que no sea dígito» una celda con «12/05/2025» se
+     convertía en 12052025, y ese entero entraba al registro como si fuera una
+     medición: la ficha de la Glorieta de los Ahuehuetes llegó a publicar
+     «12,052,025 kg de CO2 al año» —doce mil toneladas evitadas por un árbol—.
+     Seis celdas del registro estaban así. El separador de listas tampoco
+     ayudaba: solo reconocía « / » con espacios, de modo que la barra de la
+     fecha sobrevivía a la división y se borraba después.
+     Una celda con forma de fecha se rechaza: vale más un hueco declarado que
+     una cifra falsa con separador de miles, que es justo lo que la hace
+     parecer verdadera. */
+  if (esFecha(s0)) return null;
+
   // Listas separadas por ';' o por ' / ': se toma el primer elemento.
   let s = s0.split(/[;|]|\s\/\s/)[0].trim();
+
+  /* Sobre el elemento ya aislado: dos grupos de dígitos separados por algo que
+     NO es separador decimal tampoco son un número. «2 de 3» se convertía en 23
+     por el mismo camino que la fecha, y «20 - 30» en 2030. Un sufijo de unidad
+     —«128 g»— no cae aquí, porque después de las letras ya no vienen dígitos;
+     un negativo —«-99.18»— tampoco, porque el signo va delante y no entre dos
+     cifras. */
+  if (/\d[^\d.,]+\d/.test(s)) return null;
 
   // Quita todo salvo dígitos, signo, punto y coma.
   s = s.replace(/[^\d,.\-]/g, "");

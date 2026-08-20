@@ -112,7 +112,7 @@
         "emisionesEvitadasCO_g": 34.45,
         "emisionesEvitadasNO2_g": 10.42,
         "emisionesEvitadasSO2_g": 113.66,
-        "emisionesEvitadasPM25_g": 10122025
+        "emisionesEvitadasPM25_g": null
       },
       "linkITree": "MyTree",
       "observaciones": null,
@@ -948,7 +948,7 @@
         "ahorroElectricidad_kWh": 55.55,
         "emisionesEvitadasCO2_kg": 41.97,
         "emisionesEvitadasCO_g": 22.29,
-        "emisionesEvitadasNO2_g": 8062025,
+        "emisionesEvitadasNO2_g": null,
         "emisionesEvitadasSO2_g": 86.77,
         "emisionesEvitadasPM25_g": 5.88
       },
@@ -1180,11 +1180,11 @@
         "so2Eliminado_g": 1040.6,
         "pm25Eliminado_g": 127.28,
         "ahorroElectricidad_kWh": 108.73,
-        "emisionesEvitadasCO2_kg": 12052025,
+        "emisionesEvitadasCO2_kg": null,
         "emisionesEvitadasCO_g": 28.31,
-        "emisionesEvitadasNO2_g": 3022025,
+        "emisionesEvitadasNO2_g": null,
         "emisionesEvitadasSO2_g": 39.66,
-        "emisionesEvitadasPM25_g": 11022025
+        "emisionesEvitadasPM25_g": null
       },
       "linkITree": "MyTree",
       "observaciones": null,
@@ -1419,7 +1419,7 @@
         "ahorroElectricidad_kWh": 101.49,
         "emisionesEvitadasCO2_kg": 10.76,
         "emisionesEvitadasCO_g": 26.31,
-        "emisionesEvitadasNO2_g": 2092025,
+        "emisionesEvitadasNO2_g": null,
         "emisionesEvitadasSO2_g": 36.1,
         "emisionesEvitadasPM25_g": 10.29
       },
