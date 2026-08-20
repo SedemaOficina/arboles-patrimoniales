@@ -323,8 +323,21 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
   function marcarResultado(slug) {
     slugResultado = slug;
     pintarLista();
+    pintarPinResultado();
     const fila = lista.querySelector(`.mapa-item[data-slug="${slug}"]`);
     if (fila && fila.scrollIntoView) fila.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
+  /** El marcador del ejemplar más cercano lleva halo y pulso, en verde, igual
+   *  que el punto de la persona lleva el suyo en morado. Así la pareja
+   *  «dónde estoy / cuál es mi árbol» se lee de un vistazo, sin buscar cuál de
+   *  los trece puntos verdes es el que respondió a la pregunta. */
+  function pintarPinResultado() {
+    marcadores.forEach((m, s) => {
+      const el = m.getElement();
+      const pin = el && el.querySelector(".pin");
+      if (pin) pin.classList.toggle("pin--cercano", s === slugResultado);
+    });
   }
 
   /** Los n ejemplares más próximos, del más cercano al más lejano. */
@@ -397,6 +410,9 @@ export function crearMapa({ contenedor, lista, filtros, panel, ejemplares, alSel
       const dentro = visibles.has(slug);
       const pin = el.querySelector(".pin");
       if (pin) pin.classList.toggle("pin--atenuado", !dentro);
+      // El filtro repinta los marcadores; sin esto, la marca del más cercano
+      // se perdía al mover cualquier filtro después de ubicarse.
+      if (pin) pin.classList.toggle("pin--cercano", slug === slugResultado && dentro);
       el.classList.toggle("marcador--fuera", !dentro);
       el.setAttribute("tabindex", dentro ? "0" : "-1");
       el.setAttribute("aria-hidden", dentro ? "false" : "true");
