@@ -949,11 +949,46 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
     /-webkit-line-clamp:2/.test(cs) && /\.bosque__arbol\{flex:0 0 auto;width:clamp\(112px,13vw,168px\)/.test(cs));
   t('El globo no invade la guía: se posa sobre la copa',
     /\.bosque__globo\{position:absolute;top:10px/.test(cs) && !/margin-top:-162px/.test(cs));
-  t('La hilera tiene superficie propia y no se lee como cola de la portada',
-    /\.bosque\{position:relative;z-index:2;background:var\(--papel-hondo\)/.test(cs)
-    && /border-top:2px solid var\(--jacaranda\)/.test(cs));
+  /* DECISIÓN REVERTIDA, Y A PETICIÓN. La hilera tuvo superficie propia —un
+     crema más hondo— para despegarse de la portada. A la vista eran dos beiges
+     contiguos sin motivo y se leía como un recuadro sobrepuesto. Ahora el
+     fondo es el MISMO papel: sigue siendo opaco, porque debajo de 1000 px la
+     ilustración de la portada llega hasta aquí y se colaba entre las copas,
+     pero ya no dibuja una caja. Lo que separa la pieza es su título. */
+  t('La hilera comparte el papel de la portada y no se lee como recuadro',
+    /\.bosque\{--lienzo-bosque:268px;position:relative;z-index:2;margin:64px 0 0;padding:0;\s*background:var\(--papel\)\}/.test(cs)
+    && !/\.bosque\{[^}]*papel-hondo/.test(cs));
+  t('Pero conserva fondo opaco: debajo de 1000 px la ilustración llega hasta aquí',
+    /background:var\(--papel\)\}/.test(cs) && /la ilustración de la portada llega hasta aquí/.test(cs));
+  t('El filete morado bajó del borde de la caja al pie del título',
+    /\.bosque__titulo\{[^}]*border-bottom:2px solid var\(--jacaranda\)/.test(cs));
+  t('El título de la hilera es encabezado, no rótulo de once píxeles',
+    /\.bosque__rotulo\{font-family:var\(--display\)/.test(cs)
+    && /<h2 class="bosque__rotulo">Los ejemplares, a escala real<\/h2>/.test(
+        fs.readFileSync('cuerpo.html','utf8')));
   t('El velo de los bordes se funde con el fondo real de la hilera',
-    !/\.bosque__borde--izq\{left:0;background:linear-gradient\(90deg,var\(--papel\) /.test(cs));
+    /\.bosque__borde--izq\{left:0;background:linear-gradient\(90deg,var\(--papel\) /.test(cs)
+    && !/bosque__borde--izq\{[^}]*papel-hondo/.test(cs));
+
+  /* LA REGLA DE ALTURAS. «A escala real» era una afirmación que quien mira no
+     podía comprobar: trece siluetas de distinto tamaño y nada contra qué
+     medirlas. Las tres comprobaciones que la sostienen: que exista, que se
+     dibuje con la misma escala que los árboles, y que el suelo sea común. */
+  t('La regla de alturas existe y cuelga del lienzo del dibujo',
+    /\.bosque__regla\{position:absolute;left:0;right:0;top:0;height:var\(--lienzo-bosque\)/.test(cs));
+  t('Se dibuja con la MISMA función que dimensiona los árboles',
+    /marcas\.push\(`<i class="bosque__marca" style="bottom:\$\{px\(m\)\.toFixed\(1\)\}px">/.test(lg));
+  t('Y el paso es de cinco en cinco metros, con suelo rotulado',
+    /const PASO = 5;/.test(lg) && /bosque__marca--suelo" style="bottom:0"><span>0<\/span>/.test(lg));
+  // La altura del lienzo vive en dos sitios —la hoja y el guion— y tienen que
+  // valer lo mismo: si se separan, la regla deja de coincidir con los árboles.
+  t('El lienzo mide lo mismo en la hoja y en el guion',
+    (/--lienzo-bosque:(\d+)px/.exec(cs) || [])[1] === (/LIENZO_BOSQUE = (\d+)/.exec(lg) || [])[1],
+    `css ${(/--lienzo-bosque:(\d+)px/.exec(cs) || [])[1]} · js ${(/LIENZO_BOSQUE = (\d+)/.exec(lg) || [])[1]}`);
+  t('La ranura reserva el lienzo en una retícula, para que todos pisen el mismo suelo',
+    /\.bosque__arbol\{[^}]*display:grid;grid-template-rows:var\(--lienzo-bosque\) auto/.test(cs));
+  t('Los rótulos de la regla tienen canalón propio y no agujerean la copa',
+    /\.bosque__lienzo\{position:relative;padding-right:46px\}/.test(cs));
   t('El disco del borde es morado translúcido y dice hacia dónde',
     /\.bosque__borde::after\{[^}]*background:rgba\(141,73,146,\.82\)/.test(cs)
     && /\.bosque__borde--der::after\{content:"›"\}/.test(cs));

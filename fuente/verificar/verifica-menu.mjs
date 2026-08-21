@@ -35,7 +35,11 @@ t('logica.js · la ranura tiene piso para el nombre', /ANCHO_MINIMO_RANURA\s*=\s
 t('dc-logica.js · la ranura viaja en los datos', /anchoRanura:\s*Math\.max\(132/.test(dc));
 t('css · el ancho fijo quedó como piso, no como medida',
   /El ancho es un piso, no la medida/.test(css));
-t('css · los ejemplares no se tocan', /\.bosque__pista\{display:flex;align-items:flex-end;gap:18px/.test(css));
+// Al PRINCIPIO, no al final: el renglón fijo del dibujo tiene que arrancar a
+// la misma altura en todos, o el nombre que se parte en dos levanta su árbol
+// del suelo y la regla de alturas lo lee de más.
+t('css · los ejemplares no se tocan y arrancan todos del mismo punto',
+  /\.bosque__pista\{position:relative;z-index:1;display:flex;align-items:flex-start;gap:18px/.test(css));
 
 // La barra se fue de la portada; en su lugar va la guía. La ficha conserva la
 // barra clásica, así que el modo tiene que ser opcional, no global.
@@ -45,7 +49,11 @@ t('menu.js · la guía dice que cada árbol abre su ficha', /abres su ficha/.tes
 t('menu.js · los iconos son trazo, no glifos de fuente',
   /const FLECHAS_LR = '<svg/.test(m) && /const CURSOR = '<svg/.test(m));
 t('menu.js · con guía los controles van ARRIBA de la hilera',
-  /if \(conGuia\) pista\.insertAdjacentElement\("beforebegin", barra\)/.test(m));
+  /if \(conGuia\) marco\.insertAdjacentElement\("beforebegin", barra\)/.test(m));
+// Y fuera del marco que declara serlo: dentro, el control caía debajo de la
+// regla de alturas y la regla arrancaba por encima del suelo.
+t('menu.js · el control se monta fuera del marco declarado',
+  /const marco = pista\.closest\("\[data-desliza-marco\]"\) \|\| pista;/.test(m));
 t('css · la guía se pinta por delante del relleno de la hilera',
   /\.deslizador--guia\{[^}]*z-index:6\}/.test(css));
 // La guía es una leyenda, no un control: con borde, fondo y pastilla la gente

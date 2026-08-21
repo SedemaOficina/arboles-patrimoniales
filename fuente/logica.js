@@ -115,11 +115,44 @@ function pintarBosque(ejemplares) {
     const ancho = dibujo.offsetWidth || parseFloat(dibujo.getAttribute("width")) || 0;
     if (ancho) a.style.width = Math.max(ANCHO_MINIMO_RANURA, Math.ceil(ancho)) + "px";
   }
+  pintarReglaBosque(tope, px);
+
   document.getElementById("bosqueRango").textContent =
     `${nf(Math.min(...conAltura.map((e) => e.morfologia.altura_m)), 1)} — ${nf(tope, 1)} m`;
 
   document.getElementById("bosqueNota").textContent =
-    `Cada silueta está dibujada con la altura real medida en campo${sinAltura ? `; ${sinAltura} sin medir` : ""}.`;
+    `Cada silueta está dibujada con la altura real medida en campo y la regla marca los metros${sinAltura ? `; ${sinAltura} sin medir` : ""}.`;
+}
+
+
+/**
+ * La regla de alturas de la hilera.
+ *
+ * «A escala real» era, hasta ahora, una afirmación que quien mira no podía
+ * comprobar: trece siluetas de distinto tamaño y nada contra qué medirlas. Las
+ * marcas de cinco en cinco convierten la comparación entre ejemplares —que sí
+ * se veía— en una lectura de la altura de cada uno.
+ *
+ * Se dibuja con la MISMA función que dimensiona los árboles, no con una
+ * aproximación equivalente: si un día cambia la escala, cambian las dos a la
+ * vez. Una regla calculada aparte es una regla que acaba mintiendo.
+ *
+ * El suelo no se mide: la ranura de cada árbol reserva --lienzo-bosque para el
+ * dibujo, así que la línea de tierra cae siempre en el borde inferior de la
+ * regla. Por eso esta función no toca posiciones ni escucha cambios de tamaño.
+ */
+function pintarReglaBosque(tope, px) {
+  const regla = document.getElementById("bosqueRegla");
+  if (!regla) return;
+  const PASO = 5;
+  const marcas = [];
+  // El suelo primero, para que quede por debajo de las marcas en el orden de
+  // pintado y su línea continua no corte a las punteadas.
+  marcas.push('<i class="bosque__marca bosque__marca--suelo" style="bottom:0"><span>0</span></i>');
+  for (let m = PASO; m <= tope; m += PASO) {
+    marcas.push(`<i class="bosque__marca" style="bottom:${px(m).toFixed(1)}px"><span>${m} m</span></i>`);
+  }
+  regla.innerHTML = marcas.join("");
 }
 
 

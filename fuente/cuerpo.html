@@ -17,10 +17,13 @@
 
     <div class="bosque">
       <div class="bosque__titulo">
-        <span class="rotulo">Los ejemplares, a escala real</span>
+        <h2 class="bosque__rotulo">Los ejemplares, a escala real</h2>
         <span class="rotulo" id="bosqueRango"></span>
       </div>
-      <div class="bosque__pista" id="bosquePista" data-desliza="guia"></div>
+      <div class="bosque__lienzo" data-desliza-marco>
+        <div class="bosque__regla" id="bosqueRegla" aria-hidden="true"></div>
+        <div class="bosque__pista" id="bosquePista" data-desliza="guia"></div>
+      </div>
       <p class="bosque__nota" id="bosqueNota"></p>
     </div>
   </div>

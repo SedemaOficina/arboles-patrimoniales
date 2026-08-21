@@ -39,10 +39,16 @@
     <sc-if value="{{ hayBosque }}" hint-placeholder-val="{{ true }}">
       <div class="bosque">
         <div class="bosque__titulo">
-          <span class="rotulo">Los ejemplares, a escala real</span>
+          <h2 class="bosque__rotulo">Los ejemplares, a escala real</h2>
           <span class="rotulo">{{ bosqueRango }}</span>
         </div>
-        <div class="bosque__pista" data-desliza="guia">
+        <div class="bosque__lienzo" data-desliza-marco>
+          <div class="bosque__regla" aria-hidden="true">
+            <sc-for list="{{ reglaBosque }}" as="r" hint-placeholder-count="7">
+              <i class="{{ r.clase }}" style="bottom: {{ r.abajo }}"><span>{{ r.rotulo }}</span></i>
+            </sc-for>
+          </div>
+          <div class="bosque__pista" data-desliza="guia">
           <sc-for list="{{ bosque }}" as="b" hint-placeholder-count="13">
             <a class="bosque__arbol" href="{{ b.enlace }}" aria-label="{{ b.accesible }}" style="width: {{ b.anchoRanura }}">
               <span class="bosque__globo">Ver su ficha <b>&#8594;</b></span>
@@ -69,6 +75,7 @@
               </span>
             </a>
           </sc-for>
+          </div>
         </div>
         <p class="bosque__nota">{{ bosqueNota }}</p>
       </div>

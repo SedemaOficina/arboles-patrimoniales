@@ -134,6 +134,14 @@ class Component extends DCLogic {
       .sort((a, b) => b.morfologia.altura_m - a.morfologia.altura_m);
     const topeAlt = conAltura.length ? conAltura[0].morfologia.altura_m : 0;
     const pxAlt = (m) => (m / topeAlt) * this.LIENZO_BOSQUE;
+    /* La regla de alturas, con la MISMA escala que dimensiona los árboles.
+       Aquí se emite como lista porque la plantilla es estática; el sitio la
+       pinta con la misma fórmula desde logica.js. */
+    const reglaBosque = [{ clase: "bosque__marca bosque__marca--suelo", abajo: "0px", rotulo: "0" }];
+    for (let m = 5; m <= topeAlt; m += 5) {
+      reglaBosque.push({ clase: "bosque__marca", abajo: pxAlt(m).toFixed(1) + "px", rotulo: m + " m" });
+    }
+
     const bosque = conAltura.map((x) => {
       const h = pxAlt(x.morfologia.altura_m);
       const sil = this._S ? this._S.siluetaPlana(x.especie, h, x.morfologia.extensionCopa_m, x.morfologia.altura_m) : null;
@@ -261,10 +269,10 @@ class Component extends DCLogic {
           : `${cc} ejemplares tienen coordenadas capturadas. Los demás aparecen en el listado con su domicilio.`;
       })(),
       hayBosque: conAltura.length > 0,
-      bosque,
+      bosque, reglaBosque,
       bosqueRango: conAltura.length
         ? `${this.nf(conAltura[conAltura.length - 1].morfologia.altura_m, 1)} — ${this.nf(topeAlt, 1)} m` : "",
-      bosqueNota: `Cada silueta está dibujada con la altura real medida en campo${sinAltura ? `; ${sinAltura} sin medir` : ""}.`,
+      bosqueNota: `Cada silueta está dibujada con la altura real medida en campo y la regla marca los metros${sinAltura ? `; ${sinAltura} sin medir` : ""}.`,
       cifras, categorias, filtros, fichas, servicios,
       busqueda: busqueda || "",
       hayBusqueda: Boolean(busqueda),
