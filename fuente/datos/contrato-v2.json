@@ -1,1259 +1,1321 @@
 {
- "version": 2.1,
- "generado_de": "CONEXION_SITIO_WEB_arboles_patrimoniales.md, versión 2 del contrato, 21 de agosto de 2026.",
- "fuente": {
-  "documento": "1qW6brn3ijqUD6YRNT19kk4slSzIQ61g2cVjDx6rU6us",
-  "hoja": "Salida_Publica",
-  "csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb8DIn-UxYrBo-k91vleNcsfQoMVlQjtWp4YurZHgeh-_p0pSWLt-yeWS86wKybtQfj1D4wveAEtyw/pub?gid=283285465&single=true&output=csv",
-  "advertencia": "Nunca leer la hoja Listado: publicar un CSV publica la pestaña entera, y ahí viven las observaciones internas y el nombre de quien dictamina.",
-  "nota_direcciones": "Sustituyen a las de la versión anterior del contrato (documento 1Gg9Rp… y CSV 2PACX-1vSflo…). Si algo difiere, mandan estas."
- },
- "reglas": [
-  "Descarta toda fila cuyo id venga vacío. Es el único filtro necesario: resuelve filas vacías, no publicadas y mal formadas.",
-  "El id es la llave: inmutable, impreso en los decretos, y nombre de la carpeta de imágenes.",
-  "latitud y longitud son números; validar que no sean NaN y que caigan dentro de la Ciudad antes de dibujar el pin.",
-  "Los valores de catálogo se comparan tal cual, con acentos y en la grafía de la norma. No transformarlos.",
-  "carbono_kg ya no viaja al CSV: se captura en el padrón y no se publica. co2_eq_kg es la misma cantidad en la unidad de la convención internacional (CO2e = carbono × 3.667). Si hiciera falta el carbono elemental, divídase entre 3.667; no se pide la columna de vuelta.",
-  "beneficio_economico no se publica sin moneda_itree.",
-  "Una cifra fuera de rango plausible no se dibuja, aunque venga del padrón.",
-  "url_itree es la corrida de ESE árbol y viaja bajo la compuerta i-Tree: si hay cifras, debe haber liga.",
-  "pueblo_barrio nunca llega vacío. «No aplica» es una afirmación, no un hueco; con «Por confirmar» no se publica el dato.",
-  "Los números pueden llegar con separador de miles («1,240.50»): Number() devuelve NaN. Limpiar antes de convertir, y exigir el arreglo en origen.",
-  "Las fechas llegan en dd/mm/aaaa, no en ISO, y fecha_itree puede llegar como número de serie de la hoja. Normalizar y no confiar en el orden de los componentes."
- ],
- "compuertas": {
-  "ejemplar": {
-   "campo": "estado",
-   "publica_si": "Publicado",
-   "nota": "Las filas que no cruzan llegan completamente vacías, no ausentes."
+  "version": 2.1,
+  "generado_de": "CONEXION_SITIO_WEB_arboles_patrimoniales.md, versión 2 del contrato, 21 de agosto de 2026.",
+  "fuente": {
+    "documento": "1qW6brn3ijqUD6YRNT19kk4slSzIQ61g2cVjDx6rU6us",
+    "hoja": "Salida_Publica",
+    "csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb8DIn-UxYrBo-k91vleNcsfQoMVlQjtWp4YurZHgeh-_p0pSWLt-yeWS86wKybtQfj1D4wveAEtyw/pub?gid=283285465&single=true&output=csv",
+    "advertencia": "Nunca leer la hoja Listado: publicar un CSV publica la pestaña entera, y ahí viven las observaciones internas y el nombre de quien dictamina.",
+    "nota_direcciones": "Sustituyen a las de la versión anterior del contrato (documento 1Gg9Rp… y CSV 2PACX-1vSflo…). Si algo difiere, mandan estas."
   },
-  "itree": {
-   "campo": "validacion_itree",
-   "publica_si": "Validado",
-   "nota": "Si no dice Validado, las 16 cifras llegan vacías POR DISEÑO. No es dato faltante: se omite el bloque entero en vez de dibujar guiones."
+  "reglas": [
+    "Descarta toda fila cuyo id venga vacío. Es el único filtro necesario: resuelve filas vacías, no publicadas y mal formadas.",
+    "El id es la llave: inmutable, impreso en los decretos, y nombre de la carpeta de imágenes.",
+    "latitud y longitud son números; validar que no sean NaN y que caigan dentro de la Ciudad antes de dibujar el pin.",
+    "Los valores de catálogo se comparan tal cual, con acentos y en la grafía de la norma. No transformarlos.",
+    "carbono_kg ya no viaja al CSV: se captura en el padrón y no se publica. co2_eq_kg es la misma cantidad en la unidad de la convención internacional (CO2e = carbono × 3.667). Si hiciera falta el carbono elemental, divídase entre 3.667; no se pide la columna de vuelta.",
+    "beneficio_economico no se publica sin moneda_itree.",
+    "Una cifra fuera de rango plausible no se dibuja, aunque venga del padrón.",
+    "url_itree es la corrida de ESE árbol y viaja bajo la compuerta i-Tree: si hay cifras, debe haber liga.",
+    "pueblo_barrio nunca llega vacío. «No aplica» es una afirmación, no un hueco; con «Por confirmar» no se publica el dato.",
+    "Los números se limpian antes de convertir aunque hoy lleguen en crudo: el CSV exporta el valor MOSTRADO, no el almacenado, y basta que alguien reformatee una columna en Sheets para que vuelva «1,240.50» y Number() devuelva NaN. La limpieza es defensa permanente, no el parche de un defecto pasado.",
+    "Las fechas se normalizan aunque hoy lleguen en ISO (aaaa-mm-dd): por la misma exportación por valor mostrado pueden volver como dd/mm/aaaa o como número de serie de la hoja (46249 = 2026-08-15). Aceptar las tres formas y no confiar en el orden de los componentes."
+  ],
+  "compuertas": {
+    "ejemplar": {
+      "campo": "estado",
+      "publica_si": "Publicado",
+      "nota": "Las filas que no cruzan llegan completamente vacías, no ausentes."
+    },
+    "itree": {
+      "campo": "validacion_itree",
+      "publica_si": "Validado",
+      "nota": "Si no dice Validado, las 16 cifras llegan vacías POR DISEÑO. No es dato faltante: se omite el bloque entero en vez de dibujar guiones."
+    }
+  },
+  "catalogos": {
+    "estado": [
+      "En evaluación",
+      "Aprobado en comité / No publicado",
+      "Publicado",
+      "No procedente",
+      "Baja (ejemplar perdido)"
+    ],
+    "si_no": [
+      "SÍ",
+      "NO"
+    ],
+    "tipo_ubicacion": [
+      "Parque",
+      "Banqueta",
+      "Jardinera",
+      "Camellón",
+      "Glorieta",
+      "Arriate",
+      "Plaza",
+      "Jardín público",
+      "Predio privado",
+      "Predio público",
+      "Área verde de unidad habitacional",
+      "Barranca o cauce"
+    ],
+    "condicion_general": [
+      "Muy bueno",
+      "Bueno",
+      "Declinante incipiente",
+      "Declinante severo",
+      "Muerto"
+    ],
+    "estructura_general": [
+      "Muy buena",
+      "Buena",
+      "Susceptible de mejora",
+      "Irrecuperable"
+    ],
+    "expectativa_vida": [
+      "Más de 40 años",
+      "21 a 40 años",
+      "6 a 20 años",
+      "Hasta 5 años"
+    ],
+    "validacion_itree": [
+      "Validado",
+      "En revisión",
+      "No publicable"
+    ],
+    "moneda_itree": [
+      "MXN (pesos mexicanos)",
+      "USD (dólares estadounidenses)"
+    ],
+    "alcaldia": [
+      "Álvaro Obregón",
+      "Azcapotzalco",
+      "Benito Juárez",
+      "Coyoacán",
+      "Cuajimalpa de Morelos",
+      "Cuauhtémoc",
+      "Gustavo A. Madero",
+      "Iztacalco",
+      "Iztapalapa",
+      "La Magdalena Contreras",
+      "Miguel Hidalgo",
+      "Milpa Alta",
+      "Tláhuac",
+      "Tlalpan",
+      "Venustiano Carranza",
+      "Xochimilco"
+    ],
+    "pueblo_barrio": [
+      "No aplica",
+      "Por confirmar"
+    ]
+  },
+  "campos": [
+    {
+      "orden": 1,
+      "clave": "id",
+      "etiqueta": "ID",
+      "bloque": "1 · CONTROL INTERNO",
+      "tipo": "Texto (30)",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula copiada como valor",
+      "regla": "Único e inmutable. Nace con el decreto: mientras el ejemplar no lo tenga, la celda va vacía y el registro se identifica por su consecutivo. Una vez pegado no se modifica aunque cambien la alcaldía, la fecha o la taxonomía."
+    },
+    {
+      "orden": 2,
+      "clave": "estado",
+      "etiqueta": "Estado del Decreto",
+      "bloque": "1 · CONTROL INTERNO",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Solo los registros en estado \"Publicado\" pasan a la salida pública."
+    },
+    {
+      "orden": 3,
+      "clave": "nomino",
+      "etiqueta": "Nominó (persona, organización o institución)",
+      "bloque": "1 · CONTROL INTERNO",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Nombre completo, institución u organización. Sin comillas ni asteriscos."
+    },
+    {
+      "orden": 4,
+      "clave": "nombre_asignado",
+      "etiqueta": "Nombre asignado",
+      "bloque": "2 · IDENTIFICACIÓN",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Nombre propio de divulgación con el que el micrositio identifica al ejemplar."
+    },
+    {
+      "orden": 5,
+      "clave": "nombre_comun",
+      "etiqueta": "Nombre común",
+      "bloque": "2 · IDENTIFICACIÓN",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Nombre común de uso local en la CDMX. Uno solo, el principal."
+    },
+    {
+      "orden": 6,
+      "clave": "nombre_cientifico",
+      "etiqueta": "Nombre científico (especie válida)",
+      "bloque": "2 · IDENTIFICACIÓN",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Debe existir en Taxonomia_SNIB. De este campo dependen los 19 campos taxonómicos."
+    },
+    {
+      "orden": 7,
+      "clave": "centenario",
+      "etiqueta": "CENTENARIO",
+      "bloque": "3 · CATEGORÍAS",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Edad estimada igual o mayor a 80 años, determinada por método directo o indirecto."
+    },
+    {
+      "orden": 8,
+      "clave": "historico",
+      "etiqueta": "HISTÓRICO",
+      "bloque": "3 · CATEGORÍAS",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Su presencia se relaciona con un evento histórico relevante (NADF-001-RNAT-2015, numeral 4, definición de \"Histórico\")."
+    },
+    {
+      "orden": 9,
+      "clave": "notable",
+      "etiqueta": "NOTABLE",
+      "bloque": "3 · CATEGORÍAS",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Destaca por dimensiones, porte o valor estético en el paisaje urbano."
+    },
+    {
+      "orden": 10,
+      "clave": "singular",
+      "etiqueta": "SINGULAR",
+      "bloque": "3 · CATEGORÍAS",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Rareza de la especie, forma o condición irrepetible en la ciudad."
+    },
+    {
+      "orden": 11,
+      "clave": "categorias",
+      "etiqueta": "Categorías (texto)",
+      "bloque": "3 · CATEGORÍAS",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula",
+      "regla": "Se calcula a partir de las cuatro columnas anteriores. No editar."
+    },
+    {
+      "orden": 12,
+      "clave": "fecha_decreto",
+      "etiqueta": "Fecha del decreto",
+      "bloque": "4 · DECLARATORIA",
+      "tipo": "Fecha",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Obligatoria cuando el Estado del Decreto es \"Publicado\". Es la fecha de publicación en la Gaceta Oficial y de ella salen los dos primeros dígitos del ID."
+    },
+    {
+      "orden": 13,
+      "clave": "gaceta",
+      "etiqueta": "Publicación en Gaceta Oficial (número y fecha)",
+      "bloque": "4 · DECLARATORIA",
+      "tipo": "Texto",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Referencia hemerográfica completa del decreto."
+    },
+    {
+      "orden": 14,
+      "clave": "drive_decreto",
+      "etiqueta": "Vínculo de Drive del decreto (pegar tal cual)",
+      "bloque": "4 · DECLARATORIA",
+      "tipo": "Texto (URL)",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Vínculo de compartir de Google Drive. El archivo debe estar como \"Cualquier persona con el vínculo · Lector\"."
+    },
+    {
+      "orden": 15,
+      "clave": "tiene_programa",
+      "etiqueta": "¿Cuenta con programa de manejo?",
+      "bloque": "4 · DECLARATORIA",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Indica si el ejemplar tiene un programa de manejo técnico vigente."
+    },
+    {
+      "orden": 16,
+      "clave": "url_programa",
+      "etiqueta": "URL del programa de manejo",
+      "bloque": "4 · DECLARATORIA",
+      "tipo": "Texto (URL)",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Obligatoria cuando el ejemplar cuenta con programa de manejo. Debe apuntar al documento completo, no a una carpeta."
+    },
+    {
+      "orden": 17,
+      "clave": "alcaldia",
+      "etiqueta": "Alcaldía",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Una de las 16 demarcaciones territoriales de la Ciudad de México."
+    },
+    {
+      "orden": 18,
+      "clave": "calle",
+      "etiqueta": "Calle",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Vialidad sobre la que se localiza el ejemplar, con su tipo (Calle, Avenida, Calzada, Eje)."
+    },
+    {
+      "orden": 19,
+      "clave": "num_ext",
+      "etiqueta": "Número exterior",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Número oficial. Si no lo tiene, se escribe S/N."
+    },
+    {
+      "orden": 20,
+      "clave": "colonia",
+      "etiqueta": "Colonia",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Nombre oficial de la colonia según el catálogo postal."
+    },
+    {
+      "orden": 21,
+      "clave": "cp",
+      "etiqueta": "Código postal",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto (5)",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Cinco dígitos. Debe conservar el cero inicial."
+    },
+    {
+      "orden": 22,
+      "clave": "entre_1",
+      "etiqueta": "Entre calle 1",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Primera vialidad de referencia."
+    },
+    {
+      "orden": 23,
+      "clave": "entre_2",
+      "etiqueta": "Entre calle 2",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Segunda vialidad de referencia."
+    },
+    {
+      "orden": 24,
+      "clave": "referencias",
+      "etiqueta": "Referencias para localizarlo",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto largo",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Descripción que permita a una persona encontrar el árbol en campo."
+    },
+    {
+      "orden": 25,
+      "clave": "tipo_ubicacion",
+      "etiqueta": "Tipo de ubicación",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Catálogo cerrado. Los seis primeros valores son los de la NADF-001-RNAT-2015 (Anexo 2, lineamiento 3); los demás son extensiones institucionales documentadas."
+    },
+    {
+      "orden": 26,
+      "clave": "nombre_sitio",
+      "etiqueta": "Nombre del sitio o espacio público",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Texto",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Nombre propio del parque, jardín, plaza o predio donde se ubica."
+    },
+    {
+      "orden": 27,
+      "clave": "suelo_conservacion",
+      "etiqueta": "Suelo de conservación",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Indica si el predio se localiza en suelo de conservación conforme al Programa General de Ordenamiento Territorial."
+    },
+    {
+      "orden": 28,
+      "clave": "pueblo_barrio",
+      "etiqueta": "Pueblo o Barrio Originario",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Catálogo cerrado con tres tipos de valor: un nombre del registro de SEPI, «No aplica» —afirmación de que no cae en ninguno— o «Por confirmar» —probablemente sí, pero falta verificar—. Nunca vacío: el vacío siempre es captura pendiente."
+    },
+    {
+      "orden": 29,
+      "clave": "latitud",
+      "etiqueta": "Latitud (grados decimales)",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Número (6 dec.)",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Entre 19.02 y 19.60. WGS 84 (EPSG:4326). Seis decimales."
+    },
+    {
+      "orden": 30,
+      "clave": "longitud",
+      "etiqueta": "Longitud (grados decimales)",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Número (6 dec.)",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Entre -99.36 y -98.94. WGS 84 (EPSG:4326). Seis decimales."
+    },
+    {
+      "orden": 31,
+      "clave": "utm_x",
+      "etiqueta": "UTM X / Este (m)",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (proyección)",
+      "regla": "Se proyecta desde la latitud y la longitud. WGS 84 / UTM zona 14 N (EPSG:32614). No editar."
+    },
+    {
+      "orden": 32,
+      "clave": "utm_y",
+      "etiqueta": "UTM Y / Norte (m)",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (proyección)",
+      "regla": "Se proyecta desde la latitud y la longitud. WGS 84 / UTM zona 14 N (EPSG:32614). No editar."
+    },
+    {
+      "orden": 33,
+      "clave": "street_view",
+      "etiqueta": "URL de Street View",
+      "bloque": "5 · UBICACIÓN",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula",
+      "regla": "Extrae la dirección que va dentro de src=\"...\" del código de inserción. Si se pegó la dirección sola, la deja igual. No editar."
+    },
+    {
+      "orden": 34,
+      "clave": "reino",
+      "etiqueta": "Reino",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 35,
+      "clave": "phylum",
+      "etiqueta": "Phylum o División",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 36,
+      "clave": "clase",
+      "etiqueta": "Clase",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 37,
+      "clave": "orden",
+      "etiqueta": "Orden",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 38,
+      "clave": "familia",
+      "etiqueta": "Familia",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 39,
+      "clave": "genero",
+      "etiqueta": "Género",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 40,
+      "clave": "autor",
+      "etiqueta": "Autor del nombre científico",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 41,
+      "clave": "idnombrecat",
+      "etiqueta": "ID del nombre en el catálogo SNIB",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 42,
+      "clave": "endemismo",
+      "etiqueta": "Endemismo",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 43,
+      "clave": "cites",
+      "etiqueta": "CITES",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 44,
+      "clave": "iucn",
+      "etiqueta": "Lista Roja de la UICN",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 45,
+      "clave": "nom059",
+      "etiqueta": "NOM-059-SEMARNAT-2010",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 46,
+      "clave": "prioritaria",
+      "etiqueta": "Especie prioritaria",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 47,
+      "clave": "nivel_prioridad",
+      "etiqueta": "Nivel de prioridad",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 48,
+      "clave": "exotica_invasora",
+      "etiqueta": "Exótica / invasora",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 49,
+      "clave": "ambiente",
+      "etiqueta": "Ambiente",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 50,
+      "clave": "forma_crecimiento",
+      "etiqueta": "Forma de crecimiento",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 51,
+      "clave": "url_snib",
+      "etiqueta": "URL de la especie en el SNIB",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 52,
+      "clave": "url_observacion",
+      "etiqueta": "URL de la observación de referencia de la especie",
+      "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
+      "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
+    },
+    {
+      "orden": 53,
+      "clave": "altura_m",
+      "etiqueta": "Altura total (m)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Número (1 dec.)",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Entre 1 y 60 m. Metros lineales (NADF-001-RNAT-2015, Anexo 2, lineamiento 4)."
+    },
+    {
+      "orden": 54,
+      "clave": "dap_cm",
+      "etiqueta": "DAP · Diámetro del tronco a 1.30 m (cm)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Número (1 dec.)",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "DIÁMETRO, no perímetro. Medido a 1.30 m desde el cuello de la raíz (NADF-001-RNAT-2015, numeral 4). Entre 5 y 500 cm."
+    },
+    {
+      "orden": 55,
+      "clave": "altura_medicion_dap",
+      "etiqueta": "Altura a la que se midió el DAP (m)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Número (2 dec.)",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Normalmente 1.30. Cualquier otro valor debe justificarse en la nota de medición."
+    },
+    {
+      "orden": 56,
+      "clave": "circunferencia_cm",
+      "etiqueta": "Circunferencia del tronco (cm)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula",
+      "regla": "C = π × DAP. Se calcula. No editar."
+    },
+    {
+      "orden": 57,
+      "clave": "ancho_copa_m",
+      "etiqueta": "Ancho de copa · eje mayor (m)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Número (2 dec.)",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Diámetro de copa tomando como referencia el área de goteo (NADF-001-RNAT-2015, Anexo 2, lineamiento 6). Entre 1 y 45 m."
+    },
+    {
+      "orden": 58,
+      "clave": "largo_copa_m",
+      "etiqueta": "Largo de copa · eje menor (m)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Número (2 dec.)",
+      "presencia": "siempre",
+      "origen": "Captura",
+      "regla": "Eje perpendicular al mayor. Entre 1 y 45 m."
+    },
+    {
+      "orden": 59,
+      "clave": "extension_copa_m",
+      "etiqueta": "Extensión de copa · promedio (m)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Fórmula",
+      "presencia": "puede venir vacío",
+      "origen": "Fórmula",
+      "regla": "(eje mayor + eje menor) / 2. Criterio documentado en Notas_y_fuentes. Se calcula. No editar."
+    },
+    {
+      "orden": 60,
+      "clave": "condicion_general",
+      "etiqueta": "Condición general del árbol",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 16."
+    },
+    {
+      "orden": 61,
+      "clave": "estructura_general",
+      "etiqueta": "Estructura general del árbol",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 14."
+    },
+    {
+      "orden": 62,
+      "clave": "edad_estimada",
+      "etiqueta": "Edad estimada (años)",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Número entero",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Solo si existe estimación documentada. Entre 1 y 2000. El método de estimación se anota en Observaciones internas."
+    },
+    {
+      "orden": 63,
+      "clave": "expectativa_vida",
+      "etiqueta": "Expectativa de vida útil",
+      "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 15 y Anexo 3, factor 5."
+    },
+    {
+      "orden": 64,
+      "clave": "fecha_itree",
+      "etiqueta": "Fecha de la corrida de i-Tree",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Fecha",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Fecha en que se ejecutó la estimación i-Tree. Permite detectar corridas heterogéneas."
+    },
+    {
+      "orden": 65,
+      "clave": "moneda_itree",
+      "etiqueta": "Moneda del beneficio económico",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Catálogo",
+      "presencia": "puede venir vacío",
+      "origen": "Catálogo",
+      "regla": "Obligatoria si se captura beneficio económico."
+    },
+    {
+      "orden": 66,
+      "clave": "validacion_itree",
+      "etiqueta": "Validación del bloque i-Tree",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Catálogo",
+      "presencia": "siempre",
+      "origen": "Catálogo",
+      "regla": "COMPUERTA DE PUBLICACIÓN: los servicios ambientales solo viajan a la salida pública cuando este campo dice \"Validado\"."
+    },
+    {
+      "orden": 67,
+      "clave": "url_itree",
+      "etiqueta": "URL de la ficha de i-Tree",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Texto (URL)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Dirección de la corrida de i-Tree de ESE árbol, una distinta por ejemplar. Sujeta a la misma compuerta que las 16 cifras. Si hay cifras debe haber liga: el padrón la exige antes de dejar validar."
+    },
+    {
+      "orden": 68,
+      "clave": "beneficio_economico",
+      "etiqueta": "Beneficio económico estimado (por año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 69,
+      "clave": "co2_eq_kg",
+      "etiqueta": "Absorción de CO₂ equivalente (kg/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Fórmula",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Fórmula",
+      "regla": "CO₂e = carbono × 3.667 (razón de masas 44/12). Se calcula. NO es una medición independiente: no debe sumarse al carbono."
+    },
+    {
+      "orden": 70,
+      "clave": "escorrentia_l",
+      "etiqueta": "Disminución de escorrentía (L/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 71,
+      "clave": "precip_interceptada_l",
+      "etiqueta": "Precipitación interceptada (L/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 72,
+      "clave": "elim_co_g",
+      "etiqueta": "Eliminación de monóxido de carbono (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 73,
+      "clave": "elim_o3_g",
+      "etiqueta": "Eliminación de ozono (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 74,
+      "clave": "elim_no2_g",
+      "etiqueta": "Eliminación de dióxido de nitrógeno (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 75,
+      "clave": "elim_so2_g",
+      "etiqueta": "Eliminación de dióxido de azufre (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 76,
+      "clave": "elim_pm25_g",
+      "etiqueta": "Eliminación de PM2.5 (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 77,
+      "clave": "ahorro_kwh",
+      "etiqueta": "Ahorro de electricidad (kWh/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 78,
+      "clave": "evit_co2_kg",
+      "etiqueta": "Emisiones evitadas de dióxido de carbono (kg/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 79,
+      "clave": "evit_co_g",
+      "etiqueta": "Emisiones evitadas de monóxido de carbono (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 80,
+      "clave": "evit_no2_g",
+      "etiqueta": "Emisiones evitadas de dióxido de nitrógeno (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 81,
+      "clave": "evit_so2_g",
+      "etiqueta": "Emisiones evitadas de dióxido de azufre (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 82,
+      "clave": "evit_pm25_g",
+      "etiqueta": "Emisiones evitadas de PM2.5 (g/año)",
+      "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
+      "tipo": "Número (2 dec.)",
+      "presencia": "condicional · solo si i-Tree Validado",
+      "origen": "Captura (corrida i-Tree)",
+      "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+    },
+    {
+      "orden": 83,
+      "clave": "obs_publicas",
+      "etiqueta": "Observaciones públicas",
+      "bloque": "9 · PUBLICACIÓN",
+      "tipo": "Texto largo",
+      "presencia": "puede venir vacío",
+      "origen": "Captura",
+      "regla": "Texto que SÍ se publica en el micrositio. Redacción ciudadana, en voz activa, sin abreviaturas."
+    }
+  ],
+  "consumo": {
+    "id": {
+      "clave": "id"
+    },
+    "consecutivo": {
+      "clave": null,
+      "derivado": true,
+      "nota": "Los cuatro últimos dígitos del id. El padrón v2 ya no publica el folio por separado."
+    },
+    "nombreComun": {
+      "clave": "nombre_comun"
+    },
+    "especie": {
+      "clave": "nombre_cientifico"
+    },
+    "nombreAsignado": {
+      "clave": "nombre_asignado"
+    },
+    "slug": {
+      "clave": null,
+      "derivado": true,
+      "nota": "Se deriva de nombre_asignado."
+    },
+    "nominadoPor": {
+      "clave": "nomino"
+    },
+    "fechaNominacion": {
+      "clave": null,
+      "retirado": true,
+      "nota": "Ya no se captura. El padrón v2 solo lleva la fecha del decreto, que es la que tiene efecto jurídico. Sale del bloque de procedencia de la ficha."
+    },
+    "categorias": {
+      "clave": "categorias",
+      "nota": "Respaldo: centenario, historico, notable y singular, con valores SÍ/NO.",
+      "claves_extra": [
+        "centenario",
+        "historico",
+        "notable",
+        "singular"
+      ]
+    },
+    "fechaDecreto": {
+      "clave": "fecha_decreto"
+    },
+    "linkDecreto": {
+      "clave": "drive_decreto",
+      "nota": "Vínculo de Drive. La descarga directa se arma extrayendo el id entre /d/ y la siguiente diagonal."
+    },
+    "alcaldia": {
+      "clave": "alcaldia"
+    },
+    "codAlcaldia": {
+      "clave": null,
+      "derivado": true,
+      "nota": "Segundo segmento del id."
+    },
+    "ubicacion.calle": {
+      "clave": "calle"
+    },
+    "ubicacion.numero": {
+      "clave": "num_ext"
+    },
+    "ubicacion.colonia": {
+      "clave": "colonia"
+    },
+    "ubicacion.cp": {
+      "clave": "cp"
+    },
+    "ubicacion.entreCalles": {
+      "clave": "entre_1",
+      "nota": "Junto con entre_2.",
+      "claves_extra": [
+        "entre_2"
+      ]
+    },
+    "ubicacion.referencias": {
+      "clave": "referencias"
+    },
+    "ubicacion.tipo": {
+      "clave": "tipo_ubicacion"
+    },
+    "coords": {
+      "clave": "latitud",
+      "nota": "Junto con longitud. Ya no llegan concatenadas: el analizador de coordenadas deja de hacer falta.",
+      "claves_extra": [
+        "longitud"
+      ]
+    },
+    "utm": {
+      "clave": "utm_x",
+      "nota": "Junto con utm_y. En el v2 se proyectan desde latitud y longitud, no se capturan.",
+      "claves_extra": [
+        "utm_y"
+      ]
+    },
+    "taxonomia.reino": {
+      "clave": "reino"
+    },
+    "taxonomia.phylum": {
+      "clave": "phylum"
+    },
+    "taxonomia.clase": {
+      "clave": "clase"
+    },
+    "taxonomia.orden": {
+      "clave": "orden"
+    },
+    "taxonomia.familia": {
+      "clave": "familia"
+    },
+    "taxonomia.genero": {
+      "clave": "genero"
+    },
+    "taxonomia.autor": {
+      "clave": "autor"
+    },
+    "taxonomia.ambiente": {
+      "clave": "ambiente"
+    },
+    "taxonomia.formaCrecimiento": {
+      "clave": "forma_crecimiento"
+    },
+    "taxonomia.infraespecie": {
+      "clave": null,
+      "retirado": true,
+      "nota": "El padrón v2 no publica categoría infraespecífica."
+    },
+    "conservacion.iucn": {
+      "clave": "iucn"
+    },
+    "conservacion.nom059": {
+      "clave": "nom059"
+    },
+    "conservacion.cites": {
+      "clave": "cites"
+    },
+    "conservacion.prioritaria": {
+      "clave": "prioritaria"
+    },
+    "conservacion.prioridad": {
+      "clave": "nivel_prioridad"
+    },
+    "conservacion.endemismo": {
+      "clave": "endemismo"
+    },
+    "conservacion.exoticaInvasora": {
+      "clave": "exotica_invasora"
+    },
+    "conservacion.origen": {
+      "clave": null,
+      "retirado": true,
+      "nota": "No existe en el v2. El endemismo cubre la pregunta."
+    },
+    "urlSNIB": {
+      "clave": "url_snib",
+      "nota": "Es de la ESPECIE, no del ejemplar: idéntica entre árboles de la misma especie. Presentarla con ese sentido."
+    },
+    "urlOrigen": {
+      "clave": "url_observacion",
+      "nota": "Igual que la anterior: de la especie."
+    },
+    "morfologia.altura_m": {
+      "clave": "altura_m"
+    },
+    "morfologia.diametro_cm": {
+      "clave": "dap_cm"
+    },
+    "morfologia.circunferencia_cm": {
+      "clave": "circunferencia_cm"
+    },
+    "morfologia.anchoCopa_m": {
+      "clave": "ancho_copa_m"
+    },
+    "morfologia.largoCopa_m": {
+      "clave": "largo_copa_m"
+    },
+    "morfologia.extensionCopa_m": {
+      "clave": "extension_copa_m"
+    },
+    "condicion": {
+      "clave": "condicion_general"
+    },
+    "estructura": {
+      "clave": "estructura_general"
+    },
+    "edadEstimada": {
+      "clave": "edad_estimada"
+    },
+    "expectativaVida": {
+      "clave": "expectativa_vida"
+    },
+    "serviciosAmbientales.beneficioEconomico_moneda": {
+      "clave": "beneficio_economico",
+      "nota": "No se publica sin moneda_itree.",
+      "claves_extra": [
+        "moneda_itree"
+      ]
+    },
+    "serviciosAmbientales.carbonoSecuestrado_kg": {
+      "clave": null,
+      "retirado": true,
+      "nota": "Decisión: en la salida pública se queda el CO₂ equivalente, que es la unidad de la convención internacional. El carbono se sigue capturando en el Listado."
+    },
+    "serviciosAmbientales.co2Absorbido_kg": {
+      "clave": "co2_eq_kg",
+      "nota": "Derivado de carbono × 3.667. No es medición independiente: no se suma al carbono ni se presenta junto a él."
+    },
+    "serviciosAmbientales.escorrentiaReducida_L": {
+      "clave": "escorrentia_l"
+    },
+    "serviciosAmbientales.precipitacionInterceptada_L": {
+      "clave": "precip_interceptada_l"
+    },
+    "serviciosAmbientales.coEliminado_g": {
+      "clave": "elim_co_g"
+    },
+    "serviciosAmbientales.ozonoEliminado_g": {
+      "clave": "elim_o3_g"
+    },
+    "serviciosAmbientales.no2Eliminado_g": {
+      "clave": "elim_no2_g"
+    },
+    "serviciosAmbientales.so2Eliminado_g": {
+      "clave": "elim_so2_g"
+    },
+    "serviciosAmbientales.pm25Eliminado_g": {
+      "clave": "elim_pm25_g"
+    },
+    "serviciosAmbientales.ahorroElectricidad_kWh": {
+      "clave": "ahorro_kwh"
+    },
+    "serviciosAmbientales.emisionesEvitadasCO2_kg": {
+      "clave": "evit_co2_kg"
+    },
+    "serviciosAmbientales.emisionesEvitadasCO_g": {
+      "clave": "evit_co_g"
+    },
+    "serviciosAmbientales.emisionesEvitadasNO2_g": {
+      "clave": "evit_no2_g"
+    },
+    "serviciosAmbientales.emisionesEvitadasSO2_g": {
+      "clave": "evit_so2_g"
+    },
+    "serviciosAmbientales.emisionesEvitadasPM25_g": {
+      "clave": "evit_pm25_g"
+    },
+    "linkITree": {
+      "clave": "url_itree",
+      "nota": "Ya existe en el padrón v2. Alimenta la tarjeta «Estimación de servicios ambientales». Solo llega si el bloque está validado."
+    },
+    "observaciones": {
+      "clave": "obs_publicas"
+    },
+    "vistaCalle": {
+      "clave": "street_view",
+      "nota": "Llega lista para src. Va en un <iframe> creado por código, nunca por innerHTML, validando antes el prefijo."
+    },
+    "fotos": {
+      "clave": null,
+      "derivado": true,
+      "nota": "No viene del CSV: las imágenes viven en el repositorio, en assets/img/ejemplares/<id>/. El crédito es una constante, no un dato."
+    },
+    "_compuerta.ejemplar": {
+      "clave": "estado",
+      "nota": "Compuerta de publicación del ejemplar."
+    },
+    "_compuerta.itree": {
+      "clave": "validacion_itree",
+      "nota": "Compuerta del bloque ambiental. Viaja siempre, precisamente para que el sitio sepa por qué no hay cifras."
+    },
+    "ubicacion.sueloConservacion": {
+      "clave": "suelo_conservacion",
+      "nota": "SÍ/NO. Cambia el régimen jurídico del predio: se publica en la ficha."
+    },
+    "ubicacion.puebloBarrio": {
+      "clave": "pueblo_barrio",
+      "nota": "Tres estados. Se publica el nombre solo cuando lo hay: con «No aplica» y con «Por confirmar» se omite la línea."
+    }
+  },
+  "sin_consumo": {
+    "nota": "Campos que el padrón publica y que el sitio todavía no dibuja. No es un error: publicarlos es una decisión editorial. Se listan para que la decisión sea explícita y no un olvido.",
+    "claves": [
+      "gaceta",
+      "tiene_programa",
+      "url_programa",
+      "nombre_sitio",
+      "idnombrecat",
+      "altura_medicion_dap",
+      "fecha_itree"
+    ]
+  },
+  "catalogos_abiertos": {
+    "pueblo_barrio": {
+      "fijos": [
+        "No aplica",
+        "Por confirmar"
+      ],
+      "nota": "Además de los dos fijos admite cualquier nombre del registro de SEPI que el área usuaria haya cargado en la hoja Catalogos. El registro CRECE, así que el sitio NO lleva copia de la lista: si necesita filtrar por pueblo, arma los valores con los que vengan en el CSV.",
+      "fuente": "Sistema de Registro y Documentación de Pueblos y Barrios Originarios y Comunidades Indígenas Residentes de SEPI, y el conjunto «Padrón de pueblos y barrios originarios» del portal de datos abiertos de la CDMX. La fecha de la versión cargada se anota en la hoja Parametros del padrón."
+    }
+  },
+  "formato_observado": {
+    "medido": "CSV descargado de Salida_Publica el 21 de agosto de 2026, ya con el formato corregido en origen, con cinco registros de prueba.",
+    "numeros": "En crudo, sin separador de miles: «1240.50». Number() los lee directo.",
+    "fechas": {
+      "fecha_decreto": "aaaa-mm-dd",
+      "fecha_itree": "aaaa-mm-dd"
+    },
+    "coordenadas": "Seis decimales, punto decimal, signo negativo en la longitud.",
+    "defectos_resueltos": [
+      {
+        "que": "Separador de miles en beneficio_economico, escorrentia_l y precip_interceptada_l.",
+        "por_que_importaba": "Number(\"1,240.50\") devuelve NaN. Y solo aparece por encima de mil: con cifras pequeñas el defecto es invisible: se manifiesta el día que un ejemplar rebasa los 1000.",
+        "como_se_arreglo": "Formato de número sin separador («1234.56») en las columnas de cifras de la hoja."
+      },
+      {
+        "que": "fecha_decreto salía en dd/mm/aaaa.",
+        "por_que_importaba": "Date() la lee al revés y 12/03/2026 se vuelve 3 de diciembre.",
+        "como_se_arreglo": "Formato de fecha aaaa-mm-dd en la columna."
+      },
+      {
+        "que": "fecha_itree salía como número de serie de la hoja (46249).",
+        "por_que_importaba": "No es una fecha para nadie que lea el CSV desde fuera de Sheets.",
+        "como_se_arreglo": "Formato de fecha aaaa-mm-dd en la columna."
+      }
+    ],
+    "nota_permanencia": "El CSV se exporta con el valor MOSTRADO, no con el almacenado: manda el formato de la celda. Nadie recibe aviso si alguien reformatea una columna. Por eso el lector sigue limpiando números y normalizando fechas: es defensa, no parche."
+  },
+  "rangos": {
+    "_nota": "Los rangos que el padrón declara en prosa, escritos como datos para que el lector no tenga que leer prosa. Fuera de rango NO se descarta la fila: se descarta el dato y se levanta una advertencia con nombre y apellido. Un ejemplar con la altura mal capturada sigue siendo un ejemplar.",
+    "latitud": {
+      "min": 19.02,
+      "max": 19.6,
+      "de": "contrato, campo latitud"
+    },
+    "longitud": {
+      "min": -99.36,
+      "max": -98.94,
+      "de": "contrato, campo longitud"
+    },
+    "altura_m": {
+      "min": 1,
+      "max": 60,
+      "de": "NADF-001-RNAT-2015, Anexo 2, lineamiento 4"
+    },
+    "dap_cm": {
+      "min": 5,
+      "max": 500,
+      "de": "NADF-001-RNAT-2015, numeral 4"
+    },
+    "ancho_copa_m": {
+      "min": 1,
+      "max": 45,
+      "de": "NADF-001-RNAT-2015, Anexo 2, lineamiento 6"
+    },
+    "largo_copa_m": {
+      "min": 1,
+      "max": 45,
+      "de": "contrato, campo largo_copa_m"
+    },
+    "extension_copa_m": {
+      "min": 1,
+      "max": 45,
+      "de": "derivado de los dos ejes"
+    },
+    "edad_estimada": {
+      "min": 1,
+      "max": 2000,
+      "de": "contrato, campo edad_estimada"
+    },
+    "circunferencia_cm": {
+      "min": 15,
+      "max": 1600,
+      "de": "derivado del rango del DAP (π × 5 a π × 500), redondeado"
+    }
   }
- },
- "catalogos": {
-  "estado": [
-   "En evaluación",
-   "Aprobado en comité / No publicado",
-   "Publicado",
-   "No procedente",
-   "Baja (ejemplar perdido)"
-  ],
-  "si_no": [
-   "SÍ",
-   "NO"
-  ],
-  "tipo_ubicacion": [
-   "Parque",
-   "Banqueta",
-   "Jardinera",
-   "Camellón",
-   "Glorieta",
-   "Arriate",
-   "Plaza",
-   "Jardín público",
-   "Predio privado",
-   "Predio público",
-   "Área verde de unidad habitacional",
-   "Barranca o cauce"
-  ],
-  "condicion_general": [
-   "Muy bueno",
-   "Bueno",
-   "Declinante incipiente",
-   "Declinante severo",
-   "Muerto"
-  ],
-  "estructura_general": [
-   "Muy buena",
-   "Buena",
-   "Susceptible de mejora",
-   "Irrecuperable"
-  ],
-  "expectativa_vida": [
-   "Más de 40 años",
-   "21 a 40 años",
-   "6 a 20 años",
-   "Hasta 5 años"
-  ],
-  "validacion_itree": [
-   "Validado",
-   "En revisión",
-   "No publicable"
-  ],
-  "moneda_itree": [
-   "MXN (pesos mexicanos)",
-   "USD (dólares estadounidenses)"
-  ],
-  "alcaldia": [
-   "Álvaro Obregón",
-   "Azcapotzalco",
-   "Benito Juárez",
-   "Coyoacán",
-   "Cuajimalpa de Morelos",
-   "Cuauhtémoc",
-   "Gustavo A. Madero",
-   "Iztacalco",
-   "Iztapalapa",
-   "La Magdalena Contreras",
-   "Miguel Hidalgo",
-   "Milpa Alta",
-   "Tláhuac",
-   "Tlalpan",
-   "Venustiano Carranza",
-   "Xochimilco"
-  ],
-  "pueblo_barrio": [
-   "No aplica",
-   "Por confirmar"
-  ]
- },
- "campos": [
-  {
-   "orden": 1,
-   "clave": "id",
-   "etiqueta": "ID",
-   "bloque": "1 · CONTROL INTERNO",
-   "tipo": "Texto (30)",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula copiada como valor",
-   "regla": "Único e inmutable. Nace con el decreto: mientras el ejemplar no lo tenga, la celda va vacía y el registro se identifica por su consecutivo. Una vez pegado no se modifica aunque cambien la alcaldía, la fecha o la taxonomía."
-  },
-  {
-   "orden": 2,
-   "clave": "estado",
-   "etiqueta": "Estado del Decreto",
-   "bloque": "1 · CONTROL INTERNO",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Solo los registros en estado \"Publicado\" pasan a la salida pública."
-  },
-  {
-   "orden": 3,
-   "clave": "nomino",
-   "etiqueta": "Nominó (persona, organización o institución)",
-   "bloque": "1 · CONTROL INTERNO",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Nombre completo, institución u organización. Sin comillas ni asteriscos."
-  },
-  {
-   "orden": 4,
-   "clave": "nombre_asignado",
-   "etiqueta": "Nombre asignado",
-   "bloque": "2 · IDENTIFICACIÓN",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Nombre propio de divulgación con el que el micrositio identifica al ejemplar."
-  },
-  {
-   "orden": 5,
-   "clave": "nombre_comun",
-   "etiqueta": "Nombre común",
-   "bloque": "2 · IDENTIFICACIÓN",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Nombre común de uso local en la CDMX. Uno solo, el principal."
-  },
-  {
-   "orden": 6,
-   "clave": "nombre_cientifico",
-   "etiqueta": "Nombre científico (especie válida)",
-   "bloque": "2 · IDENTIFICACIÓN",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Debe existir en Taxonomia_SNIB. De este campo dependen los 21 campos taxonómicos."
-  },
-  {
-   "orden": 7,
-   "clave": "centenario",
-   "etiqueta": "CENTENARIO",
-   "bloque": "3 · CATEGORÍAS",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Edad estimada igual o mayor a 80 años, determinada por método directo o indirecto."
-  },
-  {
-   "orden": 8,
-   "clave": "historico",
-   "etiqueta": "HISTÓRICO",
-   "bloque": "3 · CATEGORÍAS",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Su presencia se relaciona con un evento histórico relevante (NADF-001-RNAT-2015, numeral 4, definición de \"Histórico\")."
-  },
-  {
-   "orden": 9,
-   "clave": "notable",
-   "etiqueta": "NOTABLE",
-   "bloque": "3 · CATEGORÍAS",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Destaca por dimensiones, porte o valor estético en el paisaje urbano."
-  },
-  {
-   "orden": 10,
-   "clave": "singular",
-   "etiqueta": "SINGULAR",
-   "bloque": "3 · CATEGORÍAS",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Rareza de la especie, forma o condición irrepetible en la ciudad."
-  },
-  {
-   "orden": 11,
-   "clave": "categorias",
-   "etiqueta": "Categorías (texto)",
-   "bloque": "3 · CATEGORÍAS",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula",
-   "regla": "Se calcula a partir de las cuatro columnas anteriores. No editar."
-  },
-  {
-   "orden": 12,
-   "clave": "fecha_decreto",
-   "etiqueta": "Fecha del decreto",
-   "bloque": "4 · DECLARATORIA",
-   "tipo": "Fecha",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Obligatoria cuando el Estado del Decreto es \"Publicado\". Es la fecha de publicación en la Gaceta Oficial y de ella salen los dos primeros dígitos del ID."
-  },
-  {
-   "orden": 13,
-   "clave": "gaceta",
-   "etiqueta": "Publicación en Gaceta Oficial (número y fecha)",
-   "bloque": "4 · DECLARATORIA",
-   "tipo": "Texto",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Referencia hemerográfica completa del decreto."
-  },
-  {
-   "orden": 14,
-   "clave": "drive_decreto",
-   "etiqueta": "Vínculo de Drive del decreto (pegar tal cual)",
-   "bloque": "4 · DECLARATORIA",
-   "tipo": "Texto (URL)",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Vínculo de compartir de Google Drive. El archivo debe estar como \"Cualquier persona con el vínculo · Lector\"."
-  },
-  {
-   "orden": 15,
-   "clave": "tiene_programa",
-   "etiqueta": "¿Cuenta con programa de manejo?",
-   "bloque": "4 · DECLARATORIA",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Indica si el ejemplar tiene un programa de manejo técnico vigente."
-  },
-  {
-   "orden": 16,
-   "clave": "url_programa",
-   "etiqueta": "URL del programa de manejo",
-   "bloque": "4 · DECLARATORIA",
-   "tipo": "Texto (URL)",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Obligatoria cuando el ejemplar cuenta con programa de manejo. Debe apuntar al documento completo, no a una carpeta."
-  },
-  {
-   "orden": 17,
-   "clave": "alcaldia",
-   "etiqueta": "Alcaldía",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Una de las 16 demarcaciones territoriales de la Ciudad de México."
-  },
-  {
-   "orden": 18,
-   "clave": "calle",
-   "etiqueta": "Calle",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Vialidad sobre la que se localiza el ejemplar, con su tipo (Calle, Avenida, Calzada, Eje)."
-  },
-  {
-   "orden": 19,
-   "clave": "num_ext",
-   "etiqueta": "Número exterior",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Número oficial. Si no lo tiene, se escribe S/N."
-  },
-  {
-   "orden": 20,
-   "clave": "colonia",
-   "etiqueta": "Colonia",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Nombre oficial de la colonia según el catálogo postal."
-  },
-  {
-   "orden": 21,
-   "clave": "cp",
-   "etiqueta": "Código postal",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto (5)",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Cinco dígitos. Debe conservar el cero inicial."
-  },
-  {
-   "orden": 22,
-   "clave": "entre_1",
-   "etiqueta": "Entre calle 1",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Primera vialidad de referencia."
-  },
-  {
-   "orden": 23,
-   "clave": "entre_2",
-   "etiqueta": "Entre calle 2",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Segunda vialidad de referencia."
-  },
-  {
-   "orden": 24,
-   "clave": "referencias",
-   "etiqueta": "Referencias para localizarlo",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto largo",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Descripción que permita a una persona encontrar el árbol en campo."
-  },
-  {
-   "orden": 25,
-   "clave": "tipo_ubicacion",
-   "etiqueta": "Tipo de ubicación",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Catálogo cerrado. Los seis primeros valores son los de la NADF-001-RNAT-2015 (Anexo 2, lineamiento 3); los demás son extensiones institucionales documentadas."
-  },
-  {
-   "orden": 26,
-   "clave": "nombre_sitio",
-   "etiqueta": "Nombre del sitio o espacio público",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Nombre propio del parque, jardín, plaza o predio donde se ubica."
-  },
-  {
-   "orden": 27,
-   "clave": "suelo_conservacion",
-   "etiqueta": "Suelo de conservación",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Indica si el predio se localiza en suelo de conservación conforme al Programa General de Ordenamiento Territorial."
-  },
-  {
-   "orden": 28,
-   "clave": "pueblo_barrio",
-   "etiqueta": "Pueblo o Barrio Originario",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Catálogo cerrado con tres tipos de valor: un nombre del registro de SEPI, «No aplica» —afirmación de que no cae en ninguno— o «Por confirmar» —probablemente sí, pero falta verificar—. Nunca vacío: el vacío siempre es captura pendiente."
-  },
-  {
-   "orden": 29,
-   "clave": "latitud",
-   "etiqueta": "Latitud (grados decimales)",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Número (6 dec.)",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Entre 19.02 y 19.60. WGS 84 (EPSG:4326). Seis decimales."
-  },
-  {
-   "orden": 30,
-   "clave": "longitud",
-   "etiqueta": "Longitud (grados decimales)",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Número (6 dec.)",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Entre -99.36 y -98.94. WGS 84 (EPSG:4326). Seis decimales."
-  },
-  {
-   "orden": 31,
-   "clave": "utm_x",
-   "etiqueta": "UTM X / Este (m)",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (proyección)",
-   "regla": "Se proyecta desde la latitud y la longitud. WGS 84 / UTM zona 14 N (EPSG:32614). No editar."
-  },
-  {
-   "orden": 32,
-   "clave": "utm_y",
-   "etiqueta": "UTM Y / Norte (m)",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (proyección)",
-   "regla": "Se proyecta desde la latitud y la longitud. WGS 84 / UTM zona 14 N (EPSG:32614). No editar."
-  },
-  {
-   "orden": 33,
-   "clave": "street_view",
-   "etiqueta": "URL de Street View",
-   "bloque": "5 · UBICACIÓN",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula",
-   "regla": "Extrae la dirección que va dentro de src=\"...\" del código de inserción. Si se pegó la dirección sola, la deja igual. No editar."
-  },
-  {
-   "orden": 34,
-   "clave": "reino",
-   "etiqueta": "Reino",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 35,
-   "clave": "phylum",
-   "etiqueta": "Phylum o División",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 36,
-   "clave": "clase",
-   "etiqueta": "Clase",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 37,
-   "clave": "orden",
-   "etiqueta": "Orden",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 38,
-   "clave": "familia",
-   "etiqueta": "Familia",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 39,
-   "clave": "genero",
-   "etiqueta": "Género",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 40,
-   "clave": "autor",
-   "etiqueta": "Autor del nombre científico",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 41,
-   "clave": "idnombrecat",
-   "etiqueta": "ID del nombre en el catálogo SNIB",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 42,
-   "clave": "endemismo",
-   "etiqueta": "Endemismo",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 43,
-   "clave": "cites",
-   "etiqueta": "CITES",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 44,
-   "clave": "iucn",
-   "etiqueta": "Lista Roja de la UICN",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 45,
-   "clave": "nom059",
-   "etiqueta": "NOM-059-SEMARNAT-2010",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 46,
-   "clave": "prioritaria",
-   "etiqueta": "Especie prioritaria",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 47,
-   "clave": "nivel_prioridad",
-   "etiqueta": "Nivel de prioridad",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 48,
-   "clave": "exotica_invasora",
-   "etiqueta": "Exótica / invasora",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 49,
-   "clave": "ambiente",
-   "etiqueta": "Ambiente",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 50,
-   "clave": "forma_crecimiento",
-   "etiqueta": "Forma de crecimiento",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 51,
-   "clave": "url_snib",
-   "etiqueta": "URL de la especie en el SNIB",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 52,
-   "clave": "url_observacion",
-   "etiqueta": "URL de la observación de referencia de la especie",
-   "bloque": "6 · TAXONOMÍA · SNIB-CONABIO",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula (Taxonomia_SNIB, SNIB-CONABIO)",
-   "regla": "Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB."
-  },
-  {
-   "orden": 53,
-   "clave": "altura_m",
-   "etiqueta": "Altura total (m)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Número (1 dec.)",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Entre 1 y 60 m. Metros lineales (NADF-001-RNAT-2015, Anexo 2, lineamiento 4)."
-  },
-  {
-   "orden": 54,
-   "clave": "dap_cm",
-   "etiqueta": "DAP · Diámetro del tronco a 1.30 m (cm)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Número (1 dec.)",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "DIÁMETRO, no perímetro. Medido a 1.30 m desde el cuello de la raíz (NADF-001-RNAT-2015, numeral 4). Entre 5 y 500 cm."
-  },
-  {
-   "orden": 55,
-   "clave": "altura_medicion_dap",
-   "etiqueta": "Altura a la que se midió el DAP (m)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Número (2 dec.)",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Normalmente 1.30. Cualquier otro valor debe justificarse en la nota de medición."
-  },
-  {
-   "orden": 56,
-   "clave": "circunferencia_cm",
-   "etiqueta": "Circunferencia del tronco (cm)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula",
-   "regla": "C = π × DAP. Se calcula. No editar."
-  },
-  {
-   "orden": 57,
-   "clave": "ancho_copa_m",
-   "etiqueta": "Ancho de copa · eje mayor (m)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Número (2 dec.)",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Diámetro de copa tomando como referencia el área de goteo (NADF-001-RNAT-2015, Anexo 2, lineamiento 6). Entre 1 y 45 m."
-  },
-  {
-   "orden": 58,
-   "clave": "largo_copa_m",
-   "etiqueta": "Largo de copa · eje menor (m)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Número (2 dec.)",
-   "presencia": "siempre",
-   "origen": "Captura",
-   "regla": "Eje perpendicular al mayor. Entre 1 y 45 m."
-  },
-  {
-   "orden": 59,
-   "clave": "extension_copa_m",
-   "etiqueta": "Extensión de copa · promedio (m)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Fórmula",
-   "presencia": "puede venir vacío",
-   "origen": "Fórmula",
-   "regla": "(eje mayor + eje menor) / 2. Criterio documentado en Notas_y_fuentes. Se calcula. No editar."
-  },
-  {
-   "orden": 60,
-   "clave": "condicion_general",
-   "etiqueta": "Condición general del árbol",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 16."
-  },
-  {
-   "orden": 61,
-   "clave": "estructura_general",
-   "etiqueta": "Estructura general del árbol",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 14."
-  },
-  {
-   "orden": 62,
-   "clave": "edad_estimada",
-   "etiqueta": "Edad estimada (años)",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Número entero",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Solo si existe estimación documentada. Entre 1 y 2000. El método de estimación se anota en Observaciones internas."
-  },
-  {
-   "orden": 63,
-   "clave": "expectativa_vida",
-   "etiqueta": "Expectativa de vida útil",
-   "bloque": "7 · DENDROMETRÍA · NADF-001-RNAT-2015",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 15 y Anexo 3, factor 5."
-  },
-  {
-   "orden": 64,
-   "clave": "fecha_itree",
-   "etiqueta": "Fecha de la corrida de i-Tree",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Fecha",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Fecha en que se ejecutó la estimación i-Tree. Permite detectar corridas heterogéneas."
-  },
-  {
-   "orden": 65,
-   "clave": "moneda_itree",
-   "etiqueta": "Moneda del beneficio económico",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Catálogo",
-   "presencia": "puede venir vacío",
-   "origen": "Catálogo",
-   "regla": "Obligatoria si se captura beneficio económico."
-  },
-  {
-   "orden": 66,
-   "clave": "validacion_itree",
-   "etiqueta": "Validación del bloque i-Tree",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Catálogo",
-   "presencia": "siempre",
-   "origen": "Catálogo",
-   "regla": "COMPUERTA DE PUBLICACIÓN: los servicios ambientales solo viajan a la salida pública cuando este campo dice \"Validado\"."
-  },
-  {
-   "orden": 67,
-   "clave": "url_itree",
-   "etiqueta": "URL de la ficha de i-Tree",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Texto (URL)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Dirección de la corrida de i-Tree de ESE árbol, una distinta por ejemplar. Sujeta a la misma compuerta que las 16 cifras. Si hay cifras debe haber liga: el padrón la exige antes de dejar validar."
-  },
-  {
-   "orden": 68,
-   "clave": "beneficio_economico",
-   "etiqueta": "Beneficio económico estimado (por año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 69,
-   "clave": "co2_eq_kg",
-   "etiqueta": "Absorción de CO₂ equivalente (kg/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Fórmula",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Fórmula",
-   "regla": "CO₂e = carbono × 3.667 (razón de masas 44/12). Se calcula. NO es una medición independiente: no debe sumarse al carbono."
-  },
-  {
-   "orden": 70,
-   "clave": "escorrentia_l",
-   "etiqueta": "Disminución de escorrentía (L/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 71,
-   "clave": "precip_interceptada_l",
-   "etiqueta": "Precipitación interceptada (L/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 72,
-   "clave": "elim_co_g",
-   "etiqueta": "Eliminación de monóxido de carbono (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 73,
-   "clave": "elim_o3_g",
-   "etiqueta": "Eliminación de ozono (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 74,
-   "clave": "elim_no2_g",
-   "etiqueta": "Eliminación de dióxido de nitrógeno (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 75,
-   "clave": "elim_so2_g",
-   "etiqueta": "Eliminación de dióxido de azufre (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 76,
-   "clave": "elim_pm25_g",
-   "etiqueta": "Eliminación de PM2.5 (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 77,
-   "clave": "ahorro_kwh",
-   "etiqueta": "Ahorro de electricidad (kWh/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 78,
-   "clave": "evit_co2_kg",
-   "etiqueta": "Emisiones evitadas de dióxido de carbono (kg/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 79,
-   "clave": "evit_co_g",
-   "etiqueta": "Emisiones evitadas de monóxido de carbono (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 80,
-   "clave": "evit_no2_g",
-   "etiqueta": "Emisiones evitadas de dióxido de nitrógeno (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 81,
-   "clave": "evit_so2_g",
-   "etiqueta": "Emisiones evitadas de dióxido de azufre (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 82,
-   "clave": "evit_pm25_g",
-   "etiqueta": "Emisiones evitadas de PM2.5 (g/año)",
-   "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
-   "presencia": "condicional · solo si i-Tree Validado",
-   "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
-  },
-  {
-   "orden": 83,
-   "clave": "obs_publicas",
-   "etiqueta": "Observaciones públicas",
-   "bloque": "9 · PUBLICACIÓN",
-   "tipo": "Texto largo",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Texto que SÍ se publica en el micrositio. Redacción ciudadana, en voz activa, sin abreviaturas."
-  }
- ],
- "consumo": {
-  "id": {
-   "clave": "id"
-  },
-  "consecutivo": {
-   "clave": null,
-   "derivado": true,
-   "nota": "Los cuatro últimos dígitos del id. El padrón v2 ya no publica el folio por separado."
-  },
-  "nombreComun": {
-   "clave": "nombre_comun"
-  },
-  "especie": {
-   "clave": "nombre_cientifico"
-  },
-  "nombreAsignado": {
-   "clave": "nombre_asignado"
-  },
-  "slug": {
-   "clave": null,
-   "derivado": true,
-   "nota": "Se deriva de nombre_asignado."
-  },
-  "nominadoPor": {
-   "clave": "nomino"
-  },
-  "fechaNominacion": {
-   "clave": null,
-   "retirado": true,
-   "nota": "Ya no se captura. El padrón v2 solo lleva la fecha del decreto, que es la que tiene efecto jurídico. Sale del bloque de procedencia de la ficha."
-  },
-  "categorias": {
-   "clave": "categorias",
-   "nota": "Respaldo: centenario, historico, notable y singular, con valores SÍ/NO.",
-   "claves_extra": [
-    "centenario",
-    "historico",
-    "notable",
-    "singular"
-   ]
-  },
-  "fechaDecreto": {
-   "clave": "fecha_decreto"
-  },
-  "linkDecreto": {
-   "clave": "drive_decreto",
-   "nota": "Vínculo de Drive. La descarga directa se arma extrayendo el id entre /d/ y la siguiente diagonal."
-  },
-  "alcaldia": {
-   "clave": "alcaldia"
-  },
-  "codAlcaldia": {
-   "clave": null,
-   "derivado": true,
-   "nota": "Segundo segmento del id."
-  },
-  "ubicacion.calle": {
-   "clave": "calle"
-  },
-  "ubicacion.numero": {
-   "clave": "num_ext"
-  },
-  "ubicacion.colonia": {
-   "clave": "colonia"
-  },
-  "ubicacion.cp": {
-   "clave": "cp"
-  },
-  "ubicacion.entreCalles": {
-   "clave": "entre_1",
-   "nota": "Junto con entre_2.",
-   "claves_extra": [
-    "entre_2"
-   ]
-  },
-  "ubicacion.referencias": {
-   "clave": "referencias"
-  },
-  "ubicacion.tipo": {
-   "clave": "tipo_ubicacion"
-  },
-  "coords": {
-   "clave": "latitud",
-   "nota": "Junto con longitud. Ya no llegan concatenadas: el analizador de coordenadas deja de hacer falta.",
-   "claves_extra": [
-    "longitud"
-   ]
-  },
-  "utm": {
-   "clave": "utm_x",
-   "nota": "Junto con utm_y. En el v2 se proyectan desde latitud y longitud, no se capturan.",
-   "claves_extra": [
-    "utm_y"
-   ]
-  },
-  "taxonomia.reino": {
-   "clave": "reino"
-  },
-  "taxonomia.phylum": {
-   "clave": "phylum"
-  },
-  "taxonomia.clase": {
-   "clave": "clase"
-  },
-  "taxonomia.orden": {
-   "clave": "orden"
-  },
-  "taxonomia.familia": {
-   "clave": "familia"
-  },
-  "taxonomia.genero": {
-   "clave": "genero"
-  },
-  "taxonomia.autor": {
-   "clave": "autor"
-  },
-  "taxonomia.ambiente": {
-   "clave": "ambiente"
-  },
-  "taxonomia.formaCrecimiento": {
-   "clave": "forma_crecimiento"
-  },
-  "taxonomia.infraespecie": {
-   "clave": null,
-   "retirado": true,
-   "nota": "El padrón v2 no publica categoría infraespecífica."
-  },
-  "conservacion.iucn": {
-   "clave": "iucn"
-  },
-  "conservacion.nom059": {
-   "clave": "nom059"
-  },
-  "conservacion.cites": {
-   "clave": "cites"
-  },
-  "conservacion.prioritaria": {
-   "clave": "prioritaria"
-  },
-  "conservacion.prioridad": {
-   "clave": "nivel_prioridad"
-  },
-  "conservacion.endemismo": {
-   "clave": "endemismo"
-  },
-  "conservacion.exoticaInvasora": {
-   "clave": "exotica_invasora"
-  },
-  "conservacion.origen": {
-   "clave": null,
-   "retirado": true,
-   "nota": "No existe en el v2. El endemismo cubre la pregunta."
-  },
-  "urlSNIB": {
-   "clave": "url_snib",
-   "nota": "Es de la ESPECIE, no del ejemplar: idéntica entre árboles de la misma especie. Presentarla con ese sentido."
-  },
-  "urlOrigen": {
-   "clave": "url_observacion",
-   "nota": "Igual que la anterior: de la especie."
-  },
-  "morfologia.altura_m": {
-   "clave": "altura_m"
-  },
-  "morfologia.diametro_cm": {
-   "clave": "dap_cm"
-  },
-  "morfologia.circunferencia_cm": {
-   "clave": "circunferencia_cm"
-  },
-  "morfologia.anchoCopa_m": {
-   "clave": "ancho_copa_m"
-  },
-  "morfologia.largoCopa_m": {
-   "clave": "largo_copa_m"
-  },
-  "morfologia.extensionCopa_m": {
-   "clave": "extension_copa_m"
-  },
-  "condicion": {
-   "clave": "condicion_general"
-  },
-  "estructura": {
-   "clave": "estructura_general"
-  },
-  "edadEstimada": {
-   "clave": "edad_estimada"
-  },
-  "expectativaVida": {
-   "clave": "expectativa_vida"
-  },
-  "serviciosAmbientales.beneficioEconomico_moneda": {
-   "clave": "beneficio_economico",
-   "nota": "No se publica sin moneda_itree.",
-   "claves_extra": [
-    "moneda_itree"
-   ]
-  },
-  "serviciosAmbientales.carbonoSecuestrado_kg": {
-   "clave": null,
-   "retirado": true,
-   "nota": "Decisión: en la salida pública se queda el CO₂ equivalente, que es la unidad de la convención internacional. El carbono se sigue capturando en el Listado."
-  },
-  "serviciosAmbientales.co2Absorbido_kg": {
-   "clave": "co2_eq_kg",
-   "nota": "Derivado de carbono × 3.667. No es medición independiente: no se suma al carbono ni se presenta junto a él."
-  },
-  "serviciosAmbientales.escorrentiaReducida_L": {
-   "clave": "escorrentia_l"
-  },
-  "serviciosAmbientales.precipitacionInterceptada_L": {
-   "clave": "precip_interceptada_l"
-  },
-  "serviciosAmbientales.coEliminado_g": {
-   "clave": "elim_co_g"
-  },
-  "serviciosAmbientales.ozonoEliminado_g": {
-   "clave": "elim_o3_g"
-  },
-  "serviciosAmbientales.no2Eliminado_g": {
-   "clave": "elim_no2_g"
-  },
-  "serviciosAmbientales.so2Eliminado_g": {
-   "clave": "elim_so2_g"
-  },
-  "serviciosAmbientales.pm25Eliminado_g": {
-   "clave": "elim_pm25_g"
-  },
-  "serviciosAmbientales.ahorroElectricidad_kWh": {
-   "clave": "ahorro_kwh"
-  },
-  "serviciosAmbientales.emisionesEvitadasCO2_kg": {
-   "clave": "evit_co2_kg"
-  },
-  "serviciosAmbientales.emisionesEvitadasCO_g": {
-   "clave": "evit_co_g"
-  },
-  "serviciosAmbientales.emisionesEvitadasNO2_g": {
-   "clave": "evit_no2_g"
-  },
-  "serviciosAmbientales.emisionesEvitadasSO2_g": {
-   "clave": "evit_so2_g"
-  },
-  "serviciosAmbientales.emisionesEvitadasPM25_g": {
-   "clave": "evit_pm25_g"
-  },
-  "linkITree": {
-   "clave": "url_itree",
-   "nota": "Ya existe en el padrón v2. Alimenta la tarjeta «Estimación de servicios ambientales». Solo llega si el bloque está validado."
-  },
-  "observaciones": {
-   "clave": "obs_publicas"
-  },
-  "vistaCalle": {
-   "clave": "street_view",
-   "nota": "Llega lista para src. Va en un <iframe> creado por código, nunca por innerHTML, validando antes el prefijo."
-  },
-  "fotos": {
-   "clave": null,
-   "derivado": true,
-   "nota": "No viene del CSV: las imágenes viven en el repositorio, en assets/img/ejemplares/<id>/. El crédito es una constante, no un dato."
-  },
-  "_compuerta.ejemplar": {
-   "clave": "estado",
-   "nota": "Compuerta de publicación del ejemplar."
-  },
-  "_compuerta.itree": {
-   "clave": "validacion_itree",
-   "nota": "Compuerta del bloque ambiental. Viaja siempre, precisamente para que el sitio sepa por qué no hay cifras."
-  },
-  "ubicacion.sueloConservacion": {
-   "clave": "suelo_conservacion",
-   "nota": "SÍ/NO. Cambia el régimen jurídico del predio: se publica en la ficha."
-  },
-  "ubicacion.puebloBarrio": {
-   "clave": "pueblo_barrio",
-   "nota": "Tres estados. Se publica el nombre solo cuando lo hay: con «No aplica» y con «Por confirmar» se omite la línea."
-  }
- },
- "sin_consumo": {
-  "nota": "Campos que el padrón publica y que el sitio todavía no dibuja. No es un error: publicarlos es una decisión editorial. Se listan para que la decisión sea explícita y no un olvido.",
-  "claves": [
-   "gaceta",
-   "tiene_programa",
-   "url_programa",
-   "nombre_sitio",
-   "idnombrecat",
-   "altura_medicion_dap",
-   "fecha_itree"
-  ]
- },
- "catalogos_abiertos": {
-  "pueblo_barrio": {
-   "fijos": [
-    "No aplica",
-    "Por confirmar"
-   ],
-   "nota": "Además de los dos fijos admite cualquier nombre del registro de SEPI que el área usuaria haya cargado en la hoja Catalogos. El registro CRECE, así que el sitio NO lleva copia de la lista: si necesita filtrar por pueblo, arma los valores con los que vengan en el CSV.",
-   "fuente": "Sistema de Registro y Documentación de Pueblos y Barrios Originarios y Comunidades Indígenas Residentes de SEPI, y el conjunto «Padrón de pueblos y barrios originarios» del portal de datos abiertos de la CDMX. La fecha de la versión cargada se anota en la hoja Parametros del padrón."
-  }
- },
- "formato_observado": {
-  "medido": "CSV descargado de Salida_Publica el 21 de agosto de 2026, con cinco registros de prueba.",
-  "separador_miles": [
-   "beneficio_economico",
-   "escorrentia_l",
-   "precip_interceptada_l"
-  ],
-  "nota_separador": "Solo aparece en los valores por encima de mil. Con cifras pequeñas el defecto es invisible: se manifiesta el día que un ejemplar rebasa los 1000.",
-  "fechas": {
-   "fecha_decreto": "dd/mm/aaaa",
-   "fecha_itree": "número de serie de la hoja (46249 = 2026-08-15)"
-  }
- }
 }

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Corre las doce suites. Falla con codigo distinto de cero si algo se rompio.
+# Corre las catorce suites. Falla con codigo distinto de cero si algo se rompio.
 #
 # El veredicto se toma del CODIGO DE SALIDA de cada suite, no de buscar la
 # frase «0 fallidas» en su texto. Buscarla era un colador: verifica-galeria
@@ -10,7 +10,8 @@ cd "$(dirname "$0")"
 mal=0
 for f in verifica-dc verifica-ficha-dc verifica-galeria verifica-mapa verifica-panel \
          suite-real verifica-identidad verifica-copia verifica-contenido \
-         verifica-design verifica-menu verifica-contrato verifica-auditoria; do
+         verifica-design verifica-menu verifica-contrato verifica-lector \
+         verifica-auditoria; do
   salida=$(node "$f.mjs" 2>&1)
   codigo=$?
   linea=$(echo "$salida" | grep -E '^(TOTAL|RESULTADO)' | tail -1)

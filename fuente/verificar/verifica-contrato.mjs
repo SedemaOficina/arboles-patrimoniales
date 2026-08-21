@@ -169,25 +169,32 @@ console.log('\n-- contra el CSV real, no contra el contrato --');
 
 console.log('\n-- el formato con el que la hoja entrega los datos --');
 {
-  /* Medido sobre el CSV real con cinco registros de prueba. No son defectos
-     del contrato sino de cómo Sheets aplica el formato de PRESENTACIÓN a lo
-     que debería salir en crudo. Quedan escritos aquí para que el lector los
-     defienda aunque se arreglen en origen: un CSV público lo consume más gente
-     que este sitio. */
+  /* Medido sobre el CSV real. Los tres defectos que traía la primera medición
+     —separador de miles, fechas al revés y una fecha como número de serie— ya
+     se arreglaron en la hoja. Quedan escritos porque el CSV se exporta con el
+     valor MOSTRADO: basta que alguien reformatee una columna para que vuelvan,
+     y sin aviso. Por eso el lector conserva la limpieza. */
   const F = C.formato_observado;
   t('Queda registrado con qué se midió', !!F && /Salida_Publica/.test(F.medido));
-  // Number("1,240.50") es NaN. Y solo pasa arriba de mil: con cifras pequeñas
-  // el defecto es invisible hasta que un ejemplar rebasa los 1000.
-  t('Las tres columnas con separador de miles están nombradas',
-    F.separador_miles.length===3 && F.separador_miles.includes('beneficio_economico'));
-  t('Y se advierte que el defecto solo asoma arriba de mil',
-    /invisible/.test(F.nota_separador));
-  t('El formato real de las fechas queda documentado',
-    F.fechas.fecha_decreto==='dd/mm/aaaa' && /serie/.test(F.fechas.fecha_itree));
-  t('El lector tiene regla para el separador de miles',
-    C.reglas.some(r=>/separador de miles/.test(r) && /NaN/.test(r)));
-  t('Y regla para las fechas que no llegan en ISO',
-    C.reglas.some(r=>/dd\/mm\/aaaa/.test(r)));
+  t('Y que se midió sobre la hoja ya corregida', /corregido en origen/.test(F.medido));
+  t('Los números llegan en crudo, sin separador de miles',
+    /sin separador de miles/.test(F.numeros));
+  t('Las dos fechas llegan en ISO',
+    F.fechas.fecha_decreto==='aaaa-mm-dd' && F.fechas.fecha_itree==='aaaa-mm-dd');
+  t('Los tres defectos corregidos quedan documentados, no borrados',
+    Array.isArray(F.defectos_resueltos) && F.defectos_resueltos.length===3);
+  t('Cada uno dice qué era, por qué importaba y cómo se arregló',
+    F.defectos_resueltos.every(d=>d.que && d.por_que_importaba && d.como_se_arreglo));
+  // El defecto del separador solo asoma arriba de mil: es la clase de error que
+  // se cuela porque con cifras pequeñas no se ve.
+  t('Se conserva la advertencia de que era invisible bajo mil',
+    F.defectos_resueltos.some(d=>/invisible/.test(d.por_que_importaba)));
+  t('Se advierte que el CSV exporta el valor mostrado y el defecto puede volver',
+    /valor MOSTRADO/.test(F.nota_permanencia) && /defensa, no parche/.test(F.nota_permanencia));
+  t('El lector conserva la limpieza de números como defensa',
+    C.reglas.some(r=>/NaN/.test(r) && /defensa permanente/.test(r)));
+  t('Y la normalización de fechas, aunque hoy lleguen en ISO',
+    C.reglas.some(r=>/dd\/mm\/aaaa/.test(r) && /número de serie/.test(r)));
 }
 
 console.log('\n-- las compuertas, comprobadas sobre datos reales --');

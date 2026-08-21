@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Captura del padrón v2 · Árboles Patrimoniales CDMX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Guía autocontenida a propósito: vive en la carpeta compartida de Drive y la
+   abre el equipo técnico desde su propia computadora, sin el resto del sitio
+   alrededor. Por eso no enlaza estilos.css: se copiaron aquí los tokens que
+   necesita. Si la paleta del sitio cambia, hay que reflejarlo también aquí. */
+:root{
+  --tinta-jacaranda:#2A1630; --jacaranda:#8D4992; --jacaranda-hondo:#7A3E7F;
+  --jacaranda-luz:#C79FCA; --niebla:#F4E9F3;
+  --verde-bosque:#1E4D2B; --verde-vivo:#2D7A3E; --verde-niebla:#E7F0E1;
+  --papel:#FEF7E4; --blanco:#FFFDF7; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta:#1A1A1A; --tinta-suave:#413647; --gris:#5B4F62;
+  --display:'Anton',Impact,sans-serif;
+  --editorial:'Fraunces',Georgia,serif;
+  --texto:'Source Sans 3',system-ui,sans-serif;
+  --borde:1px solid rgba(42,22,48,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.envoltura{max-width:1000px;margin:0 auto;padding:0 26px}
+.rotulo{font-family:var(--texto);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:1;margin:0}
+
+.cabeza{background:var(--tinta-jacaranda);color:#fff;padding:44px 0 40px}
+.cabeza .rotulo{color:var(--jacaranda-luz)}
+.cabeza h1{font-size:clamp(32px,5.2vw,60px);margin:12px 0 0;color:#fff}
+.cabeza p{margin:18px 0 0;max-width:74ch;color:rgba(255,255,255,.82);font-size:16px}
+.carriles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 0}
+.carril{background:rgba(255,255,255,.07);border:1px solid rgba(199,159,202,.26);padding:18px 20px}
+.carril b{display:block;font-family:var(--display);font-weight:400;font-size:19px;color:var(--jacaranda-luz);margin-bottom:6px}
+.carril span{display:block;font-size:14.5px;color:rgba(255,255,255,.78);line-height:1.5}
+@media(max-width:700px){.carriles{grid-template-columns:1fr}}
+
+main{padding:44px 0 70px}
+section{margin:0 0 52px;scroll-margin-top:20px}
+section>h2{font-size:27px;color:var(--tinta-jacaranda);margin:0 0 4px}
+section>h2 em{font-style:normal;color:var(--dorado);margin-right:12px}
+section>.intro{margin:0 0 22px;max-width:80ch;color:var(--tinta-suave)}
+
+.indice{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 26px;margin:0 0 44px}
+.indice h2{font-size:16px;margin:0 0 12px;color:var(--tinta-jacaranda)}
+.indice ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
+.indice li{margin:0 0 6px;font-size:15px;break-inside:avoid}
+.indice a{color:var(--jacaranda-hondo);text-decoration:none;border-bottom:1px solid rgba(141,73,146,.3)}
+.indice a:hover{border-bottom-color:var(--jacaranda)}
+@media(max-width:640px){.indice ol{columns:1}}
+
+.paso{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:20px 24px;margin:0 0 14px}
+.paso h3{font-size:17px;color:var(--tinta);margin:0 0 7px}
+.paso p{margin:0 0 10px}
+.paso p:last-child{margin-bottom:0}
+.paso ul,.paso ol{margin:0 0 10px;padding-left:22px}
+.paso li{margin:0 0 5px}
+
+.aviso{border-left:3px solid var(--alerta);background:rgba(192,57,43,.05);padding:18px 22px;margin:0 0 14px}
+.aviso b{color:var(--alerta)}
+.ojo{border-left:3px solid var(--verde-vivo);background:var(--verde-niebla);padding:18px 22px;margin:0 0 14px}
+.ojo b{color:var(--verde-bosque)}
+
+/* Sobre el morado profundo el chip claro con tinta morada da menos de 2:1.
+   En fondo oscuro el código va en claro sobre un velo del propio fondo. */
+.cabeza code,.carril code,pre code{background:rgba(255,255,255,.16);color:#F2E8F3}
+code,.ruta{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.88em;
+  background:var(--niebla);padding:2px 6px;border-radius:2px;overflow-wrap:anywhere}
+pre{background:var(--tinta-jacaranda);color:#EDE3EE;padding:16px 20px;overflow-x:auto;
+  border-radius:3px;margin:0 0 14px;font-size:14px;line-height:1.55}
+pre code{background:none!important;padding:0;color:inherit}
+
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14.5px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:var(--borde);vertical-align:top}
+th{background:var(--verde-bosque);color:#fff;font-size:12px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:700;white-space:nowrap}
+tbody tr:nth-child(even){background:rgba(244,233,243,.42)}
+td code{white-space:nowrap}
+
+.etiqueta{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.etiqueta--obl{background:rgba(192,57,43,.1);color:var(--alerta)}
+.etiqueta--opc{background:rgba(178,142,92,.18);color:#8A6B3D}
+.etiqueta--calc{background:var(--niebla);color:var(--jacaranda-hondo)}
+
+.lista-chk{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+/* NI GRID NI FLEX: la casilla va posicionada y el texto fluye normal.
+   El contenido de cada renglón es «<b>título</b> más texto suelto». En una
+   retícula cada hijo es una celda; en flex, cada ELEMENTO hijo es un elemento
+   flexible por separado y solo el texto suelto se agrupa en uno anónimo. En
+   los dos casos el <b> quedaba en una columna y el resto de la frase en otra,
+   partida palabra por palabra. Sacando la casilla del flujo, el renglón vuelve
+   a ser un párrafo y se lee entero. */
+.lista-chk li{position:relative;padding:13px 17px 13px 47px;
+  background:var(--blanco);border:var(--borde);font-size:15px}
+.lista-chk li::before{content:"";position:absolute;left:17px;top:16px;
+  width:19px;height:19px;border:2px solid rgba(42,22,48,.26);border-radius:3px}
+
+footer{background:var(--tinta-jacaranda);color:rgba(255,255,255,.76);padding:30px 0;font-size:14px}
+footer b{color:#fff}
+@media print{body{background:#fff}.cabeza,footer{background:#fff;color:#000}
+  .cabeza h1,.cabeza .rotulo,.carril b{color:#000}pre{background:#eee;color:#000}}
+
+/* Añadidos de esta guía: la columna «al CSV» y el aparato de portado. */
+.no-viaja{color:var(--gris);font-size:13px;font-style:italic}
+table td:nth-child(3){white-space:nowrap}
+.bloque-campos{margin:0 0 26px}
+.bloque-campos>h3{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:19px;color:var(--tinta-jacaranda);margin:0 0 4px;
+  border-bottom:2px solid var(--jacaranda-luz);padding-bottom:7px}
+.bloque-campos>p{margin:10px 0 14px;color:var(--tinta-suave);max-width:80ch}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 14px}
+@media(max-width:760px){.dupla{grid-template-columns:1fr}}
+.caja{background:var(--blanco);border:var(--borde);padding:18px 22px}
+.caja>b{display:block;font-family:var(--display);font-weight:400;font-size:17px;
+  text-transform:uppercase;color:var(--tinta-jacaranda);margin-bottom:7px}
+.flecha{font-family:var(--display);color:var(--dorado);font-size:20px;padding:0 6px}
+.numeros{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 20px}
+@media(max-width:760px){.numeros{grid-template-columns:repeat(2,1fr)}}
+.numeros div{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);
+  padding:14px 16px;text-align:center}
+.numeros strong{display:block;font-family:var(--display);font-weight:400;font-size:30px;
+  line-height:1;color:var(--tinta-jacaranda)}
+.numeros span{display:block;font-size:12.5px;color:var(--gris);margin-top:5px;line-height:1.35}
+/* En un aviso, el <b> guía de cada viñeta no debe ir en rojo: el rojo es del
+   encabezado del aviso. Tres viñetas rojas seguidas dejan de llamar la atención. */
+.aviso li b{color:inherit}
+</style>
+</head>
+<body>
+
+<header class="cabeza">
+  <div class="envoltura">
+    <span class="rotulo">Secretaría del Medio Ambiente · Oficina de la Secretaría</span>
+    <h1>Captura del padrón v2</h1>
+    <p>Las 95 columnas del <code>Listado</code>: cuáles se capturan, cuáles se calculan solas y cuáles llegan al micrositio. Y el procedimiento para pasar los 23 registros del padrón anterior sin perder nada por el camino.</p>
+    <div class="carriles">
+      <div class="carril"><b>Para qué sirve</b><span>Capturar un ejemplar nuevo, y portar los que ya existen. Es la misma hoja y las mismas reglas.</span></div>
+      <div class="carril"><b>Qué NO cubre</b><span>Fotografías, decretos y publicación del sitio: eso sigue en la guía de alta, que se reescribe el día del corte.</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura">
+
+<nav class="indice">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#capas">Las dos capas y las dos compuertas</a></li>
+    <li><a href="#oro">La regla de oro: las columnas ƒ</a></li>
+    <li><a href="#orden">En qué orden capturar</a></li>
+    <li><a href="#campos">Las 95 columnas, bloque por bloque</a></li>
+    <li><a href="#formato">El formato de las celdas (la trampa silenciosa)</a></li>
+    <li><a href="#portar">Portar los 23 registros</a></li>
+    <li><a href="#calidad">Qué marca el control de calidad</a></li>
+    <li><a href="#antes">Antes de dar por buena una captura</a></li>
+  </ol>
+</nav>
+
+<section id="capas">
+  <h2><em>1</em>Las dos capas y las dos compuertas</h2>
+  <p class="intro">Todo lo demás se entiende a partir de esto. El padrón tiene dos hojas que hacen cosas distintas, y entre ellas hay dos filtros que deciden qué ve el público.</p>
+
+  <div class="dupla">
+    <div class="caja"><b>Listado</b>
+      <p>Donde trabaja el equipo. 95 columnas, incluidas las observaciones internas, el nombre de quien dictaminó y el origen de cada coordenada. <b>Esta hoja no se publica nunca.</b></p></div>
+    <div class="caja"><b>Salida_Publica</b>
+      <p>83 columnas. Lo único que sale al CSV que lee el micrositio. Se llena sola desde el <code>Listado</code>: no se captura aquí.</p></div>
+  </div>
+
+  <div class="paso">
+    <h3>Compuerta 1 · el ejemplar</h3>
+    <p><b>Estado del Decreto = <code>Publicado</code>.</b> Si no lo dice, el renglón no llega a <code>Salida_Publica</code> aunque esté completo, y el micrositio ni se entera de que existe.</p>
+  </div>
+  <div class="paso">
+    <h3>Compuerta 2 · el bloque ambiental</h3>
+    <p><b>Validación del bloque i-Tree = <code>Validado</code>.</b> Si dice <code>En revisión</code> o <code>No publicable</code>, las veinte columnas de servicios ambientales llegan vacías. El ejemplar sí se publica; sus cifras no.</p>
+    <p>El motivo sí viaja, y a propósito: el sitio puede decir «la estimación de este ejemplar está en revisión» en lugar de dejar un hueco sin explicación.</p>
+  </div>
+
+  <div class="aviso">
+    <p><b>Nunca publiques la hoja <code>Listado</code> como CSV.</b> Publicar una hoja publica la pestaña entera, con las observaciones internas y el nombre de la persona dictaminadora dentro. La única hoja publicable es <code>Salida_Publica</code>.</p>
+  </div>
+</section>
+
+<section id="oro">
+  <h2><em>2</em>La regla de oro: las columnas ƒ</h2>
+  <p class="intro">De las 95 columnas, <b>29 empiezan con ƒ</b> y no se tocan jamás. Las llena una fórmula, y escribir encima de una fórmula la destruye para siempre en ese renglón: no hay aviso, no hay deshacer al día siguiente, y el error se descubre semanas después cuando alguien nota que un árbol no tiene familia botánica.</p>
+
+  <div class="numeros">
+    <div><strong>95</strong><span>columnas en el <code>Listado</code></span></div>
+    <div><strong>66</strong><span>que se capturan</span></div>
+    <div><strong>29</strong><span>que se calculan solas</span></div>
+    <div><strong>83</strong><span>que llegan al micrositio</span></div>
+  </div>
+
+  <div class="ojo">
+    <p><b>Cómo saber si estás sobre una fórmula:</b> el encabezado empieza con <code>ƒ</code>. Si además la celda tiene un fondo distinto, es porque el rango está protegido. Si Sheets te deja escribir y el encabezado trae la ƒ, avisa antes de guardar: falta la protección de ese rango.</p>
+  </div>
+
+  <div class="paso">
+    <h3>La única fórmula que sí se copia a mano</h3>
+    <p><code>ƒ ID sugerido</code> arma el identificador. Se copia y se pega <b>como valor</b> en la columna <code>ID</code>. Se hace una sola vez, cuando el decreto se publica, y a partir de ahí el ID no cambia nunca: está impreso en el decreto, nombra la carpeta de imágenes y es la dirección de la ficha en internet.</p>
+  </div>
+</section>
+
+<section id="orden">
+  <h2><em>3</em>En qué orden capturar</h2>
+  <p class="intro">El orden importa porque unas columnas desbloquean otras. Capturando así, cada bloque de fórmulas se llena antes de que llegues al siguiente.</p>
+
+  <div class="paso">
+    <h3>1 · El nombre científico, antes que nada</h3>
+    <p>De él dependen 19 columnas taxonómicas. Si lo dejas para el final, capturas todo el renglón mirando celdas vacías y no puedes revisar si el árbol quedó bien clasificado.</p>
+  </div>
+  <div class="paso">
+    <h3>2 · Alcaldía y coordenadas</h3>
+    <p>La alcaldía alimenta el código de tres letras del ID. Latitud y longitud proyectan las UTM y arman el respaldo de Street View.</p>
+  </div>
+  <div class="paso">
+    <h3>3 · Las cuatro casillas de categoría</h3>
+    <p>Al menos una en SÍ. Un ejemplar sin categoría se publica, pero llega al sitio sin la etiqueta que lo clasifica.</p>
+  </div>
+  <div class="paso">
+    <h3>4 · Dendrometría</h3>
+    <p>Altura, DAP y los dos ejes de copa. La circunferencia y la extensión de copa se calculan solas a partir de ahí.</p>
+  </div>
+  <div class="paso">
+    <h3>5 · Los datos del decreto, cuando exista</h3>
+    <p>Fecha, Gaceta y vínculo de Drive. Con la fecha capturada, <code>ƒ ID sugerido</code> queda listo para copiarse.</p>
+  </div>
+  <div class="paso">
+    <h3>6 · i-Tree, al final y de una sola vez</h3>
+    <p>Las cifras, la fecha de la corrida, la moneda y la liga. Y <b>solo entonces</b> se cambia la validación a <code>Validado</code>. Marcar validado antes de tener la liga publica cifras que nadie puede rastrear.</p>
+  </div>
+  <div class="paso">
+    <h3>7 · El estado del decreto, hasta el final</h3>
+    <p>Poner <code>Publicado</code> es abrir la compuerta. Se hace cuando el renglón está terminado y <code>ƒ ¿Listo para publicar?</code> está en verde, no antes.</p>
+  </div>
+</section>
+
+<section id="campos">
+  <h2><em>4</em>Las 95 columnas, bloque por bloque</h2>
+  <p class="intro">La columna <b>«al CSV»</b> dice con qué nombre llega ese dato al micrositio. Las que dicen «no viaja» se quedan en el <code>Listado</code>: son de trabajo interno.</p>
+  <div class="bloque-campos" id="b1"><h3>1 · CONTROL INTERNO</h3><p>Seis columnas que no describen al árbol sino al expediente. El <b>Estado del Decreto</b> es la primera compuerta: mientras no diga <code>Publicado</code>, ese renglón no existe para el sitio, esté completo o no.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>ID</b><br><span class="etiqueta etiqueta--obl">al publicar</span></td><td>Único e inmutable. Nace con el decreto: mientras el ejemplar no lo tenga, la celda va vacía y el registro se identifica por su consecutivo. Una vez pegado no se modifica aunque cambien la alcaldía, la fecha o la taxonomía.</td><td><code>id</code></td></tr>
+<tr><td><b>Consecutivo</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Cuatro dígitos, el siguiente libre. Es el folio interno y es la cola del ID. No se reutiliza aunque un registro se dé de baja.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;ID sugerido</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>La hoja arma el ID a partir de la fecha del decreto, la alcaldía, el género y el consecutivo. Se copia y se pega como VALOR en la columna ID; no se escribe a mano.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>Estado del Decreto</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Solo los registros en estado "Publicado" pasan a la salida pública.</td><td><code>estado</code></td></tr>
+<tr><td><b>Nominó (persona, organización o institución)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Nombre completo, institución u organización. Sin comillas ni asteriscos.</td><td><code>nomino</code></td></tr>
+<tr><td><b>Observaciones internas</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Notas de trabajo del equipo. <b>Nunca salen al CSV público</b>: es la columna donde se puede escribir con franqueza sobre el estado de un expediente.</td><td><span class="no-viaja">no viaja</span></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b2"><h3>2 · IDENTIFICACIÓN</h3><p>Tres columnas, y de la tercera dependen diecinueve. El nombre científico tiene que existir tal cual en <code>Taxonomia_SNIB</code>; si no, el bloque taxonómico entero se queda en blanco.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>Nombre asignado</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Nombre propio de divulgación con el que el micrositio identifica al ejemplar.</td><td><code>nombre_asignado</code></td></tr>
+<tr><td><b>Nombre común</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Nombre común de uso local en la CDMX. Uno solo, el principal.</td><td><code>nombre_comun</code></td></tr>
+<tr><td><b>Nombre científico (especie válida)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Debe existir en Taxonomia_SNIB. De este campo dependen los 21 campos taxonómicos.</td><td><code>nombre_cientifico</code></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b3"><h3>3 · CATEGORÍAS</h3><p>Cuatro casillas SÍ/NO y una fórmula que las resume. <b>Las casillas mandan.</b> El sitio publica lo que dicen las cuatro, no lo que diga la columna de texto: si discrepan, el lector avisa y se queda con las casillas.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>CENTENARIO</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Edad estimada igual o mayor a 80 años, determinada por método directo o indirecto.</td><td><code>centenario</code></td></tr>
+<tr><td><b>HISTÓRICO</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Su presencia se relaciona con un evento histórico relevante (NADF-001-RNAT-2015, numeral 4, definición de "Histórico").</td><td><code>historico</code></td></tr>
+<tr><td><b>NOTABLE</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Destaca por dimensiones, porte o valor estético en el paisaje urbano.</td><td><code>notable</code></td></tr>
+<tr><td><b>SINGULAR</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Rareza de la especie, forma o condición irrepetible en la ciudad.</td><td><code>singular</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Categorías (texto)</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se calcula a partir de las cuatro columnas anteriores. No editar.</td><td><code>categorias</code></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b4"><h3>4 · DECLARATORIA</h3><p>Lo que le da sustento jurídico al registro. La fecha del decreto es la que tiene efecto legal y de ella salen los dos primeros dígitos del ID. La fecha de nominación ya no se captura.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>Fecha del decreto</b><br><span class="etiqueta etiqueta--obl">al publicar</span></td><td>Obligatoria cuando el Estado del Decreto es "Publicado". Es la fecha de publicación en la Gaceta Oficial y de ella salen los dos primeros dígitos del ID.</td><td><code>fecha_decreto</code></td></tr>
+<tr><td><b>Publicación en Gaceta Oficial (número y fecha)</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Referencia hemerográfica completa del decreto.</td><td><code>gaceta</code></td></tr>
+<tr><td><b>Vínculo de Drive del decreto (pegar tal cual)</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Vínculo de compartir de Google Drive. El archivo debe estar como "Cualquier persona con el vínculo · Lector".</td><td><code>drive_decreto</code></td></tr>
+<tr><td><b>¿Cuenta con programa de manejo?</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Indica si el ejemplar tiene un programa de manejo técnico vigente.</td><td><code>tiene_programa</code></td></tr>
+<tr><td><b>URL del programa de manejo</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Obligatoria cuando el ejemplar cuenta con programa de manejo. Debe apuntar al documento completo, no a una carpeta.</td><td><code>url_programa</code></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b5"><h3>5 · UBICACIÓN</h3><p>El bloque más largo, y el que más se equivoca. Veinte columnas: doce de captura, cuatro de fórmula y cuatro internas. Las coordenadas ya no se pegan concatenadas: latitud y longitud son columnas separadas y la proyección UTM se calcula sola.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>Alcaldía</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Una de las 16 demarcaciones territoriales de la Ciudad de México.</td><td><code>alcaldia</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Código de alcaldía</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Tres letras derivadas de la alcaldía. Alimenta el ID.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>Calle</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Vialidad sobre la que se localiza el ejemplar, con su tipo (Calle, Avenida, Calzada, Eje).</td><td><code>calle</code></td></tr>
+<tr><td><b>Número exterior</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Número oficial. Si no lo tiene, se escribe S/N.</td><td><code>num_ext</code></td></tr>
+<tr><td><b>Colonia</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Nombre oficial de la colonia según el catálogo postal.</td><td><code>colonia</code></td></tr>
+<tr><td><b>Código postal</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Cinco dígitos. Debe conservar el cero inicial.</td><td><code>cp</code></td></tr>
+<tr><td><b>Entre calle 1</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Primera vialidad de referencia.</td><td><code>entre_1</code></td></tr>
+<tr><td><b>Entre calle 2</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Segunda vialidad de referencia.</td><td><code>entre_2</code></td></tr>
+<tr><td><b>Referencias para localizarlo</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Descripción que permita a una persona encontrar el árbol en campo.</td><td><code>referencias</code></td></tr>
+<tr><td><b>Tipo de ubicación</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Catálogo cerrado. Los seis primeros valores son los de la NADF-001-RNAT-2015 (Anexo 2, lineamiento 3); los demás son extensiones institucionales documentadas.</td><td><code>tipo_ubicacion</code></td></tr>
+<tr><td><b>Nombre del sitio o espacio público</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Nombre propio del parque, jardín, plaza o predio donde se ubica.</td><td><code>nombre_sitio</code></td></tr>
+<tr><td><b>Suelo de conservación</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Indica si el predio se localiza en suelo de conservación conforme al Programa General de Ordenamiento Territorial.</td><td><code>suelo_conservacion</code></td></tr>
+<tr><td><b>Pueblo o Barrio Originario</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Catálogo cerrado con tres tipos de valor: un nombre del registro de SEPI, «No aplica» —afirmación de que no cae en ninguno— o «Por confirmar» —probablemente sí, pero falta verificar—. Nunca vacío: el vacío siempre es captura pendiente.</td><td><code>pueblo_barrio</code></td></tr>
+<tr><td><b>Latitud (grados decimales)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Entre 19.02 y 19.60. WGS 84 (EPSG:4326). Seis decimales.</td><td><code>latitud</code></td></tr>
+<tr><td><b>Longitud (grados decimales)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Entre -99.36 y -98.94. WGS 84 (EPSG:4326). Seis decimales.</td><td><code>longitud</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;UTM X / Este (m)</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se proyecta desde la latitud y la longitud. WGS 84 / UTM zona 14 N (EPSG:32614). No editar.</td><td><code>utm_x</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;UTM Y / Norte (m)</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se proyecta desde la latitud y la longitud. WGS 84 / UTM zona 14 N (EPSG:32614). No editar.</td><td><code>utm_y</code></td></tr>
+<tr><td><b>Origen de la coordenada</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>CAT_ORIGEN_COORD: Levantamiento en campo · Derivada de UTM · Fotointerpretación · Verificada en gabinete · Sin verificar. Interno: dice cuánto vale la coordenada.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>Código de inserción de Street View (pegar tal cual)</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Se pega el bloque <code>&lt;iframe …&gt;</code> completo que entrega Google. La fórmula de al lado extrae la dirección que va dentro de <code>src="…"</code>. No editar el pegado.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;URL de Street View</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Extrae la dirección que va dentro de src="..." del código de inserción. Si se pegó la dirección sola, la deja igual. No editar.</td><td><code>street_view</code></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b6"><h3>6 · TAXONOMÍA · SNIB-CONABIO</h3><p><b>Diecinueve columnas y ninguna se captura.</b> Todas salen de <code>Taxonomia_SNIB</code> a partir del nombre científico. Si algo aquí está mal, se corrige en el catálogo o se corrige el nombre científico —nunca la celda.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>ƒ&nbsp;&nbsp;Reino</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>reino</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Phylum o División</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>phylum</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Clase</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>clase</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Orden</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>orden</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Familia</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>familia</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Género</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>genero</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Autor del nombre científico</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>autor</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;ID del nombre en el catálogo SNIB</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>idnombrecat</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Endemismo</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>endemismo</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;CITES</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>cites</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Lista Roja de la UICN</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>iucn</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;NOM-059-SEMARNAT-2010</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>nom059</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Especie prioritaria</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>prioritaria</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Nivel de prioridad</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>nivel_prioridad</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Exótica / invasora</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>exotica_invasora</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Ambiente</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>ambiente</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Forma de crecimiento</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>forma_crecimiento</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;URL de la especie en el SNIB</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>url_snib</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;URL de la observación de referencia de la especie</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>Se hereda de la especie, no del ejemplar. Para corregirlo, edita la hoja Taxonomia_SNIB.</td><td><code>url_observacion</code></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b7"><h3>7 · DENDROMETRÍA · NADF-001-RNAT-2015</h3><p>Las medidas del árbol, con la norma técnica como referencia. El error clásico es capturar el <b>perímetro</b> donde va el <b>diámetro</b>: son las columnas que dan cifras cuatro veces más grandes de lo que deben.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>Fecha del dictamen técnico</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Fecha del dictamen que sustenta la dendrometría. Interno.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>Persona dictaminadora acreditada</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Quién firmó el dictamen. Interno: no se publica el nombre de la persona servidora pública que dictaminó.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>Altura total (m)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Entre 1 y 60 m. Metros lineales (NADF-001-RNAT-2015, Anexo 2, lineamiento 4).</td><td><code>altura_m</code></td></tr>
+<tr><td><b>DAP · Diámetro del tronco a 1.30 m (cm)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>DIÁMETRO, no perímetro. Medido a 1.30 m desde el cuello de la raíz (NADF-001-RNAT-2015, numeral 4). Entre 5 y 500 cm.</td><td><code>dap_cm</code></td></tr>
+<tr><td><b>Altura a la que se midió el DAP (m)</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Normalmente 1.30. Cualquier otro valor debe justificarse en la nota de medición.</td><td><code>altura_medicion_dap</code></td></tr>
+<tr><td><b>Nota de medición del DAP</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Para el caso en que el DAP no se pudo medir a 1.30 m —tronco bifurcado, contrafuertes, pendiente— y hubo que documentar por qué. Interno.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Circunferencia del tronco (cm)</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>C = π × DAP. Se calcula. No editar.</td><td><code>circunferencia_cm</code></td></tr>
+<tr><td><b>Ancho de copa · eje mayor (m)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Diámetro de copa tomando como referencia el área de goteo (NADF-001-RNAT-2015, Anexo 2, lineamiento 6). Entre 1 y 45 m.</td><td><code>ancho_copa_m</code></td></tr>
+<tr><td><b>Largo de copa · eje menor (m)</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Eje perpendicular al mayor. Entre 1 y 45 m.</td><td><code>largo_copa_m</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Extensión de copa · promedio (m)</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>(eje mayor + eje menor) / 2. Criterio documentado en Notas_y_fuentes. Se calcula. No editar.</td><td><code>extension_copa_m</code></td></tr>
+<tr><td><b>Condición general del árbol</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 16.</td><td><code>condicion_general</code></td></tr>
+<tr><td><b>Estructura general del árbol</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 14.</td><td><code>estructura_general</code></td></tr>
+<tr><td><b>Edad estimada (años)</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Solo si existe estimación documentada. Entre 1 y 2000. El método de estimación se anota en Observaciones internas.</td><td><code>edad_estimada</code></td></tr>
+<tr><td><b>Expectativa de vida útil</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>Catálogo cerrado de la NADF-001-RNAT-2015, Anexo 1, apartado 15 y Anexo 3, factor 5.</td><td><code>expectativa_vida</code></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b8"><h3>8 · SERVICIOS AMBIENTALES · i-Tree</h3><p>Veinte columnas bajo la segunda compuerta. Mientras <b>Validación del bloque i-Tree</b> no diga <code>Validado</code>, ninguna cifra sale al público, aunque estén todas capturadas. Es a propósito: una estimación sin validar es un borrador.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>Fecha de la corrida de i-Tree</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Fecha en que se ejecutó la estimación i-Tree. Permite detectar corridas heterogéneas.</td><td><code>fecha_itree</code></td></tr>
+<tr><td><b>Moneda del beneficio económico</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Obligatoria si se captura beneficio económico.</td><td><code>moneda_itree</code></td></tr>
+<tr><td><b>Validación del bloque i-Tree</b><br><span class="etiqueta etiqueta--obl">obligatoria</span></td><td>COMPUERTA DE PUBLICACIÓN: los servicios ambientales solo viajan a la salida pública cuando este campo dice "Validado".</td><td><code>validacion_itree</code></td></tr>
+<tr><td><b>URL de la ficha de i-Tree</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Dirección de la corrida de i-Tree de ESE árbol, una distinta por ejemplar. Sujeta a la misma compuerta que las 16 cifras. Si hay cifras debe haber liga: el padrón la exige antes de dejar validar.</td><td><code>url_itree</code></td></tr>
+<tr><td><b>Beneficio económico estimado (por año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>beneficio_economico</code></td></tr>
+<tr><td><b>Carbono secuestrado (kg/año)</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Se sigue capturando tal como lo entrega i-Tree, porque de aquí se deriva el CO₂ equivalente. <b>Ya no se publica</b>: la salida pública lleva CO₂e.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;Absorción de CO₂ equivalente (kg/año)</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>CO₂e = carbono × 3.667 (razón de masas 44/12). Se calcula. NO es una medición independiente: no debe sumarse al carbono.</td><td><code>co2_eq_kg</code></td></tr>
+<tr><td><b>Disminución de escorrentía (L/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>escorrentia_l</code></td></tr>
+<tr><td><b>Precipitación interceptada (L/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>precip_interceptada_l</code></td></tr>
+<tr><td><b>Eliminación de monóxido de carbono (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>elim_co_g</code></td></tr>
+<tr><td><b>Eliminación de ozono (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>elim_o3_g</code></td></tr>
+<tr><td><b>Eliminación de dióxido de nitrógeno (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>elim_no2_g</code></td></tr>
+<tr><td><b>Eliminación de dióxido de azufre (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>elim_so2_g</code></td></tr>
+<tr><td><b>Eliminación de PM2.5 (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>elim_pm25_g</code></td></tr>
+<tr><td><b>Ahorro de electricidad (kWh/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>ahorro_kwh</code></td></tr>
+<tr><td><b>Emisiones evitadas de dióxido de carbono (kg/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>evit_co2_kg</code></td></tr>
+<tr><td><b>Emisiones evitadas de monóxido de carbono (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>evit_co_g</code></td></tr>
+<tr><td><b>Emisiones evitadas de dióxido de nitrógeno (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>evit_no2_g</code></td></tr>
+<tr><td><b>Emisiones evitadas de dióxido de azufre (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>evit_so2_g</code></td></tr>
+<tr><td><b>Emisiones evitadas de PM2.5 (g/año)</b><br><span class="etiqueta etiqueta--opc">solo si validado</span></td><td>Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA.</td><td><code>evit_pm25_g</code></td></tr>
+</tbody></table></div>
+<div class="bloque-campos" id="b9"><h3>9 · PUBLICACIÓN</h3><p>Lo último que se toca. Las observaciones públicas son el único texto libre que sí ve el ciudadano.</p><table><thead><tr><th>Columna</th><th>Qué va</th><th>Al CSV</th></tr></thead><tbody>
+<tr><td><b>Carpeta de imágenes seleccionadas para web en Drive (vínculo)</b><br><span class="etiqueta etiqueta--opc">captura</span></td><td>Vínculo de la carpeta de Drive con las fotografías ya seleccionadas. Las imágenes que sirve el sitio viven en el repositorio; esta columna es la trazabilidad hacia el archivo maestro.</td><td><span class="no-viaja">no viaja</span></td></tr>
+<tr><td><b>Observaciones públicas</b><br><span class="etiqueta etiqueta--opc">opcional</span></td><td>Texto que SÍ se publica en el micrositio. Redacción ciudadana, en voz activa, sin abreviaturas.</td><td><code>obs_publicas</code></td></tr>
+<tr><td><b>ƒ&nbsp;&nbsp;¿Listo para publicar?</b><br><span class="etiqueta etiqueta--calc">se calcula</span></td><td>El veredicto de Control_Calidad para ese renglón. Es lo que hay que ver en verde antes de dar por terminada la captura.</td><td><span class="no-viaja">no viaja</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="formato">
+  <h2><em>5</em>El formato de las celdas: la trampa silenciosa</h2>
+  <p class="intro">Esta sección existe porque ya nos pasó, y es la clase de error que no se ve.</p>
+
+  <div class="aviso">
+    <p><b>El CSV se exporta con el valor que se MUESTRA, no con el que está guardado.</b> Manda el formato de la celda. Si alguien le pone a una columna de cifras el formato «Número» de Google, el CSV sale con <code>1,240.50</code> en lugar de <code>1240.50</code> — y el separador de miles convierte esa cifra en un dato ilegible para cualquier programa que lo lea.</p>
+    <p><b>Y solo asoma arriba de mil.</b> Con cifras pequeñas el defecto es invisible: se manifiesta el día que un ejemplar rebasa los 1000 y nadie relaciona una cosa con la otra.</p>
+  </div>
+
+  <div class="paso">
+    <h3>Cómo deben estar formateadas</h3>
+    <table>
+      <thead><tr><th>Columnas</th><th>Formato</th><th>Cómo debe salir</th></tr></thead>
+      <tbody>
+        <tr><td>Todas las de cifras (dendrometría e i-Tree)</td><td>Número personalizado <code>0.00</code></td><td><code>1240.50</code></td></tr>
+        <tr><td>Latitud y longitud</td><td>Número personalizado <code>0.000000</code></td><td><code>-99.165040</code></td></tr>
+        <tr><td>Fecha del decreto · Fecha de la corrida i-Tree · Fecha del dictamen</td><td>Fecha personalizada <code>aaaa-mm-dd</code></td><td><code>2026-03-12</code></td></tr>
+        <tr><td>Código postal</td><td>Texto sin formato</td><td><code>03100</code>, con su cero</td></tr>
+      </tbody>
+    </table>
+    <p>El formato personalizado <code>0.00</code> no lleva separador de miles; el formato «Número» que Google pone por omisión, sí. Es toda la diferencia.</p>
+  </div>
+
+  <div class="ojo">
+    <p><b>El micrositio se defiende de todas formas.</b> El lector limpia los separadores y acepta las tres formas de fecha aunque hoy lleguen bien. Pero esa defensa protege al sitio, no al CSV: el archivo público lo consume más gente que nosotros, y si sale mal formado sale mal para todos.</p>
+  </div>
+</section>
+
+<section id="portar">
+  <h2><em>6</em>Portar los 23 registros</h2>
+  <p class="intro">Pasar el padrón anterior al <code>Listado</code> v2. El orden de estos pasos no es indistinto: los tres primeros rescatan datos que se pierden si se portan encima.</p>
+
+  <div class="aviso">
+    <p><b>Antes de copiar una sola celda, rescata esto del padrón viejo.</b> Si portas primero, se pierde.</p>
+    <ul>
+      <li><b>Las 13 ligas de i-Tree de la columna BW.</b> Son corridas ya hechas. Si se pierden hay que rehacerlas una por una, y sin ellas ninguna cifra ambiental se puede publicar: el contrato exige liga cuando hay cifras.</li>
+      <li><b>La fecha de <code>BT13</code>,</b> que quedó mal capturada.</li>
+      <li><b>El <code>«No determinadi»</code> de <code>BU10</code></b> — está mal escrito y no coincide con ningún valor de catálogo.</li>
+    </ul>
+  </div>
+
+  <div class="paso">
+    <h3>Paso 1 · Unificar los marcadores de nulo</h3>
+    <p>Hoy conviven la celda vacía, <code>N/A</code>, <code>S/D</code> y guiones para decir lo mismo. <b>Deja la celda vacía.</b> El lector trata los cuatro como ausencia, pero los catálogos no: un <code>S/D</code> en una columna de catálogo es un valor inválido y el control de calidad lo va a marcar.</p>
+    <p>La excepción es <b>Pueblo o Barrio Originario</b>, donde vacío no es opción: hay que decir <code>No aplica</code> o <code>Por confirmar</code>. Una celda vacía ahí no distingue «no le toca» de «no lo hemos averiguado».</p>
+  </div>
+
+  <div class="paso">
+    <h3>Paso 2 · Copiar bloque por bloque, no renglón por renglón</h3>
+    <p>Copia la columna vieja completa y pégala en la columna nueva que le corresponde, con <b>pegado especial → solo valores</b>. Renglón por renglón se pierde el hilo a la mitad y aparecen desplazamientos de una fila que nadie detecta.</p>
+    <p>Salta todas las columnas <code>ƒ</code>: se llenan solas en cuanto pegas de las que dependen.</p>
+  </div>
+
+  <div class="paso">
+    <h3>Paso 3 · Las coordenadas se separan</h3>
+    <p>En el padrón viejo venían concatenadas en una sola celda (<code>19.457671, -99.188791</code>). Ahora son <b>dos columnas</b>. Sepáralas con <code>Datos → Dividir texto en columnas</code> antes de pegar, y revisa que la longitud conserve el signo negativo: sin él, el árbol aparece en China.</p>
+    <p>Las UTM <b>no se portan</b>: se calculan solas desde latitud y longitud.</p>
+  </div>
+
+  <div class="paso">
+    <h3>Paso 4 · Lo que no se porta porque ya no existe</h3>
+    <ul>
+      <li><b>Fecha de nominación</b> — se retira. Queda <code>Nominó</code>, que responde a quién postuló.</li>
+      <li><b>Crédito fotográfico</b> — deja de ser un dato. Todas las fotografías son de la Secretaría, así que el crédito se escribe una vez en el código. <span class="etiqueta etiqueta--opc">pendiente</span> Las ilustraciones de árboles sí tendrán otra procedencia y habrá que decidir dónde vive su crédito.</li>
+      <li><b>Consecutivo como campo público</b> — sigue en el <code>Listado</code>, pero ya no viaja: el sitio lo lee de los cuatro últimos dígitos del ID.</li>
+    </ul>
+  </div>
+
+  <div class="paso">
+    <h3>Paso 5 · Los huecos conocidos</h3>
+    <p>Estos ya están detectados y van a aparecer en cuanto portes. No son errores del portado:</p>
+    <ul>
+      <li><b>Suelo de conservación falta en los 23.</b> Es dato obligatorio y cambia el régimen jurídico del predio.</li>
+      <li><b>Diez de los trece publicados no tienen decreto capturado.</b></li>
+      <li><b>Doce no tienen fotografía ni Street View.</b></li>
+      <li><b>Diez coordenadas están derivadas de UTM</b> y no verificadas en campo.</li>
+      <li><b>«Los Gemelos de San Álvaro»</b> traen ID y consecutivo duplicados: son dos ejemplares a 11 m de distancia y necesitan dos renglones con dos IDs.</li>
+      <li><b>Falta categoría</b> en el Sabino de San Juan y en Eugenio; y hay que confirmar si Laureano es NOTABLE o SINGULAR.</li>
+      <li><b>Dendrometría por revisar:</b> Sabino de San Juan (DAP 590 cm), Molotla (50.9) y Tlalnahuac (41.4).</li>
+    </ul>
+  </div>
+
+  <div class="ojo">
+    <p><b>Al terminar de portar, cuenta cuántos renglones dicen <code>Publicado</code>.</b> Ese número es exactamente cuántos árboles va a mostrar el micrositio. Si esperabas 23 y salen 13, la compuerta está haciendo su trabajo — pero conviene saberlo antes del corte, no el día del corte.</p>
+  </div>
+</section>
+
+<section id="calidad">
+  <h2><em>7</em>Qué marca el control de calidad</h2>
+  <p class="intro">La hoja <code>Control_Calidad</code> revisa cada renglón y da un veredicto en tres estados. Se lee antes de poner <code>Publicado</code>, no después.</p>
+
+  <table>
+    <thead><tr><th>Estado</th><th>Qué significa</th><th>Qué hacer</th></tr></thead>
+    <tbody>
+      <tr><td><b>LISTO</b></td><td>Pasó las verificaciones.</td><td>Se puede publicar.</td></tr>
+      <tr><td><b>REVISAR</b></td><td>Solo advertencias. Nada impide publicar, pero algo está incompleto o es dudoso.</td><td>Revisar qué advertencia es. Publicar con advertencias es una decisión, no un descuido.</td></tr>
+      <tr><td><b>NO PUBLICABLE</b></td><td>Al menos un error duro: un valor fuera de catálogo, un dato obligatorio ausente, una cifra imposible.</td><td>Corregir antes de tocar el estado del decreto.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="aviso">
+    <p><b>El contador de incidencias muestra 0 en algunos renglones marcados REVISAR.</b> Está detectado y sigue pendiente de arreglar en la hoja: el veredicto es correcto, el contador no. Guíate por el texto de la verificación, no por el número.</p>
+  </div>
+
+  <div class="paso">
+    <h3>Dos reglas que conviene reforzar</h3>
+    <ul>
+      <li><b>La verificación de coordenadas</b> solo se dispara con «Derivada de UTM» y «Sin verificar». Una coordenada marcada <code>Verificada en gabinete</code> tampoco se verificó en campo, y hoy pasa sin aviso.</li>
+      <li><b>La verificación del DAP</b> revisa en un solo sentido. Conviene que sea bidireccional para atrapar tanto el diámetro capturado como perímetro, como el perímetro capturado como diámetro.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="antes">
+  <h2><em>8</em>Antes de dar por buena una captura</h2>
+  <p class="intro">Ocho comprobaciones. Si las ocho pasan, ese renglón está listo.</p>
+  <ul class="lista-chk">
+    <li><b>El ID quedó pegado como valor</b> y coincide con el que aparece en el decreto publicado.</li>
+    <li><b>Ninguna columna ƒ tiene texto escrito encima.</b> Revisa que las 19 taxonómicas se hayan llenado solas: si están vacías, el nombre científico no existe en <code>Taxonomia_SNIB</code>.</li>
+    <li><b>Al menos una categoría en SÍ</b>, y la columna de texto coincide con las cuatro casillas.</li>
+    <li><b>Latitud y longitud caen dentro de la Ciudad</b> —entre 19.02 y 19.60, y entre −99.36 y −98.94— y la longitud conserva el signo negativo.</li>
+    <li><b>El DAP es diámetro, no perímetro.</b> Si el árbol se ve como de un metro de tronco, el DAP anda por 100 cm, no por 300.</li>
+    <li><b>Pueblo o Barrio Originario dice algo:</b> un nombre, <code>No aplica</code> o <code>Por confirmar</code>. Nunca vacío.</li>
+    <li><b>Si i-Tree quedó en <code>Validado</code></b>, están la liga de la corrida, la fecha y la moneda. Sin los tres, no se marca validado.</li>
+    <li><b>ƒ ¿Listo para publicar? está en verde</b> — y solo entonces se pone <code>Publicado</code>.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <div class="envoltura">
+    <p><b>Secretaría del Medio Ambiente de la Ciudad de México</b> · Oficina de la Secretaría<br>
+    Documento de trabajo interno. Describe el <code>Listado</code> del padrón v2 con 95 columnas y la <code>Salida_Publica</code> con 83 campos, medidos sobre la hoja del 21 de agosto de 2026.</p>
+  </div>
+</footer>
+
+</body>
+</html>
