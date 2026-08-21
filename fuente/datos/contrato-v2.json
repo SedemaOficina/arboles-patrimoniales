@@ -1,20 +1,25 @@
 {
- "version": 2,
- "generado_de": "Campos_publicos_arboles_patrimoniales.csv, entregado por la conversación del padrón el 21 de agosto de 2026.",
+ "version": 2.1,
+ "generado_de": "CONEXION_SITIO_WEB_arboles_patrimoniales.md, versión 2 del contrato, 21 de agosto de 2026.",
  "fuente": {
-  "documento": "1Gg9Rp4bPY-lVkwsj_8wn9IUKM3j8MIrXAgZgvi28Jf8",
+  "documento": "1qW6brn3ijqUD6YRNT19kk4slSzIQ61g2cVjDx6rU6us",
   "hoja": "Salida_Publica",
-  "csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSfloaJfemAY5cehLIMm5Z9knW9zyYm8lJ_lASBzAAOKcgHdXhtx7Qolrz_76yL0Gh2dVdSeUGj-gLN/pub?gid=1798214318&single=true&output=csv",
-  "advertencia": "Nunca leer la hoja Listado: publicar un CSV publica la pestaña entera, y ahí viven las observaciones internas y el nombre de quien dictamina."
+  "csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb8DIn-UxYrBo-k91vleNcsfQoMVlQjtWp4YurZHgeh-_p0pSWLt-yeWS86wKybtQfj1D4wveAEtyw/pub?gid=283285465&single=true&output=csv",
+  "advertencia": "Nunca leer la hoja Listado: publicar un CSV publica la pestaña entera, y ahí viven las observaciones internas y el nombre de quien dictamina.",
+  "nota_direcciones": "Sustituyen a las de la versión anterior del contrato (documento 1Gg9Rp… y CSV 2PACX-1vSflo…). Si algo difiere, mandan estas."
  },
  "reglas": [
   "Descarta toda fila cuyo id venga vacío. Es el único filtro necesario: resuelve filas vacías, no publicadas y mal formadas.",
   "El id es la llave: inmutable, impreso en los decretos, y nombre de la carpeta de imágenes.",
   "latitud y longitud son números; validar que no sean NaN y que caigan dentro de la Ciudad antes de dibujar el pin.",
   "Los valores de catálogo se comparan tal cual, con acentos y en la grafía de la norma. No transformarlos.",
-  "co2_eq_kg es carbono × 3.667: no sumarlo al carbono ni presentarlos como mediciones independientes.",
+  "carbono_kg ya no viaja al CSV: se captura en el padrón y no se publica. co2_eq_kg es la misma cantidad en la unidad de la convención internacional (CO2e = carbono × 3.667). Si hiciera falta el carbono elemental, divídase entre 3.667; no se pide la columna de vuelta.",
   "beneficio_economico no se publica sin moneda_itree.",
-  "Una cifra fuera de rango plausible no se dibuja, aunque venga del padrón."
+  "Una cifra fuera de rango plausible no se dibuja, aunque venga del padrón.",
+  "url_itree es la corrida de ESE árbol y viaja bajo la compuerta i-Tree: si hay cifras, debe haber liga.",
+  "pueblo_barrio nunca llega vacío. «No aplica» es una afirmación, no un hueco; con «Por confirmar» no se publica el dato.",
+  "Los números pueden llegar con separador de miles («1,240.50»): Number() devuelve NaN. Limpiar antes de convertir, y exigir el arreglo en origen.",
+  "Las fechas llegan en dd/mm/aaaa, no en ISO, y fecha_itree puede llegar como número de serie de la hoja. Normalizar y no confiar en el orden de los componentes."
  ],
  "compuertas": {
   "ejemplar": {
@@ -99,6 +104,10 @@
    "Tlalpan",
    "Venustiano Carranza",
    "Xochimilco"
+  ],
+  "pueblo_barrio": [
+   "No aplica",
+   "Por confirmar"
   ]
  },
  "campos": [
@@ -377,10 +386,10 @@
    "clave": "pueblo_barrio",
    "etiqueta": "Pueblo o Barrio Originario",
    "bloque": "5 · UBICACIÓN",
-   "tipo": "Texto",
-   "presencia": "puede venir vacío",
-   "origen": "Captura",
-   "regla": "Nombre del pueblo o barrio originario reconocido, cuando aplique."
+   "tipo": "Catálogo",
+   "presencia": "siempre",
+   "origen": "Catálogo",
+   "regla": "Catálogo cerrado con tres tipos de valor: un nombre del registro de SEPI, «No aplica» —afirmación de que no cae en ninguno— o «Por confirmar» —probablemente sí, pero falta verificar—. Nunca vacío: el vacío siempre es captura pendiente."
   },
   {
    "orden": 29,
@@ -764,18 +773,18 @@
   },
   {
    "orden": 67,
-   "clave": "beneficio_economico",
-   "etiqueta": "Beneficio económico estimado (por año)",
+   "clave": "url_itree",
+   "etiqueta": "URL de la ficha de i-Tree",
    "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
-   "tipo": "Número (2 dec.)",
+   "tipo": "Texto (URL)",
    "presencia": "condicional · solo si i-Tree Validado",
    "origen": "Captura (corrida i-Tree)",
-   "regla": "Valor numérico. Nunca texto, nunca fecha. Si no hay dato, la celda se deja VACÍA."
+   "regla": "Dirección de la corrida de i-Tree de ESE árbol, una distinta por ejemplar. Sujeta a la misma compuerta que las 16 cifras. Si hay cifras debe haber liga: el padrón la exige antes de dejar validar."
   },
   {
    "orden": 68,
-   "clave": "carbono_kg",
-   "etiqueta": "Carbono secuestrado (kg/año)",
+   "clave": "beneficio_economico",
+   "etiqueta": "Beneficio económico estimado (por año)",
    "bloque": "8 · SERVICIOS AMBIENTALES · i-Tree",
    "tipo": "Número (2 dec.)",
    "presencia": "condicional · solo si i-Tree Validado",
@@ -1180,9 +1189,8 @@
    "clave": "evit_pm25_g"
   },
   "linkITree": {
-   "clave": null,
-   "retirado": true,
-   "nota": "NO EXISTE en el padrón v2. El usuario acaba de capturar trece direcciones distintas de MyTree en la base vieja; si esa tarjeta debe sobrevivir, hay que agregar la columna al v2 antes de portar."
+   "clave": "url_itree",
+   "nota": "Ya existe en el padrón v2. Alimenta la tarjeta «Estimación de servicios ambientales». Solo llega si el bloque está validado."
   },
   "observaciones": {
    "clave": "obs_publicas"
@@ -1203,6 +1211,14 @@
   "_compuerta.itree": {
    "clave": "validacion_itree",
    "nota": "Compuerta del bloque ambiental. Viaja siempre, precisamente para que el sitio sepa por qué no hay cifras."
+  },
+  "ubicacion.sueloConservacion": {
+   "clave": "suelo_conservacion",
+   "nota": "SÍ/NO. Cambia el régimen jurídico del predio: se publica en la ficha."
+  },
+  "ubicacion.puebloBarrio": {
+   "clave": "pueblo_barrio",
+   "nota": "Tres estados. Se publica el nombre solo cuando lo hay: con «No aplica» y con «Por confirmar» se omite la línea."
   }
  },
  "sin_consumo": {
@@ -1212,12 +1228,32 @@
    "tiene_programa",
    "url_programa",
    "nombre_sitio",
-   "suelo_conservacion",
-   "pueblo_barrio",
    "idnombrecat",
    "altura_medicion_dap",
-   "fecha_itree",
-   "carbono_kg"
+   "fecha_itree"
   ]
+ },
+ "catalogos_abiertos": {
+  "pueblo_barrio": {
+   "fijos": [
+    "No aplica",
+    "Por confirmar"
+   ],
+   "nota": "Además de los dos fijos admite cualquier nombre del registro de SEPI que el área usuaria haya cargado en la hoja Catalogos. El registro CRECE, así que el sitio NO lleva copia de la lista: si necesita filtrar por pueblo, arma los valores con los que vengan en el CSV.",
+   "fuente": "Sistema de Registro y Documentación de Pueblos y Barrios Originarios y Comunidades Indígenas Residentes de SEPI, y el conjunto «Padrón de pueblos y barrios originarios» del portal de datos abiertos de la CDMX. La fecha de la versión cargada se anota en la hoja Parametros del padrón."
+  }
+ },
+ "formato_observado": {
+  "medido": "CSV descargado de Salida_Publica el 21 de agosto de 2026, con cinco registros de prueba.",
+  "separador_miles": [
+   "beneficio_economico",
+   "escorrentia_l",
+   "precip_interceptada_l"
+  ],
+  "nota_separador": "Solo aparece en los valores por encima de mil. Con cifras pequeñas el defecto es invisible: se manifiesta el día que un ejemplar rebasa los 1000.",
+  "fechas": {
+   "fecha_decreto": "dd/mm/aaaa",
+   "fecha_itree": "número de serie de la hoja (46249 = 2026-08-15)"
+  }
  }
 }
