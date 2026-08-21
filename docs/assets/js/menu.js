@@ -120,8 +120,13 @@ export function activarDeslizador(pista) {
   // indicacion que se descubre despues de haber intentado usar la pieza llega
   // tarde. Sin guia —la ficha— la barra sigue debajo, que es donde una barra
   // de desplazamiento se espera.
-  if (conGuia) pista.insertAdjacentElement("beforebegin", barra);
-  else pista.insertAdjacentElement("afterend", barra);
+  // Si la hilera vive dentro de un marco declarado, el control se monta FUERA
+  // de él. En la portada ese marco contiene la regla de alturas, que se estira
+  // desde su borde superior: metido dentro, el control quedaba tapado por la
+  // primera marca y la regla arrancaba treinta píxeles por encima del suelo.
+  const marco = pista.closest("[data-desliza-marco]") || pista;
+  if (conGuia) marco.insertAdjacentElement("beforebegin", barra);
+  else marco.insertAdjacentElement("afterend", barra);
 
   const riel = barra.querySelector(".deslizador__riel");
   const tirador = barra.querySelector(".deslizador__tirador");

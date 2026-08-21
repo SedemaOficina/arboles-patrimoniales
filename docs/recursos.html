@@ -1255,20 +1255,37 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .observacion{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:24px 28px;font-family:var(--editorial);font-size:18px;line-height:1.55;color:var(--tinta-suave)}
 
 /* ===== EL BOSQUE A ESCALA · elemento distintivo de la portada ===== */
-.bosque__titulo{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin:0 0 26px;border-bottom:1px solid rgba(42,22,48,.16);padding-bottom:12px}
+.bosque__titulo{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin:0 0 26px;border-bottom:2px solid var(--jacaranda);padding-bottom:12px}
 .bosque__titulo .rotulo{color:var(--gris)}
 /* El globo del ejemplar ya no sobresale por encima de la hilera, así que la
    hilera ya no necesita 162 px de aire arriba —y ese aire, ganado con margen
    negativo, era exactamente donde ahora vive la guía: el globo se encimaba con
    las fichas moradas cada vez que el cursor tocaba un árbol. */
-.bosque__pista{display:flex;align-items:flex-end;gap:18px;scroll-snap-type:x proximity;overflow-x:auto;overflow-y:hidden;padding:0 0 22px}
+.bosque__pista{position:relative;z-index:1;display:flex;align-items:flex-start;gap:18px;scroll-snap-type:x proximity;overflow-x:auto;overflow-y:hidden;padding:0 0 22px}
 /* Firefox no acepta ::-webkit-scrollbar; su propiedad propia hace lo mismo. */
 .bosque__pista{scrollbar-width:none}
 .bosque__pista::-webkit-scrollbar{display:none}
+/* AL PRINCIPIO, NO AL FINAL. Alinear al final igualaba el borde INFERIOR de
+   cada ranura, y como el pie crece un renglón cuando el nombre no cabe en uno,
+   ese renglón de más empujaba el dibujo hacia arriba. Alineando al principio
+   el renglón fijo del dibujo arranca a la misma altura en los trece y el pie
+   cuelga; la línea de tierra queda a --lienzo-bosque del borde superior, que
+   es de donde cuelga la regla. */
 /* El ancho es un piso, no la medida: el guion lo sobreescribe con el ancho
    real del dibujo. Con ancho fijo la ilustracion de 30 m sobresalia 102 px por
    cada lado y los ejemplares se encimaban unos con otros. */
-.bosque__arbol{flex:0 0 auto;width:clamp(112px,13vw,168px);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-decoration:none;background:none;border:0;padding:0;cursor:pointer;position:relative}
+/* RETÍCULA, NO COLUMNA FLEXIBLE, Y POR UNA RAZÓN MEDIBLE.
+   Con la columna flexible el dibujo se apoyaba sobre su pie, y el pie crecía
+   un renglón cuando el nombre no cabía en uno solo. El Sabino de San Juan
+   —único nombre de dos renglones— quedaba 16 px por encima del suelo de los
+   otros doce: 24.5 m dibujados que, leídos contra la regla, marcaban 26.3.
+   Con la retícula el primer renglón mide siempre --lienzo-bosque, así que los
+   trece se apoyan en la misma línea de tierra pase lo que pase con los
+   nombres. Es la condición para que la regla no mienta. */
+.bosque__arbol{flex:0 0 auto;width:clamp(112px,13vw,168px);
+  display:grid;grid-template-rows:var(--lienzo-bosque) auto;
+  align-items:end;justify-items:center;
+  text-decoration:none;background:none;border:0;padding:0;cursor:pointer;position:relative}
 
 /* El globo se quedo con una sola cosa: la llamada a la ficha. Todo lo que
    identifica al ejemplar —nombre, altura, alcaldia— bajo al pie del arbol,
@@ -1365,18 +1382,63 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    como continuación suya. Se le da superficie propia —el crema hondo del
    sistema—, filete morado arriba y aire por los cuatro lados: ahora es una
    pieza, no la cola de la anterior. */
-.bosque{position:relative;z-index:2;background:var(--papel-hondo);
-  margin:64px 0 0;padding:26px 22px 30px;border-top:2px solid var(--jacaranda);
-  box-shadow:0 1px 0 rgba(42,22,48,.06)}
-@media(max-width:700px){.bosque{margin-top:44px;padding:20px 14px 24px}}
+/* LA HILERA DEJÓ DE SER UNA CAJA PEGADA ENCIMA.
+   Tenía superficie propia —un crema más hondo que el de la portada— y a la
+   vista eran dos beiges contiguos sin motivo: se leía como un recuadro
+   sobrepuesto, no como parte de la portada. Ahora comparte el papel con la
+   sección y lo que la separa es su propio título, que además dice de qué se
+   trata; el filete morado bajó del borde superior de la caja al pie del
+   título, donde acompaña a la palabra en lugar de encerrar al dibujo.
+   El fondo NO se quitó, se igualó: sigue siendo opaco porque debajo de 1000 px
+   la ilustración de la portada llega hasta aquí y se veía entre las copas —un
+   bosque sobre otro bosque—, pero ahora es el mismo papel de la sección, así
+   que tapa sin dibujar un recuadro.
+   --lienzo-bosque tiene que valer lo mismo que LIENZO_BOSQUE en logica.js: es
+   la altura del ejemplar más alto, y de ella cuelgan la regla y el suelo. */
+.bosque{--lienzo-bosque:268px;position:relative;z-index:2;margin:64px 0 0;padding:0;
+  background:var(--papel)}
+@media(max-width:700px){.bosque{margin-top:44px}}
+
+/* El título ya no es un rótulo de once píxeles perdido sobre la hilera: es el
+   encabezado de la pieza, y la pieza es el elemento distintivo de la portada. */
+.bosque__rotulo{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:clamp(21px,2.5vw,30px);line-height:1;letter-spacing:.01em;
+  color:var(--tinta-jacaranda);margin:0}
+
+/* El marco de la regla. Existe para que la regla se ancle al lienzo del dibujo
+   y no a la hilera entera: la hilera se desplaza en horizontal y la regla no
+   debe moverse con ella. */
+/* El canalón de la derecha es para los rótulos de la regla. Sin él, «25 m» y
+   «20 m» caían encima del último árbol de la hilera y su fondo de papel abría
+   un agujero en la copa. La hilera se mete 46 px; la regla, que se posiciona
+   contra la caja de relleno, los cruza y deja sus rótulos fuera del paso. */
+.bosque__lienzo{position:relative;padding-right:46px}
+@media(max-width:520px){.bosque__lienzo{padding-right:38px}}
+
+/* LA REGLA DE ALTURAS.
+   Sin ella «a escala real» era una afirmación que nadie podía comprobar: trece
+   siluetas de distinto tamaño y nada contra qué medirlas. Las marcas cuelgan
+   del suelo del dibujo, que está exactamente a --lienzo-bosque del borde de
+   arriba porque la ranura de cada árbol reserva esa altura fija. */
+.bosque__regla{position:absolute;left:0;right:0;top:0;height:var(--lienzo-bosque);
+  pointer-events:none;z-index:0}
+.bosque__marca{position:absolute;left:0;right:0;display:block;
+  border-top:1px dashed rgba(42,22,48,.17)}
+.bosque__marca span{position:absolute;right:0;top:-9px;background:var(--papel);
+  padding:0 6px;font-size:11px;font-weight:700;color:var(--gris);letter-spacing:.06em;
+  font-style:normal}
+/* El suelo es continuo y más firme que las marcas: es la línea contra la que
+   se miden todas las alturas, no una división más del eje. */
+.bosque__marca--suelo{border-top:2px solid rgba(42,22,48,.42)}
+.bosque__marca--suelo span{color:var(--tinta-suave)}
 /* Bordes que arrastran la hilera al acercar el raton. Son ayuda, no el unico
    camino: la barra y las flechas siguen siendo el control accesible y el unico
    que dice cuanto falta por ver. Se apagan en pantallas tactiles, donde no hay
    puntero que acercar, y con movimiento reducido. */
 .bosque__borde{position:absolute;top:0;bottom:74px;width:72px;z-index:4;pointer-events:none;
   opacity:0;transition:opacity .2s;display:flex;align-items:center}
-.bosque__borde--izq{left:0;background:linear-gradient(90deg,var(--papel-hondo) 12%,transparent)}
-.bosque__borde--der{right:0;background:linear-gradient(270deg,var(--papel-hondo) 12%,transparent)}
+.bosque__borde--izq{left:0;background:linear-gradient(90deg,var(--papel) 12%,transparent)}
+.bosque__borde--der{right:0;background:linear-gradient(270deg,var(--papel) 12%,transparent)}
 .bosque__borde[data-activo]{opacity:1}
 /* El disco era blanco sobre papel crema: casi no se veía justo cuando debía
    avisar. Morado translúcido sobre el follaje, con la flecha dentro para que
@@ -2337,8 +2399,13 @@ function activarDeslizador(pista) {
   // indicacion que se descubre despues de haber intentado usar la pieza llega
   // tarde. Sin guia —la ficha— la barra sigue debajo, que es donde una barra
   // de desplazamiento se espera.
-  if (conGuia) pista.insertAdjacentElement("beforebegin", barra);
-  else pista.insertAdjacentElement("afterend", barra);
+  // Si la hilera vive dentro de un marco declarado, el control se monta FUERA
+  // de él. En la portada ese marco contiene la regla de alturas, que se estira
+  // desde su borde superior: metido dentro, el control quedaba tapado por la
+  // primera marca y la regla arrancaba treinta píxeles por encima del suelo.
+  const marco = pista.closest("[data-desliza-marco]") || pista;
+  if (conGuia) marco.insertAdjacentElement("beforebegin", barra);
+  else marco.insertAdjacentElement("afterend", barra);
 
   const riel = barra.querySelector(".deslizador__riel");
   const tirador = barra.querySelector(".deslizador__tirador");
