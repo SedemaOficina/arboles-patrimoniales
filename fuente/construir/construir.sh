@@ -46,6 +46,9 @@ cp ../decretos/*.pdf "$DEST/decretos/" 2>/dev/null || true
 if [ "$DESTINO" != "produccion" ]; then
   node armar-guia.js
   cp ../pendientes.html "$DEST/"
+  # La guía de alta es autocontenida: se puede copiar sola a la carpeta de
+  # Drive que comparte el equipo técnico y se abre sin el resto del sitio.
+  cp ../guia-alta.html "$DEST/"
 fi
 
 echo ""

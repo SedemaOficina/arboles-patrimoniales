@@ -364,17 +364,25 @@ console.log('\n══ FICHA · el recuadro morado es ahora el mapa del ejemplar 
     /\.mapa-caja,[\s\S]{0,500}?display: none !important;/.test(cs3.slice(cs3.indexOf('@media print'))));
 }
 
-console.log('\n══ PENDIENTES · celda vacía = no determinado ══');
+console.log('\n══ DATO FALTANTE · el sitio lo dice, no lo disimula ══');
 {
-  const pe=fs.readFileSync('pendientes.html','utf8');
-  t('Edad, lluvia, escurrimientos y observaciones quedan cerrados',
-    (pe.match(/<td class="ok">Cerrado<\/td>/g)||[]).length===4);
-  t('Se explica que la celda vacía equivale a no determinado',
-    (pe.match(/no determinado/g)||[]).length>=2);
-  t('La discrepancia lluvia vs. escurrimientos sigue abierta',
-    /mismos 5 ejemplares<\/b> que sí traen cifra/.test(pe));
-  t('La ruta biocultural quedó documentada',
-    /Ruta biocultural documentada/.test(pe) && /artículo 62, fracción VI/.test(pe));
+  // Este bloque comprobaba contra pendientes.html que pendientes.html decía
+  // ciertas cosas: circular. Una de esas aserciones daba verde por «la ruta
+  // biocultural quedó documentada» mientras el sitio NO tenía ese contenido en
+  // ninguna parte —se verificó la afirmación contra el documento que la hacía,
+  // no contra la página—. Ahora se comprueba el comportamiento real.
+  const fv=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
+  const fl2=fs.readFileSync('ficha-logica.js','utf8');
+  t('La ficha declara el dato faltante en lugar de fingir un cero',
+    /Sin determinar/.test(fv));
+  t('Las tarjetas sin dato no se dibujan vacías: se omiten',
+    /\.filter\(\(\[, url\]\) => url\)/.test(fl2));
+  t('Y si no queda ninguna fuente, el bloque entero se oculta',
+    /if \(!fuentes\.length\) \{ if \(bloque\) bloque\.style\.display = "none"/.test(fl2));
+  // La cobertura de una suma se declara: 1,200 años salen de 2 de 13 ejemplares.
+  const pv7=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
+  t('El cintillo declara sobre cuántos ejemplares está calculada la suma de edades',
+    /ejemplares con edad dictaminada/.test(pv7));
 }
 
 console.log('\n══ TARJETAS · fuera la barrita del punto verde ══');
@@ -723,23 +731,80 @@ console.log('\n══ GUÍA DE IDENTIDAD ══');
   t('No se indexa: es documentación interna', /<meta name="robots" content="noindex">/.test(g));
 }
 
-console.log('\n══ PENDIENTES · cómo organizar las fotografías ══');
+console.log('\n══ GUÍA DE ALTA · el procedimiento completo ══');
+{
+  // La receta de fotografías vivía en pendientes.html. Se movió aquí por
+  // instrucción del usuario: pendientes es la lista de lo que falta, no el
+  // manual. Estas guardas siguen al contenido a su casa nueva.
+  const ga=fs.readFileSync('guia-alta.html','utf8');
+  const pe=fs.readFileSync('pendientes.html','utf8');
+
+  t('La guía existe y cubre los nueve apartados',
+    ['id="reunir"','id="hoja"','id="id"','id="fotos"','id="decreto"','id="ilustracion"',
+     'id="publicar"','id="comprobar"','id="identificadores"'].every(x=>ga.includes(x)));
+  t('El índice no manda a ningún ancla inexistente',
+    (ga.match(/href="#([a-z]+)"/g)||[]).every(h=>ga.includes('id="'+h.slice(7,-1)+'"')));
+
+  // Lo que rompe el descubrimiento de fotografías, que es lo que de verdad
+  // hay que advertir: el sitio las pide en orden hasta que una falta.
+  t('Advierte que un hueco en la numeración corta la galería',
+    /sin interrupción/.test(ga) && /la galería se detiene/.test(ga));
+  t('Advierte que no se pueden mezclar extensiones en una carpeta',
+    /no se pueden mezclar/.test(ga) && /La primera que responde manda para toda la carpeta/.test(ga));
+  t('Da la ruta de la carpeta y el nombrado de dos dígitos',
+    /assets\/img\/ejemplares\//.test(ga) && /01\.jpg/.test(ga));
+  t('Explica que cada foto lleva su miniatura y para qué sirve',
+    /01-chica\.jpg/.test(ga) && /pidiéndolas, y lo hace contra las miniaturas/.test(ga));
+  t('Conserva la restricción de derechos de imagen',
+    /derechos tenga la Secretaría o que estén expresamente licenciadas para uso público/.test(ga));
+  // Distintos, no coincidencias: el paso 3 usa uno de ellos como ejemplo.
+  t('Lista los trece identificadores en uso',
+    new Set(ga.match(/<code>2[45]-[A-Z]{3}-[A-Z]{3}-\d+[A-Z]+-\d{4}<\/code>/g)||[]).size===13);
+
+  // El orden entre el ID y la carpeta de fotos es la trampa principal: el ID
+  // se recalcula solo y deja huérfana la carpeta que se llama como él.
+  t('Advierte que corregir un campo del ID renombra al árbol',
+    /El ID se recalcula solo/.test(ga) && /deja huérfana la carpeta/.test(ga));
+
+  // Los errores de captura que ya ocurrieron, para que no se repitan.
+  t('Recoge el error de las fechas en columnas de número',
+    /12,052,025/.test(ga) && /nunca fechas/.test(ga));
+  t('Recoge el del nombre de la herramienta en lugar del enlace',
+    /MyTree/.test(ga) && /Eso no es una dirección/.test(ga));
+
+  t('Las tablas se desplazan solas en pantalla angosta', /overflow-x:auto/.test(ga));
+  t('No se indexa: es documentación interna',
+    /<meta name="robots" content="noindex, nofollow">/.test(ga));
+  // Se abre suelta desde la carpeta de Drive: si enlazara estilos.css con ruta
+  // relativa saldría sin diseño, que es justo lo que pasaba con pendientes.
+  t('Es autocontenida: no depende de estilos.css por ruta relativa',
+    !/href="assets\/css\/estilos\.css"/.test(ga) && /--jacaranda:#8D4992/.test(ga));
+
+  t('Y pendientes ya no duplica la receta de fotografías',
+    !/class="receta"/.test(pe) && !/pend-tabla/.test(pe));
+}
+
+console.log('\n══ PENDIENTES · solo lo que falta ══');
 {
   const pe=fs.readFileSync('pendientes.html','utf8');
-  t('La sección existe y el pendiente de fotos remite a ella',
-    /id="fotos"/.test(pe) && /href="#fotos"/.test(pe));
-  t('Explica los cinco pasos', (pe.match(/class="receta"[\s\S]*?<\/div>/)||[''])[0].split('<h3>').length-1===5);
-  t('Con el árbol de carpetas y el de archivos numerados',
-    (pe.match(/<pre>/g)||[]).length===2 && /assets\/img\/ejemplares\//.test(pe) && /01\.jpg/.test(pe));
-  t('Advierte lo que rompe el descubrimiento: huecos y mezcla de formatos',
-    /sin huecos/.test(pe) && /no\s*\n?\s*mezcles formatos/.test(pe.replace(/\s+/g,' ').replace(/no mezcles/,'no\nmezcles')) || /no mezcles formatos/.test(pe.replace(/\s+/g,' ')));
-  t('Lista los trece identificadores, con el que ya tiene fotos marcado',
-    (pe.match(/<code>2[45]-[A-Z]{3}-[A-Z]{3}-\d+[A-Z]+-\d{4}<\/code>/g)||[]).length===13
-    && /pend-fila--listo/.test(pe));
-  t('Conserva la restricción de derechos de imagen',
-    /derechos tenga la Secretaría o estén expresamente licenciadas para uso público/.test(pe));
-  t('Las tablas se desplazan solas en pantalla angosta',
-    (pe.match(/pend-tabla-caja/g)||[]).length>=3 && /overflow-x:auto/.test(pe));
+  // Misma razón que la guía: se abre suelta, descargada o adjunta.
+  t('Es autocontenida: no depende de estilos.css por ruta relativa',
+    !/href="assets\/css\/estilos\.css"/.test(pe) && /--jacaranda:#8D4992/.test(pe));
+  t('No se indexa', /<meta name="robots" content="noindex, nofollow">/.test(pe));
+  // Una lista de pendientes llena de tareas tachadas deja de leerse.
+  t('No quedan tareas marcadas como hechas', !/pend--listo/.test(pe));
+  t('El tablero no presume decretos publicados que no lo están',
+    /Con PDF de decreto publicado/.test(pe) && !/Con decreto enlazado/.test(pe));
+  t('Las fotografías siguen abiertas: falta cerrar la portada repetida',
+    /<h3>Fotografías<\/h3>/.test(pe) && /No resuelto/.test(pe));
+  t('La auditoría de interfaz sigue sin realizarse',
+    /No realizada/.test(pe) && /consistencia del encabezado/.test(pe));
+  t('La ficha imprimible espera validación en papel',
+    /falta validar el formato en papel/.test(pe));
+  t('Queda anotado que el sitio debe leer la hoja en vivo',
+    /El sitio debe leer la hoja en vivo/.test(pe) && /registro\.json/.test(pe));
+  t('Y la decisión de que los archivos vienen de Drive',
+    /Drive compartido como origen de los archivos/.test(pe));
 }
 
 console.log('\n══ AUDITORÍA APLICADA · pasos 1 a 4 ══');

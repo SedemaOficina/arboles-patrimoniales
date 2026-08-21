@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Alta de un árbol patrimonial · Guía de actualización</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Guía autocontenida a propósito: vive en la carpeta compartida de Drive y la
+   abre el equipo técnico desde su propia computadora, sin el resto del sitio
+   alrededor. Por eso no enlaza estilos.css: se copiaron aquí los tokens que
+   necesita. Si la paleta del sitio cambia, hay que reflejarlo también aquí. */
+:root{
+  --tinta-jacaranda:#2A1630; --jacaranda:#8D4992; --jacaranda-hondo:#7A3E7F;
+  --jacaranda-luz:#C79FCA; --niebla:#F4E9F3;
+  --verde-bosque:#1E4D2B; --verde-vivo:#2D7A3E; --verde-niebla:#E7F0E1;
+  --papel:#FEF7E4; --blanco:#FFFDF7; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta:#1A1A1A; --tinta-suave:#413647; --gris:#5B4F62;
+  --display:'Anton',Impact,sans-serif;
+  --editorial:'Fraunces',Georgia,serif;
+  --texto:'Source Sans 3',system-ui,sans-serif;
+  --borde:1px solid rgba(42,22,48,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.envoltura{max-width:1000px;margin:0 auto;padding:0 26px}
+.rotulo{font-family:var(--texto);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:1;margin:0}
+
+.cabeza{background:var(--tinta-jacaranda);color:#fff;padding:44px 0 40px}
+.cabeza .rotulo{color:var(--jacaranda-luz)}
+.cabeza h1{font-size:clamp(32px,5.2vw,60px);margin:12px 0 0;color:#fff}
+.cabeza p{margin:18px 0 0;max-width:74ch;color:rgba(255,255,255,.82);font-size:16px}
+.carriles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 0}
+.carril{background:rgba(255,255,255,.07);border:1px solid rgba(199,159,202,.26);padding:18px 20px}
+.carril b{display:block;font-family:var(--display);font-weight:400;font-size:19px;color:var(--jacaranda-luz);margin-bottom:6px}
+.carril span{display:block;font-size:14.5px;color:rgba(255,255,255,.78);line-height:1.5}
+@media(max-width:700px){.carriles{grid-template-columns:1fr}}
+
+main{padding:44px 0 70px}
+section{margin:0 0 52px;scroll-margin-top:20px}
+section>h2{font-size:27px;color:var(--tinta-jacaranda);margin:0 0 4px}
+section>h2 em{font-style:normal;color:var(--dorado);margin-right:12px}
+section>.intro{margin:0 0 22px;max-width:80ch;color:var(--tinta-suave)}
+
+.indice{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 26px;margin:0 0 44px}
+.indice h2{font-size:16px;margin:0 0 12px;color:var(--tinta-jacaranda)}
+.indice ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
+.indice li{margin:0 0 6px;font-size:15px;break-inside:avoid}
+.indice a{color:var(--jacaranda-hondo);text-decoration:none;border-bottom:1px solid rgba(141,73,146,.3)}
+.indice a:hover{border-bottom-color:var(--jacaranda)}
+@media(max-width:640px){.indice ol{columns:1}}
+
+.paso{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:20px 24px;margin:0 0 14px}
+.paso h3{font-size:17px;color:var(--tinta);margin:0 0 7px}
+.paso p{margin:0 0 10px}
+.paso p:last-child{margin-bottom:0}
+.paso ul,.paso ol{margin:0 0 10px;padding-left:22px}
+.paso li{margin:0 0 5px}
+
+.aviso{border-left:3px solid var(--alerta);background:rgba(192,57,43,.05);padding:18px 22px;margin:0 0 14px}
+.aviso b{color:var(--alerta)}
+.ojo{border-left:3px solid var(--verde-vivo);background:var(--verde-niebla);padding:18px 22px;margin:0 0 14px}
+.ojo b{color:var(--verde-bosque)}
+
+/* Sobre el morado profundo el chip claro con tinta morada da menos de 2:1.
+   En fondo oscuro el código va en claro sobre un velo del propio fondo. */
+.cabeza code,.carril code,pre code{background:rgba(255,255,255,.16);color:#F2E8F3}
+code,.ruta{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.88em;
+  background:var(--niebla);padding:2px 6px;border-radius:2px;overflow-wrap:anywhere}
+pre{background:var(--tinta-jacaranda);color:#EDE3EE;padding:16px 20px;overflow-x:auto;
+  border-radius:3px;margin:0 0 14px;font-size:14px;line-height:1.55}
+pre code{background:none!important;padding:0;color:inherit}
+
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14.5px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:var(--borde);vertical-align:top}
+th{background:var(--verde-bosque);color:#fff;font-size:12px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:700;white-space:nowrap}
+tbody tr:nth-child(even){background:rgba(244,233,243,.42)}
+td code{white-space:nowrap}
+
+.etiqueta{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.etiqueta--obl{background:rgba(192,57,43,.1);color:var(--alerta)}
+.etiqueta--opc{background:rgba(178,142,92,.18);color:#8A6B3D}
+.etiqueta--calc{background:var(--niebla);color:var(--jacaranda-hondo)}
+
+.lista-chk{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+/* NI GRID NI FLEX: la casilla va posicionada y el texto fluye normal.
+   El contenido de cada renglón es «<b>título</b> más texto suelto». En una
+   retícula cada hijo es una celda; en flex, cada ELEMENTO hijo es un elemento
+   flexible por separado y solo el texto suelto se agrupa en uno anónimo. En
+   los dos casos el <b> quedaba en una columna y el resto de la frase en otra,
+   partida palabra por palabra. Sacando la casilla del flujo, el renglón vuelve
+   a ser un párrafo y se lee entero. */
+.lista-chk li{position:relative;padding:13px 17px 13px 47px;
+  background:var(--blanco);border:var(--borde);font-size:15px}
+.lista-chk li::before{content:"";position:absolute;left:17px;top:16px;
+  width:19px;height:19px;border:2px solid rgba(42,22,48,.26);border-radius:3px}
+
+footer{background:var(--tinta-jacaranda);color:rgba(255,255,255,.76);padding:30px 0;font-size:14px}
+footer b{color:#fff}
+@media print{body{background:#fff}.cabeza,footer{background:#fff;color:#000}
+  .cabeza h1,.cabeza .rotulo,.carril b{color:#000}pre{background:#eee;color:#000}}
+</style>
+</head>
+<body>
+
+<header class="cabeza">
+  <div class="envoltura">
+    <span class="rotulo">Secretaría del Medio Ambiente · Oficina de la Secretaría</span>
+    <h1>Alta de un árbol patrimonial</h1>
+    <p>Todo lo que tiene que estar completo para que un ejemplar recién declarado aparezca en el micrositio sin huecos, sin enlaces rotos y sin cifras a medias. Esta guía es el contrato entre las dos mitades del trabajo: lo que reúne el equipo en Drive y lo que se integra al repositorio.</p>
+    <div class="carriles">
+      <div class="carril">
+        <b>Carril 1 · Drive compartido</b>
+        <span>El equipo técnico deposita ahí el PDF del decreto, las fotografías del ejemplar y, cuando toque, la ilustración de la especie. Es la fuente de los archivos.</span>
+      </div>
+      <div class="carril">
+        <b>Carril 2 · Repositorio</b>
+        <span>De Drive se bajan, se renombran según esta guía y se colocan en <code>fuente/</code>. Solo desde ahí llegan al sitio publicado.</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura">
+
+  <nav class="indice">
+    <h2>Lo que hay que hacer, en orden</h2>
+    <ol>
+      <li><a href="#reunir">Reunir el material</a></li>
+      <li><a href="#hoja">Capturar en la hoja</a></li>
+      <li><a href="#id">Fijar el identificador</a></li>
+      <li><a href="#fotos">Preparar las fotografías</a></li>
+      <li><a href="#decreto">Colocar el decreto</a></li>
+      <li><a href="#ilustracion">La ilustración de la especie</a></li>
+      <li><a href="#publicar">Construir y publicar</a></li>
+      <li><a href="#comprobar">Comprobación final</a></li>
+      <li><a href="#identificadores">Los identificadores en uso</a></li>
+    </ol>
+  </nav>
+
+  <section id="reunir">
+    <h2><em>1</em>Reunir el material</h2>
+    <p class="intro">Nada de esto se improvisa a medio camino. Antes de tocar la hoja de cálculo conviene tener las cinco cosas a la vista, porque el identificador del ejemplar —que es el nombre de su carpeta de fotografías— depende de datos que se capturan en el primer paso.</p>
+
+    <ul class="lista-chk">
+      <li><b>El decreto publicado.</b> El PDF del acuerdo en la Gaceta Oficial que declara patrimonial al ejemplar, con su fecha de publicación.</li>
+      <li><b>La determinación taxonómica.</b> El nombre científico válido, tal como lo escribe el catálogo taxonómico. De él salen el género y el identificador que forman parte del ID.</li>
+      <li><b>Las medidas de campo.</b> Altura total, DAP, los dos ejes de copa, condición y estructura. Sin altura el ejemplar no puede dibujarse a escala en la portada.</li>
+      <li><b>La corrida de i-Tree MyTree.</b> Con su dirección propia: la ficha enlaza la corrida de <em>ese</em> árbol, no la herramienta.</li>
+      <li><b>Las fotografías.</b> Al menos una. La primera es la que se ve en miniatura en el listado y en el globo del mapa.</li>
+    </ul>
+
+    <div class="aviso">
+      <p><b>Si la especie no está entre las tres que hoy conoce el sitio</b> —<em>Taxodium mucronatum</em>, <em>Fraxinus uhdei</em>, <em>Ficus microcarpa</em>— hace falta trabajo de código antes de publicar: dar de alta su perfil de dibujo y su ilustración. Ver el <a href="#ilustracion">paso 6</a>. No es opcional: sin perfil el ejemplar se dibuja con una silueta genérica que no corresponde a su porte.</p>
+    </div>
+  </section>
+
+  <section id="hoja">
+    <h2><em>2</em>Capturar en la hoja</h2>
+    <p class="intro">El sitio lee la hoja de cálculo. Los nombres de las columnas se reconocen de forma tolerante —acentos, mayúsculas, espacios de más y los numeritos de nota al pie no importan— pero el <em>texto</em> de la columna sí: si alguien la renombra, el campo deja de leerse y el dato desaparece del sitio sin avisar.</p>
+
+    <h3 style="font-size:15px;color:var(--gris);margin:22px 0 10px" class="rotulo">Los campos de los que depende que la ficha se vea completa</h3>
+    <table>
+      <thead><tr><th>Columna en la hoja</th><th>Qué pasa si falta</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><code>especievalida</code></td><td>Sin ella no hay taxonomía, ni silueta, ni ilustración. Es la llave de todo el bloque taxonómico.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td><code>Nombre asignado</code></td><td>El ejemplar se queda sin nombre propio en el listado, el mapa y el título de su ficha.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td><code>Alcaldía</code></td><td>Rompe el ID, el filtro por alcaldía y la cifra de «alcaldías» de la portada.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td><code>Coordenadas geográficas</code></td><td>El ejemplar no aparece en el mapa. Sale en el listado con su domicilio y la página lo declara abiertamente.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td><code>Altura total (m)</code></td><td>No puede dibujarse a escala en la hilera de la portada ni entra en la suma de alturas.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td><code>Fecha de decreto</code></td><td>La ficha dice «Sin determinar» en la procedencia.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td><code>Link al decreto</code></td><td>La tarjeta «Consultar el decreto» no aparece.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td>Las cuatro de <code>Categoría /</code></td><td>El ejemplar no entra en ningún filtro de categoría de la portada.</td><td><span class="etiqueta etiqueta--obl">Obligatoria</span></td></tr>
+        <tr><td><code>Link i-Tree…</code></td><td>La tarjeta «Estimación de servicios ambientales» no aparece. <b>Debe ser una dirección</b> que empiece con <code>http</code>: cualquier otro texto se descarta.</td><td><span class="etiqueta etiqueta--opc">Recomendada</span></td></tr>
+        <tr><td><code>Edad estimada (años)</code></td><td>La ficha no muestra edad. Es legítimo dejarla sin dato: hoy solo dos de trece la tienen dictaminada.</td><td><span class="etiqueta etiqueta--opc">Opcional</span></td></tr>
+        <tr><td><code>Circunferencia del tronco</code></td><td>Se calcula sola con <code>=PI()*DAP</code>. No se captura a mano.</td><td><span class="etiqueta etiqueta--calc">Se calcula</span></td></tr>
+        <tr><td><code>Extensión de copa</code></td><td>Se calcula sola: promedio de los dos ejes.</td><td><span class="etiqueta etiqueta--calc">Se calcula</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="aviso">
+      <p><b>Cuatro errores de captura que ya ocurrieron y que el sitio no puede adivinar:</b></p>
+      <ul>
+        <li><b>Fechas en columnas de número.</b> Una celda con <code>12/05/2025</code> en una columna de emisiones se publicó como <code>12,052,025 kg de CO₂ al año</code>. Con separador de miles parecía verdadera. Las columnas de servicios ambientales llevan números, nunca fechas.</li>
+        <li><b>El nombre de la herramienta en lugar del enlace.</b> La columna de i-Tree traía el texto <code>MyTree</code> en los trece ejemplares. Eso no es una dirección y ya no se publica.</li>
+        <li><b>Códigos postales sin el cero inicial.</b> Guardados como número, <code>02250</code> se vuelve <code>2250</code>. La columna del CP va formateada como texto.</li>
+        <li><b>Dos marcadores distintos para lo mismo.</b> Conviven <code>No determinado</code> y <code>S/D</code>. Hay que elegir uno y usarlo siempre.</li>
+      </ul>
+    </div>
+
+    <div class="ojo">
+      <p><b>Sobre las coordenadas.</b> Se capturan como <code>19.457671, -99.188791</code> —latitud primero, longitud después, con punto decimal—. El sitio valida que el punto caiga dentro de la Ciudad de México y detecta si vienen invertidas, pero no puede saber si el punto está en el árbol equivocado. Conviene verificarlo en el mapa antes de publicar.</p>
+    </div>
+  </section>
+
+  <section id="id">
+    <h2><em>3</em>Fijar el identificador</h2>
+    <p class="intro">El ID no es un dato más: es el nombre de la carpeta donde viven las fotografías del ejemplar y el identificador con el que alguien puede citarlo desde fuera. Se arma solo, con una fórmula, a partir de cuatro campos.</p>
+
+    <div class="paso">
+      <h3>Cómo se forma</h3>
+      <pre><code>25 - CUH - TAX - 19405GIMNO - 0002
+│    │     │     │             └── Consecutivo
+│    │     │     └──────────────── Identificador taxonómico
+│    │     └────────────────────── Tres primeras letras del género
+│    └──────────────────────────── Clave de la alcaldía
+└───────────────────────────────── Año de la fecha de nominación</code></pre>
+      <p>Ejemplo real: <code>25-CUH-TAX-19405GIMNO-0002</code>, el ahuehuete del Jardín de San Fernando.</p>
+    </div>
+
+    <div class="aviso">
+      <p><b>El ID se recalcula solo.</b> Depende de la fecha de nominación, la alcaldía, el género y el identificador taxonómico. Corregir cualquiera de esos cuatro campos <b>renombra al árbol</b>, y con eso deja huérfana la carpeta de sus fotografías, que ya no coincide con el nuevo nombre. Las fotos desaparecen del sitio sin que nada marque error.</p>
+      <p style="margin-top:10px">Por eso el orden importa: <b>primero se cierra la captura de esos cuatro campos, después se crea la carpeta de fotografías con el ID ya definitivo.</b> Si más adelante hay que corregir uno, hay que renombrar también la carpeta.</p>
+    </div>
+  </section>
+
+  <section id="fotos">
+    <h2><em>4</em>Preparar las fotografías</h2>
+    <p class="intro">El sitio no lleva un listado de qué fotos existen: las descubre pidiéndolas en orden hasta que una falta. Eso hace que el nombrado sea estricto —un hueco en la numeración corta la galería ahí mismo— y a cambio evita tener que registrar cada archivo en ningún lado.</p>
+
+    <div class="paso">
+      <h3>1 · Una carpeta por ejemplar, nombrada con su ID</h3>
+      <p class="ruta">fuente/assets/img/ejemplares/25-CUH-TAX-19405GIMNO-0002/</p>
+      <p>El nombre de la carpeta tiene que ser <b>idéntico</b> al ID de la hoja, incluidos los guiones y las mayúsculas.</p>
+    </div>
+
+    <div class="paso">
+      <h3>2 · Los archivos se numeran con dos dígitos, sin saltos</h3>
+      <p class="ruta">01.jpg &nbsp; 02.jpg &nbsp; 03.jpg &nbsp; …</p>
+      <p>Empiezan en <code>01</code> y siguen sin interrupción. Si falta la <code>03</code>, la galería se detiene en la <code>02</code> aunque existan la <code>04</code> y la <code>05</code>. El tope es de doce fotografías por ejemplar.</p>
+      <p><b>La <code>01</code> es la más importante:</b> es la que se ve en el listado, en el globo del mapa y en la vista previa al compartir la ficha. Conviene que sea la más representativa del árbol completo.</p>
+    </div>
+
+    <div class="paso">
+      <h3>3 · Una sola extensión por carpeta</h3>
+      <p>El sitio prueba en este orden: <code>jpg</code>, <code>webp</code>, <code>png</code>, <code>jpeg</code>, <code>JPG</code>. <b>La primera que responde manda para toda la carpeta</b>, así que no se pueden mezclar: si la <code>01</code> es <code>.jpg</code> y la <code>02</code> es <code>.png</code>, la segunda no se encuentra.</p>
+    </div>
+
+    <div class="paso">
+      <h3>4 · Cada foto lleva su miniatura</h3>
+      <p class="ruta">01.jpg &nbsp;+&nbsp; 01-chica.jpg</p>
+      <p>La miniatura mide 480 píxeles de lado largo; la grande, 2 000 o más. No es un capricho de peso: el sitio averigua cuántas fotografías hay pidiéndolas, y lo hace contra las miniaturas. Sin ellas cada ficha descarga megabytes de imágenes a tamaño completo solo para contarlas.</p>
+      <p>Si falta una miniatura no se rompe nada: el sitio usa la grande y la página pesa más.</p>
+    </div>
+
+    <div class="paso">
+      <h3>5 · El crédito va en la hoja, no en el nombre del archivo</h3>
+      <p>La columna <code>Crédito fotográfico</code>, uno por ejemplar: aplica a todas sus fotografías. Y solo se suben imágenes cuyos derechos tenga la Secretaría o que estén expresamente licenciadas para uso público.</p>
+    </div>
+
+    <div class="paso">
+      <h3>6 · Y nada más</h3>
+      <p>No hay que ejecutar ningún programa ni marcar nada en la hoja para dar de alta una fotografía. Se copian las carpetas y las imágenes aparecen solas: en la tarjeta del listado, en el globo del mapa y en la galería de la ficha.</p>
+      <p>Un ejemplar <b>sin carpeta no queda roto</b>: sigue mostrando la ilustración de su especie.</p>
+    </div>
+  </section>
+
+  <section id="decreto">
+    <h2><em>5</em>Colocar el decreto</h2>
+    <p class="intro">La ficha no adivina el nombre del archivo: lo toma tal cual de la columna <code>Link al decreto</code>. Hay dos formas válidas de resolverlo y conviene elegir una sola para todo el registro.</p>
+
+    <div class="paso">
+      <h3>Opción A · El PDF viaja con el sitio <span class="etiqueta etiqueta--calc">La de hoy</span></h3>
+      <p>La hoja guarda el <b>nombre del archivo</b> —<code>GOCDMX_26-06-01_TACUBA.pdf</code>— y el PDF se coloca en:</p>
+      <p class="ruta">fuente/decretos/GOCDMX_26-06-01_TACUBA.pdf</p>
+      <p>El nombre tiene que coincidir <b>exactamente</b>: acentos, mayúsculas y espacios incluidos. Todo lo que esté en esa carpeta se copia al sitio publicado.</p>
+      <p>Si el archivo no está, la tarjeta no queda rota: se apaga sola y dice «El documento aún no está publicado en este sitio». Ese es el mensaje que aparece hoy en doce de trece fichas.</p>
+    </div>
+
+    <div class="paso">
+      <h3>Opción B · El PDF vive fuera</h3>
+      <p>La hoja guarda una <b>dirección completa</b> que empieza con <code>http://</code> o <code>https://</code> —la Gaceta Oficial, por ejemplo—. El sitio la usa tal cual y no busca nada en la carpeta.</p>
+      <p>Si se toma este camino, la dirección tiene que ser pública y estable. Un enlace de Drive con permisos restringidos le devuelve una pantalla de acceso denegado a la ciudadanía.</p>
+    </div>
+
+    <div class="ojo">
+      <p><b>Un decreto puede amparar a más de un árbol.</b> Hoy ocurre: <code>DECRETO VIEJO DL AGUA LAUREANO.pdf</code> está capturado en dos ejemplares. Eso es correcto si se trata de una sola declaratoria. Si son dos declaratorias distintas, cada una necesita su archivo y su nombre.</p>
+    </div>
+  </section>
+
+  <section id="ilustracion">
+    <h2><em>6</em>La ilustración de la especie</h2>
+    <p class="intro">Solo aplica cuando entra una <b>especie nueva</b>. La ilustración no es del ejemplar: representa a la especie, y se reutiliza en todos los árboles que compartan nombre científico.</p>
+
+    <div class="paso">
+      <h3>Los dos archivos</h3>
+      <p class="ruta">fuente/assets/img/especies/&lt;clave&gt;-media.webp<br>fuente/assets/img/especies/&lt;clave&gt;-grande.webp</p>
+      <p>La <code>media</code> es la que se descarga siempre; la <code>grande</code> solo la piden las pantallas de alta densidad. La clave es una palabra corta y sin acentos, normalmente el género en minúsculas: <code>taxodium</code>, <code>fraxinus</code>, <code>ficus</code>.</p>
+    </div>
+
+    <div class="paso">
+      <h3>Requisitos de la imagen</h3>
+      <ul>
+        <li>Derechos de la Secretaría o licencia expresa para uso público.</li>
+        <li>Un ejemplar de la especie correcta, no un árbol parecido.</li>
+        <li><b>Fondo transparente</b>, en PNG o WebP.</li>
+        <li><b>El árbol completo, con el fuste tocando el borde inferior de la imagen.</b> Esto no es estético: la ilustración se escala por la altura real del ejemplar, y un margen en blanco abajo desplaza toda la escala y hace que el árbol se dibuje más bajo de lo que es.</li>
+      </ul>
+    </div>
+
+    <div class="aviso">
+      <p><b>Esto requiere tocar código y no lo puede hacer el equipo desde Drive.</b> Además de las dos imágenes hay que dar de alta el <em>perfil de dibujo</em> de la especie —proporción de copa, altura y grosor del fuste, contrafuerte, lóbulos, ramas—, que es lo que hace que la silueta de la portada tenga el porte de la especie y no el de un árbol genérico. Es un trabajo de una sola vez por especie: deposita las imágenes en Drive y avísame.</p>
+    </div>
+  </section>
+
+  <section id="publicar">
+    <h2><em>7</em>Construir y publicar</h2>
+    <p class="intro">Se edita siempre dentro de <code>fuente/</code>, nunca dentro de <code>docs/</code>: el armado borra esa carpeta y la vuelve a escribir en cada construcción.</p>
+
+    <div class="paso">
+      <h3>Los dos comandos, en este orden</h3>
+      <pre><code>fuente/construir/construir.sh produccion
+fuente/verificar/verificar.sh</code></pre>
+      <p>El primero rearma <code>docs/</code>, que es lo que sirve GitHub Pages. El segundo corre todas las suites de comprobación y <b>termina con error si algo se rompió</b>.</p>
+      <p><b>Si la verificación no queda en verde, no se publica.</b> Ese es el punto de tenerla: ha detenido enlaces rotos, un identificador que no coincidía con su carpeta de fotos y cifras que se contradecían entre secciones.</p>
+    </div>
+
+    <div class="paso">
+      <h3>Después</h3>
+      <p>En GitHub Desktop aparecen los archivos cambiados: una descripción corta, <b>Commit to main</b> y <b>Push origin</b>. El sitio se actualiza solo en un par de minutos.</p>
+    </div>
+
+    <div class="ojo">
+      <p><b>Si cambió la imagen para compartir</b> —la que se ve al pegar el enlace en WhatsApp—, hay que subir el número de <code>VERSION_TARJETA</code> en <code>fuente/construir/sitio.js</code>. WhatsApp guarda esa miniatura por dirección, no por contenido: sin ese cambio sigue mostrando la anterior durante semanas.</p>
+    </div>
+  </section>
+
+  <section id="comprobar">
+    <h2><em>8</em>Comprobación final</h2>
+    <p class="intro">Con el sitio ya construido, antes de subirlo. Son las cosas que la verificación automática no puede juzgar porque dependen de mirar.</p>
+
+    <ul class="lista-chk">
+      <li>El ejemplar <b>aparece en la hilera de la portada</b>, dibujado a una altura que corresponde a la de los demás.</li>
+      <li>Su <b>punto está en el mapa</b>, y al hacer clic el globo muestra la fotografía correcta.</li>
+      <li>El punto <b>cae donde de verdad está el árbol</b>. Vale la pena comprobarlo contra Street View.</li>
+      <li>En su ficha, la <b>galería muestra todas las fotografías</b> que se subieron. Si se detiene antes, hay un hueco en la numeración.</li>
+      <li>La tarjeta <b>«Consultar el decreto» abre el PDF</b>, y no el mensaje de «aún no está publicado».</li>
+      <li>La tarjeta <b>«Estimación de servicios ambientales» abre la corrida de ese árbol</b>, no la portada de la herramienta.</li>
+      <li>Las <b>cifras de la portada subieron</b>: el conteo de ejemplares, y si toca, el de alcaldías y el de especies.</li>
+      <li>Ningún dato dice <b>«12,052,025»</b> ni ninguna otra cifra que no resista una lectura en voz alta.</li>
+    </ul>
+  </section>
+
+
+  <section id="identificadores">
+    <h2><em>9</em>Los identificadores en uso</h2>
+    <p class="intro">Para copiar el nombre exacto de una carpeta sin volver a teclearlo, y para ver de un vistazo qué consecutivo sigue. El del ejemplar nuevo se toma de la hoja, no de esta lista.</p>
+    <table>
+      <thead><tr><th>Nombre de la carpeta</th><th>Ejemplar</th><th>Alcaldía</th></tr></thead>
+      <tbody>
+        <tr><td><code>25-MIH-TAX-19405GIMNO-0001</code></td><td>Tacuba</td><td>Miguel Hidalgo</td></tr>
+        <tr><td><code>25-CUH-TAX-19405GIMNO-0002</code></td><td>Jardín San Fernando</td><td>Cuauhtémoc</td></tr>
+        <tr><td><code>25-COY-TAX-19405GIMNO-0003</code></td><td>San Diego Churubusco</td><td>Coyoacán</td></tr>
+        <tr><td><code>25-CUH-TAX-19405GIMNO-0004</code></td><td>Jardín Ramón López Velarde</td><td>Cuauhtémoc</td></tr>
+        <tr><td><code>25-CUH-TAX-19405GIMNO-0005</code></td><td>Parque España</td><td>Cuauhtémoc</td></tr>
+        <tr><td><code>25-AZC-TAX-19405GIMNO-0006</code></td><td>Viejo del Agua</td><td>Azcapotzalco</td></tr>
+        <tr><td><code>25-XOC-TAX-19405GIMNO-0007</code></td><td>Árbol Ahuehuete (Sabino) de San Juan y su Arboleda</td><td>Xochimilco</td></tr>
+        <tr><td><code>25-COY-FRA-30222ANGIO-0008</code></td><td>Santa Catarina</td><td>Coyoacán</td></tr>
+        <tr><td><code>25-COY-TAX-19405GIMNO-0009</code></td><td>Río Magdalena</td><td>Coyoacán</td></tr>
+        <tr><td><code>25-AZC-TAX-19405GIMNO-0010</code></td><td>Glorieta de Ahuehuetes</td><td>Azcapotzalco</td></tr>
+        <tr><td><code>25-CUH-TAX-19405GIMNO-0011</code></td><td>Juarista</td><td>Cuauhtémoc</td></tr>
+        <tr><td><code>25-BJU-FIC-75040ANGIO-0012</code></td><td>Laureano</td><td>Benito Juárez</td></tr>
+        <tr><td><code>24-BJU-FRA-30222ANGIO-0013</code></td><td>Eugenio</td><td>Benito Juárez</td></tr>
+      </tbody>
+    </table>
+    <div class="ojo">
+      <p><b>El consecutivo no es el orden de declaratoria.</b> El <code>0013</code> lleva año <code>24</code> porque su nominación es de 2024, anterior a la de casi todos los demás. El número solo distingue registros; no ordena nada.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="envoltura">
+    <p><b>Secretaría del Medio Ambiente de la Ciudad de México</b> · Oficina de la Secretaría. Documento interno de trabajo: no se publica en el micrositio.</p>
+    <p style="margin-top:8px">Esta guía describe el sistema tal como está construido hoy. Si cambia la forma en que el sitio lee el registro, hay que actualizarla junto con el cambio.</p>
+  </div>
+</footer>
+
+</body>
+</html>

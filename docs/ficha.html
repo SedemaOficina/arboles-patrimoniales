@@ -3610,40 +3610,68 @@ function rutaDecreto(valor) {
 }
 
 /**
+ * ¿Esto es una dirección de verdad?
+ *
+ * La hoja guardaba el texto «MyTree» en la columna del cálculo de i-Tree —el
+ * nombre de la herramienta, no la corrida— y ese texto llegó a publicarse como
+ * si fuera un enlace. Una tarjeta de fuente solo tiene sentido si lleva a algún
+ * lado: si el campo no empieza por http:// o https://, no se dibuja.
+ */
+function esDireccion(valor) {
+  return /^https?:\/\/\S+$/i.test(String(valor || "").trim());
+}
+
+/**
  * Las fuentes del ejemplar, al final de la ficha.
  *
- * Queda una: el decreto. Se retiraron «Fuente del registro», «Cálculo i-Tree»
- * y «Ejemplar en el SNIB» porque las tres guardaban el MISMO valor en los
- * trece ejemplares —la misma observación de iNaturalist, el texto «MyTree» y
- * el mismo identificador del SNIB—, de modo que ninguna llevaba a información
- * de ESE árbol, que es lo único que justifica un enlace en su ficha.
+ * Cada tarjeta aparece SOLO si su campo trae una dirección propia de ESE árbol.
+ * Se retiraron en su momento «Fuente del registro», «Cálculo i-Tree» y
+ * «Ejemplar en el SNIB» porque las tres guardaban el mismo valor en los trece
+ * ejemplares —la misma observación de iNaturalist, el texto «MyTree» y el mismo
+ * identificador del SNIB—, de modo que ninguna llevaba a información de ese
+ * ejemplar, que es lo único que justifica un enlace en su ficha.
  *
- * La clase enlace--externa se conserva por si vuelve a haber una fuente ajena
- * con dirección propia por ejemplar.
+ * La de i-Tree vuelve porque el registro ya guarda la corrida de cada árbol.
+ * La condición no cambia y por eso se escribe como regla, no como excepción:
+ * el día que el campo vuelva a traer «MyTree» —o se quede vacío— la tarjeta
+ * desaparece sola en lugar de publicar un enlace que no lleva a nada.
  */
 function pintarFuentes(e) {
   const caja = document.getElementById("fFuentes");
   if (!caja) return;
   const fuentes = [
-    ["Consultar el decreto", rutaDecreto(e.linkDecreto), "propia", "El acuerdo publicado que lo declara patrimonial"],
-  ];
-  caja.innerHTML = fuentes.map(([t2, url, tipo, pie]) => url
-    ? `<a class="enlace enlace--fuente enlace--${tipo}" href="${esc(url)}" target="_blank" rel="noopener">
-         <b>${t2}${tipo === "externa" ? '<span class="enlace__fuera" aria-hidden="true">↗</span><span class="vo">, abre un sitio externo</span>' : ""}</b>
-         <span>${pie}</span></a>`
-    : `<span class="enlace enlace--fuente enlace--apagado"><b>${t2}</b><span>No disponible en el registro</span></span>`).join("");
+    ["Consultar el decreto", rutaDecreto(e.linkDecreto), "propia",
+     "El acuerdo publicado que lo declara patrimonial"],
+    ["Estimación de servicios ambientales", esDireccion(e.linkITree) ? String(e.linkITree).trim() : null, "externa",
+     "La corrida de i-Tree MyTree con la que se calcularon las cifras de este ejemplar"],
+  ].filter(([, url]) => url);
+
+  // Sin ninguna fuente que ofrecer, el bloque entero sobra: un encabezado
+  // seguido de nada se lee como un error de carga.
+  const bloque = caja.closest(".bloque") || caja.parentElement;
+  if (!fuentes.length) { if (bloque) bloque.style.display = "none"; return; }
+  if (bloque) bloque.style.display = "";
+
+  caja.innerHTML = fuentes.map(([t2, url, tipo, pie]) =>
+    `<a class="enlace enlace--fuente enlace--${tipo}" href="${esc(url)}" target="_blank" rel="noopener">
+       <b>${t2}${tipo === "externa" ? '<span class="enlace__fuera" aria-hidden="true">↗</span><span class="vo">, abre un sitio externo</span>' : ""}</b>
+       <span>${pie}</span></a>`).join("");
 
   // Un enlace que promete un documento y devuelve un 404 es peor que no
   // ofrecerlo: la persona cree que el decreto no existe. Se comprueba que el
   // archivo esté publicado y, si no está, la tarjeta se apaga con un texto que
   // dice la verdad. La comprobación es una sola petición de cabecera, sin
-  // descargar el PDF.
+  // descargar el PDF. Solo se hace con el decreto servido desde este sitio:
+  // una petición a un dominio ajeno la bloquea el navegador por CORS y el
+  // resultado no significaría nada.
   const enlaceDecreto = caja.querySelector(".enlace--propia");
   if (enlaceDecreto && typeof fetch === "function") {
     const url = enlaceDecreto.getAttribute("href");
-    fetch(url, { method: "HEAD" })
-      .then((r) => { if (!r.ok) apagarDecreto(caja); })
-      .catch(() => { /* sin red o con file://: se deja el enlace como está */ });
+    if (!/^https?:\/\//i.test(url)) {
+      fetch(url, { method: "HEAD" })
+        .then((r) => { if (!r.ok) apagarDecreto(caja); })
+        .catch(() => { /* sin red o con file://: se deja el enlace como está */ });
+    }
   }
 }
 

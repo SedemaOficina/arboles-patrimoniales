@@ -130,14 +130,32 @@ t('ficha · sigue el mapa del ejemplar', /pintarMapaEjemplar\(e\)/.test(fl));
 
 
 console.log('══ FICHA · fuentes y decreto ══');
-t('fuentes · queda una tarjeta, la del decreto',
-  /\["Consultar el decreto"/.test(fl)
-  && !/"Fuente del registro"/.test(fl) && !/"Cálculo i-Tree"/.test(fl)
-  && !/"Ejemplar en el SNIB"/.test(fl));
-t('fuentes · nada lee ya urlSNIB', !/e\.urlSNIB/.test(fl) && !/e\.urlSNIB/.test(fdc));
-t('fuentes · nada lee urlOrigen ni linkITree',
-  !/e\.urlOrigen/.test(fl) && !/e\.linkITree/.test(fl)
-  && !/e\.urlOrigen/.test(fdc) && !/e\.linkITree/.test(fdc));
+// Dos tarjetas: el decreto y la corrida de i-Tree. «Fuente del registro» y
+// «Ejemplar en el SNIB» siguen fuera porque guardaban el MISMO valor en los
+// trece: ninguna llevaba a información de ese ejemplar.
+t('fuentes · están el decreto y la estimación de servicios ambientales',
+  /\["Consultar el decreto"/.test(fl) && /\["Estimación de servicios ambientales"/.test(fl));
+t('fuentes · «Fuente del registro» y el SNIB siguen fuera',
+  !/"Fuente del registro"/.test(fl) && !/"Ejemplar en el SNIB"/.test(fl));
+t('fuentes · nada lee ya urlSNIB ni urlOrigen',
+  !/e\.urlSNIB/.test(fl) && !/e\.urlOrigen/.test(fl)
+  && !/e\.urlSNIB/.test(fdc) && !/e\.urlOrigen/.test(fdc));
+// LA REGLA QUE IMPIDE QUE VUELVA EL ENLACE MUERTO.
+// La hoja guardaba el texto «MyTree» —el nombre de la herramienta, no la
+// corrida— en la columna del cálculo, y eso llegó a publicarse como enlace.
+// La tarjeta de i-Tree solo se dibuja si el campo es una dirección de verdad.
+t('fuentes · i-Tree solo aparece si el campo es una dirección',
+  /function esDireccion\(valor\)/.test(fl)
+  && /\^https\?:/.test(fl)
+  && /esDireccion\(e\.linkITree\)/.test(fl));
+t('fuentes · las tarjetas sin dirección se filtran, no se dibujan apagadas',
+  /\.filter\(\(\[, url\]\) => url\)/.test(fl));
+t('fuentes · sin ninguna fuente, el bloque entero se oculta',
+  /if \(!fuentes\.length\) \{ if \(bloque\) bloque\.style\.display = "none"/.test(fl));
+// Una petición HEAD a un dominio ajeno la bloquea el navegador por CORS: su
+// resultado no significa nada y apagaría una tarjeta buena.
+t('decreto · la comprobación HEAD solo corre contra este mismo sitio',
+  /if \(!\/\^https\?:\\\/\\\/\/i\.test\(url\)\) \{/.test(fl));
 // El registro guarda el NOMBRE del PDF, no una URL: publicado crudo, el
 // navegador lo resolvía contra la raíz y devolvía 404.
 t('decreto · el nombre de archivo se resuelve a la carpeta decretos/',

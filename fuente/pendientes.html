@@ -9,8 +9,36 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/estilos.css">
 <style>
+/* AUTOCONTENIDA A PROPÓSITO.
+   Antes enlazaba assets/css/estilos.css con ruta relativa. Eso funciona
+   dentro del sitio armado, pero esta página se abre suelta —descargada,
+   adjunta en un mensaje, copiada a otra carpeta— y ahí la ruta no resuelve:
+   salía en Times New Roman, sin color y sin retícula. Los tokens y las reglas
+   base que necesita están copiados abajo. Si la paleta del sitio cambia, hay
+   que reflejarlo también aquí. */
+:root{
+  --tinta-jacaranda:#2A1630; --jacaranda:#8D4992; --jacaranda-hondo:#7A3E7F;
+  --jacaranda-luz:#C79FCA; --niebla:#F4E9F3;
+  --verde-bosque:#1E4D2B; --verde-vivo:#2D7A3E; --verde-niebla:#E7F0E1; --verde-luz:#8FC77F;
+  --papel:#FEF7E4; --blanco:#FFFDF7; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta:#1A1A1A; --tinta-suave:#413647; --gris:#5B4F62;
+  --display:'Anton',Impact,sans-serif;
+  --editorial:'Fraunces',Georgia,serif;
+  --texto:'Source Sans 3',system-ui,sans-serif;
+  --borde:1px solid rgba(42,22,48,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.envoltura{max-width:1180px;margin:0 auto;padding:0 28px}
+.rotulo{font-family:var(--texto);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:.005em;line-height:1.05;margin:0;text-transform:uppercase}
+main{padding:44px 0 70px}
+code{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.88em;
+  background:var(--niebla);padding:2px 6px;border-radius:2px;overflow-wrap:anywhere}
+a{color:var(--jacaranda-hondo)}
+
   /* Página interna de control. No se publica: lleva noindex y no está
      enlazada desde el sitio. Se borra cuando ya no haga falta. */
   .pend-cabeza{background:var(--tinta-jacaranda);color:#fff;padding:38px 0 34px}
@@ -30,20 +58,18 @@
   .pend{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:start;
     background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:18px 22px}
   .pend--bloquea{border-left-color:var(--alerta)}
-  .pend--listo{border-left-color:var(--verde-vivo);opacity:.62}
+  /* Ya no hay estilo de «hecho»: esta página lista lo que falta. Lo que se
+     cierra se borra, no se tacha; una lista llena de tachones deja de leerse. */
   .pend__marca{width:22px;height:22px;border-radius:50%;border:2px solid rgba(42,22,48,.24);margin-top:2px}
-  .pend--listo .pend__marca{border-color:var(--verde-vivo);background:var(--verde-vivo);position:relative}
-  .pend--listo .pend__marca::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
-    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
   .pend h3{font-size:17px;margin:0 0 5px;color:var(--tinta)}
-  .pend--listo h3{text-decoration:line-through;text-decoration-color:rgba(42,22,48,.35)}
   .pend p{margin:0;font-size:14.5px;line-height:1.55;color:#413647}
   .pend cite{display:block;margin-top:9px;font-family:var(--editorial);font-style:italic;font-size:13.5px;color:var(--gris)}
   .pend__quien{flex:0 0 auto;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
     padding:5px 11px;border-radius:999px;white-space:nowrap}
   .pend__quien[data-q="tu"]{background:rgba(192,57,43,.1);color:var(--alerta)}
   .pend__quien[data-q="registro"]{background:rgba(178,142,92,.16);color:#8A6B3D}
-  .pend__quien[data-q="listo"]{background:var(--verde-niebla);color:var(--verde-bosque)}
+  /* No es una tarea hecha: es una decisión vigente que enmarca lo demás. */
+  .pend__quien[data-q="decidido"]{background:var(--niebla);color:var(--jacaranda-hondo)}
   @media(max-width:640px){.pend{grid-template-columns:auto 1fr}.pend__quien{grid-column:2}}
   /* A 320 px la tarjeta se salía 16 px: el disco de la marca más los rellenos
      no caben junto al texto. Se aprieta el relleno y se elimina la columna del
@@ -55,34 +81,11 @@
   /* Los identificadores y las direcciones son cadenas sin espacios: sin esto
      estiran su columna y con ella la página entera. */
   .pend,.pend div,.pend p,.pend cite,.receta p{min-width:0;overflow-wrap:anywhere}
-  .receta{background:var(--niebla);border:1px solid rgba(141,73,146,.24);border-left:5px solid var(--jacaranda);
-    padding:26px 30px;margin:18px 0 0}
-  .receta h3{font-size:16px;margin:22px 0 6px;color:var(--tinta-jacaranda)}
-  .receta h3:first-child{margin-top:0}
-  .receta p{margin:0;font-size:15px;line-height:1.6;color:#413647;max-width:76ch}
-  .receta pre{max-width:100%;margin:11px 0 0;background:var(--blanco);border:var(--borde);padding:14px 18px;
-    font-family:ui-monospace,'DejaVu Sans Mono',monospace;font-size:13px;line-height:1.65;color:var(--tinta);
-    overflow-x:auto;white-space:pre}
-  .receta__titulo{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--gris);margin:32px 0 10px}
-  .receta__nota{margin:0 0 6px;font-size:14.5px;line-height:1.6;color:#413647;max-width:80ch}
   code{font-family:ui-monospace,'DejaVu Sans Mono',monospace;font-size:.92em;
     background:rgba(141,73,146,.09);padding:1px 5px;border-radius:2px;color:var(--jacaranda-hondo)}
   /* Auditoría P1.3: --jacaranda-hondo esta hecho para fondo claro; sobre la
      cabecera profunda caia a 2.25:1. La variante clara sube a 5.45:1. */
   .pend-cabeza code{color:var(--jacaranda-luz);background:rgba(199,159,202,.16)}
-  .pend-fila--listo{background:var(--verde-niebla)}
-  .pend-fila--listo td{color:var(--verde-bosque)}
-  /* La tabla de identificadores no cabe en un teléfono: se desplaza sola en
-     lugar de estirar la página entera. */
-  .pend-tabla-caja{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .pend-tabla{width:100%;border-collapse:collapse;min-width:520px;background:var(--blanco);border:var(--borde);font-size:14.5px}
-  .pend-tabla th,.pend-tabla td{text-align:left;padding:11px 16px;border-bottom:1px solid rgba(42,22,48,.09)}
-  .pend-tabla th{background:var(--verde-bosque);color:#fff;font-size:11.5px;letter-spacing:.08em;
-    text-transform:uppercase;font-weight:700}
-  .pend-tabla tr:last-child td{border-bottom:0}
-  .pend-tabla td b{color:var(--alerta)}
-  .pend-tabla td.ok{color:var(--verde-bosque);font-weight:700}
   .pend-nota{margin:34px 0 0;padding:20px 24px;background:var(--niebla);border-left:3px solid var(--jacaranda);
     font-size:14.5px;line-height:1.6;color:#413647}
 </style>
@@ -97,7 +100,7 @@
       <div><b>13</b><span>Ejemplares en el registro</span></div>
       <div><b>13</b><span>Con fotografía</span></div>
       <div><b>2</b><span>Con edad estimada</span></div>
-      <div><b>12</b><span>Con decreto enlazado</span></div>
+      <div><b>0</b><span>Con PDF de decreto publicado</span></div>
     </div>
   </div>
 </header>
@@ -111,33 +114,15 @@
       <p>Nada de esto lo puedo resolver yo. Sin estos insumos el sitio funciona, pero se publica incompleto.</p>
       <div class="pend-lista">
 
-        <article class="pend pend--listo">
+        <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
-            <h3>Fotografías · resuelto</h3>
-            <p>Los trece ejemplares tienen fotografías: <b>88 imágenes</b> montadas desde la carpeta que entregaste. Cada una va en dos tamaños —1 400 px para el visor de la galería y 480 px para la miniatura de la tarjeta, del mapa y del tirador—.</p>
-            <p>Se aplicó la orientación EXIF —33 de las 92 venían giradas 90°— y se retiraron los metadatos de cámara, incluidas las coordenadas GPS. Se omitieron <b>4 fotografías repetidas</b> dentro de su propia carpeta, que en una galería solo repetían cuadro.</p>
-            <cite>Queda una por revisar: la portada de Parque España es el mismo archivo que la segunda fotografía de Jardín Ramón López Velarde. Uno de los dos ejemplares está mostrando un árbol que no es el suyo. <a href="#fotos">Cómo se organizan las fotografías</a>.</cite>
+            <h3>Fotografías</h3>
+            <p>Los trece ejemplares tienen fotografías: <b>88 imágenes</b> montadas desde la carpeta que entregaste, cada una en dos tamaños —1 400 px para el visor de la galería y 480 px para la miniatura de la tarjeta, del mapa y del tirador—. Se aplicó la orientación EXIF —33 de las 92 venían giradas 90°— y se retiraron los metadatos de cámara, incluidas las coordenadas GPS. Se omitieron <b>4 fotografías repetidas</b> dentro de su propia carpeta.</p>
+            <p style="margin-top:9px"><b>Falta cerrar:</b> la portada de Jardín Ramón López Velarde parece ser una segunda fotografía de Jardín San Fernando. Si es así, esa ficha está mostrando un árbol que no es el suyo.</p>
+            <cite>Las especificaciones de nombrado, tamaños y créditos se pasaron a guia-alta.html, paso 4.</cite>
           </div>
-          <span class="pend__quien" data-q="listo">Listo</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Enlace del Reglamento de impacto ambiental</h3>
-            <p>Enlace entregado e incorporado. Los nueve instrumentos del marco normativo llevan ya su liga al texto vigente en la Consejería Jurídica.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Título real del video</h3>
-            <p>Título y canal incorporados. Por decisión tuya, el título y el pie de respaldo <b>ya no se muestran</b> junto al reproductor: el título vive solo en el atributo del marco, que es lo que anuncia el contenido a un lector de pantalla.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
+          <span class="pend__quien" data-q="tu">No resuelto</span>
         </article>
 
         <article class="pend pend--bloquea">
@@ -195,93 +180,6 @@
     </div>
 
 
-    <div class="pend-grupo" id="fotos">
-      <h2>Cómo organizar las fotografías</h2>
-      <p>Las fotos <b>no se capturan en la hoja de cálculo</b>. Van en el disco, una carpeta por ejemplar nombrada con su identificador del registro. La hoja solo aporta el crédito fotográfico.</p>
-
-      <div class="receta">
-        <h3>1 · Una carpeta por ejemplar</h3>
-        <p>Dentro de <code>assets/img/ejemplares/</code>, con el identificador <b>exacto</b>: mismos guiones, mismas mayúsculas. Un carácter de más y ese árbol se queda sin fotos.</p>
-        <pre>assets/img/ejemplares/
-  25-MIH-TAX-19405GIMNO-0001/
-  25-CUH-TAX-19405GIMNO-0002/
-  25-COY-TAX-19405GIMNO-0003/
-  ...</pre>
-
-        <h3>2 · Los archivos se numeran 01, 02, 03...</h3>
-        <p>Dos dígitos y <b>sin huecos</b>. El sitio busca 01, luego 02, y se detiene en el primer número que falta: si subes 01 y 03, la tercera no aparece.</p>
-        <pre>25-AZC-TAX-19405GIMNO-0006/
-  01.jpg     &lt;- esta es la miniatura del listado y del mapa
-  02.jpg
-  03.jpg</pre>
-
-        <h3>3 · Una sola extensión por carpeta</h3>
-        <p>Admitidas: <code>.jpg</code>, <code>.webp</code>, <code>.png</code> y <code>.jpeg</code>. La primera foto fija la extensión del resto, así que no mezcles formatos dentro de la misma carpeta. Máximo doce fotografías por ejemplar.</p>
-
-        <h3>4 · El crédito, en la hoja</h3>
-        <p>Columna «Crédito fotográfico», uno por ejemplar. Aplica a todas sus fotos.</p>
-
-        <h3>5 · Nada más</h3>
-        <p>No hay que ejecutar ningún programa ni marcar nada en la hoja. Copias las carpetas al servidor y las fotos aparecen solas: en la tarjeta del listado, en el renglón del mapa y en la galería de la ficha. Un ejemplar sin carpeta sigue mostrando la ilustración de su especie.</p>
-      </div>
-
-      <h3 class="receta__titulo">Formato recomendado</h3>
-      <p class="receta__nota">Lado largo de 2 000 píxeles o más en el original. Conviene que la <b>01</b> sea la más representativa: es la que se ve en miniatura. Junto a cada <code>NN.jpg</code> va su miniatura <code>NN-chica.jpg</code> de 480 píxeles; si falta, el sitio usa la grande y solo pesa más. Solo deben subirse imágenes cuyos derechos tenga la Secretaría o estén expresamente licenciadas para uso público.</p>
-
-      <h3 class="receta__titulo">Los trece identificadores, para copiar</h3>
-      <div class="pend-tabla-caja">
-      <table class="pend-tabla">
-        <thead><tr><th>Nombre de la carpeta</th><th>Ejemplar</th><th>Alcaldía</th><th>Estado</th></tr></thead>
-        <tbody>
-            <tr class="pend-fila--listo"><td><code>25-MIH-TAX-19405GIMNO-0001</code></td><td>Tacuba</td><td>Miguel Hidalgo</td><td>5 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-CUH-TAX-19405GIMNO-0002</code></td><td>Jardin San Fernando</td><td>Cuauhtémoc</td><td>5 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-COY-TAX-19405GIMNO-0003</code></td><td>San Diego Churubusco</td><td>Coyoacán</td><td>11 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-CUH-TAX-19405GIMNO-0004</code></td><td>Jardín Ramón López Velarde</td><td>Cuauhtémoc</td><td>3 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-CUH-TAX-19405GIMNO-0005</code></td><td>Parque España</td><td>Cuauhtémoc</td><td>4 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-AZC-TAX-19405GIMNO-0006</code></td><td>Viejo del Agua</td><td>Azcapotzalco</td><td>10 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-XOC-TAX-19405GIMNO-0007</code></td><td>Árbol Ahuehuete (Sabino) de San Juan y su Arboleda</td><td>Xochimilco</td><td>6 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-COY-FRA-30222ANGIO-0008</code></td><td>Santa Catarina</td><td>Coyoacán</td><td>11 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-COY-TAX-19405GIMNO-0009</code></td><td>Río Magdalena</td><td>Coyoacán</td><td>9 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-AZC-TAX-19405GIMNO-0010</code></td><td>Glorieta de Ahuehuetes</td><td>Azcapotzalco</td><td>7 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-CUH-TAX-19405GIMNO-0011</code></td><td>Juarista</td><td>Cuauhtémoc</td><td>9 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>25-BJU-FIC-75040ANGIO-0012</code></td><td>Laureano</td><td>Benito Juárez</td><td>5 fotos</td></tr>
-            <tr class="pend-fila--listo"><td><code>24-BJU-FRA-30222ANGIO-0013</code></td><td>Eugenio</td><td>Benito Juárez</td><td>3 fotos</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
-    <div class="pend-grupo">
-      <h2>2 · Datos del registro por corregir</h2>
-      <p>Son celdas de la hoja de captura. El sitio las declara honestamente como faltantes, pero conviene cerrarlas.</p>
-
-      <div class="pend-tabla-caja">
-      <table class="pend-tabla">
-        <thead><tr><th>Dato</th><th>Estado</th><th>Qué hacer</th></tr></thead>
-        <tbody>
-          <tr><td>Edad estimada</td><td class="ok">Cerrado</td><td>Solo 2 de 13 tienen edad. No es un hueco de captura: en los otros 11 no se pudo determinar con los elementos técnicos del dictamen. Celda vacía equivale a <b>no determinado</b>, y así lo dice el sitio en cada ficha. No queda nada por llenar.</td></tr>
-          <tr><td>Categoría patrimonial</td><td><b>11 de 13</b></td><td>Sabino de San Juan y Eugenio. El sitio explica que su decreto se emitió antes de que la Secretaría lanzara el programa del que se derivaron las categorías. Si ya procede clasificarlos, asígnalas.</td></tr>
-          <tr><td>Lluvia interceptada</td><td class="ok">Cerrado</td><td>5 de 13 con cifra. En los otros 8 no se pudo estimar. Celda vacía equivale a <b>no determinado</b>: la ficha lo declara renglón por renglón, no lo deja en blanco.</td></tr>
-          <tr><td>Reducción de escurrimientos</td><td class="ok">Cerrado</td><td>Mismos 5 con cifra y mismos 8 no determinados, con la misma declaración en la ficha.</td></tr>
-          <tr><td>Extensión promedio de copa</td><td class="ok">Corregido</td><td>La fórmula de la hoja calculaba <code>largo + ancho ÷ 2</code> en lugar de <code>(largo + ancho) ÷ 2</code>. Afectaba a los trece ejemplares: Viejo del Agua publicaba 39 m donde el promedio real es 27, y Santa Catarina 39 con los dos ejes en 26. Corregido en el origen. <b>La copia congelada sigue trayendo el valor viejo</b>: Viejo del Agua publica hoy 39 m con ejes de 30 y 24, cuyo promedio real es 27. Se cierra cuando me pases el CSV actualizado y regenere <code>registro.json</code>.</td></tr>
-          <tr><td>Copa de Río Magdalena</td><td><b>Verificar</b></td><td>106 m en un eje contra 15 en el otro, para un ejemplar de 26.6 m de altura. Una copa cuatro veces más ancha que alto el árbol no es plausible. En la vista desde arriba se ve como una astilla, y así se queda hasta que se confirme el dato: el sitio no maquilla lo que no cuadra.</td></tr>
-          <tr><td>Lluvia vs. escurrimientos</td><td><b>Revisar</b></td><td>Este sí sigue abierto, y no tiene que ver con los datos que faltan sino con los que están: 911,487 L contra 1,258 L en los <b>mismos 5 ejemplares</b> que sí traen cifra. Tres órdenes de magnitud de diferencia. Si el cálculo es correcto conviene explicarlo en el sitio; si no, uno de los dos campos está mal capturado.</td></tr>
-          <tr><td>Carbono y CO₂ por año</td><td><b>Revisar</b></td><td>Doce de trece ejemplares reportan entre <b>1 y 3 kg de carbono al año</b>; el decimotercero, Glorieta de Ahuehuetes, reporta <b>49 kg</b>. Y el que menos reporta es Viejo del Agua, que tiene el tronco más grueso del padrón: 440 cm de diámetro. Un árbol de ese porte capturando 1 kg al año no es plausible, y la cifra más alta no corresponde al árbol más grande. Parece un problema de unidad o de columna en la corrida de i-Tree, no un resultado. El sitio publica lo que dice el registro: no inventa ni corrige cifras técnicas.</td></tr>
-          <tr><td>Erratas de captura</td><td class="ok">Corregido</td><td>«numero 28» sin acento en Eugenio, «Peréz» por Pérez en Río Magdalena, «Villalongin» sin acento en Juarista, «baqueta» por banqueta y «calle fresas» en minúscula en Laureano. Corregidas en la copia congelada para que el sitio no publique faltas de ortografía. <b>El arreglo de fondo va en la hoja</b>: este archivo se regenera desde ella y las erratas volverían.</td></tr>
-          <tr><td>Capa geográfica</td><td class="ok">Publicada</td><td>Los trece ejemplares se publican como capa de puntos en GeoJSON, KML y shapefile, con dieciséis atributos por punto. Se genera en cada construcción desde el mismo registro que alimenta al sitio, así que no puede quedarse atrás. Sustituyó a la descarga del perímetro de la Ciudad, que no era lo que alguien busca para trabajar el inventario en QGIS.</td></tr>
-          <tr><td>Enlace al SNIB</td><td><b>Sin capturar</b></td><td>Los trece ejemplares comparten <b>la misma dirección del SNIB</b>, con el identificador <code>84deb4b8…</code>. No es un enlace por ejemplar: es un valor copiado trece veces, así que llevaba a todos al mismo registro. La tarjeta se retiró de la ficha por decisión tuya. Si se captura el identificador real de cada ejemplar, se restituye en una línea.</td></tr>
-          <tr><td>Fuente del registro</td><td><b>Sin capturar</b></td><td>Mismo caso: los trece traen la misma observación de iNaturalist, <code>observations/16695761</code>. Tarjeta retirada de la ficha.</td></tr>
-          <tr><td>Cálculo i-Tree</td><td><b>Sin capturar</b></td><td>La columna guarda el texto <code>MyTree</code> —el nombre de la herramienta— en los trece, no una dirección. Tarjeta retirada de la ficha. La explicación de qué es i-Tree vive en la metodología de Recursos, que es donde corresponde.</td></tr>
-          <tr><td>Decreto duplicado</td><td><b>Verificar</b></td><td><code>DECRETO VIEJO DL AGUA LAUREANO.pdf</code> está capturado en <b>dos ejemplares</b>: Viejo del Agua y Laureano. Si son dos declaratorias distintas, cada una necesita su archivo y su propio nombre en la hoja. De paso: el nombre trae «DL» por «DEL».</td></tr>
-          <tr><td>Observaciones</td><td class="ok">Cerrado</td><td>Ningún ejemplar tiene, y es válido que así sea: el campo recoge incidencias, no es obligatorio. El bloque de la ficha aparece solo cuando hay texto, de modo que hoy no se ve y el día que se capture una observación aparece solo.</td></tr>
-          <tr><td>«Mas de 40»</td><td class="ok">Resuelto</td><td>El sitio le restituye el acento al mostrarlo. Aun así conviene corregirlo en la fuente.</td></tr>
-          <tr><td>Código postal</td><td class="ok">Resuelto</td><td>El sitio rellena el cero inicial. Corregir en la fuente cuando se pueda.</td></tr>
-          <tr><td>Beneficio económico</td><td class="ok">Retirado</td><td>La columna no declaraba moneda. Se quitó del sitio por decisión tuya.</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
     <div class="pend-grupo">
       <h2>3 · Decisiones institucionales</h2>
       <p>No son técnicas. Alguien tiene que decidirlas antes de publicar.</p>
@@ -290,35 +188,28 @@
         <article class="pend">
           <span class="pend__marca"></span>
           <div>
+            <h3>Drive compartido como origen de los archivos</h3>
+            <p>Decisión tomada: los PDF de los decretos viven en la carpeta de Drive compartida con el equipo técnico, y ahí mismo se depositan las fotografías y, en el futuro, las ilustraciones de las especies. De ahí se bajan, se renombran según la guía de alta y se colocan en <code>fuente/</code>, que sigue siendo lo único que llega al sitio publicado.</p>
+            <cite>Las especificaciones completas quedaron en <b>guia-alta.html</b>, autocontenida a propósito para que se pueda dejar en la misma carpeta de Drive y la abra cualquiera del equipo.</cite>
+          </div>
+          <span class="pend__quien" data-q="decidido">Decidido</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>El sitio debe leer la hoja en vivo</h3>
+            <p>Hoy el sitio NO lee la hoja: lee <code>fuente/datos/registro.json</code>, un archivo congelado, y no hay ningún paso que lo regenere. Lo que el equipo capture en Sheets es invisible hasta que alguien con acceso al código rehace ese archivo. Como el registro lo mantiene el equipo y el código solo lo toca una persona, esto convierte cada corrección de dato en un cuello de botella.</p>
+            <cite>Trabajo pausado a propósito: el sistema de registro en Sheets se está rehaciendo y mueve las columnas. Se retoma cuando la hoja nueva esté firme. El plan acordado es render inmediato desde el congelado —para que la página nunca salga vacía si Google falla— y actualización en vivo encima. Requiere además incorporar un lector de CSV; se probó PapaParse y se retiró para no publicar 18 KB que todavía no se usan.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">En pausa</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
             <h3>Dominio y ruta definitiva</h3>
             <p>Los metadatos para compartir apuntan hoy a <code>sedema.cdmx.gob.mx/arboles-patrimoniales/</code>. Si va a otra ruta, hay que cambiarla en las cuatro páginas.</p>
-          </div>
-          <span class="pend__quien" data-q="registro">Decidir</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>La placa física con el emblema</h3>
-            <p>El artículo 56, fracción V, último párrafo, de la Ley de Patrimonio obliga a que los bienes declarados <b>ostenten un emblema</b> que facilite su identificación. Ya existe el emblema circular. Si aún no hay placa en los 13 árboles, es un incumplimiento con solución barata, y el micrositio es el lugar natural para anunciarla.</p>
-          </div>
-          <span class="pend__quien" data-q="registro">Decidir</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Ruta biocultural documentada</h3>
-            <p>Resuelto por instrucción tuya. La sección de postulación abre con la decisión de ruta: Patrimonio Natural, que dictamina la Secretaría del Medio Ambiente (artículo 34; artículo 35, fracciones I y III), y Patrimonio Biocultural, que corresponde a la Secretaría de Pueblos y Barrios Originarios y Comunidades Indígenas Residentes, con consentimiento libre y previo de la comunidad (artículos 36 y 37, fracciones V y IX; artículo 62, fracción VI).</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Actualización del numeral 7.5</h3>
-            <p>La NADF-001 remite a la Ley de Salvaguarda del Patrimonio Urbanístico Arquitectónico, abrogada en 2020, y al Consejo de Salvaguarda, extinto. El sitio ya publica la advertencia de que debe leerse hecha a la Ley de Patrimonio Cultural, Natural y Biocultural, pero conviene corregirlo en la próxima revisión de la norma.</p>
           </div>
           <span class="pend__quien" data-q="registro">Decidir</span>
         </article>
@@ -349,94 +240,23 @@
           <span class="pend__quien" data-q="registro">Pendiente</span>
         </article>
 
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Enlace «Saltar al contenido»</h3>
-            <p>Puesto en las tres páginas. Es el primer elemento del recorrido de teclado y aparece en pantalla al recibir el foco.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
+        <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>Auditoría integral de interfaz</h3>
-            <p>Barrido automatizado de las tres páginas en once anchuras, de 320 a 1920 píxeles: contraste de todo el texto compuesto capa por capa, tipografías en uso, tamaños, jerarquía de encabezados, objetivos táctiles, marcas semánticas, anclas rotas y errores de consola. Los hallazgos se corrigieron y quedaron fijados en la suite: ninguno de severidad alta o media sigue abierto.</p>
+            <p>No realizada. Falta una revisión completa con criterio de diseño gráfico: jerarquía tipográfica, ritmo entre secciones largas de texto, consistencia entre los patrones de tarjeta que hoy conviven y coherencia del encabezado en las tres vistas.</p>
+            <cite>Incluye el lote de consistencia del encabezado que quedó sin cerrar: espaciado parejo entre los tres logotipos en todas las vistas, jerarquía entre ellos, una sola regla de separador y coherencia de la página activa en el menú.</cite>
           </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
+          <span class="pend__quien" data-q="registro">No realizada</span>
         </article>
 
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Página de recursos</h3>
-            <p>Nueva página aparte del sitio de una sola pantalla, con el video, el marco normativo enlazado instrumento por instrumento, los datos abiertos, la metodología —qué es i-Tree, qué es la Lista Roja de la UICN, cómo se levantan las medidas— y el directorio.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El estado del listado y del mapa sobrevive a la navegación</h3>
-            <p>Filtros, búsqueda y ejemplar seleccionado viajan en la dirección. Quien filtraba, entraba a una ficha y volvía con el botón «atrás» encontraba el listado completo otra vez; ahora lo recupera tal como lo dejó, y puede compartir la dirección con el filtro puesto.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
+        <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>Ficha imprimible</h3>
-            <p>Cada ficha tiene su botón de impresión y su hoja de estilo propia: tamaño carta, fondos aplanados, sin menú ni galería, con las direcciones de los enlaces impresas entre paréntesis para que sirvan en papel.</p>
+            <p>La hoja de impresión está escrita —membrete institucional, tres hojas como máximo, sin mapa ni galería—, pero <b>falta validar el formato en papel</b>: imprimirla en carta y en A4, ver dónde caen los saltos de página, que ningún título quede huérfano al pie y que las direcciones de los enlaces expandidos no partan a media palabra.</p>
           </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Street View de los 13 ejemplares</h3>
-            <p>Los trece panoramas cargados y verificados. Cada ficha abre la vista de calle encuadrada sobre su árbol.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Perímetro oficial de la Ciudad de México</h3>
-            <p>Sustituida mi versión por tu GeoJSON del INEGI (CVEGEO 09). El mapa apaga todo lo que queda fuera y dibuja el contorno oficial. La geometría viaja incrustada en el código: pedirla por red dejaba el mapa sin recorte al abrir el archivo con doble clic o al publicar sin la carpeta de geografía.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Logotipo institucional SEDEMA</h3>
-            <p>Instalado el SVG oficial en RGB. El respaldo tipográfico ya no se usa, pero sigue ahí por si el archivo falta.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Perímetros de alcaldías</h3>
-            <p>El mapa recorta todo lo que no es Ciudad de México. La máscara se construyó disolviendo las 16 alcaldías y pesa 28 KB.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
-        </article>
-
-        <article class="pend pend--listo">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Metadatos para compartir y descarga de datos abiertos</h3>
-            <p>Tarjeta de 1200×630, título por ejemplar, y descarga del listado en CSV y JSON con 29 columnas.</p>
-          </div>
-          <span class="pend__quien" data-q="listo">Hecho</span>
+          <span class="pend__quien" data-q="registro">Falta validar</span>
         </article>
 
       </div>
