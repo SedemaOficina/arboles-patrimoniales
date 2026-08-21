@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Plan de migración al padrón v2 · Árboles patrimoniales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta-jacaranda:#2A1630; --jacaranda:#8D4992; --jacaranda-hondo:#7A3E7F;
+  --jacaranda-luz:#C79FCA; --niebla:#F4E9F3;
+  --verde-bosque:#1E4D2B; --verde-vivo:#2D7A3E; --verde-niebla:#E7F0E1;
+  --papel:#FEF7E4; --blanco:#FFFDF7; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta:#1A1A1A; --tinta-suave:#413647; --gris:#5B4F62;
+  --display:'Anton',Impact,sans-serif; --editorial:'Fraunces',Georgia,serif;
+  --texto:'Source Sans 3',system-ui,sans-serif; --borde:1px solid rgba(42,22,48,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.envoltura{max-width:1020px;margin:0 auto;padding:0 26px}
+.rotulo{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:1;margin:0}
+.cabeza{background:var(--tinta-jacaranda);color:#fff;padding:44px 0 40px}
+.cabeza .rotulo{color:var(--jacaranda-luz)}
+.cabeza h1{font-size:clamp(30px,4.8vw,54px);margin:12px 0 0;color:#fff}
+.cabeza p{margin:18px 0 0;max-width:76ch;color:rgba(255,255,255,.84)}
+.cabeza code{background:rgba(255,255,255,.16);color:#F2E8F3}
+.tesis{margin:26px 0 0;padding:20px 24px;background:rgba(255,255,255,.07);
+  border:1px solid rgba(199,159,202,.28);border-left:4px solid var(--jacaranda-luz)}
+.tesis b{color:#fff}
+main{padding:42px 0 70px}
+section{margin:0 0 48px;scroll-margin-top:20px}
+section>h2{font-size:25px;color:var(--tinta-jacaranda);margin:0 0 4px}
+section>h2 em{font-style:normal;color:var(--dorado);margin-right:12px}
+section>.intro{margin:0 0 20px;max-width:80ch;color:var(--tinta-suave)}
+.indice{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 26px;margin:0 0 42px}
+.indice h2{font-size:15px;margin:0 0 12px;color:var(--tinta-jacaranda)}
+.indice ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
+.indice li{margin:0 0 6px;font-size:15px;break-inside:avoid}
+.indice a{color:var(--jacaranda-hondo);text-decoration:none;border-bottom:1px solid rgba(141,73,146,.3)}
+@media(max-width:640px){.indice ol{columns:1}}
+.paso{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:19px 23px;margin:0 0 13px}
+.paso h3{font-size:16.5px;color:var(--tinta);margin:0 0 7px}
+.paso h3 span{font-family:var(--texto);font-size:11px;font-weight:700;letter-spacing:.07em;
+  padding:3px 9px;border-radius:999px;margin-left:9px;vertical-align:2px;white-space:nowrap}
+.tu{background:rgba(192,57,43,.1);color:var(--alerta)}
+.yo{background:var(--niebla);color:var(--jacaranda-hondo)}
+.paso p{margin:0 0 9px}.paso p:last-child{margin-bottom:0}
+.paso ul,.paso ol{margin:0 0 9px;padding-left:21px}.paso li{margin:0 0 5px}
+.aviso{border-left:3px solid var(--alerta);background:rgba(192,57,43,.05);padding:17px 21px;margin:0 0 13px}
+.aviso b{color:var(--alerta)}
+.ojo{border-left:3px solid var(--verde-vivo);background:var(--verde-niebla);padding:17px 21px;margin:0 0 13px}
+.ojo b{color:var(--verde-bosque)}
+code{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.88em;
+  background:var(--niebla);padding:2px 6px;border-radius:2px;overflow-wrap:anywhere}
+pre{background:var(--tinta-jacaranda);color:#EDE3EE;padding:15px 19px;overflow-x:auto;
+  border-radius:3px;margin:0 0 13px;font-size:13.5px;line-height:1.55}
+pre code{background:none!important;padding:0;color:inherit}
+table{width:100%;border-collapse:collapse;margin:0 0 15px;font-size:14.5px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:var(--borde);vertical-align:top}
+th{background:var(--verde-bosque);color:#fff;font-size:11.5px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:700;white-space:nowrap}
+tbody tr:nth-child(even){background:rgba(244,233,243,.42)}
+.lista-chk{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.lista-chk li{position:relative;padding:13px 17px 13px 47px;background:var(--blanco);border:var(--borde);font-size:15px}
+.lista-chk li::before{content:"";position:absolute;left:17px;top:16px;width:19px;height:19px;
+  border:2px solid rgba(42,22,48,.26);border-radius:3px}
+footer{background:var(--tinta-jacaranda);color:rgba(255,255,255,.76);padding:28px 0;font-size:14px}
+footer b{color:#fff}
+</style>
+</head>
+<body>
+
+<header class="cabeza">
+  <div class="envoltura">
+    <span class="rotulo">Secretaría del Medio Ambiente · Oficina de la Secretaría</span>
+    <h1>Plan de migración al padrón v2</h1>
+    <p>El micrositio deja de leer un archivo congelado en el repositorio y pasa a leer la hoja <code>Salida_Publica</code> del padrón nuevo. Cambian la dirección, la estructura, los nombres de los 83 campos y el número de ejemplares: de 13 a los que crucen la compuerta.</p>
+    <div class="tesis">
+      <p><b>La idea que ordena todo el plan: no se reescribe el sitio, se le pone un adaptador.</b> El sitio ya tiene 312 comprobaciones automáticas escritas contra su forma interna de los datos. Si esa forma se conserva y solo cambia quién la produce, esas 312 comprobaciones siguen defendiendo la migración en lugar de estorbarla. Reescribir de golpe las tocaría todas y perderíamos la red justo el día que más falta hace.</p>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura">
+
+  <nav class="indice">
+    <h2>Las ocho fases</h2>
+    <ol>
+      <li><a href="#f0">Publicar el CSV y congelar el punto de partida</a></li>
+      <li><a href="#f1">El contrato entra al repositorio</a></li>
+      <li><a href="#f2">Lector nuevo, aislado y sin conectar</a></li>
+      <li><a href="#f3">El adaptador viejo ↔ nuevo</a></li>
+      <li><a href="#f4">Las decisiones que no son técnicas</a></li>
+      <li><a href="#f5">Doble lectura y comparación</a></li>
+      <li><a href="#f6">Fotografías y decretos</a></li>
+      <li><a href="#f7">El corte y lo que hay que reescribir el mismo día</a></li>
+    </ol>
+  </nav>
+
+  <section id="f0">
+    <h2><em>0</em>Publicar el CSV y congelar el punto de partida</h2>
+    <p class="intro">Nada de lo que sigue puede empezar sin la dirección publicada. Y durante toda la migración el sitio en línea sigue funcionando con el archivo congelado: no se apaga nada para encender lo nuevo.</p>
+
+    <div class="paso" style="border-left-color:var(--verde-vivo)">
+      <h3>Publicar <code>Salida_Publica</code> como CSV <span class="yo">Hecho</span></h3>
+      <p>Ya está publicada. La dirección es:</p>
+      <pre><code>https://docs.google.com/spreadsheets/d/e/2PACX-1vSfloaJfemAY5cehLIMm5Z9k
+nW9zyYm8lJ_lASBzAAOKcgHdXhtx7Qolrz_76yL0Gh2dVdSeUGj-gLN/pub
+?gid=1798214318&amp;single=true&amp;output=csv</code></pre>
+      <p>Trae un identificador <b>distinto</b> al del documento —empieza por <code>2PACX-</code>—, y eso es justo lo que la hace segura: publica esa hoja y deja las otras catorce privadas. La comprobé y responde: el servidor redirige al contenido, que es la señal de que la publicación quedó bien.</p>
+      <p>Esa dirección va a vivir en <code>fuente/construir/sitio.js</code>, junto a la dirección del sitio, no repartida por el código.</p>
+    </div>
+
+    <div class="aviso">
+      <p><b>No pude leer el contenido desde aquí.</b> Mi entorno bloquea el servidor al que Google redirige el CSV publicado, así que no puedo contar las filas ni ver los valores reales. Lo necesito antes de la fase 2, porque el lector se prueba contra datos de verdad y no contra los que yo suponga.</p>
+      <p style="margin-top:9px"><b>Lo más simple:</b> abre esa dirección en el navegador, guarda la página como archivo <code>.csv</code> y adjúntamelo aquí. Con eso confirmo los encabezados, cuántas filas traen <code>id</code> y qué valores reales tienen <code>estado</code> y <code>validacion_itree</code>.</p>
+    </div>
+
+    <div class="paso">
+      <h3>Comprobar la compuerta antes de entregarme la dirección <span class="tu">Te toca</span></h3>
+      <p>Abre la dirección en el navegador y cuenta cuántas filas traen <code>id</code>. Ese número es exactamente cuántos ejemplares va a mostrar el sitio. Si esperas 23 y salen 13, la compuerta <code>estado = Publicado</code> está haciendo su trabajo y hay que decidir si eso es lo que quieres publicar.</p>
+    </div>
+
+    <div class="ojo">
+      <p><b>El archivo congelado no se borra: se queda de piso.</b> <code>fuente/datos/registro.json</code> pasa a ser el respaldo con el que la portada se dibuja al instante si Google no responde. Un micrositio institucional que se queda en blanco porque un servicio ajeno falló es peor que uno con datos de ayer, siempre que diga que son de ayer.</p>
+    </div>
+  </section>
+
+  <section id="f1">
+    <h2><em>1</em>El contrato entra al repositorio</h2>
+    <p class="intro">El documento que escribiste en la otra conversación es el contrato. Mientras viva solo como texto, nada impide que el sitio y el padrón se separen en silencio. Entra al repositorio como dato y como comprobación.</p>
+
+    <div class="paso">
+      <h3>Los 83 campos, como archivo <span class="yo">Me toca</span></h3>
+      <p><code>fuente/datos/contrato-v2.json</code>, generado del CSV de campos que ya tienes: clave, bloque, tipo, presencia y regla. No es documentación: es lo que la comprobación lee.</p>
+    </div>
+
+    <div class="paso">
+      <h3>La comprobación que impide la deriva silenciosa <span class="yo">Me toca</span></h3>
+      <p>Una suite nueva que cruza <b>los campos que el sitio consume</b> contra <b>los campos que el contrato declara</b> y contra <b>los encabezados que el CSV trae de verdad</b>. Si el padrón renombra o retira un campo que el sitio dibuja, la construcción <b>falla con error</b> en lugar de publicar una ficha con huecos.</p>
+      <p>Es el mismo patrón que ya salvó tres veces la lista de exposición del ensamblador. Aquí importa más: del otro lado hay un equipo capturando todos los días.</p>
+    </div>
+
+    <div class="aviso">
+      <p><b>Sin esta fase la migración es una bomba de tiempo.</b> El día que alguien renombre una columna en el padrón, el sitio no se rompe: se vacía. Un campo que no se encuentra da cadena vacía, y una cadena vacía se dibuja como una ficha sin ese dato. Nadie se entera hasta que un ciudadano lo nota.</p>
+    </div>
+  </section>
+
+  <section id="f2">
+    <h2><em>2</em>Lector nuevo, aislado y sin conectar</h2>
+    <p class="intro">Se escribe el lector del padrón v2 <b>sin tocar el sitio</b>. Vive aparte, se prueba contra un CSV de muestra guardado en el repositorio, y no se conecta a nada hasta la fase 5.</p>
+
+    <div class="paso">
+      <h3>Qué hace el lector <span class="yo">Me toca</span></h3>
+      <ol>
+        <li>Pide el CSV con un analizador que respeta comillas —<code>referencias</code>, <code>gaceta</code> y <code>obs_publicas</code> traen comas dentro del texto—.</li>
+        <li><b>Descarta toda fila con <code>id</code> vacío.</b> Es el único filtro necesario: resuelve filas vacías, no publicadas y mal formadas de un golpe.</li>
+        <li>Convierte <code>latitud</code> y <code>longitud</code> a número y descarta el ejemplar del mapa si no son finitos o caen fuera de la Ciudad.</li>
+        <li>Aplica la <b>compuerta i-Tree</b>: si <code>validacion_itree</code> no dice <code>Validado</code>, el bloque ambiental de esa ficha no existe. No se dibujan guiones ni «sin dato»: se omite el bloque.</li>
+        <li>Conserva la guarda contra fechas en columnas numéricas que ya corrigió el incidente de los 12,052,025.</li>
+      </ol>
+    </div>
+
+    <div class="paso">
+      <h3>Un CSV de muestra congelado, dentro del repositorio <span class="yo">Me toca</span></h3>
+      <p>Con los casos difíciles a propósito: una fila sin <code>id</code>, una con i-Tree en revisión, una con comas dentro del texto, una sin decreto. Las pruebas corren contra ese archivo, no contra la red: una suite que depende de Google falla los días que Google tiene un mal día y deja de creerse.</p>
+    </div>
+  </section>
+
+  <section id="f3">
+    <h2><em>3</em>El adaptador viejo ↔ nuevo</h2>
+    <p class="intro">Aquí está el trabajo fino. El adaptador traduce cada fila del padrón v2 a la forma interna que el sitio ya sabe dibujar. Tres cosas pueden pasar con un campo, y cada una tiene una respuesta distinta.</p>
+
+    <table>
+      <thead><tr><th>Situación</th><th>Ejemplos</th><th>Qué se hace</th></tr></thead>
+      <tbody>
+        <tr><td><b>Cambia de nombre</b></td><td><code>Altura total (m)</code> → <code>altura_m</code>, <code>Alcaldía</code> → <code>alcaldia</code></td><td>Traducción directa en el adaptador. Sin efecto visible.</td></tr>
+        <tr><td><b>Cambia de forma</b></td><td>Las coordenadas eran una cadena <code>"19.45, -99.18"</code>; ahora son <code>latitud</code> y <code>longitud</code> separadas</td><td>El adaptador recompone lo que el sitio espera. Se elimina el analizador de coordenadas, que ya no hace falta.</td></tr>
+        <tr><td><b>Llega nuevo</b></td><td><code>gaceta</code>, <code>tiene_programa</code>, <code>url_programa</code>, <code>suelo_conservacion</code>, <code>pueblo_barrio</code>, <code>nombre_sitio</code>, <code>fecha_itree</code>, <code>moneda_itree</code></td><td>Se guardan aunque todavía no se dibujen. Publicarlos es una decisión editorial, no una consecuencia de la migración.</td></tr>
+        <tr><td><b>Desaparece</b></td><td><code>Fecha de nominación</code>, <code>Crédito fotográfico</code>, <code>Consecutivo</code></td><td>Ver el aviso de abajo. No se puede resolver en el código.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ojo">
+      <p><b>Los tres campos que desaparecen, ya resueltos:</b></p>
+      <ul>
+        <li><b><code>Fecha de nominación</code> · se retira de la ficha.</b> Ya no se captura: el padrón v2 solo lleva la fecha de publicación del decreto, que es la que tiene efecto jurídico. El renglón sale del bloque de procedencia; se queda <code>nomino</code>, que responde a quién postuló.</li>
+        <li><b><code>Consecutivo</code> · se lee del propio ID.</b> El folio sigue vivo dentro de la llave: <code>25-MIH-TAX-19405GIMNO-<b>0001</b></code>. Se ordena por esos cuatro dígitos. Reproduce el orden de hoy, no necesita ningún campo nuevo y es inmutable —el ID no cambia nunca—, así que el listado no se reordena solo porque alguien corrija un nombre o una fecha.</li>
+        <li><b><code>Crédito fotográfico</code> · deja de ser un dato y pasa a ser una constante.</b> Todas las fotografías del registro son de la Secretaría, así que el crédito se escribe una vez en el código —«Secretaría del Medio Ambiente de la Ciudad de México»— en lugar de repetirse en cada fila. Menos captura y ninguna posibilidad de que una foto salga sin atribución por una celda vacía.</li>
+      </ul>
+      <p style="margin-top:10px"><b>Pendiente asociado:</b> las ilustraciones de árboles sí tendrán otra procedencia. Cuando existan hay que decidir dónde vive su crédito, porque ya no podrá ser la misma constante.</p>
+    </div>
+
+    <div class="aviso">
+      <p><b>Y una corrección de fondo que la migración obliga a hacer.</b> El contrato dice —con razón— que <code>co2_eq_kg</code> es <code>carbono_kg × 3.667</code> y que no deben presentarse como mediciones independientes. El sitio hoy las publica <b>como si lo fueran, en dos lugares</b>: la portada muestra «CO₂ equivalente que absorben al año» y «Carbono que retiran del aire cada año» una debajo de la otra, y la ficha repite el par. Es la misma cantidad contada dos veces, con dos nombres.</p>
+    </div>
+
+    <div class="ojo">
+      <p><b>Decisión tomada: en la salida pública se queda el CO₂ equivalente y sale el carbono.</b></p>
+      <p style="margin-top:9px">La unidad de la convención internacional para comunicar gases de efecto invernadero es el <b>CO₂ equivalente</b>: es la que usan los inventarios nacionales del IPCC, el GHG Protocol y los programas climáticos —incluidos los de la Ciudad—, y es la única con la que una persona puede comparar lo que captura un árbol contra lo que emite un coche o un vuelo. El carbono en kg C es la unidad del inventario forestal: correcta entre técnicos, ilegible para quien entra al micrositio.</p>
+      <p style="margin-top:9px"><b>Qué borrar exactamente:</b> la columna <code>carbono_kg</code> de <code>Salida_Publica</code>, no del padrón. En el <code>Listado</code> conviene que se siga capturando lo que entrega la corrida de i-Tree tal como lo entrega; para eso existen las dos capas. Si se borra de los dos lados, <code>co2_eq_kg</code> se queda sin nada de dónde derivarse y habría que capturarlo a mano.</p>
+      <p style="margin-top:9px">Con eso el CSV público baja de 83 a 82 campos, y la metodología de Recursos tiene que decir de dónde sale la cifra y con qué factor —44/12 = 3.667—, para que un lector técnico pueda reconstruirla.</p>
+    </div>
+
+    <div class="aviso">
+      <p><b>Elegir la unidad no arregla el número.</b> Las cifras de carbono del padrón actual son implausibles: su correlación con el DAP es <b>negativa</b> (r = −0.30) cuando debería ser fuerte y positiva, y la Glorieta —92 cm de DAP— secuestra 80 veces más que el Sabino de San Juan, que tiene 590 cm. Multiplicar por 3.667 conserva el problema intacto. La cifra que sobreviva seguirá siendo incorrecta hasta que se rehaga la corrida de i-Tree con parámetros homogéneos.</p>
+    </div>
+  </section>
+
+  <section id="f4">
+    <h2><em>4</em>Las decisiones que no son técnicas</h2>
+    <p class="intro">Ninguna la puedo tomar yo, y todas bloquean el corte. Conviene cerrarlas antes de la fase 5 para no rehacer trabajo.</p>
+
+    <ul class="lista-chk">
+      <li><b>¿Qué se publica, 13 o 23?</b> La compuerta <code>estado = Publicado</code> decide. Si de los 23 solo unos cuantos tienen decreto publicado, el sitio puede terminar mostrando <b>menos</b> ejemplares que hoy. No es un error: es la compuerta funcionando. Pero hay que saberlo antes, no descubrirlo el día del corte.</li>
+      <li><b>El bloque ambiental va a desaparecer de todas las fichas.</b> Hoy los registros están en «En revisión» y la compuerta i-Tree no deja pasar ninguna cifra. El sitio perdería toda la sección de servicios ambientales —que es una de las más vistosas— hasta que rehagas la corrida. ¿Se corta igual, o se espera a validar i-Tree?</li>
+      <li><b>El crédito de las ilustraciones</b>, cuando existan: no podrá ser la constante de la Secretaría.</li>
+      <li><b>Los decretos:</b> ¿se quedan en Drive con <code>drive_decreto</code>, o se mueven al repositorio? Mi recomendación es moverlos, por la razón que tú mismo escribiste: la dirección de un decreto es citable y tiene que seguir viva en cinco años. Falta resolver el decreto que ampara a dos ejemplares.</li>
+      <li><b>La moneda del beneficio económico.</b> El contrato es explícito: sin <code>moneda_itree</code> no se publica la cifra. Hoy no está confirmada.</li>
+    </ul>
+  </section>
+
+  <section id="f5">
+    <h2><em>5</em>Doble lectura y comparación</h2>
+    <p class="intro">La fase que convierte la migración en algo verificable en vez de un salto de fe. El sitio se arma dos veces y se comparan las dos salidas, campo por campo.</p>
+
+    <div class="paso">
+      <h3>Cómo <span class="yo">Me toca</span></h3>
+      <p>Se construye <code>prueba/</code> desde el padrón nuevo mientras <code>docs/</code> sigue armado desde el archivo congelado. Nada de esto llega al servidor.</p>
+      <p>Un comparador recorre los ejemplares que existen en los dos y reporta <b>toda</b> diferencia: valores que cambiaron, campos que se vaciaron, ejemplares que aparecieron o desaparecieron.</p>
+    </div>
+
+    <div class="ojo">
+      <p><b>La regla que hace útil esta fase: cada diferencia se explica antes de aceptarse.</b> «La extensión de copa cambió porque corregiste la fórmula» es una explicación. «Se vació el carbono porque i-Tree está en revisión» es una explicación. Una diferencia sin explicación es un defecto de la migración, y se corrige antes de seguir. Sin esta disciplina el comparador solo sirve para tranquilizar.</p>
+    </div>
+  </section>
+
+  <section id="f6">
+    <h2><em>6</em>Fotografías y decretos</h2>
+    <p class="intro">Van juntos porque comparten la misma lógica: Drive es el archivo maestro donde trabaja el equipo, el repositorio es lo que se sirve al público.</p>
+
+    <div class="aviso">
+      <p><b>Hay un choque de convenciones que hay que resolver.</b> El contrato propone <code>portada.jpg</code> + <code>02.jpg</code> + <code>ilustracion.png</code>. El sitio de hoy usa <code>01.jpg … 12.jpg</code> con una miniatura <code>NN-chica.jpg</code> al lado de cada una.</p>
+      <p style="margin-top:9px">Mi recomendación es <b>conservar la convención actual</b>, por una razón medible: las miniaturas son lo que permitió bajar la ficha de 4 403 KB a 1 449 KB. El sitio averigua cuántas fotos hay pidiéndolas, y lo hace contra la miniatura; sin ese esquema cada ficha vuelve a descargar megabytes de imágenes a tamaño completo solo para contarlas. <code>portada.jpg</code> puede convivir como alias de <code>01.jpg</code>, pero el par grande+miniatura conviene que se quede.</p>
+      <p style="margin-top:9px">Si prefieres la convención del contrato, se puede — pero entonces hay que rehacer el descubrimiento de fotografías y volver a medir el peso.</p>
+    </div>
+
+    <div class="paso">
+      <h3>Street View: campo nuevo, y con una regla de seguridad <span class="yo">Me toca</span></h3>
+      <p>El campo <code>street_view</code> llega listo para <code>src</code>. Va en un <code>&lt;iframe&gt;</code> creado por código, <b>nunca por <code>innerHTML</code></b>, y validando antes que empiece por <code>https://www.google.com/maps/embed</code> o <code>https://maps.google.com/maps?</code>. Una dirección que viene de una hoja de cálculo que edita un equipo es entrada no confiable, aunque el equipo sea de casa.</p>
+    </div>
+
+    <div class="paso">
+      <h3>Una advertencia sobre los decretos en Drive <span class="yo">Me toca</span></h3>
+      <p>Si el decreto se sirve desde Drive, el sitio <b>no puede comprobar que el enlace funcione</b>: la petición a otro dominio la bloquea el navegador. Hoy, con los PDF en el repositorio, la ficha comprueba que el archivo exista y apaga la tarjeta si falta. Con Drive, un permiso mal puesto le devuelve al ciudadano una pantalla de acceso denegado y nadie se entera desde aquí.</p>
+    </div>
+  </section>
+
+  <section id="f7">
+    <h2><em>7</em>El corte y lo que hay que reescribir el mismo día</h2>
+    <p class="intro">El corte es lo de menos: cambiar de dónde lee y construir producción. Lo que hay que cuidar es todo lo que queda mintiendo si no se actualiza con él.</p>
+
+    <ul class="lista-chk">
+      <li><b>La guía de alta.</b> <code>guia-alta.html</code> documenta los nombres de columna del padrón viejo. El día del corte se vuelve un manual de un sistema que ya no existe. Hay que reescribirla contra los 83 campos nuevos, con la compuerta y el estado del decreto.</li>
+      <li><b>Todo lo que diga «trece».</b> Las cifras de la portada ya se calculan solas, pero el apéndice de identificadores de la guía, el LEEME de decretos y varios textos de metodología llevan el número escrito a mano.</li>
+      <li><b>La versión del esquema y la caché.</b> El lector guarda el padrón en el navegador de cada persona. Si no se sube la versión al cambiar la estructura, quien ya visitó el sitio sigue viendo la forma vieja hasta que expire.</li>
+      <li><b>La tarjeta para compartir</b>, si cambia el número de ejemplares que anuncia: hay que subir <code>VERSION_TARJETA</code> o WhatsApp seguirá mostrando la anterior durante semanas.</li>
+      <li><b>La metodología de Recursos:</b> explica de dónde salen las cifras. Cambia el origen, cambia el texto — y ahí es donde debe quedar escrito por qué el CO₂ equivalente no se suma al carbono.</li>
+      <li><b>Los datos abiertos.</b> El CSV, el JSON, el GeoJSON, el KML y el shapefile que el sitio publica se generan de los mismos datos: cambian sus columnas y hay que revisar los anchos del shapefile, que son fijos y truncan en silencio.</li>
+    </ul>
+  </section>
+
+  <section id="riesgo">
+    <h2><em>8</em>Lo que no haría</h2>
+    <p class="intro">Tres atajos que se ven razonables y que en este proyecto ya tienen precedente de haber salido caros.</p>
+
+    <div class="aviso">
+      <p><b>No cambiar el padrón y el sitio la misma semana.</b> Si el equipo sigue moviendo columnas mientras yo adapto el lector, ninguna comparación de la fase 5 significa nada: no se sabe si una diferencia viene de la migración o de una edición de ayer. Conviene una fecha a partir de la cual la estructura de <code>Salida_Publica</code> queda congelada —el contenido no, la <b>estructura</b>—.</p>
+    </div>
+
+    <div class="aviso">
+      <p><b>No leer el <code>Listado</code> «filtrando columnas desde el código».</b> Publicar un CSV publica la pestaña entera: quien abra esa dirección recibe todas las columnas, se dibujen o no. Ahí viven las observaciones internas y el nombre de quien dictamina.</p>
+    </div>
+
+    <div class="aviso">
+      <p><b>No confiar en que un campo vacío significa «sin dato».</b> En el padrón v2 un campo vacío puede significar tres cosas distintas: el ejemplar no está publicado, i-Tree no está validado, o de verdad no hay dato. El sitio tiene que distinguirlas, porque a la ciudadanía se le dice una cosa distinta en cada caso.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="envoltura">
+    <p><b>Secretaría del Medio Ambiente de la Ciudad de México</b> · Oficina de la Secretaría. Documento interno de trabajo.</p>
+    <p style="margin-top:8px">Plan, no ejecución. Nada de lo descrito aquí se ha hecho todavía.</p>
+  </div>
+</footer>
+
+</body>
+</html>

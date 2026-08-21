@@ -10,7 +10,7 @@ cd "$(dirname "$0")"
 mal=0
 for f in verifica-dc verifica-ficha-dc verifica-galeria verifica-mapa verifica-panel \
          suite-real verifica-identidad verifica-copia verifica-contenido \
-         verifica-design verifica-menu verifica-auditoria; do
+         verifica-design verifica-menu verifica-contrato verifica-auditoria; do
   salida=$(node "$f.mjs" 2>&1)
   codigo=$?
   linea=$(echo "$salida" | grep -E '^(TOTAL|RESULTADO)' | tail -1)
