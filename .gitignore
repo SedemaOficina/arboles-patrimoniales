@@ -9,3 +9,7 @@ desktop.ini
 
 # Dependencias de herramientas, si algún día se instalan aquí
 node_modules/
+
+# Cosas apartadas para borrar. Claude no puede borrar archivos en la carpeta
+# montada, así que los mueve aquí; se borra a mano y no viaja al repositorio.
+_a_borrar/

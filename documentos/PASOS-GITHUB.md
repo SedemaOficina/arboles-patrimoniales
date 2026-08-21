@@ -52,6 +52,7 @@ arboles-patrimoniales\
 │   ├── ficha.html
 │   ├── recursos.html
 │   └── assets\img\ejemplares\   ← las fotos, también aquí
+├── documentos\    ← auditorías, manuales, guías del padrón
 └── fuente\        ← el código fuente
     └── assets\img\ejemplares\   ← las fotos
 ```
@@ -113,10 +114,17 @@ Se acabaron los ZIP. A partir de ahora:
    fuente/verificar/verificar.sh
    ```
 
-   El primero rearma `docs\`. El segundo corre las doce suites de
+   El primero rearma `docs\`. El segundo corre las catorce suites de
    comprobaciones y **falla con error si algo se rompió**. Córrelo siempre
    antes de publicar.
-3. En GitHub Desktop verás los archivos cambiados. Escribe una descripción
+
+   > **Este paso no es opcional y es el que más se olvida.** Un commit sin
+   > reconstruir sube el código pero deja la página exactamente igual, porque
+   > GitHub Pages sirve `docs\`, no `fuente\`. Si publicas un cambio y el
+   > sitio no cambia, es casi siempre esto.
+3. En GitHub Desktop verás los archivos cambiados. **Tienen que aparecer
+   archivos de `docs\`**: si solo aparecen los de `fuente\`, te saltaste el
+   paso 2. Escribe una descripción
    corta abajo a la izquierda, **Commit to main**, y luego **Push origin**.
 4. El sitio se actualiza solo en un par de minutos.
 
