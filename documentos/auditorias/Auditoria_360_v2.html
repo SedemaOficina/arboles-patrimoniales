@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Auditoría 360 · Árboles Patrimoniales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Guía autocontenida a propósito: vive en la carpeta compartida de Drive y la
+   abre el equipo técnico desde su propia computadora, sin el resto del sitio
+   alrededor. Por eso no enlaza estilos.css: se copiaron aquí los tokens que
+   necesita. Si la paleta del sitio cambia, hay que reflejarlo también aquí. */
+:root{
+  --tinta-jacaranda:#2A1630; --jacaranda:#8D4992; --jacaranda-hondo:#7A3E7F;
+  --jacaranda-luz:#C79FCA; --niebla:#F4E9F3;
+  --verde-bosque:#1E4D2B; --verde-vivo:#2D7A3E; --verde-niebla:#E7F0E1;
+  --papel:#FEF7E4; --blanco:#FFFDF7; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta:#1A1A1A; --tinta-suave:#413647; --gris:#5B4F62;
+  --display:'Anton',Impact,sans-serif;
+  --editorial:'Fraunces',Georgia,serif;
+  --texto:'Source Sans 3',system-ui,sans-serif;
+  --borde:1px solid rgba(42,22,48,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.envoltura{max-width:1000px;margin:0 auto;padding:0 26px}
+.rotulo{font-family:var(--texto);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:1;margin:0}
+
+.cabeza{background:var(--tinta-jacaranda);color:#fff;padding:44px 0 40px}
+.cabeza .rotulo{color:var(--jacaranda-luz)}
+.cabeza h1{font-size:clamp(32px,5.2vw,60px);margin:12px 0 0;color:#fff}
+.cabeza p{margin:18px 0 0;max-width:74ch;color:rgba(255,255,255,.82);font-size:16px}
+.carriles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 0}
+.carril{background:rgba(255,255,255,.07);border:1px solid rgba(199,159,202,.26);padding:18px 20px}
+.carril b{display:block;font-family:var(--display);font-weight:400;font-size:19px;color:var(--jacaranda-luz);margin-bottom:6px}
+.carril span{display:block;font-size:14.5px;color:rgba(255,255,255,.78);line-height:1.5}
+@media(max-width:700px){.carriles{grid-template-columns:1fr}}
+
+main{padding:44px 0 70px}
+section{margin:0 0 52px;scroll-margin-top:20px}
+section>h2{font-size:27px;color:var(--tinta-jacaranda);margin:0 0 4px}
+section>h2 em{font-style:normal;color:var(--dorado);margin-right:12px}
+section>.intro{margin:0 0 22px;max-width:80ch;color:var(--tinta-suave)}
+
+.indice{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 26px;margin:0 0 44px}
+.indice h2{font-size:16px;margin:0 0 12px;color:var(--tinta-jacaranda)}
+.indice ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
+.indice li{margin:0 0 6px;font-size:15px;break-inside:avoid}
+.indice a{color:var(--jacaranda-hondo);text-decoration:none;border-bottom:1px solid rgba(141,73,146,.3)}
+.indice a:hover{border-bottom-color:var(--jacaranda)}
+@media(max-width:640px){.indice ol{columns:1}}
+
+.paso{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:20px 24px;margin:0 0 14px}
+.paso h3{font-size:17px;color:var(--tinta);margin:0 0 7px}
+.paso p{margin:0 0 10px}
+.paso p:last-child{margin-bottom:0}
+.paso ul,.paso ol{margin:0 0 10px;padding-left:22px}
+.paso li{margin:0 0 5px}
+
+.aviso{border-left:3px solid var(--alerta);background:rgba(192,57,43,.05);padding:18px 22px;margin:0 0 14px}
+.aviso b{color:var(--alerta)}
+.ojo{border-left:3px solid var(--verde-vivo);background:var(--verde-niebla);padding:18px 22px;margin:0 0 14px}
+.ojo b{color:var(--verde-bosque)}
+
+/* Sobre el morado profundo el chip claro con tinta morada da menos de 2:1.
+   En fondo oscuro el código va en claro sobre un velo del propio fondo. */
+.cabeza code,.carril code,pre code{background:rgba(255,255,255,.16);color:#F2E8F3}
+code,.ruta{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.88em;
+  background:var(--niebla);padding:2px 6px;border-radius:2px;overflow-wrap:anywhere}
+pre{background:var(--tinta-jacaranda);color:#EDE3EE;padding:16px 20px;overflow-x:auto;
+  border-radius:3px;margin:0 0 14px;font-size:14px;line-height:1.55}
+pre code{background:none!important;padding:0;color:inherit}
+
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14.5px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:var(--borde);vertical-align:top}
+th{background:var(--verde-bosque);color:#fff;font-size:12px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:700;white-space:nowrap}
+tbody tr:nth-child(even){background:rgba(244,233,243,.42)}
+td code{white-space:nowrap}
+
+.etiqueta{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.etiqueta--obl{background:rgba(192,57,43,.1);color:var(--alerta)}
+.etiqueta--opc{background:rgba(178,142,92,.18);color:#8A6B3D}
+.etiqueta--calc{background:var(--niebla);color:var(--jacaranda-hondo)}
+
+.lista-chk{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+/* NI GRID NI FLEX: la casilla va posicionada y el texto fluye normal.
+   El contenido de cada renglón es «<b>título</b> más texto suelto». En una
+   retícula cada hijo es una celda; en flex, cada ELEMENTO hijo es un elemento
+   flexible por separado y solo el texto suelto se agrupa en uno anónimo. En
+   los dos casos el <b> quedaba en una columna y el resto de la frase en otra,
+   partida palabra por palabra. Sacando la casilla del flujo, el renglón vuelve
+   a ser un párrafo y se lee entero. */
+.lista-chk li{position:relative;padding:13px 17px 13px 47px;
+  background:var(--blanco);border:var(--borde);font-size:15px}
+.lista-chk li::before{content:"";position:absolute;left:17px;top:16px;
+  width:19px;height:19px;border:2px solid rgba(42,22,48,.26);border-radius:3px}
+
+footer{background:var(--tinta-jacaranda);color:rgba(255,255,255,.76);padding:30px 0;font-size:14px}
+footer b{color:#fff}
+@media print{body{background:#fff}.cabeza,footer{background:#fff;color:#000}
+  .cabeza h1,.cabeza .rotulo,.carril b{color:#000}pre{background:#eee;color:#000}}
+
+/* Añadidos de esta auditoría 360 */
+.veredictos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:12px;margin:0 0 26px}
+.ver{background:var(--blanco);border:var(--borde);border-left:4px solid var(--gris);padding:14px 16px}
+.ver b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:16px;
+  color:var(--tinta-jacaranda);letter-spacing:.01em}
+.ver span{display:block;font-size:13px;color:var(--gris);margin-top:5px;line-height:1.45}
+.ver--bien{border-left-color:var(--verde-vivo)}
+.ver--bien b{color:var(--verde-bosque)}
+.ver--ojo{border-left-color:var(--dorado)}
+.ver--ojo b{color:#8A6B3D}
+.ver--mal{border-left-color:var(--alerta)}
+.ver--mal b{color:var(--alerta)}
+.dim{margin:0 0 30px}
+section>h2+.dim{margin-top:22px}
+.dim>h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:21px;
+  color:var(--tinta-jacaranda);margin:0 0 4px;border-bottom:2px solid var(--jacaranda-luz);padding-bottom:8px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sello-ver{font-family:var(--texto);font-size:10.5px;font-weight:700;letter-spacing:.08em;
+  padding:3px 10px;border-radius:999px;white-space:nowrap}
+.s-bien{background:var(--verde-niebla);color:var(--verde-bosque)}
+.s-ojo{background:rgba(178,142,92,.2);color:#8A6B3D}
+.s-mal{background:rgba(192,57,43,.11);color:var(--alerta)}
+.dato{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88em;font-weight:700;
+  background:var(--niebla);color:var(--jacaranda-hondo);padding:2px 7px;border-radius:2px}
+.dato--mal{background:rgba(192,57,43,.08);color:var(--alerta)}
+.dato--bien{background:var(--verde-niebla);color:var(--verde-bosque)}
+.metodo{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:18px 22px;margin:0 0 18px}
+.metodo p{margin:0 0 8px;max-width:78ch}
+.metodo p:last-child{margin:0}
+</style>
+</head>
+<body>
+<header class="cabeza">
+  <div class="envoltura">
+    <span class="rotulo">Secretaría del Medio Ambiente · Oficina de la Secretaría</span>
+    <h1>Auditoría 360</h1>
+    <p>Diez dimensiones del micrositio de Árboles Patrimoniales, medidas una por una el 22 de agosto de 2026 — primero sobre los archivos armados y después <b>contra el sitio publicado</b>. Todas las cifras son mediciones, no estimaciones.</p>
+    <div class="carriles">
+      <div class="carril"><b>Qué se midió</b><span>3 páginas × 2 anchos con axe-core (WCAG 2.1 AA), peso y peticiones reales de red, metadatos, datos del padrón, hoja de impresión, y la cadena de publicación.</span></div>
+      <div class="carril"><b>Veredicto</b><span>El sitio está sano. Los hallazgos serios no están en el código: están en los <b>datos</b>, en una <b>decisión de privacidad</b> que nadie ha tomado, y en que <b>sin JavaScript el sitio publicado no muestra ni un árbol</b>.</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura">
+
+<nav class="indice">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#metodo">Cómo se midió</a></li>
+    <li><a href="#tablero">Veredicto por dimensión</a></li>
+    <li><a href="#d1">1 · Accesibilidad</a></li>
+    <li><a href="#d2">2 · Datos</a></li>
+    <li><a href="#d3">3 · Rendimiento</a></li>
+    <li><a href="#d4">4 · Privacidad</a></li>
+    <li><a href="#d5">5 · Buscadores y metadatos</a></li>
+    <li><a href="#d6">6 · Diseño y sistema</a></li>
+    <li><a href="#d7">7 · Código y verificación</a></li>
+    <li><a href="#d8">8 · Publicación y operación</a></li>
+    <li><a href="#d9">9 · Impresión</a></li>
+    <li><a href="#d10">10 · Contenido y honestidad</a></li>
+    <li><a href="#vivo">La auditoría en vivo</a></li>
+    <li><a href="#nomedi">Lo que no pude medir</a></li>
+    <li><a href="#plan">Qué hacer, en orden</a></li>
+  </ol>
+</nav>
+
+<section id="metodo">
+  <h2><em>1</em>Cómo se midió</h2>
+  <div class="metodo">
+    <p><b>Accesibilidad:</b> axe-core con las reglas WCAG 2.1 A y AA más las de buenas prácticas, sobre las tres páginas a 1440 y 390 px. Más comprobaciones que axe no hace: foco visible en los 192 elementos enfocables, tamaño de objetivo táctil, jerarquía de encabezados, y aviso de pestaña nueva.</p>
+    <p><b>Rendimiento:</b> peticiones y bytes reales al cargar cada página desde <code>docs/</code>, no cifras teóricas. Las imágenes se recomprimieron de prueba a varias calidades para medir el ahorro posible.</p>
+    <p><b>Datos:</b> los 13 ejemplares del registro congelado, campo por campo, más la correlación entre diámetro del tronco y carbono secuestrado.</p>
+    <p><b>Y lo que no se midió también se dice.</b> Hay una sección para eso.</p>
+  </div>
+  <div class="aviso">
+    <p><b>Una hipótesis mía que resultó falsa, y la dejo escrita.</b> Supuse que las fotografías estaban guardadas a calidad excesiva y que había un 60 % de peso por ganar. Las recomprimí a calidades 70, 75, 80, 85 y 90: <b>a calidad 70 solo se ahorra un 4 %</b>, y a 80 el archivo sale más grande que el original. Ya están bien optimizadas. Quien lea esto no debe perder tiempo ahí.</p>
+  </div>
+</section>
+
+<section id="tablero">
+  <h2><em>2</em>Veredicto por dimensión</h2>
+  <div class="veredictos">
+    <div class="ver ver--bien"><b>Accesibilidad</b><span>Cero violaciones de axe en 6 mediciones. Tres detalles menores.</span></div>
+    <div class="ver ver--mal"><b>Datos</b><span>Las cifras de carbono son físicamente imposibles.</span></div>
+    <div class="ver ver--ojo"><b>Rendimiento</b><span>1.7 MB en la portada; 230 KB evitables sin tocar calidad.</span></div>
+    <div class="ver ver--mal"><b>Privacidad</b><span>Se publica el nombre completo de una persona física.</span></div>
+    <div class="ver ver--bien"><b>Buscadores</b><span>Metadatos completos en las tres páginas.</span></div>
+    <div class="ver ver--bien"><b>Diseño</b><span>Sistema cerrado hoy mismo y con suite propia.</span></div>
+    <div class="ver ver--bien"><b>Código</b><span>1 261 aserciones en verde, ahora también en tu máquina.</span></div>
+    <div class="ver ver--ojo"><b>Publicación</b><span>Un paso que se olvida deja la página sin cambiar.</span></div>
+    <div class="ver ver--bien"><b>Impresión</b><span>Hoja completa: tamaño de página, URLs y cortes.</span></div>
+    <div class="ver ver--ojo"><b>Contenido</b><span>Dos textos con restos de captura.</span></div>
+  </div>
+</section>
+
+<section id="d1">
+  <h2><em>3</em>Las diez dimensiones</h2>
+
+  <div class="dim">
+    <h3>1 · Accesibilidad <span class="sello-ver s-bien">sana</span></h3>
+    <p><span class="dato dato--bien">0 violaciones</span> de axe-core en las tres páginas a dos anchos, con reglas WCAG 2.1 A, AA y buenas prácticas. Es un resultado poco común y conviene decirlo antes que los peros.</p>
+    <p>Lo que además se comprobó a mano y está bien: un solo <code>&lt;h1&gt;</code> por página, <b>ningún salto de nivel</b> en la jerarquía de encabezados, cero imágenes sin <code>alt</code>, cero identificadores repetidos, las cuatro regiones de referencia (<code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code>) presentes, <code>lang="es-MX"</code>, y <code>rel="noopener"</code> en los 45 enlaces externos.</p>
+    <p><b>Tres hallazgos menores.</b></p>
+    <ul>
+      <li><b>Dos clases de elemento sin indicador de foco visible:</b> <code>.filtro</code> y <code>.boton</code> en la portada. Quien navega con teclado no ve dónde está parado. Es WCAG 2.4.7, nivel AA. <span class="dato dato--mal">arreglo: 10 minutos</span></li>
+      <li><b>Objetivos táctiles por debajo de 24 px:</b> un enlace de <span class="dato">22×25</span> en las tres páginas y uno de <span class="dato">135×19</span> en la ficha. WCAG 2.5.8 pide 24×24 como mínimo. En un teléfono se falla el toque.</li>
+      <li><b>45 enlaces abren pestaña nueva sin decirlo.</b> La flecha «→» significa «ir», no «se abre en otra ventana». Quien usa lector de pantalla se encuentra en otra pestaña sin aviso, y quien usa teclado pierde el botón de atrás.</li>
+    </ul>
+  </div>
+
+  <div class="dim" id="d2">
+    <h3>2 · Datos <span class="sello-ver s-mal">el hallazgo grave</span></h3>
+    <p><b>Las cifras de carbono del registro son físicamente imposibles, y hoy están publicadas.</b></p>
+    <p>La correlación entre el diámetro del tronco y el carbono secuestrado es <span class="dato dato--mal">r = −0.28</span> sobre los trece ejemplares. Debería ser fuerte y positiva: más tronco, más carbono. Es negativa.</p>
+    <p>El caso extremo lo dice mejor que el coeficiente: la <b>Glorieta de Ahuehuetes</b>, con 92 cm de diámetro, aparece secuestrando <span class="dato">48.95 kg</span> al año, mientras que el <b>Sabino de San Juan</b>, con 590 cm —seis veces y media más tronco—, aparece con <span class="dato">0.61 kg</span>. Ochenta veces menos. Ningún árbol se comporta así.</p>
+    <p>De esas cifras salen las tres sumas del cintillo de la portada y el bloque de servicios ambientales de cada ficha. <b>Es la única parte del sitio que hoy afirma algo falso</b>, y lo afirma con la autoridad de una cifra de gobierno.</p>
+    <p>El resto del registro, medido campo por campo sobre los trece: falta la fecha del decreto en 1, el vínculo del decreto en 1, la edad estimada en 11, y la categoría en 2 —el Sabino de San Juan y Eugenio—. Las trece carpetas de fotografías sí existen, con entre 3 y 11 imágenes cada una, 88 en total.</p>
+  </div>
+
+  <div class="dim" id="d3">
+    <h3>3 · Rendimiento <span class="sello-ver s-ojo">mejorable, y de forma barata</span></h3>
+    <p>Peso real al cargar, contando cada petición: portada <span class="dato">1 755 KB en 20 peticiones</span>, ficha <span class="dato">1 625 KB en 16</span>, recursos <span class="dato">289 KB en 3</span>.</p>
+    <p><b>El hallazgo concreto: el sitio sirve PNG donde ya tiene el WebP entregado.</b></p>
+    <table>
+      <thead><tr><th>Archivo que se sirve</th><th>Pesa</th><th>El WebP entregado pesa</th><th>Ahorro</th></tr></thead>
+      <tbody>
+        <tr><td><code>logo-institucional-grande.png</code> (ficha)</td><td>215 KB</td><td>123 KB</td><td>−43 %</td></tr>
+        <tr><td><code>emblema-grande.png</code> (portada)</td><td>158 KB</td><td>93 KB</td><td>−41 %</td></tr>
+        <tr><td><code>emblema-media.png</code> (pie)</td><td>68 KB</td><td>38 KB</td><td>−44 %</td></tr>
+      </tbody>
+    </table>
+    <p>Son <b>unos 230 KB por visita</b> sin tocar una sola imagen: los archivos ya están en el repositorio.</p>
+    <div class="ojo">
+      <p><b>Y esto corrige un hallazgo anterior.</b> La auditoría de archivos sin uso marcó dieciséis WebP de marca como «nadie los nombra» y estuve a punto de apartarlos. Las suites lo impidieron porque son entregables de marca. Pero la lectura correcta es otra: <b>no están sin uso por error, están sin conectar.</b> Alguien entregó las versiones ligeras y el sitio nunca las pidió.</p>
+    </div>
+    <p><b>Un segundo detalle:</b> la marca de agua del cintillo carga <code>emblema-grande.png</code> —158 KB— para dibujarla al <b>5 % de opacidad</b>. Ciento cincuenta y ocho kilobytes de algo que casi no se ve.</p>
+    <p><b>Y un tercero:</b> 13 imágenes en la portada y 14 en la ficha no declaran <code>width</code> ni <code>height</code>. El navegador no sabe cuánto sitio reservarles, así que el contenido salta al cargar. Es la causa típica de que alguien toque el enlace equivocado.</p>
+  </div>
+
+  <div class="dim" id="d4">
+    <h3>4 · Privacidad <span class="sello-ver s-mal">decisión pendiente</span></h3>
+    <p>El sitio publica, en el renglón «Nominado por» de una ficha, el valor <code>SEDEMA-Fernando Venegas Rosas**</code>: <b>el nombre completo de una persona física</b>.</p>
+    <p>No es un descuido del código —el contrato del padrón v2 define ese campo como «Nombre completo, institución u organización»— sino una decisión de diseño de datos que nadie ha revisado desde la perspectiva de protección de datos personales.</p>
+    <p><b>No afirmo cuál es el régimen aplicable</b>: eso lo tiene que decir el área jurídica de la Secretaría, y conviene preguntarlo antes de portar los 23 registros, porque después habrá 23 filas en lugar de una. Lo que sí se puede afirmar es que hoy hay un dato personal publicado y que no consta que se haya decidido publicarlo.</p>
+    <p>Lo que <b>sí</b> está bien resuelto: las observaciones internas y el nombre de la persona dictaminadora se quedan en la hoja <code>Listado</code> y no llegan al CSV público. La compuerta funciona; la pregunta es qué debe cruzarla.</p>
+  </div>
+
+  <div class="dim" id="d5">
+    <h3>5 · Buscadores y metadatos <span class="sello-ver s-bien">completos</span></h3>
+    <p>Las tres páginas traen título propio y descriptivo, <code>description</code> escrita a mano —no generada—, <code>canonical</code>, tarjeta de Open Graph, tarjeta de Twitter con sus medidas declaradas, <code>theme-color</code> y <code>viewport</code>. Nada que reparar.</p>
+    <p><b>Una mejora, no un defecto:</b> no hay datos estructurados (<code>schema.org</code>). Para un registro público de bienes patrimoniales con ubicación, un marcado de <code>Place</code> o <code>LandmarksOrHistoricalBuildings</code> haría que cada ficha pudiera aparecer en resultados enriquecidos. Es trabajo de media jornada y no cambia nada visible.</p>
+  </div>
+
+  <div class="dim" id="d6">
+    <h3>6 · Diseño y sistema <span class="sello-ver s-bien">cerrado hoy</span></h3>
+    <p>Los seis hallazgos de la auditoría de valores sueltos quedaron corregidos hoy: cero <code>z-index</code> sueltos, nueve familias de corte en vez de quince, un solo tamaño de letra literal, dos radios, dos duraciones, dos medidas de lectura y los colores atados a la paleta. Con suite propia que rechaza el valor suelto.</p>
+    <p>Queda un solo pendiente anotado: los cortes de 860 y 900 px siguen a cuarenta píxeles uno de otro. Juntarlos mueve siete reglas y es una decisión de diseño, no una limpieza.</p>
+  </div>
+
+  <div class="dim" id="d7">
+    <h3>7 · Código y verificación <span class="sello-ver s-bien">sólido, con un susto</span></h3>
+    <p><span class="dato dato--bien">15 suites · 1 261 aserciones · todo en verde</span></p>
+    <p><b>Pero hasta hoy ninguna había corrido en tu computadora.</b> Todas hacían <code>process.chdir(new URL('..').pathname)</code>, y <code>.pathname</code> viene codificado: tu carpeta «Páginas web» tiene un espacio y un acento, así que Node recibía <code>P%C3%A1ginas%20web</code> y fallaba con ENOENT antes de la primera comprobación. Una decimosexta suite leía además un archivo que solo existía en el entorno donde se escribió.</p>
+    <p>Las dos cosas están arregladas y probadas en una ruta con espacios y acentos. <b>El tablero de verificación existía pero era inalcanzable para su dueño</b>, que es tanto como no tenerlo.</p>
+    <p>De la estructura: los 61 archivos de <code>fuente/</code> tienen quien los use, no hay huérfanos, y las 13 carpetas de fotografías coinciden exactamente con los 13 ejemplares. Quedan dos pares de archivos byte por byte idénticos que hay que editar en pareja o se separan sin aviso.</p>
+  </div>
+
+  <div class="dim" id="d8">
+    <h3>8 · Publicación y operación <span class="sello-ver s-ojo">frágil por diseño</span></h3>
+    <p>La cadena es <code>fuente/</code> → armado → <code>docs/</code> → GitHub Pages. Tiene un punto débil probado: <b>si se olvida el armado, el commit sube el código y la página no cambia</b>. Ya ocurrió esta semana, y el diagnóstico tardó porque todo lo demás —commit, push, Pages— estaba bien.</p>
+    <p>Está mitigado con documentación —el aviso está en el <code>README</code> y en <code>PASOS-GITHUB</code>— pero la documentación no impide nada. <b>Un enganche de Git que rechace un commit con cambios en <code>fuente/</code> y ninguno en <code>docs/</code> lo cerraría de verdad.</b></p>
+    <p>Segundo punto: <code>prueba/</code> no existía en tu máquina, y las suites leen de ahí. Se generó al correr el armado sin argumentos.</p>
+  </div>
+
+  <div class="dim" id="d9">
+    <h3>9 · Impresión <span class="sello-ver s-bien">bien resuelta</span></h3>
+    <p>La hoja de impresión son 101 líneas con lo que hay que tener: tamaño de página declarado con <code>@page</code>, las direcciones de los enlaces impresas con <code>attr(href)</code> —quien lea el papel puede teclearlas—, y <code>break-inside</code> para que los bloques no se partan entre páginas. Oculta cuatro elementos que en papel no tienen sentido.</p>
+    <p>Es la dimensión que menos suele cuidarse en un micrositio de gobierno, y aquí está atendida.</p>
+  </div>
+
+  <div class="dim" id="d10">
+    <h3>10 · Contenido y honestidad <span class="sello-ver s-ojo">restos de captura</span></h3>
+    <p>Dos textos llegan al sitio con marcas de la hoja de cálculo: <code>SEDEMA-Fernando Venegas Rosas**</code> arrastra un asterisco doble de nota al pie, y <code>Colectivo de Vecinos de Cerrada de Eugenia”</code> arrastra una comilla de cierre sin apertura. Se ven en la ficha.</p>
+    <p>En lo demás, el sitio es honesto de una forma que conviene no perder: las sumas declaran sobre cuántos ejemplares están calculadas, la regla de alturas permite comprobar lo que el dibujo afirma, y el bloque ambiental dice por qué no hay cifras en vez de callar. <b>Ese estándar es el que hace más grave el hallazgo de los datos de carbono</b>: un sitio que se cuida tanto para no exagerar no puede publicar cifras imposibles.</p>
+  </div>
+</section>
+
+<section id="vivo">
+  <h2><em>4</em>La auditoría en vivo</h2>
+  <p class="intro">Todo lo anterior se midió sobre los archivos armados, abiertos desde el disco. Esta sección es lo que se pudo comprobar contra el <b>sitio publicado</b>, en <code>sedemaoficina.github.io/arboles-patrimoniales/</code>.</p>
+
+  <div class="metodo">
+    <p><b>Con qué se midió, y por qué importa la limitación.</b> Mi entorno bloquea la conexión directa a GitHub Pages —y la máquina del usuario también, por la misma política de salida—, así que el único canal disponible devuelve el texto ya convertido: <b>no los bytes, no las cabeceras, no los tiempos</b>. Todo lo que sigue se pudo verificar; lo que no se pudo, está en su propia lista al final.</p>
+  </div>
+
+  <div class="dim">
+    <h3>El sitio está en línea y sirve la versión de hoy <span class="sello-ver s-bien">confirmado</span></h3>
+    <p>Las tres páginas responden, con su título y su descripción propios. Y la hoja de estilos publicada es la de hoy: se pudieron citar textualmente cuatro valores que solo existen desde esta mañana —<span class="dato dato--bien">--medida-nota:52ch</span> <span class="dato dato--bien">--paso-lento:.22s</span> <span class="dato dato--bien">--radio-pastilla:999px</span> <span class="dato dato--bien">--capa-mapa-globo:1010</span>—. El CSS es texto plano, así que esas citas son fiables.</p>
+    <p>Los datos abiertos también están en línea: <code>datos/arboles-patrimoniales-cdmx.csv</code> responde con sus 29 columnas y sus 13 registros.</p>
+  </div>
+
+  <div class="dim">
+    <h3>Sin JavaScript, el sitio no muestra ni un solo árbol <span class="sello-ver s-mal">hallazgo nuevo</span></h3>
+    <p>Es lo que solo se ve mirando el sitio como lo mira una máquina que no ejecuta guiones. Se buscaron expresamente los nombres <b>Tacuba</b>, <b>Eugenio</b>, <b>Viejo del Agua</b> y <b>Glorieta</b>, y el número <b>13</b>. <span class="dato dato--mal">Ninguno aparece.</span></p>
+    <p>La portada publicada contiene toda su prosa —los once encabezados de sección se leen bien— pero <b>ni un ejemplar, ni el conteo, ni el listado, ni el mapa, ni las cifras del cintillo</b>. Todo eso lo pinta el guion al cargar. Y <b>no hay un aviso <code>noscript</code></b> que lo diga: quien llegue sin guiones ve una página que parece completa y está vacía de datos, sin enterarse.</p>
+    <p><b>Qué consecuencias tiene, sin exagerar ninguna:</b></p>
+    <ul>
+      <li><b>Google sí ejecuta JavaScript</b>, así que la indexación principal no está en riesgo. Esto hay que decirlo antes que lo demás.</li>
+      <li>Los buscadores y rastreadores que <b>no</b> lo ejecutan no ven un solo ejemplar.</li>
+      <li><b>Los archivadores web conservarían una cáscara.</b> Para un registro de patrimonio natural que aspira a seguir siendo consultable en diez años, eso pesa más que el posicionamiento.</li>
+      <li>Si el guion falla al descargarse —una red mala, un bloqueador—, la página no avisa: se queda muda con aspecto de estar bien.</li>
+    </ul>
+    <p><b>Lo que sí está resuelto:</b> las etiquetas de Open Graph son estáticas, así que las vistas previas al compartir en redes funcionan aunque el resto dependa del guion. Y la página de <b>Recursos</b> —normativa, datos abiertos, video— se lee entera sin JavaScript, porque su contenido está escrito, no generado.</p>
+  </div>
+
+  <div class="dim">
+    <h3>Las cifras imposibles también están en los datos abiertos <span class="sello-ver s-mal">agrava el hallazgo 2</span></h3>
+    <p>El CSV descargable trae las columnas <code>carbono_secuestrado_kg_anio</code> y <code>co2_absorbido_kg_anio</code>. Es decir: las cifras que la auditoría encontró físicamente imposibles <b>no solo se muestran en pantalla, se distribuyen en formato legible por máquina</b>, listas para que un tercero las reutilice, las cite o las cargue en otro sistema. Un dato abierto malo viaja más lejos que un dato mostrado malo.</p>
+  </div>
+
+  <div class="dim">
+    <h3>El nombre de la persona NO viaja a los datos abiertos <span class="sello-ver s-bien">acota el hallazgo 4</span></h3>
+    <p>La columna de quién nominó no está entre las 29 del CSV público. La exposición del nombre completo ocurre <b>en la ficha, para quien la abre con JavaScript</b>, no en el conjunto descargable. Sigue siendo una decisión que hay que consultar, pero su alcance es menor de lo que la medición local sugería.</p>
+  </div>
+
+  <div class="dim">
+    <h3>No hay <code>robots.txt</code> ni <code>sitemap.xml</code> <span class="sello-ver s-ojo">menor</span></h3>
+    <p>Los dos devuelven 404. No es un defecto —sin <code>robots.txt</code> el sitio es indexable, que es lo que se quiere— pero un <code>sitemap.xml</code> con las tres páginas y las trece fichas ayudaría justamente donde el sitio es débil: a que un buscador encuentre los ejemplares sin depender de ejecutar el guion. Es media hora de trabajo y se genera solo en el armado.</p>
+  </div>
+</section>
+
+<section id="nomedi">
+  <h2><em>5</em>Lo que no pude medir</h2>
+  <div class="paso">
+    <h3>Del sitio en línea, todo lo que no es texto</h3>
+    <p>La sección anterior sí alcanzó el sitio publicado, pero por un canal que devuelve el contenido ya convertido a texto. <b>Siguen sin medirse:</b> las cabeceras HTTP, la compresión, la política de caché, las cabeceras de seguridad, el certificado y los tiempos reales de descarga. Tampoco pude ver el HTML crudo, así que no comprobé atributos ni clases en línea: lo que se afirma del HTML publicado sale de su texto, no de su código.</p>
+    <p>Mi entorno bloquea la conexión directa a GitHub Pages, y la máquina del usuario también, por la misma política de salida. Para medir eso hace falta abrir el sitio en un navegador con las herramientas de desarrollo, o una herramienta externa de auditoría.</p>
+  </div>
+  <div class="paso">
+    <h3>El CSV del padrón publicado desde Sheets</h3>
+    <p>Google lo prohíbe por <code>robots.txt</code> al canal que tengo, así que no pude comprobar en vivo qué expone exactamente la hoja publicada. Sí se verificó contra el archivo descargado a mano: 83 columnas, sin observaciones internas ni nombre de la persona dictaminadora.</p>
+  </div>
+  <div class="paso">
+    <h3>El mapa con cartografía</h3>
+    <p>Mi entorno no alcanza el servidor de teselas, así que el mapa se probó sin fondo cartográfico. La lógica —marcadores, filtros, ubicación, el árbol más cercano— sí se probó; el encaje visual sobre la cartografía real, no.</p>
+  </div>
+  <div class="paso">
+    <h3>Lectores de pantalla reales y navegadores reales</h3>
+    <p>axe-core encuentra entre el 30 y el 40 % de los problemas de accesibilidad: los que una máquina puede ver. Cero violaciones no es lo mismo que «probado con una persona usuaria de NVDA o VoiceOver». Y todo se midió en Chromium; Safari y Firefox no se probaron.</p>
+  </div>
+  <div class="paso">
+    <h3>Lo jurídico</h3>
+    <p>No verifiqué si las citas normativas del sitio corresponden al texto vigente de cada norma, ni cuál es el régimen aplicable a la publicación del nombre de la persona nominadora. Ambas cosas son del área jurídica.</p>
+  </div>
+</section>
+
+<section id="plan">
+  <h2><em>6</em>Qué hacer, en orden</h2>
+  <table>
+    <thead><tr><th>#</th><th>Qué</th><th>Quién</th><th>Trabajo</th><th>Por qué ahí</th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b></td><td>Rehacer las corridas de i-Tree con parámetros homogéneos</td><td>Tú</td><td>—</td><td>Es lo único que hoy publica algo falso.</td></tr>
+      <tr><td><b>2</b></td><td>Consultar a jurídico si se publica el nombre de quien nomina</td><td>Tú</td><td>—</td><td>Antes de portar: después serán 23 filas en vez de una.</td></tr>
+      <tr><td><b>3</b></td><td>Servir los WebP que ya están entregados</td><td>Yo</td><td>1 hora</td><td>−230 KB por visita sin tocar calidad.</td></tr>
+      <tr><td><b>4</b></td><td>Foco visible en <code>.filtro</code> y <code>.boton</code></td><td>Yo</td><td>10 min</td><td>WCAG AA, y es barato.</td></tr>
+      <tr><td><b>5</b></td><td>Avisar cuándo un enlace abre pestaña nueva</td><td>Yo</td><td>½ jornada</td><td>45 enlaces; se resuelve con un pseudoelemento y texto para lector.</td></tr>
+      <tr><td><b>6</b></td><td>Declarar <code>width</code> y <code>height</code> en las imágenes</td><td>Yo</td><td>½ jornada</td><td>Quita el salto de contenido al cargar.</td></tr>
+      <tr><td><b>7</b></td><td>Limpiar los restos de captura de dos textos</td><td>Tú, en la hoja</td><td>2 min</td><td>Se ven en la ficha.</td></tr>
+      <tr><td><b>8</b></td><td>Enganche de Git que exija <code>docs/</code> al commitear <code>fuente/</code></td><td>Yo</td><td>1 hora</td><td>Cierra de verdad el fallo que ya ocurrió.</td></tr>
+      <tr><td><b>9</b></td><td>Objetivos táctiles a 24×24</td><td>Yo</td><td>1 hora</td><td>WCAG 2.5.8.</td></tr>
+      <tr><td><b>10</b></td><td>Datos estructurados <code>schema.org</code></td><td>Yo</td><td>½ jornada</td><td>Mejora de alcance, no defecto.</td></tr>
+      <tr><td><b>11</b></td><td><code>sitemap.xml</code> generado en el armado</td><td>Yo</td><td>½ hora</td><td>Ayuda donde el sitio es débil: encontrar las fichas sin ejecutar el guion.</td></tr>
+      <tr><td><b>12</b></td><td>Aviso <code>noscript</code> y, si se quiere, listado mínimo sin guion</td><td>Yo</td><td>1 h / 1 jornada</td><td>Hoy la página sin JavaScript parece completa y está vacía.</td></tr>
+    </tbody>
+  </table>
+  <div class="ojo">
+    <p><b>Los dos primeros son tuyos y ninguno es de código.</b> Todo lo que puede arreglarse programando ya está arreglado o cuesta menos de una jornada. Lo que queda pendiente de verdad son un dato que hay que volver a medir en campo y una decisión que hay que consultar.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="envoltura">
+    <p><b>Secretaría del Medio Ambiente de la Ciudad de México</b> · Oficina de la Secretaría<br>
+    Auditoría 360 del micrositio de Árboles Patrimoniales, 22 de agosto de 2026. Medida sobre el sitio armado: 3 páginas, 2 anchos, 871 reglas de estilo, 13 ejemplares, 15 suites de comprobación.</p>
+  </div>
+</footer>
+
+</body>
+</html>
