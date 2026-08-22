@@ -677,15 +677,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   background:var(--jacaranda);color:#fff;font-family:var(--display);font-weight:400;font-size:21px;line-height:1}
 .linea__cuerpo{background:var(--blanco);border:var(--borde);border-left:3px solid var(--jacaranda-luz);
   padding:22px 24px 20px;min-width:0}
-/* Estos párrafos eran los únicos del sitio sin tope: corrían los 1 008 px de
-   la tarjeta, a 90 caracteres por renglón, mientras el resto de la página se
-   detiene en 83. Se acogen a la medida como todo lo demás. */
-.linea__cuerpo p{max-width:var(--medida)}
 .linea__actor{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:var(--jacaranda-hondo);background:var(--niebla);padding:3px 8px;border-radius:2px;margin-bottom:9px}
 .linea__cuerpo h3{font-size:19px;font-family:var(--display);font-weight:400;letter-spacing:.01em;
   text-transform:none;color:var(--tinta-jacaranda);margin:0 0 10px;padding-right:0;line-height:1.18}
-.linea__cuerpo p{margin:0;font-size:15.5px;line-height:1.6;color:var(--tinta-suave)}
+/* Estos párrafos eran los únicos del sitio sin tope: corrían los 1 008 px de
+   la tarjeta, a 90 caracteres por renglón, mientras el resto se detiene en 83. */
+.linea__cuerpo p{margin:0;font-size:15.5px;line-height:1.6;color:var(--tinta-suave);max-width:var(--medida)}
 .linea__cuerpo .paso__lista{margin-top:10px}
 .linea__cuerpo cite{display:block;margin-top:14px;font-family:var(--editorial);font-style:italic;font-size:13.5px;color:var(--gris)}
 @media(max-width:560px){.linea::before{left:15px}

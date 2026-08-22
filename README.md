@@ -107,7 +107,7 @@ Ninguna de las dos es lo que se publica: lo publicado es `docs/`.
 | `documentos/Ficha_impresa_Viejo_del_Agua.pdf` | Ejemplo de la ficha en papel, tres hojas |
 | `documentos/padron/Guia_captura_padron_v2.html` | Las 95 columnas del `Listado` y cómo portar los registros |
 | `documentos/padron/Plan_migracion_padron.html` | Las ocho fases del cambio de fuente de datos |
-| `documentos/auditorias/` | Las cuatro auditorías: integral, UX/UI, 360 y la de la base de datos |
+| `documentos/auditorias/` | Las cinco auditorías: integral, UX/UI, 360, la de la base de datos y la de valores sueltos de la hoja de estilos |
 
 La versión navegable del manual de identidad es `prueba/guia-identidad.html`: se
 pinta con la misma hoja de estilos que el sitio, así que no puede quedar

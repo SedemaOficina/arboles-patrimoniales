@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Los valores sueltos · Auditoría de la hoja de estilos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Guía autocontenida a propósito: vive en la carpeta compartida de Drive y la
+   abre el equipo técnico desde su propia computadora, sin el resto del sitio
+   alrededor. Por eso no enlaza estilos.css: se copiaron aquí los tokens que
+   necesita. Si la paleta del sitio cambia, hay que reflejarlo también aquí. */
+:root{
+  --tinta-jacaranda:#2A1630; --jacaranda:#8D4992; --jacaranda-hondo:#7A3E7F;
+  --jacaranda-luz:#C79FCA; --niebla:#F4E9F3;
+  --verde-bosque:#1E4D2B; --verde-vivo:#2D7A3E; --verde-niebla:#E7F0E1;
+  --papel:#FEF7E4; --blanco:#FFFDF7; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta:#1A1A1A; --tinta-suave:#413647; --gris:#5B4F62;
+  --display:'Anton',Impact,sans-serif;
+  --editorial:'Fraunces',Georgia,serif;
+  --texto:'Source Sans 3',system-ui,sans-serif;
+  --borde:1px solid rgba(42,22,48,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.envoltura{max-width:1000px;margin:0 auto;padding:0 26px}
+.rotulo{font-family:var(--texto);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:1;margin:0}
+
+.cabeza{background:var(--tinta-jacaranda);color:#fff;padding:44px 0 40px}
+.cabeza .rotulo{color:var(--jacaranda-luz)}
+.cabeza h1{font-size:clamp(32px,5.2vw,60px);margin:12px 0 0;color:#fff}
+.cabeza p{margin:18px 0 0;max-width:74ch;color:rgba(255,255,255,.82);font-size:16px}
+.carriles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 0}
+.carril{background:rgba(255,255,255,.07);border:1px solid rgba(199,159,202,.26);padding:18px 20px}
+.carril b{display:block;font-family:var(--display);font-weight:400;font-size:19px;color:var(--jacaranda-luz);margin-bottom:6px}
+.carril span{display:block;font-size:14.5px;color:rgba(255,255,255,.78);line-height:1.5}
+@media(max-width:700px){.carriles{grid-template-columns:1fr}}
+
+main{padding:44px 0 70px}
+section{margin:0 0 52px;scroll-margin-top:20px}
+section>h2{font-size:27px;color:var(--tinta-jacaranda);margin:0 0 4px}
+section>h2 em{font-style:normal;color:var(--dorado);margin-right:12px}
+section>.intro{margin:0 0 22px;max-width:80ch;color:var(--tinta-suave)}
+
+.indice{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 26px;margin:0 0 44px}
+.indice h2{font-size:16px;margin:0 0 12px;color:var(--tinta-jacaranda)}
+.indice ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
+.indice li{margin:0 0 6px;font-size:15px;break-inside:avoid}
+.indice a{color:var(--jacaranda-hondo);text-decoration:none;border-bottom:1px solid rgba(141,73,146,.3)}
+.indice a:hover{border-bottom-color:var(--jacaranda)}
+@media(max-width:640px){.indice ol{columns:1}}
+
+.paso{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:20px 24px;margin:0 0 14px}
+.paso h3{font-size:17px;color:var(--tinta);margin:0 0 7px}
+.paso p{margin:0 0 10px}
+.paso p:last-child{margin-bottom:0}
+.paso ul,.paso ol{margin:0 0 10px;padding-left:22px}
+.paso li{margin:0 0 5px}
+
+.aviso{border-left:3px solid var(--alerta);background:rgba(192,57,43,.05);padding:18px 22px;margin:0 0 14px}
+.aviso b{color:var(--alerta)}
+.ojo{border-left:3px solid var(--verde-vivo);background:var(--verde-niebla);padding:18px 22px;margin:0 0 14px}
+.ojo b{color:var(--verde-bosque)}
+
+/* Sobre el morado profundo el chip claro con tinta morada da menos de 2:1.
+   En fondo oscuro el código va en claro sobre un velo del propio fondo. */
+.cabeza code,.carril code,pre code{background:rgba(255,255,255,.16);color:#F2E8F3}
+code,.ruta{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.88em;
+  background:var(--niebla);padding:2px 6px;border-radius:2px;overflow-wrap:anywhere}
+pre{background:var(--tinta-jacaranda);color:#EDE3EE;padding:16px 20px;overflow-x:auto;
+  border-radius:3px;margin:0 0 14px;font-size:14px;line-height:1.55}
+pre code{background:none!important;padding:0;color:inherit}
+
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14.5px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:var(--borde);vertical-align:top}
+th{background:var(--verde-bosque);color:#fff;font-size:12px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:700;white-space:nowrap}
+tbody tr:nth-child(even){background:rgba(244,233,243,.42)}
+td code{white-space:nowrap}
+
+.etiqueta{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.etiqueta--obl{background:rgba(192,57,43,.1);color:var(--alerta)}
+.etiqueta--opc{background:rgba(178,142,92,.18);color:#8A6B3D}
+.etiqueta--calc{background:var(--niebla);color:var(--jacaranda-hondo)}
+
+.lista-chk{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+/* NI GRID NI FLEX: la casilla va posicionada y el texto fluye normal.
+   El contenido de cada renglón es «<b>título</b> más texto suelto». En una
+   retícula cada hijo es una celda; en flex, cada ELEMENTO hijo es un elemento
+   flexible por separado y solo el texto suelto se agrupa en uno anónimo. En
+   los dos casos el <b> quedaba en una columna y el resto de la frase en otra,
+   partida palabra por palabra. Sacando la casilla del flujo, el renglón vuelve
+   a ser un párrafo y se lee entero. */
+.lista-chk li{position:relative;padding:13px 17px 13px 47px;
+  background:var(--blanco);border:var(--borde);font-size:15px}
+.lista-chk li::before{content:"";position:absolute;left:17px;top:16px;
+  width:19px;height:19px;border:2px solid rgba(42,22,48,.26);border-radius:3px}
+
+footer{background:var(--tinta-jacaranda);color:rgba(255,255,255,.76);padding:30px 0;font-size:14px}
+footer b{color:#fff}
+@media print{body{background:#fff}.cabeza,footer{background:#fff;color:#000}
+  .cabeza h1,.cabeza .rotulo,.carril b{color:#000}pre{background:#eee;color:#000}}
+
+/* Añadidos de esta auditoría */
+.tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:14px;margin:0 0 24px}
+.tarjeta{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:16px 18px}
+.tarjeta strong{display:block;font-family:var(--display);font-weight:400;font-size:34px;line-height:1;
+  color:var(--tinta-jacaranda)}
+.tarjeta span{display:block;font-size:12.5px;color:var(--gris);margin-top:6px;line-height:1.4}
+.tarjeta--rojo{border-top-color:var(--alerta)}
+.tarjeta--rojo strong{color:var(--alerta)}
+.tarjeta--verde{border-top-color:var(--verde-vivo)}
+.tarjeta--verde strong{color:var(--verde-bosque)}
+
+.hallazgo{background:var(--blanco);border:var(--borde);border-left:4px solid var(--dorado);
+  padding:20px 24px;margin:0 0 16px}
+.hallazgo--alto{border-left-color:var(--alerta)}
+.hallazgo--medio{border-left-color:var(--dorado)}
+.hallazgo--bajo{border-left-color:var(--verde-vivo)}
+.hallazgo__cabeza{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+.hallazgo__cabeza h3{font-size:18px;color:var(--tinta);margin:0;flex:1 1 260px}
+.hallazgo p{margin:0 0 10px;max-width:74ch}
+.hallazgo p:last-child{margin-bottom:0}
+.riesgo{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 9px;border-radius:999px;white-space:nowrap}
+.riesgo--alto{background:rgba(192,57,43,.11);color:var(--alerta)}
+.riesgo--medio{background:rgba(178,142,92,.2);color:#8A6B3D}
+.riesgo--bajo{background:var(--verde-niebla);color:var(--verde-bosque)}
+.cifra-clave{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;font-weight:700;
+  color:var(--alerta);background:rgba(192,57,43,.08);padding:2px 6px;border-radius:2px}
+.escala-vis{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0 14px}
+.escala-vis i{font-style:normal;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;
+  background:var(--niebla);color:var(--jacaranda-hondo);padding:3px 8px;border-radius:2px}
+.escala-vis i.mal{background:rgba(192,57,43,.1);color:var(--alerta)}
+.escala-vis i.bien{background:var(--verde-niebla);color:var(--verde-bosque)}
+</style>
+</head>
+<body>
+
+<header class="cabeza">
+  <div class="envoltura">
+    <span class="rotulo">Secretaría del Medio Ambiente · Oficina de la Secretaría</span>
+    <h1>Los valores sueltos</h1>
+    <p>Auditoría de la hoja de estilos del micrositio: cuántas decisiones de medida, color y espacio se tomaron una a una, sin criterio común, y cuáles de ellas cuestan algo. Medido sobre <code>fuente/estilos.css</code> el 22 de agosto de 2026.</p>
+    <div class="carriles">
+      <div class="carril"><b>De dónde sale</b><span>De una pregunta: «¿el texto que no ocupa todo el ancho es equivocación o intencional?». Era intencional, pero estaba puesto de nueve formas distintas.</span></div>
+      <div class="carril"><b>Qué mide</b><span>871 reglas y 2 347 declaraciones. No busca errores de código: busca decisiones repetidas que nadie unificó.</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura">
+
+<nav class="indice">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#que">Qué es este tipo de caso</a></li>
+    <li><a href="#tablero">El tablero</a></li>
+    <li><a href="#h1">1 · Las capas de apilado</a></li>
+    <li><a href="#h2">2 · Los puntos de corte</a></li>
+    <li><a href="#h3">3 · Los tamaños de letra</a></li>
+    <li><a href="#h4">4 · El espaciado</a></li>
+    <li><a href="#h5">5 · Los colores a mano</a></li>
+    <li><a href="#h6">6 · Radios y duraciones</a></li>
+    <li><a href="#no">Lo que NO es un hallazgo</a></li>
+    <li><a href="#plan">El orden en que conviene atacarlo</a></li>
+  </ol>
+</nav>
+
+<section id="que">
+  <h2><em>1</em>Qué es este tipo de caso</h2>
+  <p class="intro">No son errores. Cada valor, por separado, es razonable: alguien miró la pantalla, ajustó un número hasta que se veía bien y siguió adelante. El problema aparece cuando se acumulan.</p>
+
+  <div class="paso">
+    <h3>La firma del problema</h3>
+    <p>Una misma decisión —cuánto mide un renglón, cuánto separa dos bloques, qué tan redondeada va una esquina— resuelta muchas veces, cada una con un número distinto y ninguno derivado de los otros.</p>
+    <p>Tiene tres costos, y solo el primero se ve:</p>
+    <ul>
+      <li><b>Se lee como descuido.</b> Fue justo la pregunta que originó esta auditoría: párrafos de anchos distintos en la misma página no parecen una decisión, parecen falta de cuidado.</li>
+      <li><b>El cambio se vuelve caro.</b> Ajustar «la medida de lectura» costaba tocar veintiún números y acertarle a cada uno. Ahora cuesta uno.</li>
+      <li><b>El siguiente valor se adivina.</b> Sin escala, quien añade un elemento nuevo elige a ojo. Así aparecen los errores de apilado y los cortes de página en anchos que nadie probó.</li>
+    </ul>
+  </div>
+
+  <div class="ojo">
+    <p><b>El caso resuelto, como referencia.</b> La medida de lectura estaba puesta con <b>nueve</b> topes en caracteres —52, 56, 62, 64, 70, 74, 78, 82 ch— más seis en píxeles. Quedaron <b>dos</b> tokens por rol, con cuatro excepciones documentadas y una suite que impide que aparezca una décima. En el mismo barrido salieron dos párrafos que corrían a 122 y 82 caracteres por renglón sin tope ninguno, invisibles hasta que se midieron.</p>
+  </div>
+</section>
+
+<section id="tablero">
+  <h2><em>2</em>El tablero</h2>
+  <p class="intro">Cada cifra es el número de valores <b>distintos</b> con que se resuelve una misma decisión.</p>
+
+  <div class="tarjetas">
+    <div class="tarjeta tarjeta--rojo"><strong>14</strong><span>capas de apilado<br>(z-index)</span></div>
+    <div class="tarjeta tarjeta--rojo"><strong>15</strong><span>puntos de corte<br>de pantalla</span></div>
+    <div class="tarjeta"><strong>42</strong><span>tamaños de letra<br>(25 fijos + 17 fluidos)</span></div>
+    <div class="tarjeta"><strong>39</strong><span>valores de<br>espaciado</span></div>
+    <div class="tarjeta"><strong>92</strong><span>colores escritos<br>a mano en rgba()</span></div>
+    <div class="tarjeta"><strong>10</strong><span>radios de<br>esquina</span></div>
+    <div class="tarjeta"><strong>6</strong><span>duraciones de<br>transición</span></div>
+    <div class="tarjeta tarjeta--verde"><strong>2</strong><span>medidas de lectura<br><b>ya resuelto</b></span></div>
+  </div>
+
+  <p>Para calibrar: la hoja declara <b>34 tokens</b> en <code>:root</code>. Todo lo de arriba vive fuera de ellos.</p>
+</section>
+
+<section id="h1">
+  <h2><em>3</em>Los hallazgos</h2>
+
+  <div class="hallazgo hallazgo--alto">
+    <div class="hallazgo__cabeza">
+      <h3>1 · Catorce capas de apilado sin escala</h3>
+      <span class="riesgo riesgo--alto">riesgo alto</span>
+    </div>
+    <div class="escala-vis">
+      <i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i class="mal">50</i><i class="mal">600</i><i class="mal">850</i><i class="mal">900</i><i class="mal">1010</i><i class="mal">2000</i><i class="mal">9000</i>
+    </div>
+    <p>Treinta y un usos repartidos en catorce valores, sin relación entre ellos. Los de un dígito conviven con un <code>9000</code> y un <code>2000</code>, y en medio hay cinco números elegidos para ganarle a algo concreto en un momento concreto.</p>
+    <p><b>Es el de mayor riesgo, y no es hipotético.</b> Esta misma semana costó dos incidencias: el botón de cerrar del globo del mapa —que perdía contra la hoja de Leaflet, inyectada después— y el globo que se abría por debajo de los controles de acercamiento. Los dos son el mismo error: alguien tuvo que adivinar contra qué competía.</p>
+    <p><b>Propuesta.</b> Cinco tokens con nombre —<code>--capa-fondo</code>, <code>--capa-contenido</code>, <code>--capa-flotante</code>, <code>--capa-globo</code>, <code>--capa-menu</code>— y una comprobación que rechace cualquier <code>z-index</code> numérico fuera de ellos. Trabajo: media jornada. Es el cambio con mejor relación entre esfuerzo y errores evitados.</p>
+  </div>
+
+  <div class="hallazgo hallazgo--alto" id="h2">
+    <div class="hallazgo__cabeza">
+      <h3>2 · Quince anchos de pantalla distintos</h3>
+      <span class="riesgo riesgo--alto">riesgo alto</span>
+    </div>
+    <div class="escala-vis">
+      <i>345</i><i>420</i><i>430</i><i>520</i><i class="bien">560</i><i>620</i><i class="bien">700</i><i>760</i><i>820</i><i class="bien">860</i><i class="bien">900</i><i class="bien">1000</i><i>1090</i><i>1100</i><i>1240</i>
+    </div>
+    <p>Cuarenta y siete consultas de medios sobre quince anchos. Cinco concentran la mayoría de los usos; los otros diez aparecen una o dos veces cada uno. <span class="cifra-clave">420, 430, 520, 620, 760, 1090</span> son anchos que existen porque un elemento concreto se rompía ahí.</p>
+    <p><b>Qué cuesta.</b> El sitio cambia de forma en quince momentos distintos al estrechar la ventana. Probarlo entero exige quince pruebas; en la práctica se prueban tres o cuatro, y los otros once quedan sin mirar. Ahí es donde aparece la tarjeta descuadrada que nadie reporta.</p>
+    <p><b>Matiz honesto:</b> los pares <code>820/821</code>, <code>899/900/901</code> y <code>999/1000/1001</code> <b>no</b> son desorden — son parejas <code>max</code>/<code>min</code> legítimas del mismo corte. Ya van contadas como uno.</p>
+    <p><b>Propuesta.</b> Cinco cortes con nombre y reubicar los diez sueltos al más cercano, comprobando cada uno. Trabajo: una jornada, con revisión visual a los cinco anchos.</p>
+  </div>
+
+  <div class="hallazgo hallazgo--medio" id="h3">
+    <div class="hallazgo__cabeza">
+      <h3>3 · Cuarenta y dos tamaños de letra</h3>
+      <span class="riesgo riesgo--medio">riesgo medio</span>
+    </div>
+    <div class="escala-vis">
+      <i>8.5</i><i>10</i><i>10.5</i><i>11</i><i>11.5</i><i>12</i><i>12.5</i><i>13</i><i>13.5</i><i>14</i><i>14.5</i><i>15</i><i>15.5</i><i>16</i><i>16.5</i><i>17</i><i>17.5</i><i>18</i><i>19</i><i>20</i><i>21</i><i>24</i><i>28</i><i>34</i><i>38</i>
+    </div>
+    <p>Veinticinco tamaños fijos en 202 usos, más diecisiete <code>clamp()</code> distintos, uno por cada sitio donde el texto crece con la pantalla. Trece de los tamaños fijos van de medio en medio de píxel —<span class="cifra-clave">13, 13.5, 14, 14.5, 15, 15.5</span>— y esas diferencias no se distinguen a simple vista, pero sí obligan a decidir cada vez.</p>
+    <p><b>Qué cuesta.</b> Es lo que más se nota a la vista como «no hay sistema», y lo que más trabajo da cada vez que se añade un componente: no hay de dónde elegir, hay que inventar.</p>
+    <p><b>Y es el de mayor riesgo visual al tocarlo.</b> Cambiar un tamaño cambia el alto de su bloque y puede correr todo lo que va debajo. Se hace con medición antes y después, página por página.</p>
+    <p><b>Propuesta.</b> Una escala de nueve pasos que absorba los veinticinco, y un solo <code>clamp()</code> parametrizado para los títulos. Trabajo: dos jornadas, la mitad de ellas comprobando.</p>
+  </div>
+
+  <div class="hallazgo hallazgo--medio" id="h4">
+    <div class="hallazgo__cabeza">
+      <h3>4 · Treinta y nueve valores de espaciado, nueve de ellos impares</h3>
+      <span class="riesgo riesgo--medio">riesgo medio</span>
+    </div>
+    <div class="escala-vis">
+      <i class="bien">8</i><i class="bien">10</i><i class="bien">12</i><i class="bien">14</i><i class="bien">16</i><i class="bien">18</i><i class="bien">20</i><i class="bien">22</i><i class="bien">24</i><i class="bien">26</i><i class="mal">9</i><i class="mal">11</i><i class="mal">13</i><i class="mal">15</i><i class="mal">17</i><i class="mal">5</i><i class="mal">7</i><i class="mal">3</i>
+    </div>
+    <p>508 usos de <code>padding</code>, <code>margin</code> y <code>gap</code> sobre treinta y nueve valores. Los pares dominan y forman casi una escala de dos en dos; los nueve impares son la huella del ajuste a ojo: nadie diseña un sistema con un margen de 9 px y otro de 11.</p>
+    <p><b>Qué cuesta.</b> Poco por sí solo. Importa porque es la superficie más grande —508 usos— y porque cada valor impar es una decisión que hubo que tomar y que habrá que volver a tomar.</p>
+    <p><b>Propuesta.</b> Escala de dos en dos de 4 a 40, y redondear los nueve impares al par vecino. El cambio máximo por elemento es de un píxel. Trabajo: media jornada.</p>
+  </div>
+
+  <div class="hallazgo hallazgo--medio" id="h5">
+    <div class="hallazgo__cabeza">
+      <h3>5 · Noventa y dos colores escritos a mano</h3>
+      <span class="riesgo riesgo--medio">riesgo medio</span>
+    </div>
+    <p>160 usos de <code>rgba()</code> con noventa y dos combinaciones distintas. La mayoría son el mismo color con otra opacidad: la tinta morada <code>42,22,48</code> aparece <b>55 veces con diecinueve opacidades distintas</b> —.06, .08, .09, .1, .12, .13, .14, .16, .17, .18, .2, .22, .24, .3, .32, .34, .42, .45, .86—.</p>
+    <p><b>Qué cuesta, y esto sí es de fondo.</b> Ninguno de esos 160 usos está atado a la paleta. El día que la identidad cambie el morado, los tokens de <code>:root</code> lo seguirán y estos ciento sesenta no: quedarán bordes y sombras del color anterior, repartidos por todo el sitio, sin lista de dónde están.</p>
+    <p><b>Buena noticia:</b> ningún hexadecimal duplica un token. Los <code>#fff</code> y <code>#000</code> —47 y 17 usos— son blanco y negro puros, legítimos.</p>
+    <p><b>Propuesta.</b> Tokens con opacidad derivada del color base, de modo que los ciento sesenta sigan a la paleta. Trabajo: una jornada.</p>
+  </div>
+
+  <div class="hallazgo hallazgo--bajo" id="h6">
+    <div class="hallazgo__cabeza">
+      <h3>6 · Diez radios de esquina y seis duraciones de transición</h3>
+      <span class="riesgo riesgo--bajo">riesgo bajo</span>
+    </div>
+    <p>Radios: <code>2px</code> y <code>50%</code> se llevan 38 de los 55 usos; el resto son <code>3, 5, 6, 7px</code>, indistinguibles entre sí a tamaño real.</p>
+    <p>Duraciones: <span class="cifra-clave">.14s · .15s · .16s · .18s · .2s · .22s</span>. Ocho centésimas separan la más corta de la más larga. <b>Ningún ojo distingue eso</b>, pero son seis decisiones tomadas.</p>
+    <p><b>Propuesta.</b> Tres radios y dos duraciones. Es la corrección más barata de todas y la que menos riesgo tiene: media hora, sin efecto visible.</p>
+  </div>
+</section>
+
+<section id="no">
+  <h2><em>4</em>Lo que NO es un hallazgo</h2>
+  <p class="intro">Un barrido automático encuentra más cosas de las que son problemas. Estas se revisaron una a una y se descartan, para que nadie las «arregle» después.</p>
+
+  <div class="paso">
+    <h3><code>!important</code>: 54 declaraciones, pero 38 son de impresión</h3>
+    <p>La hoja de impresión tiene que ganarle a la de pantalla, y ahí <code>!important</code> es la herramienta correcta, no un parche. <b>Fuera de impresión quedan 16</b>, que es una cifra normal para una hoja de 871 reglas. No hay hallazgo.</p>
+  </div>
+
+  <div class="paso">
+    <h3>Diez reglas «duplicadas» que no lo son</h3>
+    <p>Selectores como <code>.bosque__pista</code> aparecen dos veces en el nivel principal, pero a propósito: la segunda regla agrupa una propiedad que necesitaba su propio comentario —el degradado de recorte, o la barra de desplazamiento que Firefox nombra distinto—. Separarlas hace la hoja más legible, no menos. <b>No hay hallazgo.</b></p>
+    <p>La única que sí era desorden la introduje yo hoy, al añadir la medida en un sitio distinto del resto de la regla. Ya está fusionada.</p>
+  </div>
+
+  <div class="paso">
+    <h3>Los 17 <code>clamp()</code> de tipografía fluida</h3>
+    <p>Cuentan en el total de tamaños, pero cada uno resuelve un caso real —un titular que no puede meterse debajo de una ilustración, una cifra que no puede partirse—. Se pueden reducir, no eliminar. Van en el hallazgo 3 con esa salvedad.</p>
+  </div>
+</section>
+
+<section id="plan">
+  <h2><em>5</em>El orden en que conviene atacarlo</h2>
+  <p class="intro">Ordenado por errores evitados frente a esfuerzo y riesgo, no por tamaño del número.</p>
+
+  <table>
+    <thead><tr><th>Orden</th><th>Qué</th><th>Trabajo</th><th>Riesgo visual</th><th>Por qué ahí</th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b></td><td>Capas de apilado</td><td>½ jornada</td><td>Ninguno</td><td>Ya costó dos incidencias esta semana. Nada cambia de aspecto.</td></tr>
+      <tr><td><b>2</b></td><td>Radios y duraciones</td><td>½ hora</td><td>Ninguno</td><td>Gratis. Quita dieciséis decisiones sin que se note.</td></tr>
+      <tr><td><b>3</b></td><td>Espaciado</td><td>½ jornada</td><td>Un píxel</td><td>La superficie más grande. El cambio máximo es imperceptible.</td></tr>
+      <tr><td><b>4</b></td><td>Colores a mano</td><td>1 jornada</td><td>Ninguno si se hace bien</td><td>Es la deuda que se cobra el día que cambie la identidad.</td></tr>
+      <tr><td><b>5</b></td><td>Puntos de corte</td><td>1 jornada</td><td>Medio</td><td>Hay que revisar a cinco anchos. Se hace con capturas antes y después.</td></tr>
+      <tr><td><b>6</b></td><td>Tamaños de letra</td><td>2 jornadas</td><td>Alto</td><td>Lo más visible y lo más delicado. Al final, y con medición página por página.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="ojo">
+    <p><b>La regla que hace que esto no vuelva.</b> Cada tanda termina con una aserción que rechaza el valor suelto, igual que la de la medida de lectura: no basta con limpiar una vez, porque el siguiente componente que alguien añada volverá a inventar un número. La comprobación es lo que convierte la limpieza en una decisión permanente.</p>
+  </div>
+
+  <div class="aviso">
+    <p><b>Lo que esta auditoría no dice.</b> No mide accesibilidad, contraste, peso de la página ni rendimiento — eso está en las auditorías anteriores. Tampoco dice que el sitio se vea mal: se ve bien. Dice que <b>se ve bien por acumulación de aciertos individuales</b>, y que eso es más caro de mantener y más fácil de romper que verse bien por sistema.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="envoltura">
+    <p><b>Secretaría del Medio Ambiente de la Ciudad de México</b> · Oficina de la Secretaría<br>
+    Auditoría de constantes de la hoja de estilos. Medida sobre <code>fuente/estilos.css</code> —871 reglas, 2 347 declaraciones, 1 945 líneas— el 22 de agosto de 2026. Todas las cifras son recuentos del archivo, no estimaciones.</p>
+  </div>
+</footer>
+
+</body>
+</html>
