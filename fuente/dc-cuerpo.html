@@ -25,10 +25,18 @@
 </sc-if>
 <section class="portada" id="inicio">
   <div class="envoltura">
-    <img class="sello" src="assets/img/marca/emblema-grande.png"
-         srcset="assets/img/marca/emblema-media.png 128w, assets/img/marca/emblema-grande.png 320w"
-         sizes="(max-width:700px) 96px, 132px"
-         alt="Árboles Patrimoniales de la Ciudad de México" width="320" height="319">
+    <!-- El WebP pesa 93 KB donde el PNG pesa 158, y son la MISMA imagen: se
+         comprobó píxel a píxel. «emblema-color-*» es el nombre de archivo de
+         la versión a color, que es a la que apuntan los nombres históricos. -->
+    <picture>
+      <source type="image/webp"
+              srcset="assets/img/marca/emblema-color-media.webp 128w, assets/img/marca/emblema-color-grande.webp 320w"
+              sizes="(max-width:700px) 96px, 132px">
+      <img class="sello" src="assets/img/marca/emblema-grande.png"
+           srcset="assets/img/marca/emblema-media.png 128w, assets/img/marca/emblema-grande.png 320w"
+           sizes="(max-width:700px) 96px, 132px"
+           alt="Árboles Patrimoniales de la Ciudad de México" width="320" height="319">
+    </picture>
     <span class="rotulo">Secretaría del Medio Ambiente · Ciudad de México</span>
     <h1>Árboles<em>patrimoniales</em></h1>
     <p class="entrada editorial">{{ entradaPortada }}</p>

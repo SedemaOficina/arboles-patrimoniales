@@ -156,5 +156,87 @@ console.log('\n-- 7 · la medida de lectura, del barrido anterior --');
   t('Y solo queda el tope documentado en ch', enCh.length === 1 && enCh[0] === '34ch', enCh.join(', '));
 }
 
+
+console.log('\n-- 8 · lo que la auditoría 360 dejó cerrado --');
+{
+  const cu = fs.readFileSync('cuerpo.html','utf8');
+  const enc = fs.readFileSync('parciales/encabezado.html','utf8');
+  const mn = fs.readFileSync('menu.js','utf8');
+  const armar = fs.readFileSync('construir/armar.js','utf8');
+  const pv = fs.readFileSync('../prueba/portada-vista-previa.html','utf8');
+
+  /* IMÁGENES DE MARCA EN WEBP. Se comprobó píxel a píxel que el PNG y el WebP
+     son la misma imagen; el ahorro es de unos 230 KB por visita. El del
+     membrete de la ficha es el más llamativo: está oculto en pantalla y aun
+     así el navegador lo descarga. */
+  t('El sello de la portada ofrece WebP antes que PNG',
+    /<source type="image\/webp"[^>]*emblema-color-media\.webp 128w/.test(cu));
+  t('El emblema del pie, también',
+    /<source type="image\/webp"[^>]*emblema-color-media\.webp 1x/.test(fs.readFileSync('parciales/pie.html','utf8')));
+  t('Y el membrete impreso de la ficha, que se descarga aunque no se vea',
+    /<source type="image\/webp" srcset="assets\/img\/marca\/logo-institucional-grande\.webp">/
+      .test(fs.readFileSync('ficha-cuerpo.html','utf8')));
+  t('Se explica por qué el membrete oculto igual pesaba',
+    /el navegador descarga la imagen igual/.test(fs.readFileSync('ficha-cuerpo.html','utf8')));
+  t('La marca de agua del cintillo usa image-set con WebP',
+    /background:image-set\(url\("assets\/img\/marca\/emblema-color-grande\.webp"\) type\("image\/webp"\)/.test(css));
+  t('Ninguna página pide ya el PNG grande del logotipo institucional',
+    !/logo-institucional-grande\.png[^)]*\)/.test(css) &&
+    /logo-institucional-grande\.png/.test(fs.readFileSync('ficha-cuerpo.html','utf8')));  // solo como respaldo del <picture>
+
+  /* FOCO. El anillo existía, pero «transition:all» lo desvanecía durante 200 ms:
+     un indicador de foco que se desvanece es peor que uno que aparece. */
+  t('El filtro ya no anima su contorno de foco',
+    !/\.filtro\{[^}]*transition:all/.test(css)
+    && /\.filtro\{[^}]*transition:background var\(--paso\),border-color var\(--paso\),color var\(--paso\)/.test(css));
+
+  /* OBJETIVO DE TOQUE. El más pequeño del sitio era el número de emergencias. */
+  t('Los enlaces sueltos tienen ancho de toque, no solo alto',
+    /min-width:24px;text-align:center\}/.test(css) && /min-height:32px;line-height:32px;min-width:32px/.test(css));
+  t('Y se dice cuál era el caso que lo motivó',
+    /911.{0,40}22 px de ancho/s.test(fs.readFileSync('estilos.css','utf8')));
+
+  /* PESTAÑA NUEVA. Cuarenta y seis enlaces la abrían sin decirlo. */
+  t('Hay marca visible en los enlaces que abren otra pestaña',
+    /a\[target="_blank"\]::after\{content:"\\2197"/.test(css));
+  t('Y aviso audible para lector de pantalla',
+    /se abre en otra pestaña/.test(mn) && /export function avisarPestanaNueva/.test(mn));
+  t('El aviso se vuelve a pasar cuando el sitio pinta enlaces nuevos',
+    /avisarPestanaNueva\(\);/.test(mn) && mn.indexOf('avisarPestanaNueva();') < mn.indexOf('export function avisarPestanaNueva'));
+  t('La flecha decorativa que ya existía se reaprovecha en vez de duplicarse',
+    /decorativa\.textContent\.replace\(\/→\/g, "↗"\)/.test(mn)
+    && /a\[target="_blank"\]\.sin-marca-externa::after\{content:none\}/.test(css));
+
+  /* SIN JAVASCRIPT. Es lo que solo se ve mirando el sitio publicado. */
+  t('Hay aviso para quien llega sin JavaScript', /<noscript>/.test(enc) && /sin-guion/.test(enc));
+  t('El aviso manda a lo único que sí se lee sin guion: los datos abiertos',
+    /__RECURSOS__#datos/.test(enc));
+  t('Y llega a la página armada', /<noscript>/.test(pv));
+
+  /* MAPA DEL SITIO. Con su alcance dicho: son tres direcciones, no dieciséis. */
+  t('El armado genera sitemap.xml, y solo en producción',
+    /DESTINO === 'produccion'[\s\S]{0,900}sitemap\.xml/.test(armar));
+  t('Se advierte que las fichas no tienen dirección propia',
+    /no tienen dirección propia/.test(armar));
+}
+
+
+console.log('\n-- 9 · los pares que hay que editar juntos --');
+{
+  /* Dos parejas de archivos son byte por byte idénticas. No es un error: el
+     armado de Claude Design pide expresamente la variante «-design» / «-dc»
+     para que pueda divergir el día que haga falta. El riesgo es el contrario:
+     que alguien edite uno y no el otro, y se separen sin que nadie avise.
+     Mientras no haya un motivo para que difieran, esto exige que sigan iguales.
+     Si algún día TIENEN que diferir, se borra esta comprobación a conciencia,
+     no se «arregla» copiando un archivo sobre el otro. */
+  const iguales = (a, b) =>
+    fs.readFileSync(a, 'utf8') === fs.readFileSync(b, 'utf8');
+  t('El pie del sitio y el de Claude Design siguen siendo el mismo',
+    iguales('parciales/pie.html', 'parciales/pie-design.html'));
+  t('El cuerpo de Recursos y su variante de Claude Design, también',
+    iguales('recursos-cuerpo.html', 'recursos-dc-cuerpo.html'));
+}
+
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal ? 1 : 0);

@@ -130,3 +130,27 @@ pintarPortada(DATOS);
 </html>`;
 fs.writeFileSync(SALIDA+NOMBRES.portada,enlazar(html));
 console.log(DESTINO+'/'+NOMBRES.portada+' ·',Math.round(html.length/1024),'KB');
+
+/* EL MAPA DEL SITIO, solo en producción.
+   Honestidad sobre su alcance: son TRES direcciones, no dieciséis. Las trece
+   fichas no tienen dirección propia —viven todas en ficha.html y se distinguen
+   por el fragmento «#ficha-slug», que los buscadores no indexan por separado—,
+   así que este archivo no sirve para que aparezcan los ejemplares. Sirve para
+   declarar cuáles son las páginas canónicas y cuándo cambiaron, que es poco
+   pero es cierto. Si algún día cada ficha tiene su propia dirección, aquí es
+   donde se listan. */
+if (DESTINO === 'produccion') {
+  const hoy = new Date().toISOString().slice(0, 10);
+  const paginas = [
+    [SITIO.BASE, '1.0'],
+    [SITIO.url(NOMBRES.ficha), '0.8'],
+    [SITIO.url(NOMBRES.recursos), '0.6'],
+  ];
+  const mapa = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + paginas.map(([u, p]) =>
+        `  <url><loc>${u}</loc><lastmod>${hoy}</lastmod><priority>${p}</priority></url>`).join('\n')
+    + '\n</urlset>\n';
+  fs.writeFileSync(SALIDA + 'sitemap.xml', mapa);
+  console.log(DESTINO + '/sitemap.xml · 3 direcciones');
+}

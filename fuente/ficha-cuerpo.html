@@ -4,14 +4,27 @@
 <main id="contenido">
 <!-- Membrete y pie de la ficha impresa. Invisibles en pantalla. -->
 <div class="hoja-cabeza" aria-hidden="true">
-  <img class="hoja-cabeza__gob" src="assets/img/marca/logo-institucional-grande.png"
-       alt="Gobierno de la Ciudad de México · Secretaría del Medio Ambiente · Sistema de Información Ambiental de la Ciudad de México">
+  <!-- OJO: este membrete está oculto en pantalla y solo se ve al imprimir,
+       PERO el navegador descarga la imagen igual. Eran 215 KB en cada visita
+       para algo que casi nadie imprime. En WebP son 123, misma imagen. Se
+       conserva el tamaño «grande» porque a 180 mm de ancho el papel pide
+       2 126 px a 300 ppp y este tiene 2 294. -->
+  <picture>
+    <source type="image/webp" srcset="assets/img/marca/logo-institucional-grande.webp">
+    <img class="hoja-cabeza__gob" src="assets/img/marca/logo-institucional-grande.png"
+         width="2294" height="168"
+         alt="Gobierno de la Ciudad de México · Secretaría del Medio Ambiente · Sistema de Información Ambiental de la Ciudad de México">
+  </picture>
   <span class="hoja-cabeza__texto">
     <b>Árboles patrimoniales de la Ciudad de México</b>
     Registro público · Secretaría del Medio Ambiente
   </span>
-  <img class="hoja-cabeza__emblema" src="assets/img/marca/emblema-media.png"
-       alt="Árboles Patrimoniales de la Ciudad de México">
+  <picture>
+    <source type="image/webp" srcset="assets/img/marca/emblema-color-media.webp">
+    <img class="hoja-cabeza__emblema" src="assets/img/marca/emblema-media.png"
+         width="256" height="255"
+         alt="Árboles Patrimoniales de la Ciudad de México">
+  </picture>
 </div>
 <section class="ficha-portada">
   <div class="envoltura">

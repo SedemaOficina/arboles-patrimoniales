@@ -401,11 +401,12 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* El sello del programa encabeza la portada: es la marca del registro, no un
    adorno. Sobre crema va sin recuadro; sobre fondo profundo se le da un disco
    claro para que el anillo guinda no se pierda. */
+/* El <picture> es un envoltorio de línea que no pinta nada: se le quita del
+   medio para que las reglas de posición sigan actuando sobre la imagen. */
+.portada .envoltura>picture,.pie__col--sede>picture,.hoja-cabeza>picture{display:contents}
 .sello{display:block;width:132px;height:auto;margin:0 0 12px}
 @media(max-width:700px){.sello{width:96px;margin-bottom:10px}}
-.sello--ficha{position:absolute;top:26px;right:0;width:104px;margin:0;z-index:var(--capa-realce);
-  background:var(--papel);border-radius:50%;padding:8px;box-sizing:content-box}
-@media(max-width:860px){.sello--ficha{position:static;width:82px;padding:6px;margin:14px 0 6px}}
+@media(max-width:860px){}
 
 /* EL SELLO SOBRE LA ILUSTRACIÓN.
    Encabezando la portada, el sello decía «Árboles Patrimoniales de la Ciudad de
@@ -430,7 +431,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    halo de papel debajo del disco; el tercero lo despega del fondo. */
 @media(min-width:1000px){
   .portada{--aire-portada:58px}
-  .portada .envoltura>.sello{position:absolute;z-index:var(--capa-realce-alto);width:128px;margin:0;
+  .portada .envoltura .sello{position:absolute;z-index:var(--capa-realce-alto);width:128px;margin:0;
     right:14px;top:calc(clamp(380px,52vw,600px) - var(--aire-portada) - 210px);
     filter:drop-shadow(0 0 22px rgba(var(--blanco-calido-rgb),.98)) drop-shadow(0 0 46px rgba(var(--blanco-calido-rgb),.9))
            drop-shadow(0 3px 12px rgba(0,0,0,.13))}
@@ -511,7 +512,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* Marca de agua: el emblema sangrado por la derecha, casi invisible. Se apaga
    en pantallas angostas, donde solo estorbaría detrás del texto. */
 .cifras::after{content:"";position:absolute;right:-60px;top:50%;transform:translateY(-50%);
-  width:340px;height:340px;background:url("assets/img/marca/emblema-grande.png") no-repeat center/contain;
+  width:340px;height:340px;background:image-set(url("assets/img/marca/emblema-color-grande.webp") type("image/webp"),
+    url("assets/img/marca/emblema-grande.png") type("image/png")) no-repeat center/contain;
   opacity:.05;pointer-events:none}
 @media(max-width:1100px){.cifras::after{display:none}}
 
@@ -604,7 +606,11 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 /* --- listado --- */
 .filtros{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 26px}
-.filtro{font-family:var(--texto);font-size:var(--t-apoyo);font-weight:700;letter-spacing:.03em;padding:10px 16px;border:1px solid rgba(var(--tinta-jacaranda-rgb),.2);background:var(--blanco);color:var(--tinta);border-radius:var(--radio);cursor:pointer;transition:all var(--paso)}
+/* «transition:all» animaba TAMBIÉN el contorno de foco: al tabular hasta aquí
+   el anillo tardaba 200 ms en aparecer, desvaneciéndose desde cero. Un
+   indicador de foco que se desvanece es peor que uno que aparece. Se nombran
+   las tres propiedades que sí deben moverse. */
+.filtro{font-family:var(--texto);font-size:var(--t-apoyo);font-weight:700;letter-spacing:.03em;padding:10px 16px;border:1px solid rgba(var(--tinta-jacaranda-rgb),.2);background:var(--blanco);color:var(--tinta);border-radius:var(--radio);cursor:pointer;transition:background var(--paso),border-color var(--paso),color var(--paso)}
 .filtro:hover{border-color:var(--jacaranda)}
 .filtro[aria-pressed="true"]{background:var(--jacaranda);border-color:var(--jacaranda);color:#fff}
 .padron{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(268px,100%),1fr));gap:18px}
@@ -857,10 +863,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    aspecto, y en pantallas de dedo se separan entre sí. */
 .norma__fuente,.migas a,.visita__mapa,.recurso__nota a,.nota-asterisco a,
 .cuidado__contacto a,.pie__lista a{
-  display:inline-block;min-height:24px;line-height:24px}
+  display:inline-block;min-height:24px;line-height:24px;
+  /* Y ANCHO, que faltaba. «911» medía 22 px de ancho: el objetivo de toque más
+     pequeño del sitio era justamente el número de emergencias. WCAG 2.5.8 pide
+     24×24. En enlaces largos esta regla no hace nada. */
+  min-width:24px;text-align:center}
 @media(pointer:coarse){
   .norma__fuente,.migas a,.visita__mapa,.recurso__nota a,.nota-asterisco a,
-  .cuidado__contacto a,.pie__lista a{min-height:32px;line-height:32px}
+  .cuidado__contacto a,.pie__lista a{min-height:32px;line-height:32px;min-width:32px}
   .pie__lista li{margin-bottom:2px}
 }
 
@@ -1396,6 +1406,25 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .enlace__fuera{font-size:var(--t-nota);line-height:1;color:var(--jacaranda-hondo)}
 .enlace--fuente.enlace--apagado b{color:var(--gris)}
 /* Solo para lectores de pantalla: la flecha es un adorno, la frase es el dato. */
+/* AVISO DE PESTAÑA NUEVA.
+   Cuarenta y cinco enlaces del sitio abren otra pestaña y ninguno lo decía. La
+   flecha «→» que ya llevaban significa «ir», no «se abre en otra ventana»:
+   quien usa lector de pantalla aparecía en otra pestaña sin aviso y quien usa
+   teclado perdía el botón de atrás.
+   La marca visible es esta flecha; el aviso para lector de pantalla lo añade
+   menu.js, porque el contenido de un pseudoelemento no todos lo anuncian. */
+a[target="_blank"]::after{content:"\2197";font-size:.82em;margin-left:.28em;
+  color:currentColor;opacity:.7;font-weight:400;text-decoration:none;display:inline-block}
+a[target="_blank"].sin-marca-externa::after{content:none}
+
+/* El aviso de «sin JavaScript». Va arriba del todo y no se puede ignorar:
+   quien lo ve está viendo una página incompleta. */
+.sin-guion{background:var(--niebla);border-bottom:3px solid var(--jacaranda);
+  color:var(--tinta);padding:16px 0;font-size:var(--t-apoyo);line-height:1.55}
+.sin-guion p{margin:0;max-width:var(--medida)}
+.sin-guion b{display:block;font-weight:700;margin-bottom:4px;color:var(--jacaranda-hondo)}
+.sin-guion a{display:inline-block;margin-top:8px;color:var(--jacaranda-hondo);font-weight:700}
+
 .vo{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* El identificador se partía por cualquiera de sus guiones. Una sola línea,
@@ -2095,6 +2124,21 @@ body.sin-desplazamiento{overflow:hidden}
 </head>
 <body>
 <a class="saltar" href="#contenido">Saltar al contenido</a>
+<!-- SIN JAVASCRIPT NO HAY REGISTRO.
+     El listado, el mapa, las cifras y la hilera de ejemplares los pinta el
+     guion al cargar. Quien llegue sin él veía una página con toda su prosa y
+     ni un árbol, sin enterarse de que faltaba algo. Esto lo dice, y manda a lo
+     único que sí se lee sin guion: los datos abiertos. -->
+<noscript>
+  <div class="sin-guion">
+    <p class="envoltura">
+      <b>Este sitio necesita JavaScript para mostrar el registro.</b>
+      Sin él puedes leer la información general y el marco normativo, pero no el
+      listado de ejemplares, el mapa ni las cifras.
+      <a href="recursos.html#datos">Descargar los datos del registro</a>
+    </p>
+  </div>
+</noscript>
 <header class="barra">
   <div class="envoltura">
     <a class="marca" href="index.html" aria-label="Árboles Patrimoniales de la Ciudad de México · Secretaría del Medio Ambiente">
@@ -2390,9 +2434,13 @@ body.sin-desplazamiento{overflow:hidden}
     <div class="pie__rejilla">
 
       <div class="pie__col pie__col--sede">
-        <img class="pie__emblema" src="assets/img/marca/emblema-media.png"
-             srcset="assets/img/marca/emblema-media.png 1x, assets/img/marca/emblema-grande.png 2x"
-             alt="Árboles Patrimoniales de la Ciudad de México" width="128" height="128">
+        <picture>
+          <source type="image/webp"
+                  srcset="assets/img/marca/emblema-color-media.webp 1x, assets/img/marca/emblema-color-grande.webp 2x">
+          <img class="pie__emblema" src="assets/img/marca/emblema-media.png"
+               srcset="assets/img/marca/emblema-media.png 1x, assets/img/marca/emblema-grande.png 2x"
+               alt="Árboles Patrimoniales de la Ciudad de México" width="128" height="128">
+        </picture>
         <h3 class="rotulo">Secretaría del Medio Ambiente</h3>
         <p class="pie__dir">Gobierno de la Ciudad de México<br>
           Plaza de la Constitución 1, 3.<sup>er</sup> piso<br>
@@ -2778,6 +2826,9 @@ function activarArrastre(pista) {
 function activarDeslizadores() {
   const enganchar = () => {
     for (const p of document.querySelectorAll("[data-desliza]")) { activarDeslizador(p); activarBordes(p); activarArrastre(p); }
+    // Varios enlaces externos los pinta el sitio con los datos ya cargados, así
+    // que el aviso de pestaña nueva se vuelve a pasar en cada cambio del árbol.
+    avisarPestanaNueva();
   };
   enganchar();
   if (!("MutationObserver" in window)) return;
@@ -2873,6 +2924,42 @@ function activarBordes(pista) {
   pista.addEventListener("mouseleave", parar);
   // Si alguien esta leyendo un globo, no se le mueve la hilera bajo el raton.
   pista.addEventListener("mouseover", (ev) => { if (ev.target.closest(".bosque__globo")) parar(); });
+}
+
+/**
+ * Dice, para quien usa lector de pantalla, que un enlace abre otra pestaña.
+ *
+ * La flecha «↗» que la hoja de estilos añade es la señal visible; esto es la
+ * audible. No se toca el aria-label existente —hay enlaces de red social que
+ * ya lo traen— sino que se añade un texto oculto al final, que es lo que el
+ * lector lee después del nombre del enlace.
+ *
+ * Se hace con guion y no escribiéndolo cuarenta y cinco veces a mano porque
+ * varios de esos enlaces los pinta el propio sitio a partir de los datos.
+ */
+function avisarPestanaNueva(raiz = document) {
+  const AVISO = " (se abre en otra pestaña)";
+  for (const a of raiz.querySelectorAll('a[target="_blank"]')) {
+    if (a.dataset.avisoExterno === "si") continue;
+    a.dataset.avisoExterno = "si";
+
+    /* Varios enlaces ya traían una flecha decorativa «→» en un span oculto al
+       lector. Añadirles encima la «↗» de la hoja de estilos dejaba dos flechas
+       seguidas. Se reaprovecha la que ya está: pasa a ser la diagonal, que dice
+       más —«ir» y «se abre en otra parte»— y se apaga el pseudoelemento. */
+    const decorativa = a.querySelector(':scope > span[aria-hidden="true"]');
+    if (decorativa && /[→↗]/.test(decorativa.textContent)) {
+      decorativa.textContent = decorativa.textContent.replace(/→/g, "↗");
+      a.classList.add("sin-marca-externa");
+    }
+
+    const etiqueta = a.getAttribute("aria-label");
+    if (etiqueta) { a.setAttribute("aria-label", etiqueta + AVISO); continue; }
+    const vo = document.createElement("span");
+    vo.className = "vo";
+    vo.textContent = AVISO;
+    a.appendChild(vo);
+  }
 }
 
 })();

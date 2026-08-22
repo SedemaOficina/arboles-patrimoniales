@@ -321,6 +321,9 @@ export function activarArrastre(pista) {
 export function activarDeslizadores() {
   const enganchar = () => {
     for (const p of document.querySelectorAll("[data-desliza]")) { activarDeslizador(p); activarBordes(p); activarArrastre(p); }
+    // Varios enlaces externos los pinta el sitio con los datos ya cargados, así
+    // que el aviso de pestaña nueva se vuelve a pasar en cada cambio del árbol.
+    avisarPestanaNueva();
   };
   enganchar();
   if (!("MutationObserver" in window)) return;
@@ -416,4 +419,40 @@ export function activarBordes(pista) {
   pista.addEventListener("mouseleave", parar);
   // Si alguien esta leyendo un globo, no se le mueve la hilera bajo el raton.
   pista.addEventListener("mouseover", (ev) => { if (ev.target.closest(".bosque__globo")) parar(); });
+}
+
+/**
+ * Dice, para quien usa lector de pantalla, que un enlace abre otra pestaña.
+ *
+ * La flecha «↗» que la hoja de estilos añade es la señal visible; esto es la
+ * audible. No se toca el aria-label existente —hay enlaces de red social que
+ * ya lo traen— sino que se añade un texto oculto al final, que es lo que el
+ * lector lee después del nombre del enlace.
+ *
+ * Se hace con guion y no escribiéndolo cuarenta y cinco veces a mano porque
+ * varios de esos enlaces los pinta el propio sitio a partir de los datos.
+ */
+export function avisarPestanaNueva(raiz = document) {
+  const AVISO = " (se abre en otra pestaña)";
+  for (const a of raiz.querySelectorAll('a[target="_blank"]')) {
+    if (a.dataset.avisoExterno === "si") continue;
+    a.dataset.avisoExterno = "si";
+
+    /* Varios enlaces ya traían una flecha decorativa «→» en un span oculto al
+       lector. Añadirles encima la «↗» de la hoja de estilos dejaba dos flechas
+       seguidas. Se reaprovecha la que ya está: pasa a ser la diagonal, que dice
+       más —«ir» y «se abre en otra parte»— y se apaga el pseudoelemento. */
+    const decorativa = a.querySelector(':scope > span[aria-hidden="true"]');
+    if (decorativa && /[→↗]/.test(decorativa.textContent)) {
+      decorativa.textContent = decorativa.textContent.replace(/→/g, "↗");
+      a.classList.add("sin-marca-externa");
+    }
+
+    const etiqueta = a.getAttribute("aria-label");
+    if (etiqueta) { a.setAttribute("aria-label", etiqueta + AVISO); continue; }
+    const vo = document.createElement("span");
+    vo.className = "vo";
+    vo.textContent = AVISO;
+    a.appendChild(vo);
+  }
 }

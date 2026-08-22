@@ -125,16 +125,21 @@ t('css · el aire de la portada en pantalla ancha se queda por debajo de los 64 
 // El sello firma la acuarela; si vuelve al flujo, reaparecen los 144 px y la
 // portada vuelve a decir tres veces el mismo nombre en 150 px de alto.
 t('css · el sello se posa sobre la ilustración, no encabeza la portada',
-  /\.portada \.envoltura>\.sello\{position:absolute/.test(css));
+  /\.portada \.envoltura \.sello\{position:absolute/.test(css));
 // La posición se cuelga del alto de la caja de la ilustración para que suba y
 // baje con ella. Un top en pixeles fijos se despega en cuanto cambia el clamp.
 t('css · la posición del sello se calcula a partir del alto de la ilustración',
-  /\.portada \.envoltura>\.sello\{[^}]*top:calc\(clamp\(380px,52vw,600px\)/.test(css));
+  /\.portada \.envoltura \.sello\{[^}]*top:calc\(clamp\(380px,52vw,600px\)/.test(css));
 // Entre 901 y 999 px el hueco pálido del ángulo inferior derecho mide 84 px:
 // no sostiene un disco de 128. El sello vuelve al flujo por debajo de 1000 px.
 t('css · el sello sobre la acuarela solo aplica de 1000 px en adelante',
-  /@media\(min-width:1000px\)\{[\s\S]{0,400}\.portada \.envoltura>\.sello\{position:absolute/.test(css));
+  /@media\(min-width:1000px\)\{[\s\S]{0,500}\.portada \.envoltura \.sello\{position:absolute/.test(css));
 // En esa franja el parrafo de entrada se metia debajo del follaje.
+// El <picture> que envuelve al sello es una caja de línea que rompería el
+// posicionamiento si contara en el flujo. display:contents la borra del árbol
+// de cajas sin borrarla del documento.
+t('css · el envoltorio <picture> no estorba a la posición del sello',
+  /\.portada \.envoltura>picture,\.pie__col--sede>picture,\.hoja-cabeza>picture\{display:contents\}/.test(css));
 t('css · la entrada se acorta en la franja de 901 a 999 px',
   /@media\(min-width:901px\) and \(max-width:999px\)\{\.entrada\{max-width:400px\}\}/.test(css));
 t('css · el sello no vuelve a separarse 22 px', /\.sello\{display:block;width:132px;height:auto;margin:0 0 12px\}/.test(css));

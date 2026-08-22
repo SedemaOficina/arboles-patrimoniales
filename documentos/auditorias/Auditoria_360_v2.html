@@ -210,12 +210,15 @@ section>h2+.dim{margin-top:22px}
     <h3>1 · Accesibilidad <span class="sello-ver s-bien">sana</span></h3>
     <p><span class="dato dato--bien">0 violaciones</span> de axe-core en las tres páginas a dos anchos, con reglas WCAG 2.1 A, AA y buenas prácticas. Es un resultado poco común y conviene decirlo antes que los peros.</p>
     <p>Lo que además se comprobó a mano y está bien: un solo <code>&lt;h1&gt;</code> por página, <b>ningún salto de nivel</b> en la jerarquía de encabezados, cero imágenes sin <code>alt</code>, cero identificadores repetidos, las cuatro regiones de referencia (<code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code>) presentes, <code>lang="es-MX"</code>, y <code>rel="noopener"</code> en los 45 enlaces externos.</p>
-    <p><b>Tres hallazgos menores.</b></p>
+    <p><b>Tres hallazgos menores. Y dos de ellos se encogieron al comprobarlos.</b></p>
     <ul>
-      <li><b>Dos clases de elemento sin indicador de foco visible:</b> <code>.filtro</code> y <code>.boton</code> en la portada. Quien navega con teclado no ve dónde está parado. Es WCAG 2.4.7, nivel AA. <span class="dato dato--mal">arreglo: 10 minutos</span></li>
-      <li><b>Objetivos táctiles por debajo de 24 px:</b> un enlace de <span class="dato">22×25</span> en las tres páginas y uno de <span class="dato">135×19</span> en la ficha. WCAG 2.5.8 pide 24×24 como mínimo. En un teléfono se falla el toque.</li>
-      <li><b>45 enlaces abren pestaña nueva sin decirlo.</b> La flecha «→» significa «ir», no «se abre en otra ventana». Quien usa lector de pantalla se encuentra en otra pestaña sin aviso, y quien usa teclado pierde el botón de atrás.</li>
+      <li><b>46 enlaces abrían pestaña nueva sin decirlo.</b> La flecha «→» significa «ir», no «se abre en otra ventana». Quien usa lector de pantalla aparecía en otra pestaña sin aviso, y quien usa teclado perdía el botón de atrás. <span class="dato dato--bien">resuelto</span></li>
+      <li><b>Un objetivo táctil por debajo de 24 px:</b> el enlace <code>911</code> del pie, de <span class="dato">22×25</span>. El objetivo de toque más pequeño del sitio era justamente el número de emergencias. <span class="dato dato--bien">resuelto</span></li>
+      <li><b>El foco del filtro tardaba 200 ms en aparecer.</b> El anillo existía —mi primera medición dijo que no y estaba mal, porque enfocar por guion no dispara <code>:focus-visible</code>—. Lo que ocurría es que <code>transition:all</code> animaba también el contorno, así que el indicador se desvanecía desde cero en lugar de aparecer. <span class="dato dato--bien">resuelto</span></li>
     </ul>
+    <div class="aviso">
+      <p><b>Dos correcciones a mi propia auditoría.</b> Dije que <code>.boton</code> tampoco tenía foco visible: <b>era falso</b>, salió del mismo error de medición. Y dije que las imágenes sin <code>width</code> y <code>height</code> hacían saltar el contenido al cargar: medido con el observador de desplazamientos, el CLS real es <span class="dato dato--bien">0.0034</span> en la portada, <span class="dato dato--bien">0.0435</span> en la ficha y <span class="dato dato--bien">0.0000</span> en Recursos — los tres muy por debajo del 0.1 que se considera bueno. <b>El problema no existe.</b> Un auditor que no comprueba sus propios hallazgos solo reparte inquietud.</p>
+    </div>
   </div>
 
   <div class="dim" id="d2">
@@ -244,7 +247,7 @@ section>h2+.dim{margin-top:22px}
       <p><b>Y esto corrige un hallazgo anterior.</b> La auditoría de archivos sin uso marcó dieciséis WebP de marca como «nadie los nombra» y estuve a punto de apartarlos. Las suites lo impidieron porque son entregables de marca. Pero la lectura correcta es otra: <b>no están sin uso por error, están sin conectar.</b> Alguien entregó las versiones ligeras y el sitio nunca las pidió.</p>
     </div>
     <p><b>Un segundo detalle:</b> la marca de agua del cintillo carga <code>emblema-grande.png</code> —158 KB— para dibujarla al <b>5 % de opacidad</b>. Ciento cincuenta y ocho kilobytes de algo que casi no se ve.</p>
-    <p><b>Y un tercero:</b> 13 imágenes en la portada y 14 en la ficha no declaran <code>width</code> ni <code>height</code>. El navegador no sabe cuánto sitio reservarles, así que el contenido salta al cargar. Es la causa típica de que alguien toque el enlace equivocado.</p>
+    <p><b>Y un tercero que resultó no serlo:</b> 13 imágenes en la portada y 14 en la ficha no declaran <code>width</code> ni <code>height</code>. Parecía causa de saltos al cargar, pero el desplazamiento medido es despreciable en las tres páginas. Se deja anotado y no se toca.</p>
   </div>
 
   <div class="dim" id="d4">
@@ -371,16 +374,17 @@ section>h2+.dim{margin-top:22px}
     <tbody>
       <tr><td><b>1</b></td><td>Rehacer las corridas de i-Tree con parámetros homogéneos</td><td>Tú</td><td>—</td><td>Es lo único que hoy publica algo falso.</td></tr>
       <tr><td><b>2</b></td><td>Consultar a jurídico si se publica el nombre de quien nomina</td><td>Tú</td><td>—</td><td>Antes de portar: después serán 23 filas en vez de una.</td></tr>
-      <tr><td><b>3</b></td><td>Servir los WebP que ya están entregados</td><td>Yo</td><td>1 hora</td><td>−230 KB por visita sin tocar calidad.</td></tr>
-      <tr><td><b>4</b></td><td>Foco visible en <code>.filtro</code> y <code>.boton</code></td><td>Yo</td><td>10 min</td><td>WCAG AA, y es barato.</td></tr>
-      <tr><td><b>5</b></td><td>Avisar cuándo un enlace abre pestaña nueva</td><td>Yo</td><td>½ jornada</td><td>45 enlaces; se resuelve con un pseudoelemento y texto para lector.</td></tr>
-      <tr><td><b>6</b></td><td>Declarar <code>width</code> y <code>height</code> en las imágenes</td><td>Yo</td><td>½ jornada</td><td>Quita el salto de contenido al cargar.</td></tr>
+      <tr><td><b>3</b></td><td>Servir los WebP que ya están entregados</td><td>—</td><td><b>hecho</b></td><td>−230 KB por visita. Incluye el membrete de la ficha, que se descargaba oculto.</td></tr>
+      <tr><td><b>4</b></td><td>Foco del filtro, sin animar el contorno</td><td>—</td><td><b>hecho</b></td><td>El anillo ya no se desvanece: aparece.</td></tr>
+      <tr><td><b>5</b></td><td>Avisar cuándo un enlace abre pestaña nueva</td><td>—</td><td><b>hecho</b></td><td>46 enlaces, con flecha visible y aviso para lector.</td></tr>
+      <tr><td><b>6</b></td><td><s>Declarar <code>width</code> y <code>height</code></s></td><td>—</td><td><b>descartado</b></td><td>El desplazamiento medido es despreciable. No había problema.</td></tr>
       <tr><td><b>7</b></td><td>Limpiar los restos de captura de dos textos</td><td>Tú, en la hoja</td><td>2 min</td><td>Se ven en la ficha.</td></tr>
       <tr><td><b>8</b></td><td>Enganche de Git que exija <code>docs/</code> al commitear <code>fuente/</code></td><td>Yo</td><td>1 hora</td><td>Cierra de verdad el fallo que ya ocurrió.</td></tr>
-      <tr><td><b>9</b></td><td>Objetivos táctiles a 24×24</td><td>Yo</td><td>1 hora</td><td>WCAG 2.5.8.</td></tr>
+      <tr><td><b>9</b></td><td>Objetivos táctiles a 24×24</td><td>—</td><td><b>hecho</b></td><td>Era el <code>911</code> del pie.</td></tr>
       <tr><td><b>10</b></td><td>Datos estructurados <code>schema.org</code></td><td>Yo</td><td>½ jornada</td><td>Mejora de alcance, no defecto.</td></tr>
-      <tr><td><b>11</b></td><td><code>sitemap.xml</code> generado en el armado</td><td>Yo</td><td>½ hora</td><td>Ayuda donde el sitio es débil: encontrar las fichas sin ejecutar el guion.</td></tr>
-      <tr><td><b>12</b></td><td>Aviso <code>noscript</code> y, si se quiere, listado mínimo sin guion</td><td>Yo</td><td>1 h / 1 jornada</td><td>Hoy la página sin JavaScript parece completa y está vacía.</td></tr>
+      <tr><td><b>11</b></td><td><code>sitemap.xml</code> generado en el armado</td><td>—</td><td><b>hecho</b></td><td>Con su alcance dicho: son tres direcciones, no dieciséis.</td></tr>
+      <tr><td><b>12</b></td><td>Aviso <code>noscript</code></td><td>—</td><td><b>hecho</b></td><td>Y manda a los datos abiertos, que sí se leen sin guion.</td></tr>
+      <tr><td><b>13</b></td><td>Listado mínimo legible sin JavaScript</td><td><b>Decisión</b></td><td>1 jornada</td><td>Cambia la arquitectura: el registro pasaría a escribirse en el HTML al armar.</td></tr>
     </tbody>
   </table>
   <div class="ojo">
