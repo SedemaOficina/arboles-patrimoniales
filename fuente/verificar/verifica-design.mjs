@@ -6,8 +6,18 @@ process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 const PRUEBA = '../prueba/';
 let ok=0,mal=0; const t=(n,c,d='')=>{ c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d)); };
 console.log('\n══ CONTRATO DE CLAUDE DESIGN ══');
-const modelo = fs.readFileSync('/root/.claude/uploads/94ad78c7-5506-5a60-ad3f-7cc40013ed06/ff822544-test.dc.html','utf8');
-t('El archivo de referencia usa el script tipado', /<script type="text\/x-dc" data-dc-script>/.test(modelo));
+/* El archivo de referencia de Claude Design se subió a la conversación, no al
+   repositorio: en cualquier otra máquina no existe. Antes se leía sin más y la
+   suite entera reventaba con ENOENT —era la razón de que no corriera fuera del
+   entorno donde se escribió—. Ahora, si no está, se anota y se sigue: una
+   comprobación que no se puede hacer no debe tumbar a las otras dieciséis. */
+const RUTA_MODELO = '/root/.claude/uploads/94ad78c7-5506-5a60-ad3f-7cc40013ed06/ff822544-test.dc.html';
+if (fs.existsSync(RUTA_MODELO)) {
+  const modelo = fs.readFileSync(RUTA_MODELO, 'utf8');
+  t('El archivo de referencia usa el script tipado', /<script type="text\/x-dc" data-dc-script>/.test(modelo));
+} else {
+  console.log('  ➖ El archivo de referencia de Claude Design no está en esta máquina; se omite esa comprobación');
+}
 
 for (const f of [PRUEBA+'portada.dc.html',PRUEBA+'ficha.dc.html']) {
   const s = fs.readFileSync(f, 'utf8');
