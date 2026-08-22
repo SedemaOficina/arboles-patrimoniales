@@ -1,0 +1,29 @@
+AUDITORÍAS SUPERADAS
+====================
+
+Aquí viven las auditorías que ya fueron reemplazadas por una versión
+posterior. No se borran: son el registro de qué se revisó, cuándo y con qué
+criterio. Sirven para responder «¿esto ya se había visto antes?» sin volver a
+medirlo.
+
+QUÉ HAY AQUÍ
+------------
+  Auditoria_360.md
+      Primera revisión integral del sitio. La sustituye
+      ../Auditoria_360_v2.html, que además incorpora la auditoría en vivo
+      contra la página publicada y la corrección de dos hallazgos falsos.
+
+  Auditoria_integral.md
+      Revisión temprana, anterior al sistema de constantes de estilo.
+      Sus hallazgos vigentes se absorbieron en la 360 v2.
+
+  Auditoria_UX_UI_sistema_de_diseno.md
+      Revisión de interfaz previa a la unificación de la medida de lectura y
+      a los tokens de color, capa, radio y duración. La sustituye
+      ../Auditoria_valores_sueltos.html.
+
+REGLA
+-----
+Cuando una auditoría vigente se reemplace, se mueve aquí y se anota arriba
+qué documento la sustituye. Una auditoría sin sustituto declarado no es
+histórica: sigue vigente y va en la carpeta de arriba.
