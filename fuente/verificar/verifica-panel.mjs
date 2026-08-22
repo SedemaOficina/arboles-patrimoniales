@@ -1,7 +1,8 @@
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 // Las suites leen la salida de ../../prueba y las fuentes de ..; se plantan
 // solas en fuente/ para poder ejecutarse desde cualquier sitio.
-process.chdir(new URL('..', import.meta.url).pathname);
+process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 const PRUEBA = '../prueba/';
 const D=JSON.parse(fs.readFileSync('verificar/datos/datos-reales.json','utf8'));
 const I=await import('../indicadores.js');

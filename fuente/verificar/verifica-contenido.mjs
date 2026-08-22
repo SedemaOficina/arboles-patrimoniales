@@ -1,7 +1,8 @@
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 // Las suites leen la salida de ../../prueba y las fuentes de ..; se plantan
 // solas en fuente/ para poder ejecutarse desde cualquier sitio.
-process.chdir(new URL('..', import.meta.url).pathname);
+process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 const PRUEBA = '../prueba/';
 let ok=0,mal=0; const t=(n,c,d='')=>{ c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d)); };
 console.log('\n══ SECCIONES NUEVAS Y CITAS ══');

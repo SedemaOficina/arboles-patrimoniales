@@ -1,7 +1,8 @@
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 // Las suites leen la salida de ../../prueba y las fuentes de ..; se plantan
 // solas en fuente/ para poder ejecutarse desde cualquier sitio.
-process.chdir(new URL('..', import.meta.url).pathname);
+process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 const PRUEBA = '../prueba/';
 const src=fs.readFileSync('ficha-dc-logica.js','utf8');
 class DCLogic{ setState(o){ this.state={...this.state,...o}; } }

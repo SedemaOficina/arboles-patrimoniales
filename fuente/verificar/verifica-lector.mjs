@@ -5,9 +5,10 @@
  * El lector no toca el sitio: si esta suite pasa, el sitio sigue igual.
  */
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import * as L from '../padron/lector-v2.js';
 /* Igual que las demás suites: se planta en fuente/ para correr desde donde sea. */
-process.chdir(new URL('..', import.meta.url).pathname);
+process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 
 console.log('\n══ LECTOR DEL PADRÓN v2 ══');
 let ok = 0, mal = 0;

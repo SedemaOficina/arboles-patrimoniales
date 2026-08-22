@@ -15,7 +15,8 @@
  * cuenta. Si aparece una nueva, esto falla.
  */
 import fs from 'fs';
-process.chdir(new URL('..', import.meta.url).pathname);
+import { fileURLToPath } from 'url';
+process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 let ok = 0, mal = 0;
 const t = (n, c, d = '') => { c ? (ok++, console.log('  ✅', n)) : (mal++, console.log('  ❌', n, d)); };
 
