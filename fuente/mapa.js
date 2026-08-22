@@ -84,7 +84,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     history.replaceState(null, "", location.pathname + (cad ? "?" + cad : "") + location.hash);
   }
   const marcadores = new Map();
-  let mapa = null, marcadorUsuario = null, anilloCercano = null;
+  let mapa = null, marcadorUsuario = null;
   // Estas dos se leen durante el montaje del mapa, que ocurre antes de las
   // funciones que las usan: declararlas junto a ellas las dejaba en zona muerta
   // y el montaje reventaba con «Cannot access before initialization».
@@ -421,28 +421,24 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
       const pin = el && el.querySelector(".pin");
       if (pin) pin.classList.toggle("pin--cercano", s === slugResultado);
     });
-    pintarAnilloCercano();
   }
 
-  /** Radio del anillo del ejemplar, en metros. No mide precisión —la posición
-   *  del árbol está verificada— sino que replica en verde el mismo gesto
-   *  gráfico del anillo morado de la persona, para que la pareja
-   *  «aquí estoy / aquí está tu árbol» se lea como un solo par. */
-  const RADIO_ANILLO_CERCANO = 90;
+  /* EL ANILLO GEOGRÁFICO VERDE SE RETIRÓ, Y NO POR ADORNO DE MENOS.
+     Era un círculo de 90 m de radio alrededor del árbol, gemelo visual del
+     anillo morado de la persona. Pero el morado SIGNIFICA algo —su radio es la
+     precisión que reporta el GPS: «estás en algún punto de aquí dentro»— y el
+     verde no significaba nada: se puso para replicar el gesto gráfico. Quien
+     entiende el morado lee el verde igual y concluye que la posición del árbol
+     tiene noventa metros de incertidumbre, cuando está verificada.
 
-  function pintarAnilloCercano() {
-    if (anilloCercano) { mapa.removeLayer(anilloCercano); anilloCercano = null; }
-    if (!slugResultado || !mapa) return;
-    const m = marcadores.get(slugResultado);
-    if (!m) return;
-    anilloCercano = L.circle(m.getLatLng(), {
-      radius: RADIO_ANILLO_CERCANO, className: "anillo-cercano",
-      color: "#1E4D2B", weight: 3, opacity: 0.95,
-      fillColor: "#2D7A3E", fillOpacity: 0.2, interactive: false,
-    }).addTo(mapa);
-    // El anillo se dibuja por debajo del marcador para no comerse el punto.
-    if (anilloCercano.bringToBack) anilloCercano.bringToBack();
-  }
+     Copiar la forma de un elemento que comunica un dato, sin el dato, no es
+     decoración: es afirmar algo falso. Se retira. La pareja «aquí estoy / aquí
+     está tu árbol» la sostienen el color y el pulso, que no prometen precisión.
+
+     De paso el marcador queda legible: llevaba cinco círculos encimados —borde
+     blanco, sombra en anillo, parpadeo del propio punto, pulso que se expande y
+     este anillo con su relleno— y a cierto acercamiento se leían como una
+     mancha. Ahora son el punto, un anillo suave fijo y un solo pulso. */
 
   /** Los n ejemplares más próximos, del más cercano al más lejano. */
   function masCercanos(lat, lng, n) {

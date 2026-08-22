@@ -395,8 +395,15 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* Pie del cintillo: los nombres de las especies y la cobertura de la suma de
    edades. Va dentro de la banda, en cuerpo pequeño: no compite con las cifras
    pero viaja pegado a ellas, que es donde la salvedad tiene sentido. */
-.cifras__pie{margin:0;color:rgba(255,255,255,.6);position:relative;z-index:1;
-  font-size:12.5px;line-height:1.6;padding:0 0 30px;display:grid;gap:4px}
+/* Un renglón, no tres. Eran tres frases apiladas en cuerpo casi de lectura y
+   pesaban tanto como las cifras que matizan. Con el asterisco delante y las
+   frases separadas por raya, se leen como lo que son: notas al margen. */
+.cifras__pie{margin:0;color:rgba(255,255,255,.52);position:relative;z-index:1;
+  font-size:11.5px;line-height:1.65;padding:0 0 30px;max-width:none}
+.cifras__pie__ast{color:var(--dorado-luz);font-weight:700;margin-right:5px}
+/* La raya separa frases; el punto medio, que ya separa las especies dentro de
+   la primera, se confundiría con ella. */
+.cifras__pie span + span::before{content:" — ";color:rgba(255,255,255,.32)}
 .cifras__pie[hidden]{display:none}
 .cifras__pie::before{content:"";display:block;height:1px;background:rgba(199,159,202,.22);margin-bottom:16px}
 
@@ -1261,7 +1268,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    hilera ya no necesita 162 px de aire arriba —y ese aire, ganado con margen
    negativo, era exactamente donde ahora vive la guía: el globo se encimaba con
    las fichas moradas cada vez que el cursor tocaba un árbol. */
-.bosque__pista{position:relative;z-index:1;display:flex;align-items:flex-start;gap:18px;scroll-snap-type:x proximity;overflow-x:auto;overflow-y:hidden;padding:0 0 22px}
+.bosque__pista{position:relative;z-index:1;display:flex;align-items:flex-start;gap:18px;scroll-snap-type:x proximity;overflow-x:auto;overflow-y:hidden;padding:0 0 8px}
 /* Firefox no acepta ::-webkit-scrollbar; su propiedad propia hace lo mismo. */
 .bosque__pista{scrollbar-width:none}
 .bosque__pista::-webkit-scrollbar{display:none}
@@ -1362,7 +1369,12 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   color:rgba(42,22,48,.3);font-weight:700}
 .deslizador__pista-guia b{display:inline-flex;color:var(--jacaranda);flex:0 0 auto;opacity:.75}
 .deslizador__mando{display:flex;align-items:center;gap:10px;flex:0 0 auto}
-.deslizador--guia .deslizador__paso{width:38px;height:38px;font-size:22px}
+/* La guía ya no lleva botones; queda solo la instrucción, alineada a la
+   izquierda como cualquier otro texto de la portada. */
+.deslizador--guia{justify-content:flex-start}
+/* La hilera es región enfocable: el foco tiene que verse, y por fuera, para
+   no morder el dibujo del primer árbol. */
+.bosque__pista:focus-visible{outline:3px solid var(--dorado);outline-offset:4px;border-radius:3px}
 @media(max-width:700px){
   .deslizador--guia{gap:10px}
   .deslizador__guia{gap:4px 12px}
@@ -1395,7 +1407,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    que tapa sin dibujar un recuadro.
    --lienzo-bosque tiene que valer lo mismo que LIENZO_BOSQUE en logica.js: es
    la altura del ejemplar más alto, y de ella cuelgan la regla y el suelo. */
-.bosque{--lienzo-bosque:268px;position:relative;z-index:2;margin:64px 0 0;padding:0;
+.bosque{--lienzo-bosque:268px;position:relative;z-index:2;margin:64px 0 0;padding:0 0 40px;
   background:var(--papel)}
 @media(max-width:700px){.bosque{margin-top:44px}}
 
@@ -1408,12 +1420,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* El marco de la regla. Existe para que la regla se ancle al lienzo del dibujo
    y no a la hilera entera: la hilera se desplaza en horizontal y la regla no
    debe moverse con ella. */
-/* El canalón de la derecha es para los rótulos de la regla. Sin él, «25 m» y
-   «20 m» caían encima del último árbol de la hilera y su fondo de papel abría
-   un agujero en la copa. La hilera se mete 46 px; la regla, que se posiciona
-   contra la caja de relleno, los cruza y deja sus rótulos fuera del paso. */
-.bosque__lienzo{position:relative;padding-right:46px}
-@media(max-width:520px){.bosque__lienzo{padding-right:38px}}
+/* El canalón es para los rótulos de la regla. Sin él, «25 m» y «20 m» caían
+   encima de un árbol y su fondo de papel abría un agujero en la copa.
+   VA A LA IZQUIERDA, que es donde se busca el eje de alturas: se lee antes que
+   los árboles, no después de haberlos recorrido con la vista. La hilera se
+   mete 46 px; la regla, que se posiciona contra la caja de relleno, los cruza
+   y deja sus rótulos fuera del paso. */
+.bosque__lienzo{position:relative;padding-left:46px}
+@media(max-width:520px){.bosque__lienzo{padding-left:38px}}
 
 /* LA REGLA DE ALTURAS.
    Sin ella «a escala real» era una afirmación que nadie podía comprobar: trece
@@ -1424,8 +1438,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   pointer-events:none;z-index:0}
 .bosque__marca{position:absolute;left:0;right:0;display:block;
   border-top:1px dashed rgba(42,22,48,.17)}
-.bosque__marca span{position:absolute;right:0;top:-9px;background:var(--papel);
-  padding:0 6px;font-size:11px;font-weight:700;color:var(--gris);letter-spacing:.06em;
+.bosque__marca span{position:absolute;left:0;top:-9px;background:var(--papel);
+  padding:0 6px 0 0;font-size:11px;font-weight:700;color:var(--gris);letter-spacing:.06em;
   font-style:normal}
 /* El suelo es continuo y más firme que las marcas: es la línea contra la que
    se miden todas las alturas, no una división más del eje. */
@@ -1451,7 +1465,10 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .bosque__borde--izq::after{content:"‹"}
 .bosque__borde--der::after{content:"›"}
 @media(hover:none),(pointer:coarse){.bosque__borde{display:none}}
-.bosque__nota{margin:16px 0 0;font-size:13.5px;color:var(--gris);max-width:760px}
+/* La nota tenía 53 px de aire por encima —el relleno de la hilera más su
+   propio margen— y CERO por debajo: quedaba flotando lejos de los árboles que
+   explica y pegada al cintillo morado, como si fuera su encabezado. */
+.bosque__nota{margin:14px 0 0;font-size:13.5px;color:var(--gris);max-width:760px}
 .bosque__nota strong{color:var(--verde-bosque);font-weight:600}
 /* En pantalla tactil no hay raton que pasar: el globo no aplica y el pie hace
    todo el trabajo, que es justo por lo que se bajo la informacion. */
@@ -1575,37 +1592,41 @@ body.sin-desplazamiento{overflow:hidden}
    «dónde estoy / cuál es mi árbol» se lee sin buscar entre trece puntos
    iguales. El halo se dibuja en un pseudoelemento para no tocar la caja del
    marcador, que es la que Leaflet posiciona. */
-/* El punto en sí parpadea: es la señal que se distingue de un vistazo entre
-   trece marcadores iguales. No se apaga del todo —bajar a opacidad cero haría
-   desaparecer el árbol— sino que alterna entre lleno y tenue, cambiando
-   también de tamaño para que se note en pantallas pequeñas. */
+/* UN SOLO GESTO, NO CINCO.
+   El marcador llevaba encimados: el borde blanco del punto, un anillo de
+   sombra que además se animaba, el parpadeo del propio punto —que cambiaba de
+   tamaño y de opacidad—, un pulso que se expandía, y un anillo geográfico de
+   90 m con relleno. A cierto acercamiento los cinco se fundían en una mancha
+   verde y el árbol dejaba de verse como un punto.
+   Queda el punto, un anillo suave que no se mueve, y un solo pulso. El punto
+   ya no parpadea: con el pulso encima, el parpadeo era una segunda animación
+   sobre el mismo elemento y lo que se leía era temblor, no señal. */
+/* La sombra negra del punto normal es «0 2px 8px»: cae dos píxeles hacia
+   abajo. Debajo del anillo verde eso se lee como un anillo descentrado, no
+   como sombra. Aquí se acorta y se centra, y el anillo queda concéntrico. */
 .pin--cercano{background:var(--verde-vivo);z-index:850;
-  box-shadow:0 0 0 3px rgba(45,122,62,.35),0 2px 8px rgba(0,0,0,.35);
-  animation:parpadeo-cercano 1.2s ease-in-out infinite}
-@keyframes parpadeo-cercano{
-  0%,100%{transform:translate(-50%,-50%) scale(1);   opacity:1;  box-shadow:0 0 0 3px rgba(45,122,62,.35),0 2px 8px rgba(0,0,0,.35)}
-  50%    {transform:translate(-50%,-50%) scale(1.4); opacity:.55;box-shadow:0 0 0 9px rgba(45,122,62,.16),0 2px 8px rgba(0,0,0,.35)}
-}
-/* Sobre el parpadeo va un pulso que se expande, el mismo gesto que ya usa el
-   punto de la persona en morado. */
+  transform:translate(-50%,-50%) scale(1.2);
+  box-shadow:0 0 0 3px rgba(45,122,62,.32),0 1px 4px rgba(0,0,0,.26)}
+.pin--cercano:hover{transform:translate(-50%,-50%) scale(1.35)}
+/* El pulso es ahora la única señal en movimiento, así que se dibuja con más
+   cuerpo del que tenía cuando competía con el parpadeo. */
 .pin--cercano::after{content:"";position:absolute;left:50%;top:50%;
   width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;
   border:3px solid var(--verde-vivo);pointer-events:none;
   animation:pulso-cercano 1.9s ease-out infinite}
+/* El pulso no descansa: antes se apagaba a los dos tercios y pasaba medio
+   segundo sin anillo ninguno, en el que el marcador se confundía con los otros
+   doce. Ahora el ciclo termina donde empieza. */
 @keyframes pulso-cercano{
   0%  {transform:scale(1);   opacity:.85}
-  70% {transform:scale(3.4); opacity:0}
-  100%{transform:scale(3.4); opacity:0}
+  85% {transform:scale(2.9); opacity:0}
+  100%{transform:scale(1);   opacity:0}
 }
-/* Anillo geográfico del ejemplar más cercano: gemelo verde del anillo morado
-   de precisión. Mismo halo blanco, para que el trazo se lea sobre el gris de
-   la cartografía igual que el otro. */
-.anillo-cercano{filter:drop-shadow(0 0 2px rgba(255,255,255,.95)) drop-shadow(0 0 5px rgba(255,255,255,.75))}
 /* Un elemento que parpadea sin parar molesta a quien pidió menos movimiento,
    y a cierta frecuencia puede provocar malestar. Con la preferencia activada
    el halo se queda fijo: sigue señalando, sin animarse. */
 @media(prefers-reduced-motion:reduce){
-  .pin--cercano{animation:none;transform:translate(-50%,-50%) scale(1.25)}
+  .pin--cercano{transform:translate(-50%,-50%) scale(1.3)}
   .pin--cercano::after{animation:none;transform:scale(2.1);opacity:.5}
 }
 /* Fuera del filtro: visible como contexto, pero no se puede tocar ni tabular. */
@@ -2378,6 +2399,16 @@ function activarDeslizador(pista) {
   // competia con la hilera y nada avisaba que las siluetas eran enlaces.
   const conGuia = String(pista.dataset.desliza || "").indexOf("guia") !== -1;
 
+  /* EN MODO GUIA YA NO HAY BOTONES ‹ ›.
+     Se repetían con los discos ‹ › que asoman en los bordes de la hilera al
+     acercar el ratón: dos pares de flechas para el mismo gesto, a diez píxeles
+     uno de otro.
+     Se quitan los de la barra, que son los que estorbaban, y NO se pierde el
+     teclado: la hilera pasa a ser una región enfocable con nombre, y un
+     contenedor con desplazamiento propio y foco se recorre con las flechas del
+     teclado en todos los navegadores. Es el patrón estándar para una tira que
+     se desplaza, y de paso deja de haber dos paradas de tabulación (los dos
+     botones) antes de llegar al primer árbol. */
   const barra = document.createElement("div");
   barra.className = conGuia ? "deslizador deslizador--guia" : "deslizador";
   barra.innerHTML =
@@ -2386,15 +2417,21 @@ function activarDeslizador(pista) {
         '<span class="deslizador__pista-guia"><b aria-hidden="true">' + FLECHAS_LR + '</b>Arrástrala de lado</span>' +
         '<span class="deslizador__pista-guia"><b aria-hidden="true">' + CURSOR + '</b>Elige un árbol y abres su ficha</span>' +
         '</p>'
-      : '') +
-    '<span class="deslizador__mando">' +
-    '<button type="button" class="deslizador__paso" data-dir="-1" aria-label="Ver los anteriores">‹</button>' +
-    (conGuia
-      ? ''
-      : '<div class="deslizador__riel" role="scrollbar" aria-orientation="horizontal" tabindex="0">' +
-        '<div class="deslizador__tirador"></div></div>') +
-    '<button type="button" class="deslizador__paso" data-dir="1" aria-label="Ver los siguientes">›</button>' +
-    '</span>';
+      : '<span class="deslizador__mando">' +
+        '<button type="button" class="deslizador__paso" data-dir="-1" aria-label="Ver los anteriores">‹</button>' +
+        '<div class="deslizador__riel" role="scrollbar" aria-orientation="horizontal" tabindex="0">' +
+        '<div class="deslizador__tirador"></div></div>' +
+        '<button type="button" class="deslizador__paso" data-dir="1" aria-label="Ver los siguientes">›</button>' +
+        '</span>');
+
+  // El teclado, sin botones: la hilera se enfoca y se recorre con las flechas.
+  if (conGuia && !pista.hasAttribute("tabindex")) {
+    pista.tabIndex = 0;
+    pista.setAttribute("role", "region");
+    if (!pista.hasAttribute("aria-label")) {
+      pista.setAttribute("aria-label", "Los ejemplares a escala real. Usa las flechas para recorrerlos.");
+    }
+  }
   // Con guia, los controles y la instruccion van ARRIBA de la hilera: una
   // indicacion que se descubre despues de haber intentado usar la pieza llega
   // tarde. Sin guia —la ficha— la barra sigue debajo, que es donde una barra
@@ -2638,7 +2675,10 @@ function activarBordes(pista) {
   const izq = zona("izq"), der = zona("der");
 
   const ANCHO = 72;          // franja sensible, en pixeles
-  const VELOCIDAD = 13;      // pixeles por cuadro en el borde mismo
+  // A trece pixeles por cuadro la hilera cruzaba trece ejemplares en poco mas
+  // de un segundo: se pasaba de largo antes de poder leer un nombre. A seis,
+  // el recorrido se puede seguir con la vista, que es para lo que sirve.
+  const VELOCIDAD = 6;       // pixeles por cuadro en el borde mismo
   let rumbo = 0, cuadro = 0;
 
   const paso = () => {

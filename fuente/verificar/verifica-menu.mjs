@@ -48,8 +48,32 @@ t('menu.js · la guía dice cómo se recorre', /Arrástrala de lado/.test(m));
 t('menu.js · la guía dice que cada árbol abre su ficha', /abres su ficha/.test(m));
 t('menu.js · los iconos son trazo, no glifos de fuente',
   /const FLECHAS_LR = '<svg/.test(m) && /const CURSOR = '<svg/.test(m));
-t('menu.js · con guía los controles van ARRIBA de la hilera',
+t('menu.js · con guía la instrucción va ARRIBA de la hilera',
   /if \(conGuia\) marco\.insertAdjacentElement\("beforebegin", barra\)/.test(m));
+
+/* LOS BOTONES ‹ › SALIERON DEL MODO GUÍA.
+   Se repetían con los discos ‹ › que asoman en los bordes de la hilera al
+   acercar el ratón: dos pares de flechas para el mismo gesto, a diez píxeles
+   uno de otro. Lo que NO puede perderse es el teclado, y por eso van juntas
+   las dos comprobaciones. */
+// El mando entero vive en la rama ELSE del ternario: con guía no se arma.
+t('menu.js · en modo guía no se pintan botones ‹ ›',
+  /\n\s*: '<span class="deslizador__mando">'/.test(m)
+  && !/\?\s*'<p class="deslizador__guia">'[\s\S]*?deslizador__paso[\s\S]*?deslizador__guia/.test(m));
+t('menu.js · la ficha conserva su barra con flechas y riel',
+  /deslizador__paso" data-dir="-1"/.test(m) && /deslizador__riel" role="scrollbar"/.test(m));
+t('menu.js · sin botones, la hilera se recorre con el teclado',
+  /pista\.tabIndex = 0;/.test(m) && /pista\.setAttribute\("role", "region"\)/.test(m)
+  && /Usa las flechas para recorrerlos/.test(m));
+t('css · y el foco de la hilera se ve, por fuera del dibujo',
+  /\.bosque__pista:focus-visible\{outline:3px solid var\(--dorado\);outline-offset:4px/.test(css));
+// Comprobado sobre la página armada: ahí es donde se cuenta lo que se pinta.
+{
+  const pv = fs.readFileSync('../prueba/portada-vista-previa.html','utf8');
+  const cuerpo = pv.slice(pv.indexOf('<body')).replace(/<script[\s\S]*?<\/script>/g,'');
+  t('portada · la hilera no deja botones de paso en el cuerpo',
+    !/deslizador__paso/.test(cuerpo));
+}
 // Y fuera del marco que declara serlo: dentro, el control caía debajo de la
 // regla de alturas y la regla arrancaba por encima del suelo.
 t('menu.js · el control se monta fuera del marco declarado',

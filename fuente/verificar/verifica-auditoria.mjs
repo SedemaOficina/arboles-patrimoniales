@@ -381,8 +381,8 @@ console.log('\n══ DATO FALTANTE · el sitio lo dice, no lo disimula ══')
     /if \(!fuentes\.length\) \{ if \(bloque\) bloque\.style\.display = "none"/.test(fl2));
   // La cobertura de una suma se declara: 1,200 años salen de 2 de 13 ejemplares.
   const pv7=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
-  t('El cintillo declara sobre cuántos ejemplares está calculada la suma de edades',
-    /ejemplares con edad dictaminada/.test(pv7));
+  t('El cintillo declara cuántos ejemplares tienen edad dictaminada',
+    /ejemplares tienen edad dictaminada/.test(pv7));
 }
 
 console.log('\n══ TARJETAS · fuera la barrita del punto verde ══');
@@ -956,7 +956,7 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
      ilustración de la portada llega hasta aquí y se colaba entre las copas,
      pero ya no dibuja una caja. Lo que separa la pieza es su título. */
   t('La hilera comparte el papel de la portada y no se lee como recuadro',
-    /\.bosque\{--lienzo-bosque:268px;position:relative;z-index:2;margin:64px 0 0;padding:0;\s*background:var\(--papel\)\}/.test(cs)
+    /\.bosque\{--lienzo-bosque:268px;position:relative;z-index:2;margin:64px 0 0;padding:0 0 40px;\s*background:var\(--papel\)\}/.test(cs)
     && !/\.bosque\{[^}]*papel-hondo/.test(cs));
   t('Pero conserva fondo opaco: debajo de 1000 px la ilustración llega hasta aquí',
     /background:var\(--papel\)\}/.test(cs) && /la ilustración de la portada llega hasta aquí/.test(cs));
@@ -987,8 +987,11 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
     `css ${(/--lienzo-bosque:(\d+)px/.exec(cs) || [])[1]} · js ${(/LIENZO_BOSQUE = (\d+)/.exec(lg) || [])[1]}`);
   t('La ranura reserva el lienzo en una retícula, para que todos pisen el mismo suelo',
     /\.bosque__arbol\{[^}]*display:grid;grid-template-rows:var\(--lienzo-bosque\) auto/.test(cs));
-  t('Los rótulos de la regla tienen canalón propio y no agujerean la copa',
-    /\.bosque__lienzo\{position:relative;padding-right:46px\}/.test(cs));
+  // A la IZQUIERDA: el eje de alturas se busca antes de recorrer los árboles,
+  // no después. Y ahí no tapa al último de la hilera.
+  t('Los rótulos de la regla tienen canalón propio, a la izquierda',
+    /\.bosque__lienzo\{position:relative;padding-left:46px\}/.test(cs)
+    && /\.bosque__marca span\{position:absolute;left:0/.test(cs));
   t('El disco del borde es morado translúcido y dice hacia dónde',
     /\.bosque__borde::after\{[^}]*background:rgba\(141,73,146,\.82\)/.test(cs)
     && /\.bosque__borde--der::after\{content:"›"\}/.test(cs));

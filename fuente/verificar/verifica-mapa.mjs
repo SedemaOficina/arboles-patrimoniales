@@ -56,15 +56,38 @@ t('globo · reserva la esquina de los controles al desplazarse',
 t('globo · queda por encima de los controles (Leaflet los pone en 1000)',
   /\.leaflet-pane\.leaflet-popup-pane\{z-index:1010\}/.test(css));
 
-// Halo del ejemplar más cercano: anillo geográfico verde, gemelo del morado.
-t('halo · hay anillo geográfico verde', /className: "anillo-cercano"/.test(src));
-t('halo · el anillo va detrás del marcador', /anilloCercano\.bringToBack\(\)/.test(src));
-t('halo · el anillo se retira antes de redibujarse',
-  /if \(anilloCercano\) \{ mapa\.removeLayer\(anilloCercano\); anilloCercano = null; \}/.test(src));
-t('halo · el punto parpadea, no sólo pulsa', /@keyframes parpadeo-cercano/.test(css)
-  && /\.pin--cercano\{[^}]*animation:parpadeo-cercano/.test(css));
-t('halo · el anillo verde lleva el mismo halo blanco que el morado',
-  /\.anillo-cercano\{filter:drop-shadow/.test(css));
+/* SEÑAL DEL EJEMPLAR MÁS CERCANO.
+   El anillo geográfico verde se retiró. Era de 90 m fijos y no medía nada:
+   copiaba la forma del anillo morado, cuyo radio SÍ es un dato —la precisión
+   que reporta el GPS—. Quien entiende el morado leía el verde igual y concluía
+   que la posición del árbol tiene noventa metros de incertidumbre. Y encimado
+   con el resto dejaba el marcador en cinco círculos superpuestos. */
+t('cercano · ya no se pinta un anillo geográfico verde',
+  !/anillo-cercano|anilloCercano/.test(src) && !/\.anillo-cercano\{/.test(css));
+t('cercano · el anillo morado de precisión sí se conserva: su radio es un dato',
+  /className: "anillo-precision"/.test(src)
+  && /radius: Math\.max\(accuracy \|\| 0, 25\)/.test(src));
+t('cercano · el punto ya no parpadea además de pulsar',
+  !/parpadeo-cercano/.test(css));
+// «animation:none» del bloque de movimiento reducido no cuenta: apaga, no anima.
+t('cercano · queda una sola animación sobre el marcador',
+  (css.match(/\.pin--cercano[^{]*\{[^}]*animation:(?!none)/g) || []).length === 1,
+  String((css.match(/\.pin--cercano[^{]*\{[^}]*animation:(?!none)/g) || []).length));
+t('cercano · y es el pulso que se expande',
+  /\.pin--cercano::after\{[^}]*animation:pulso-cercano/.test(css));
+t('cercano · el punto se distingue aun sin moverse: escala y anillo suave fijo',
+  /\.pin--cercano\{[^}]*transform:translate\(-50%,-50%\) scale\(1\.2\)/.test(css)
+  && /\.pin--cercano\{[^}]*box-shadow:0 0 0 3px rgba\(45,122,62,\.32\)/.test(css));
+// La sombra negra del pin normal cae 2 px; bajo el anillo verde eso se lee
+// como anillo descentrado. En el marcado se acorta para que quede concéntrica.
+t('cercano · la sombra no descentra el anillo',
+  /\.pin--cercano\{[^}]*0 1px 4px rgba\(0,0,0,\.26\)/.test(css));
+// Sin esto el anillo desaparecía medio segundo por ciclo y el árbol marcado
+// se confundía con los otros doce justo en esa pausa.
+t('cercano · el pulso no deja un hueco sin anillo',
+  /100%\{transform:scale\(1\);\s*opacity:0\}/.test(css));
+t('cercano · con movimiento reducido el pulso se detiene y el punto crece',
+  /@media\(prefers-reduced-motion:reduce\)\{\s*\.pin--cercano\{transform:translate\(-50%,-50%\) scale\(1\.3\)\}/.test(css));
 
 // Un transform sin translate descentra el punto ocho pixeles: deja de señalar
 // el árbol. Se revisan TODAS las reglas de .pin que llevan transform.
@@ -77,10 +100,10 @@ const reglasPin = [...css.matchAll(/(^|\})\s*(\.pin[^{@]*)\{([^}]*transform:[^;}
 t('pin · ninguna regla pierde el centrado', reglasPin.length>=2
   && reglasPin.every(r=>/transform:translate\(-50%,-50%\)/.test(r.cuerpo)),
   reglasPin.filter(r=>!/translate\(-50%,-50%\)/.test(r.cuerpo)).map(r=>r.sel).join(' | '));
-const cuadrosParpadeo = [...css.matchAll(/@keyframes parpadeo-cercano\{([^}]*\}[^}]*)\}/g)];
-t('pin · el parpadeo tampoco lo pierde',
-  /0%,100%\{transform:translate\(-50%,-50%\) scale\(1\)/.test(css)
-  && /50%\s*\{transform:translate\(-50%,-50%\) scale\(1\.4\)/.test(css));
+// El pulso vive en un pseudoelemento, que se centra con margin y no con
+// translate: por eso su scale() sin translate no descentra nada.
+t('pin · el pulso se centra con margin, no con translate',
+  /\.pin--cercano::after\{[^}]*margin:-8px 0 0 -8px/.test(css));
 
 // Ubicación en dos tiempos: con GPS obligatorio el botón tardaba segundos.
 t('ubicación · la primera petición no exige GPS',
@@ -230,23 +253,40 @@ t('cintillo · el ensamblador expone indicadoresPadron',
   /envolver\('indicadores\.js',\['indicadoresPadron'\]\)/
     .test(fs.readFileSync('construir/armar.js','utf8'))
   && /window\.indicadoresPadron=/.test(port));
-t('cintillo · lleva las ocho cifras', (lg.match(/^\s{4}\[/gm)||[]).length>=8);
+/* SIETE CIFRAS, NO OCHO. «Años sumados» salió: sumaba la edad de dos
+   ejemplares de trece y se presentaba junto a cifras calculadas sobre los
+   trece, así que se leía como la edad del registro entero. La salvedad al pie
+   lo advertía, pero una cifra grande se lee antes que su nota. */
+t('cintillo · lleva siete cifras', (lg.match(/^\s{4}\["/gm)||[]).length===7,
+  String((lg.match(/^\s{4}\["/gm)||[]).length));
 for (const r of ['Ejemplares','Alcaldías','Especies','En \\$\\{alcaldia\\.cifra\\}',
-                 'El más alto','Sumando sus alturas','Años del más antiguo','Años sumados']) {
+                 'El más alto','Sumando sus alturas','Años del más antiguo']) {
   t(`cintillo · rótulo «${r.replace(/\\\\/g,'')}»`, new RegExp(r).test(lg));
 }
+// Se comprueba sobre la página armada, no sobre el guion: en el guion el
+// rótulo sigue escrito dentro del comentario que explica por qué se fue.
+t('cintillo · «Años sumados» ya no se pinta',
+  !/Años sumados/.test(fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8')
+    .replace(/[\s\S]*?<body/, '<body').replace(/<script[\s\S]*?<\/script>/g, '')));
 t('cintillo · cuatro columnas fijas, no auto-fit',
   /#cifras\{display:grid;grid-template-columns:repeat\(4,1fr\)/.test(css)
   && !/\.cifras \.envoltura\{display:grid/.test(css));
 t('cintillo · la cifra no se parte en dos renglones',
   /\.cifra strong\{[^}]*white-space:nowrap/.test(css));
 
-// La salvedad es obligatoria: 1,200 años salen de dos ejemplares de trece.
-t('cintillo · el pie declara la cobertura de la suma de edades',
-  /Los años sumados salen de \$\{/.test(lg) && /edad dictaminada/.test(lg));
+/* La salvedad se queda aunque «Años sumados» se haya ido: «Años del más
+   antiguo» sale del mismo dato escaso y sin la nota los 700 años parecerían
+   representativos de los trece. */
+t('cintillo · el pie declara cuántos ejemplares tienen edad dictaminada',
+  /Solo \$\{\(edad\.nota\.match/.test(lg) && /ejemplares tienen edad dictaminada/.test(lg));
+// Un renglón, no tres: son notas al margen y no deben pesar como las cifras.
+t('cintillo · el pie va en un solo renglón, con asterisco',
+  /cifras__pie__ast/.test(lg) && /\.cifras__pie span \+ span::before\{content:" — "/.test(css));
+t('cintillo · el pie es más pequeño que las cifras que matiza',
+  /\.cifras__pie\{[^}]*font-size:11\.5px/.test(css));
 t('cintillo · el pie nombra las especies', /Las especies del registro: \$\{especies\.nota\}/.test(lg));
 t('cintillo · el pie se oculta si no hay nada que decir',
-  /pie\.hidden = renglones\.length === 0;/.test(lg));
+  /pie\.hidden = partes\.length === 0;/.test(lg));
 t('cintillo · el pie existe en el cuerpo', /id="cifrasPie"/.test(cu));
 
 

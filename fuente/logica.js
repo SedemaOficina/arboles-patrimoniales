@@ -204,26 +204,35 @@ function pintarCifras(stats, ejemplares) {
     ["alto", stats.alturaMaxima ? nf(stats.alturaMaxima, 1) + " m" : "—", "El más alto"],
     ["suma", apilada.cifra === "—" ? "—" : `${apilada.cifra} ${apilada.unidad}`, "Sumando sus alturas"],
     ["antiguo", decano ? nf(decano.edadEstimada) : "—", "Años del más antiguo"],
-    ["acumulados", edad.cifra, "Años sumados"],
+    /* «Años sumados» salió del cintillo. Sumar la edad de dos ejemplares de
+       trece y presentar el total junto a las demás cifras —que sí se calculan
+       sobre los trece— invita a leerlo como la edad del registro entero. La
+       salvedad al pie lo advertía, pero una cifra grande se lee antes que su
+       nota. Queda «Años del más antiguo», que es un dato de un solo ejemplar y
+       no finge ser un agregado. */
   ];
   document.getElementById("cifras").innerHTML = datos
     .map(([, v, l]) => `<div class="cifra"><strong>${esc(String(v))}</strong><span>${esc(l)}</span></div>`).join("");
 
-  // Al pie: los nombres de las especies y la cobertura de la suma de edades.
-  // La segunda es obligatoria: sumar 1,200 años sin decir que salen de dos
-  // ejemplares de trece daría a entender que los trece están dictaminados.
+  /* Al pie, las salvedades. Van en un solo renglón, en cuerpo pequeño y con
+     asterisco: son notas al margen de las cifras, no cifras. En tres renglones
+     sueltos pesaban tanto como el cintillo y competían con él.
+     La cobertura de la edad se declara aunque «Años sumados» ya no aparezca:
+     «Años del más antiguo» también sale del mismo dato escaso, y sin la nota
+     los 700 años parecerían representativos de los trece. */
   const pie = document.getElementById("cifrasPie");
   if (pie) {
-    const renglones = [
-      especies.nota ? `Las especies del registro: ${especies.nota}.` : "",
+    const partes = [
+      especies.nota ? `Las especies del registro: ${especies.nota}` : "",
       alcaldia.cifra && alcaldia.cifra !== "—"
-        ? `${alcaldia.cifra} es la alcaldía que más reúne.` : "",
-      // Sumar 1,200 años sin decir de cuántos ejemplares salen daría a
-      // entender que los trece están dictaminados. Solo dos lo están.
-      edad.nota ? `Los años sumados salen de ${(edad.nota.match(/(\d+ de \d+)/) || [, "pocos"])[1]} ejemplares con edad dictaminada.` : "",
+        ? `${alcaldia.cifra} es la alcaldía que más reúne` : "",
+      edad.nota ? `Solo ${(edad.nota.match(/(\d+ de \d+)/) || [, "pocos"])[1]} ejemplares tienen edad dictaminada` : "",
     ].filter(Boolean);
-    pie.innerHTML = renglones.map((r) => `<span>${esc(r)}</span>`).join("");
-    pie.hidden = renglones.length === 0;
+    pie.innerHTML = partes.length
+      ? `<b class="cifras__pie__ast" aria-hidden="true">*</b>`
+        + partes.map((r) => `<span>${esc(r)}</span>`).join("")
+      : "";
+    pie.hidden = partes.length === 0;
   }
 }
 

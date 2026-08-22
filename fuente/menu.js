@@ -99,6 +99,16 @@ export function activarDeslizador(pista) {
   // competia con la hilera y nada avisaba que las siluetas eran enlaces.
   const conGuia = String(pista.dataset.desliza || "").indexOf("guia") !== -1;
 
+  /* EN MODO GUIA YA NO HAY BOTONES ‹ ›.
+     Se repetían con los discos ‹ › que asoman en los bordes de la hilera al
+     acercar el ratón: dos pares de flechas para el mismo gesto, a diez píxeles
+     uno de otro.
+     Se quitan los de la barra, que son los que estorbaban, y NO se pierde el
+     teclado: la hilera pasa a ser una región enfocable con nombre, y un
+     contenedor con desplazamiento propio y foco se recorre con las flechas del
+     teclado en todos los navegadores. Es el patrón estándar para una tira que
+     se desplaza, y de paso deja de haber dos paradas de tabulación (los dos
+     botones) antes de llegar al primer árbol. */
   const barra = document.createElement("div");
   barra.className = conGuia ? "deslizador deslizador--guia" : "deslizador";
   barra.innerHTML =
@@ -107,15 +117,21 @@ export function activarDeslizador(pista) {
         '<span class="deslizador__pista-guia"><b aria-hidden="true">' + FLECHAS_LR + '</b>Arrástrala de lado</span>' +
         '<span class="deslizador__pista-guia"><b aria-hidden="true">' + CURSOR + '</b>Elige un árbol y abres su ficha</span>' +
         '</p>'
-      : '') +
-    '<span class="deslizador__mando">' +
-    '<button type="button" class="deslizador__paso" data-dir="-1" aria-label="Ver los anteriores">‹</button>' +
-    (conGuia
-      ? ''
-      : '<div class="deslizador__riel" role="scrollbar" aria-orientation="horizontal" tabindex="0">' +
-        '<div class="deslizador__tirador"></div></div>') +
-    '<button type="button" class="deslizador__paso" data-dir="1" aria-label="Ver los siguientes">›</button>' +
-    '</span>';
+      : '<span class="deslizador__mando">' +
+        '<button type="button" class="deslizador__paso" data-dir="-1" aria-label="Ver los anteriores">‹</button>' +
+        '<div class="deslizador__riel" role="scrollbar" aria-orientation="horizontal" tabindex="0">' +
+        '<div class="deslizador__tirador"></div></div>' +
+        '<button type="button" class="deslizador__paso" data-dir="1" aria-label="Ver los siguientes">›</button>' +
+        '</span>');
+
+  // El teclado, sin botones: la hilera se enfoca y se recorre con las flechas.
+  if (conGuia && !pista.hasAttribute("tabindex")) {
+    pista.tabIndex = 0;
+    pista.setAttribute("role", "region");
+    if (!pista.hasAttribute("aria-label")) {
+      pista.setAttribute("aria-label", "Los ejemplares a escala real. Usa las flechas para recorrerlos.");
+    }
+  }
   // Con guia, los controles y la instruccion van ARRIBA de la hilera: una
   // indicacion que se descubre despues de haber intentado usar la pieza llega
   // tarde. Sin guia —la ficha— la barra sigue debajo, que es donde una barra
@@ -359,7 +375,10 @@ export function activarBordes(pista) {
   const izq = zona("izq"), der = zona("der");
 
   const ANCHO = 72;          // franja sensible, en pixeles
-  const VELOCIDAD = 13;      // pixeles por cuadro en el borde mismo
+  // A trece pixeles por cuadro la hilera cruzaba trece ejemplares en poco mas
+  // de un segundo: se pasaba de largo antes de poder leer un nombre. A seis,
+  // el recorrido se puede seguir con la vista, que es para lo que sirve.
+  const VELOCIDAD = 6;       // pixeles por cuadro en el borde mismo
   let rumbo = 0, cuadro = 0;
 
   const paso = () => {
