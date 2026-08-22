@@ -54,7 +54,7 @@ t('globo · la banda de la foto no ocupa espacio hasta que carga',
 t('globo · reserva la esquina de los controles al desplazarse',
   /autoPanPaddingTopLeft: \[66, 16\]/.test(src));
 t('globo · queda por encima de los controles (Leaflet los pone en 1000)',
-  /\.leaflet-pane\.leaflet-popup-pane\{z-index:1010\}/.test(css));
+  /\.leaflet-pane\.leaflet-popup-pane\{z-index:var\(--capa-mapa-globo\)\}/.test(css));
 
 /* SEÑAL DEL EJEMPLAR MÁS CERCANO.
    El anillo geográfico verde se retiró. Era de 90 m fijos y no medía nada:
@@ -77,7 +77,7 @@ t('cercano · y es el pulso que se expande',
   /\.pin--cercano::after\{[^}]*animation:pulso-cercano/.test(css));
 t('cercano · el punto se distingue aun sin moverse: escala y anillo suave fijo',
   /\.pin--cercano\{[^}]*transform:translate\(-50%,-50%\) scale\(1\.2\)/.test(css)
-  && /\.pin--cercano\{[^}]*box-shadow:0 0 0 3px rgba\(45,122,62,\.32\)/.test(css));
+  && /\.pin--cercano\{[^}]*box-shadow:0 0 0 3px rgba\(var\(--verde-vivo-rgb\),\.32\)/.test(css));
 // La sombra negra del pin normal cae 2 px; bajo el anillo verde eso se lee
 // como anillo descentrado. En el marcado se acorta para que quede concéntrica.
 t('cercano · la sombra no descentra el anillo',
@@ -283,7 +283,7 @@ t('cintillo · el pie declara cuántos ejemplares tienen edad dictaminada',
 t('cintillo · el pie va en un solo renglón, con asterisco',
   /cifras__pie__ast/.test(lg) && /\.cifras__pie span \+ span::before\{content:" — "/.test(css));
 t('cintillo · el pie es más pequeño que las cifras que matiza',
-  /\.cifras__pie\{[^}]*font-size:11\.5px/.test(css));
+  /\.cifras__pie\{[^}]*font-size:var\(--t-micro\)/.test(css));
 t('cintillo · el pie nombra las especies', /Las especies del registro: \$\{especies\.nota\}/.test(lg));
 t('cintillo · el pie se oculta si no hay nada que decir',
   /pie\.hidden = partes\.length === 0;/.test(lg));
@@ -385,7 +385,7 @@ t('diferido · el ensamblador lo expone en las dos páginas',
 t('css · la cruz del globo gana a Leaflet por especificidad, no por !important',
   /\.leaflet-container \.leaflet-popup a\.leaflet-popup-close-button\{/.test(css));
 t('css · la cruz lleva su propio fondo, no el de la fotografía',
-  /a\.leaflet-popup-close-button\{[^}]*background:rgba\(254,247,228/.test(css));
+  /a\.leaflet-popup-close-button\{[^}]*background:rgba\(var\(--papel-rgb\)/.test(css));
 t('css · la cruz usa la tinta morada de la marca, no el gris de Leaflet',
   /a\.leaflet-popup-close-button\{[^}]*color:var\(--jacaranda-hondo\)/.test(css));
 t('css · el área táctil de la cruz llega a 44 px',

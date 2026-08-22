@@ -13,8 +13,8 @@ t('menu.js · se cierra al elegir, con Escape y al tocar fuera',
 t('menu.js · es idempotente', /menuListo/.test(m));
 t('menu.js · degrada sin IntersectionObserver', /"IntersectionObserver" in window/.test(m));
 const css=fs.readFileSync('estilos.css','utf8');
-t('css · los enlaces tienen superficie pulsable', /\.barra nav a\{[^}]*padding:8px 12px[^}]*border-radius:999px/.test(css));
-t('css · estado de paso del cursor', /\.barra nav a:hover\{background:rgba\(141,73,146/.test(css));
+t('css · los enlaces tienen superficie pulsable', /\.barra nav a\{[^}]*padding:8px 12px[^}]*border-radius:var\(--radio-pastilla\)/.test(css));
+t('css · estado de paso del cursor', /\.barra nav a:hover\{background:rgba\(var\(--jacaranda-rgb\)/.test(css));
 t('css · la sección activa se distingue', /\.barra nav a\[aria-current="true"\]\{color:#fff;background:var\(--jacaranda\)\}/.test(css));
 t('css · el botón solo aparece cuando hace falta', /\.barra__abrir\{display:none/.test(css)&&/\.barra__abrir\{display:inline-flex\}/.test(css));
 t('css · el menú angosto ya no desaparece', !/\.barra nav\{display:none\}/.test(css));
@@ -39,7 +39,7 @@ t('css · el ancho fijo quedó como piso, no como medida',
 // la misma altura en todos, o el nombre que se parte en dos levanta su árbol
 // del suelo y la regla de alturas lo lee de más.
 t('css · los ejemplares no se tocan y arrancan todos del mismo punto',
-  /\.bosque__pista\{position:relative;z-index:1;display:flex;align-items:flex-start;gap:18px/.test(css));
+  /\.bosque__pista\{position:relative;z-index:var\(--capa-contenido\);display:flex;align-items:flex-start;gap:18px/.test(css));
 
 // La barra se fue de la portada; en su lugar va la guía. La ficha conserva la
 // barra clásica, así que el modo tiene que ser opcional, no global.
@@ -79,7 +79,7 @@ t('css · y el foco de la hilera se ve, por fuera del dibujo',
 t('menu.js · el control se monta fuera del marco declarado',
   /const marco = pista\.closest\("\[data-desliza-marco\]"\) \|\| pista;/.test(m));
 t('css · la guía se pinta por delante del relleno de la hilera',
-  /\.deslizador--guia\{[^}]*z-index:6\}/.test(css));
+  /\.deslizador--guia\{[^}]*z-index:var\(--capa-realce-alto\)\}/.test(css));
 // La guía es una leyenda, no un control: con borde, fondo y pastilla la gente
 // intentaba pulsarla. Debe leerse bien (>=13 px) sin prometer un clic.
 t('css · la guía no aparenta ser un botón',
@@ -87,7 +87,7 @@ t('css · la guía no aparenta ser un botón',
   && /\.deslizador__pista-guia\{[^}]*border:0[^}]*\}/.test(css)
   && /\.deslizador__pista-guia\{[^}]*border-radius:0[^}]*\}/.test(css)
   && !/\.deslizador__pista-guia\{[^}]*border-radius:999px/.test(css));
-t('css · la guía sigue siendo legible', /\.deslizador__pista-guia\{[^}]*font-size:13\.5px/.test(css));
+t('css · la guía sigue siendo legible', /\.deslizador__pista-guia\{[^}]*font-size:var\(--t-apoyo\)/.test(css));
 t('css · lo único pulsable de esa fila son las flechas',
   /\.deslizador__pista-guia\{[^}]*cursor:default/.test(css));
 t('logica.js · la hilera ya no dibuja la figura humana',

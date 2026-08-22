@@ -112,6 +112,11 @@ footer b{color:#fff}
 .tarjeta{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:16px 18px}
 .tarjeta strong{display:block;font-family:var(--display);font-weight:400;font-size:34px;line-height:1;
   color:var(--tinta-jacaranda)}
+.tarjeta strong s{text-decoration:none;color:var(--gris);font-size:.62em;opacity:.75}
+.tarjeta strong s::after{content:" → ";color:var(--dorado)}
+.cerrado{background:var(--verde-niebla);border:1px solid rgba(30,77,43,.22);
+  border-left:4px solid var(--verde-vivo);padding:20px 24px;margin:0 0 26px}
+.cerrado b{color:var(--verde-bosque)}
 .tarjeta span{display:block;font-size:12.5px;color:var(--gris);margin-top:6px;line-height:1.4}
 .tarjeta--rojo{border-top-color:var(--alerta)}
 .tarjeta--rojo strong{color:var(--alerta)}
@@ -149,6 +154,7 @@ footer b{color:#fff}
     <h1>Los valores sueltos</h1>
     <p>Auditoría de la hoja de estilos del micrositio: cuántas decisiones de medida, color y espacio se tomaron una a una, sin criterio común, y cuáles de ellas cuestan algo. Medido sobre <code>fuente/estilos.css</code> el 22 de agosto de 2026.</p>
     <div class="carriles">
+      <div class="carril"><b>Estado</b><span>Los seis hallazgos, corregidos el 22 de agosto de 2026. Quince suites en verde, con una nueva —<code>verifica-sistema</code>— que impide que vuelvan.</span></div>
       <div class="carril"><b>De dónde sale</b><span>De una pregunta: «¿el texto que no ocupa todo el ancho es equivocación o intencional?». Era intencional, pero estaba puesto de nueve formas distintas.</span></div>
       <div class="carril"><b>Qué mide</b><span>871 reglas y 2 347 declaraciones. No busca errores de código: busca decisiones repetidas que nadie unificó.</span></div>
     </div>
@@ -197,18 +203,22 @@ footer b{color:#fff}
   <h2><em>2</em>El tablero</h2>
   <p class="intro">Cada cifra es el número de valores <b>distintos</b> con que se resuelve una misma decisión.</p>
 
-  <div class="tarjetas">
-    <div class="tarjeta tarjeta--rojo"><strong>14</strong><span>capas de apilado<br>(z-index)</span></div>
-    <div class="tarjeta tarjeta--rojo"><strong>15</strong><span>puntos de corte<br>de pantalla</span></div>
-    <div class="tarjeta"><strong>42</strong><span>tamaños de letra<br>(25 fijos + 17 fluidos)</span></div>
-    <div class="tarjeta"><strong>39</strong><span>valores de<br>espaciado</span></div>
-    <div class="tarjeta"><strong>92</strong><span>colores escritos<br>a mano en rgba()</span></div>
-    <div class="tarjeta"><strong>10</strong><span>radios de<br>esquina</span></div>
-    <div class="tarjeta"><strong>6</strong><span>duraciones de<br>transición</span></div>
-    <div class="tarjeta tarjeta--verde"><strong>2</strong><span>medidas de lectura<br><b>ya resuelto</b></span></div>
+  <div class="cerrado">
+    <p><b>Los seis quedaron cerrados.</b> Las cifras de abajo son «antes → después». Lo que sostiene el resultado no es la limpieza sino la suite nueva: <code>verifica-sistema</code>, veinticinco comprobaciones que rechazan el valor suelto. Si alguien vuelve a inventar un número, la construcción falla.</p>
   </div>
 
-  <p>Para calibrar: la hoja declara <b>34 tokens</b> en <code>:root</code>. Todo lo de arriba vive fuera de ellos.</p>
+  <div class="tarjetas">
+    <div class="tarjeta tarjeta--verde"><strong><s>14</s>0</strong><span>z-index sueltos<br>(11 capas con nombre)</span></div>
+    <div class="tarjeta tarjeta--verde"><strong><s>15</s>9</strong><span>familias de corte<br>de pantalla</span></div>
+    <div class="tarjeta tarjeta--verde"><strong><s>25</s>1</strong><span>tamaños de letra<br>literales</span></div>
+    <div class="tarjeta tarjeta--verde"><strong><s>39</s>31</strong><span>espaciados<br>(un solo impar)</span></div>
+    <div class="tarjeta tarjeta--verde"><strong><s>92</s>26</strong><span>rgba() a mano<br>(solo blanco y negro)</span></div>
+    <div class="tarjeta tarjeta--verde"><strong><s>10</s>2</strong><span>radios<br>de esquina</span></div>
+    <div class="tarjeta tarjeta--verde"><strong><s>6</s>2</strong><span>duraciones de<br>transición</span></div>
+    <div class="tarjeta tarjeta--verde"><strong><s>9</s>2</strong><span>medidas<br>de lectura</span></div>
+  </div>
+
+  <p>La hoja pasó de <b>34 tokens</b> en <code>:root</code> a <b>69</b>. No es que se haya complicado: es que sesenta y nueve decisiones con nombre sustituyen a doscientas tomadas de una en una.</p>
 </section>
 
 <section id="h1">

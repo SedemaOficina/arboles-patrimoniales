@@ -245,7 +245,7 @@ console.log('\n══ AUDITORÍA 360 · lo que se corrigió, para que no vuelva 
   t('accesibilidad · el anillo de foco tiene color propio, con contraste',
     /--foco:#8F6E3E/.test(est) && /:focus-visible\{outline:3px solid var\(--foco\)/.test(est));
   t('accesibilidad · el renglón de datos se apila en pantallas angostas',
-    /@media\(max-width:520px\)\{\n\s*\.dato-linea\{display:block\}/.test(est));
+    /@media\(max-width:560px\)\{\n\s*\.dato-linea\{display:block\}/.test(est));
 
   /* Un canonical que apunta a otra página impide indexar esta. */
   t('metadatos · la ficha compone los suyos con el ejemplar',
@@ -587,7 +587,7 @@ console.log('\n══ NOTA DE LA UICN EN LA FICHA ══');
     /Medido en este ejemplar/.test(fv5) && /De la especie, no de este árbol/.test(fv5));
   t('Y lo dice con palabras, no solo cambiando de color',
     /\.medidas__titulo\{[^}]*text-transform:uppercase/.test(cs7));
-  t('La aclaración tiene estilo propio, en letra chica', /\.medidas__aclara\{[^}]*font-size:12px/.test(cs7));
+  t('La aclaración tiene estilo propio, en letra chica', /\.medidas__aclara\{[^}]*font-size:var\(--t-nota\)/.test(cs7));
 }
 
 console.log('\n══ ARTÍCULO 107 · el porqué de este sitio ══');
@@ -672,7 +672,7 @@ console.log('\n══ AUDITORÍA INTEGRAL · correcciones ══');
   // de ventana: por eso el tramo apretado llega hasta 1240, no hasta 1180.
   t('La marca se aprieta antes que recortarse, en 1024 y en 320',
     /@media\(min-width:1001px\) and \(max-width:1240px\)/.test(cs9)
-    && /@media\(min-width:1001px\) and \(max-width:1090px\)/.test(cs9)
+    && /@media\(min-width:1001px\) and \(max-width:1100px\)/.test(cs9)
     && /@media\(max-width:345px\)/.test(cs9));
 }
 
@@ -956,7 +956,7 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
      ilustración de la portada llega hasta aquí y se colaba entre las copas,
      pero ya no dibuja una caja. Lo que separa la pieza es su título. */
   t('La hilera comparte el papel de la portada y no se lee como recuadro',
-    /\.bosque\{--lienzo-bosque:268px;position:relative;z-index:2;margin:64px 0 0;padding:0 0 40px;\s*background:var\(--papel\)\}/.test(cs)
+    /\.bosque\{--lienzo-bosque:268px;position:relative;z-index:var\(--capa-realce\);margin:64px 0 0;padding:0 0 40px;\s*background:var\(--papel\)\}/.test(cs)
     && !/\.bosque\{[^}]*papel-hondo/.test(cs));
   t('Pero conserva fondo opaco: debajo de 1000 px la ilustración llega hasta aquí',
     /background:var\(--papel\)\}/.test(cs) && /la ilustración de la portada llega hasta aquí/.test(cs));
@@ -993,7 +993,7 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
     /\.bosque__lienzo\{position:relative;padding-left:46px\}/.test(cs)
     && /\.bosque__marca span\{position:absolute;left:0/.test(cs));
   t('El disco del borde es morado translúcido y dice hacia dónde',
-    /\.bosque__borde::after\{[^}]*background:rgba\(141,73,146,\.82\)/.test(cs)
+    /\.bosque__borde::after\{[^}]*background:rgba\(var\(--jacaranda-rgb\),\.82\)/.test(cs)
     && /\.bosque__borde--der::after\{content:"›"\}/.test(cs));
   t('En pantalla táctil el pie hace todo el trabajo',
     /@media\(max-width:700px\)\{\.bosque__globo\{display:none\}/.test(cs));
