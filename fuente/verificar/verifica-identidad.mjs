@@ -79,5 +79,38 @@ t('fuente · compartir.jpg fue redibujado con el nombre vigente',
   fs.existsSync('assets/img/portada/compartir.jpg') &&
   fs.statSync('assets/img/portada/compartir.jpg').size !== 174182);
 
+
+console.log('\n-- la medida de lectura --');
+{
+  /* POR QUÉ ESTA COMPROBACIÓN.
+     La hoja llegó a tener NUEVE topes de medida distintos —52, 56, 62, 64, 70,
+     74, 78 y 82 ch, más seis en píxeles— puestos uno a uno, sin criterio
+     común. El resultado no se leía como decisión sino como descuido: párrafos
+     de anchos arbitrarios en la misma página. Ahora hay dos tokens por rol, y
+     esta suite impide que vuelva a aparecer un décimo valor suelto. */
+  const cs = fs.readFileSync('estilos.css','utf8');
+  t('Existen las dos medidas, y solo dos',
+    /--medida:62ch;/.test(cs) && /--medida-nota:52ch;/.test(cs));
+  t('Se advierte que «ch» no es un carácter real',
+    /62ch se leen como unos 68 caracteres reales/.test(cs));
+  t('El texto corrido se acoge a la medida',
+    (cs.match(/max-width:var\(--medida\)/g)||[]).length >= 9);
+  t('Y las notas y pies, a la suya',
+    (cs.match(/max-width:var\(--medida-nota\)/g)||[]).length >= 11);
+
+  /* Las excepciones se permiten, pero se cuentan y cada una lleva escrito por
+     qué su ancho no lo decide la lectura. Si aparece una décima, esto falla. */
+  /* Se cuentan solo los topes en «ch»: ahí vivía el zoológico. Los de píxeles
+     que quedan son anchos de caja o puntos de corte de media query, no medidas
+     de lectura, y los cuatro que sí lo eran están anotados abajo. */
+  const enCh = [...cs.matchAll(/max-width:(\d+ch)/g)].map(m => m[1]);
+  t('Solo queda un tope en ch sin token, y es el documentado',
+    enCh.length === 1 && enCh[0] === '34ch', enCh.join(', '));
+  for (const marca of ['EXENTA DE LA MEDIDA','EXENTO: no es un párrafo',
+                       'EXENTO: mensaje de estado','EXENTO: vive dentro de una caja']) {
+    t(`La excepción «${marca.slice(0, 34)}…» dice por qué`, cs.includes(marca));
+  }
+}
+
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal?1:0);

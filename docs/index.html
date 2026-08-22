@@ -91,8 +91,21 @@
      al terminarlo el ojo tiene que volver a encontrar el principio del
      siguiente, y cuanto más lejos esté, más veces se pierde el renglón. Entre
      45 y 75 caracteres es donde eso deja de pasar. De ahí salen los blancos a
-     la derecha de los párrafos: no sobra espacio, sobra renglón. */
-  --medida:72ch;
+     la derecha de los párrafos: no sobra espacio, sobra renglón.
+
+     OJO CON LA UNIDAD: «ch» es el ancho del cero, más ancho que el carácter
+     medio de esta tipografía. 62ch se leen como unos 68 caracteres reales, no
+     62. Los valores están calibrados sobre lo que se mide en pantalla.
+
+     Dos medidas, no nueve. La hoja llegó a tener nueve topes distintos —52,
+     56, 62, 64, 70, 74, 78 y 82 ch, más seis en píxeles— puestos uno a uno sin
+     criterio común, y el resultado se leía como descuido en vez de como
+     decisión. Quedan dos, por rol:
+       --medida       texto corrido: lo que se lee de principio a fin.
+       --medida-nota  notas, pies y aclaraciones: se abarcan de una mirada, así
+                      que el bloque compacto ayuda más que el renglón largo. */
+  --medida:62ch;
+  --medida-nota:52ch;
 }
 
 *{box-sizing:border-box}
@@ -350,6 +363,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .portada h1{font-size:clamp(34px,5.4vw,84px);line-height:.96;letter-spacing:0;margin:10px 0 0;
   padding-top:.16em;color:var(--jacaranda)}
 .portada h1 em{font-style:normal;display:block;color:var(--jacaranda);margin-top:.04em}
+/* EXENTA DE LA MEDIDA, y a propósito: su ancho no lo decide la lectura sino
+   la composición. Es la entrada de la portada y comparte renglón con la
+   ilustración del árbol; los 560 px son los que dejan sitio al dibujo. */
 .entrada{max-width:560px;margin:18px 0 0;color:var(--tinta-suave)}
 /* En pantalla angosta la ilustración no puede convivir con el texto: baja a
    una banda inferior, tenue, y deja el bloque de lectura sobre crema limpio. */
@@ -407,7 +423,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    pero viaja pegado a ellas, que es donde la salvedad tiene sentido. */
 /* Un renglón, no tres. Eran tres frases apiladas en cuerpo casi de lectura y
    pesaban tanto como las cifras que matizan. Con el asterisco delante y las
-   frases separadas por raya, se leen como lo que son: notas al margen. */
+   frases separadas por raya, se leen como lo que son: notas al margen.
+   EXENTO de la medida: el renglón único es la decisión. No son prosa que se
+   lea de corrido sino tres apuntes sueltos, y cada uno cabe de una mirada. */
 .cifras__pie{margin:0;color:rgba(255,255,255,.52);position:relative;z-index:1;
   font-size:11.5px;line-height:1.65;padding:0 0 30px;max-width:none}
 .cifras__pie__ast{color:var(--dorado-luz);font-weight:700;margin-right:5px}
@@ -422,10 +440,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .seccion--niebla{background:var(--verde-niebla)}
 .seccion--oscura{background:var(--tinta-jacaranda);color:#fff}
 .seccion--oscura h2{color:#fff}
+/* EXENTO: no es un párrafo, es el contenedor del titular. Su tope decide
+   dónde parte el título, no cuántos caracteres cabe leer. El párrafo que va
+   dentro sí se acoge a la medida. */
 .encabezado{max-width:760px;margin:0 0 44px}
 .encabezado .rotulo{color:var(--jacaranda);display:block;margin-bottom:14px}
 .seccion--oscura .encabezado .rotulo{color:var(--jacaranda-luz)}
-.encabezado p{margin:18px 0 0;color:var(--tinta-suave);max-width:660px}
+.encabezado p{margin:18px 0 0;color:var(--tinta-suave);max-width:var(--medida)}
 .seccion--oscura .encabezado p{color:rgba(255,255,255,.82)}
 
 /* --- mensajes institucionales --- */
@@ -446,7 +467,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   line-height:1;color:var(--jacaranda);letter-spacing:.02em}
 .mensaje__texto{margin:0 0 20px;flex:1}
 .mensaje__texto p{margin:0;font-family:var(--editorial);font-size:17.5px;line-height:1.62;
-  color:var(--tinta);max-width:62ch}
+  color:var(--tinta);max-width:var(--medida)}
 .mensaje__firma{display:block;padding-top:16px;border-top:1px solid rgba(42,22,48,.12)}
 .mensaje__firma b{display:block;font-size:15.5px;color:var(--tinta-jacaranda);letter-spacing:.01em}
 .mensaje__firma span{display:block;margin-top:3px;font-size:13px;color:var(--gris)}
@@ -518,7 +539,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .ficha-portada .etiqueta--vacia,
 .ficha-portada .etiqueta--historica,
 .ficha-portada .etiqueta--tramite{background:rgba(199,159,202,.1);color:rgba(255,255,255,.72)}
-.nota-categoria{margin:11px 0 0;max-width:56ch;font-size:14px;line-height:1.55;color:rgba(255,255,255,.72)}
+.nota-categoria{margin:11px 0 0;max-width:var(--medida-nota);font-size:14px;line-height:1.55;color:rgba(255,255,255,.72)}
 .seccion .nota-categoria,.bloque .nota-categoria{color:var(--gris)}
 
 /* --- servicios ambientales --- */
@@ -563,7 +584,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   border:0;background:none;color:var(--gris);font-size:21px;line-height:1;cursor:pointer;border-radius:2px}
 .buscador__borrar:hover{color:var(--jacaranda);background:var(--niebla)}
 .padron-barra .filtros{margin:0;flex:0 1 auto}
-.resumen__nota{margin:14px 0 0;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.72);max-width:62ch}
+.resumen__nota{margin:14px 0 0;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.72);max-width:var(--medida-nota)}
 .padron-conteo{margin:0 0 16px;font-size:13px;font-weight:600;color:var(--gris);letter-spacing:.02em;min-height:1em}
 .padron-conteo:empty{margin-bottom:0}
 .padron-vacio{grid-column:1/-1;padding:52px 24px;text-align:center;color:var(--gris);font-size:15.5px;line-height:1.6;
@@ -574,7 +595,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* Rotulo sobre encabezado: mismo patron que .rotulo, con su propio color. */
 .datos-abiertos h3{margin:0 0 5px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   font-family:var(--texto);color:var(--verde-bosque)}
-.datos-abiertos p{margin:0;font-size:14.5px;color:var(--tinta-suave);max-width:52ch}
+.datos-abiertos p{margin:0;font-size:14.5px;color:var(--tinta-suave);max-width:var(--medida-nota)}
 .datos-abiertos__botones{display:flex;gap:10px;flex-wrap:wrap}
 .datos-abiertos .enlace{cursor:pointer;background:none;font-family:var(--texto)}
 
@@ -590,7 +611,10 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @media(min-width:820px){.cuidado__idea--alerta{grid-column:1 / -1}}
 .cuidado__idea h3{font-size:19px;line-height:1.2;margin:0 0 11px;color:var(--verde-bosque)}
 .cuidado__idea--alerta h3{color:var(--alerta)}
-.cuidado__idea p{margin:0;font-size:15.5px;line-height:1.62;color:var(--tinta-suave)}
+/* La tarjeta de alerta ocupa las dos columnas, así que su párrafo corría los
+   1 068 px de la retícula: 122 caracteres por renglón, el más largo del sitio.
+   No se veía porque es una sola tarjeta entre varias estrechas. */
+.cuidado__idea p{margin:0;font-size:15.5px;line-height:1.62;color:var(--tinta-suave);max-width:var(--medida)}
 .cuidado__idea cite{display:block;margin-top:14px;font-family:var(--editorial);font-style:italic;
   font-size:13.5px;line-height:1.5;color:var(--gris)}
 .cuidado__cierre{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px 40px;
@@ -622,7 +646,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   background:var(--dorado);box-shadow:0 0 0 4px rgba(178,142,92,.22)}
 .convocatoria[data-estado="abierta"] .convocatoria__semaforo{background:var(--verde-vivo);box-shadow:0 0 0 4px rgba(45,122,62,.2)}
 .convocatoria__estado strong{display:block;font-size:17px;line-height:1.25;color:var(--tinta)}
-.convocatoria__estado p{margin:6px 0 0;font-size:14.5px;line-height:1.55;color:var(--tinta-suave);max-width:56ch}
+.convocatoria__estado p{margin:6px 0 0;font-size:14.5px;line-height:1.55;color:var(--tinta-suave);max-width:var(--medida-nota)}
 .convocatoria__accion{display:flex;flex-direction:column;align-items:flex-start;gap:10px;flex:0 0 auto}
 .convocatoria__accion .boton[disabled]{background:rgba(42,22,48,.1);color:var(--gris);cursor:not-allowed;border-color:transparent}
 .convocatoria__accion .boton[disabled]:hover{background:rgba(42,22,48,.1)}
@@ -691,7 +715,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @media(max-width:860px){.cumplimiento{grid-template-columns:1fr;gap:22px;padding:24px 22px}}
 .cumplimiento h3{font-family:var(--display);font-weight:400;font-size:clamp(21px,2.4vw,27px);
   line-height:1.14;color:var(--tinta-jacaranda);margin:10px 0 10px}
-.cumplimiento p{margin:0;font-size:15.5px;line-height:1.62;color:var(--tinta-suave);max-width:62ch}
+.cumplimiento p{margin:0;font-size:15.5px;line-height:1.62;color:var(--tinta-suave);max-width:var(--medida)}
 .cumplimiento__enlaces{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
 
 /* El enlace a la metodología va dentro del párrafo de entrada, sobre fondo
@@ -778,7 +802,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-portada__titulo{font-family:var(--display);font-weight:400;
   font-size:clamp(46px,8vw,92px);line-height:.92;letter-spacing:.005em;
   color:var(--jacaranda);margin:10px 0 0;text-transform:uppercase}
-.recursos-portada__entrada{margin:20px 0 0;max-width:64ch;font-family:var(--editorial);
+.recursos-portada__entrada{margin:20px 0 0;max-width:var(--medida);font-family:var(--editorial);
   font-size:clamp(17px,1.9vw,21px);line-height:1.55;color:var(--tinta-suave)}
 .recursos-indice{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px}
 .recursos-indice a{font-size:13.5px;font-weight:700;color:var(--jacaranda-hondo);text-decoration:none;
@@ -791,7 +815,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   background:rgba(42,22,48,.12);border:1px solid rgba(42,22,48,.12)}
 .recursos-lista li{background:var(--blanco);padding:24px 26px}
 .recursos-lista h3{font-size:18px;line-height:1.25;margin:0 0 8px;color:var(--tinta-jacaranda)}
-.recursos-lista p{margin:0 0 12px;font-size:15px;line-height:1.6;color:var(--tinta-suave);max-width:78ch}
+.recursos-lista p{margin:0 0 12px;font-size:15px;line-height:1.6;color:var(--tinta-suave);max-width:var(--medida)}
 
 .recursos-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
 /* Normativa en tarjetas, no en lista.
@@ -832,7 +856,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    dónde empieza y dónde termina lo que hay que copiar. */
 .cita{margin:0;font-size:14px;line-height:1.7;color:var(--tinta-suave);
   background:var(--papel);border-left:2px solid var(--dorado);padding:12px 14px}
-.creditos__cierre{margin:26px 0 0;font-size:14px;line-height:1.6;color:var(--gris);max-width:78ch}
+.creditos__cierre{margin:26px 0 0;font-size:14px;line-height:1.6;color:var(--gris);max-width:var(--medida-nota)}
 .recurso__descargas{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
 /* Advertencias de lectura: viñetas cortas dentro de la tarjeta de recurso, sin
    la sangría de una lista de documento. */
@@ -866,7 +890,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   .recurso--ancho p:first-of-type{margin-top:0}
 }
 .recurso h3{font-size:18px;line-height:1.25;margin:0 0 10px;color:var(--tinta-jacaranda)}
-.recurso p{margin:0 0 10px;font-size:15px;line-height:1.62;color:var(--tinta-suave);max-width:78ch}
+.recurso p{margin:0 0 10px;font-size:15px;line-height:1.62;color:var(--tinta-suave);max-width:var(--medida)}
 .recurso p:last-of-type{margin-bottom:14px}
 /* Un correo institucional largo no cabe en 320 px sin partirse. */
 .recurso__nota{font-size:13.5px!important;color:var(--gris)!important;line-height:1.55!important;
@@ -883,7 +907,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* --- llamada a visitar el ejemplar --- */
 .visita{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:24px 40px}
 .visita h2{font-size:clamp(26px,3.4vw,38px);margin:8px 0 0}
-.visita p{margin:14px 0 0;font-size:16px;line-height:1.6;color:var(--tinta-suave);max-width:56ch}
+.visita p{margin:14px 0 0;font-size:16px;line-height:1.6;color:var(--tinta-suave);max-width:var(--medida-nota)}
 .visita__acciones{display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:0 0 auto}
 .visita__mapa{font-size:13.5px;font-weight:700;color:var(--jacaranda-hondo);text-decoration:none;
   border-bottom:1.5px solid rgba(122,62,127,.35);padding-bottom:1px}
@@ -956,7 +980,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 /* Nota al pie de sección: letra chica, jerarquía de aclaración. Vivía dentro
    del recuadro de medidas, donde competía con las cifras del dictamen. */
-.nota-asterisco{margin:22px 0 0;font-size:12.5px;line-height:1.6;color:var(--gris);max-width:82ch}
+.nota-asterisco{margin:22px 0 0;font-size:12.5px;line-height:1.6;color:var(--gris);max-width:var(--medida-nota)}
 .nota-asterisco b{color:var(--tinta-suave);font-weight:700}
 .nota-asterisco a{color:var(--jacaranda-hondo);font-weight:700;
   text-decoration:none;border-bottom:1.5px solid rgba(122,62,127,.35)}
@@ -989,7 +1013,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* Advertencia de fecha del panorama. Reconoce que la imagen puede no
    corresponder al estado actual del ejemplar: eso es una advertencia, no un
    pie de foto, y va ANTES de la imagen, no debajo en gris pequeño. */
-.aviso-fecha{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;max-width:70ch;
+.aviso-fecha{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;max-width:var(--medida-nota);
   background:#FBF2DF;border-left:4px solid var(--dorado);padding:11px 15px;
   font-size:13.5px;line-height:1.5;color:var(--tinta-suave)}
 .aviso-fecha b{color:var(--corteza)}
@@ -1001,7 +1025,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .bloque h2{font-size:clamp(26px,3.4vw,40px);margin-bottom:10px}
 .bloque .rotulo{color:var(--jacaranda);display:block;margin-bottom:12px}
 .bloque--oscuro .rotulo{color:var(--jacaranda-luz)}
-.bloque .guia{max-width:640px;color:var(--tinta-suave);margin:0 0 36px}
+.bloque .guia{max-width:var(--medida);color:var(--tinta-suave);margin:0 0 36px}
 .bloque--oscuro .guia{color:rgba(255,255,255,.78)}
 
 /* escala de altura: elemento distintivo de la ficha */
@@ -1037,7 +1061,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* El pie es el caption de la ilustración, no un párrafo aparte: pegado al
    gráfico y con su misma medida, en vez de a 34 px y a todo lo ancho. */
 .escala__pie{margin:14px 0 0;font-size:13px;line-height:1.55;color:var(--gris);
-  max-width:62ch;padding-left:12px;border-left:2px solid rgba(42,22,48,.14)}
+  max-width:var(--medida-nota);padding-left:12px;border-left:2px solid rgba(42,22,48,.14)}
 /* En pantalla angosta la ilustración a escala real no cabe: se desplaza en
    horizontal antes que encogerse, porque su tamaño ES el dato. */
 /* El lienzo ya no se desplaza en horizontal. Lo hacía para no encoger el
@@ -1106,6 +1130,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   background:var(--verde-niebla);border:1px solid rgba(42,22,48,.16);
   display:flex;align-items:center;justify-content:center;z-index:0}
 .mapa-caja__lienzo .leaflet-container{width:100%;height:100%;background:var(--verde-niebla)}
+/* EXENTO: mensaje de estado, centrado y de una frase. Estrecho a propósito
+   para que se lea como un aviso y no como texto. */
 .mapa-caja__vacio{margin:0;padding:26px;max-width:34ch;text-align:center;
   font-size:14px;line-height:1.55;color:var(--gris)}
 .mapa-caja__pie{margin:0;font-size:12.5px;line-height:1.5;color:var(--gris)}
@@ -1137,7 +1163,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 /* Única llamada a la acción ciudadana del bloque: se separa de la ficha de
    datos en vez de competir con ella como un párrafo de guía más. */
-.llamado{display:flex;gap:12px;align-items:flex-start;margin:0 0 24px;max-width:74ch;
+.llamado{display:flex;gap:12px;align-items:flex-start;margin:0 0 24px;max-width:var(--medida);
   background:var(--niebla);border-left:4px solid var(--jacaranda);
   padding:14px 18px;font-size:15px;line-height:1.55;color:var(--tinta-suave)}
 .llamado b{color:var(--jacaranda-hondo)}
@@ -1209,10 +1235,12 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   .glosario-servicios__cuerpo ul,.glosario-servicios__cuerpo li{break-inside:avoid}
   .glosario-servicios__cuerpo h4{break-after:avoid}
 }
-@media(max-width:899px){.glosario-servicios__cuerpo{max-width:74ch}}
+/* En una columna, el glosario se acoge a la medida como cualquier texto
+   corrido; en dos columnas manda el ancho de la columna. */
+@media(max-width:899px){.glosario-servicios__cuerpo{max-width:var(--medida)}}
 .glosario-servicios__cuerpo h4{font-size:13px;letter-spacing:.09em;text-transform:uppercase;
   color:var(--dorado-luz);margin:20px 0 6px}
-.glosario-servicios__cuerpo p{font-size:14px;line-height:1.62;color:rgba(255,255,255,.76);margin:0 0 8px}
+.glosario-servicios__cuerpo p{font-size:14px;line-height:1.62;color:rgba(255,255,255,.76);margin:0 0 8px;max-width:var(--medida)}
 .glosario-servicios__cuerpo b{color:#fff}
 .glosario-servicios__cuerpo ul{margin:6px 0 0;padding-left:18px}
 .glosario-servicios__cuerpo li{font-size:14px;line-height:1.6;color:rgba(255,255,255,.76);margin-bottom:7px}
@@ -1482,7 +1510,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* La nota tenía 53 px de aire por encima —el relleno de la hilera más su
    propio margen— y CERO por debajo: quedaba flotando lejos de los árboles que
    explica y pegada al cintillo morado, como si fuera su encabezado. */
-.bosque__nota{margin:14px 0 0;font-size:13.5px;color:var(--gris);max-width:760px}
+.bosque__nota{margin:14px 0 0;font-size:13.5px;color:var(--gris);max-width:var(--medida-nota)}
 .bosque__nota strong{color:var(--verde-bosque);font-weight:600}
 /* En pantalla tactil no hay raton que pasar: el globo no aplica y el pie hace
    todo el trabajo, que es justo por lo que se bajo la informacion. */
@@ -1510,7 +1538,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* «contain» y no «cover»: en un árbol alto el recorte se lleva la copa,
    que es justo lo que la fotografía debe mostrar. */
 .galeria__principal img{height:100%;width:auto;max-width:100%;object-fit:contain;display:block;box-shadow:0 0 40px rgba(0,0,0,.4)}
-.galeria__pie{margin:14px auto 0;max-width:820px;text-align:center;font-size:14px;color:var(--gris);line-height:1.5}
+.galeria__pie{margin:14px auto 0;max-width:var(--medida-nota);text-align:center;font-size:14px;color:var(--gris);line-height:1.5}
 .galeria__pie b{display:block;font-weight:400;font-size:12.5px;color:#6F6A79;margin-top:4px;letter-spacing:.02em}
 .galeria__tiras{display:flex;flex-direction:column;gap:10px;overflow-y:auto;
   height:var(--alto-visor);min-height:0;scrollbar-width:thin;overscroll-behavior:contain}
@@ -1525,6 +1553,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* silueta de respaldo cuando el ejemplar no tiene fotografía */
 .sin-foto{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
   background:linear-gradient(165deg,var(--jacaranda-brasa),var(--jacaranda-noche));min-height:clamp(360px,52vh,560px);padding:32px;text-align:center}
+/* EXENTO: vive dentro de una caja pequeña; manda el ancho de la caja. */
 .sin-foto p{margin:0;color:rgba(255,255,255,.62);font-size:14px;max-width:400px;line-height:1.5}
 .sin-foto .silueta{opacity:.9}
 
