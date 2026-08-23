@@ -6,7 +6,7 @@ process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 const PRUEBA = '../prueba/';
 let ok=0,mal=0; const t=(n,c,d='')=>{ c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d)); };
 console.log('\n══ COPIA SIN DEPENDENCIA DEL NÚMERO ══');
-const paginas=[PRUEBA+'portada.dc.html',PRUEBA+'ficha.dc.html',PRUEBA+'portada-vista-previa.html',PRUEBA+'ficha-vista-previa.html'];
+const paginas=[PRUEBA+'portada-vista-previa.html',PRUEBA+'ficha-vista-previa.html'];
 for(const f of paginas){
   const s=fs.readFileSync(f,'utf8');
   // Se mide sobre el texto visible, no sobre los comentarios del código: un
@@ -56,8 +56,5 @@ t('recursos · sin el pie de respaldo del video', !/watch\?v=-CK1wiS2m3Q/.test(r
 t('recursos · el marco sigue anunciando su contenido',
   /title="El ahuehuete de Santa Catarina/.test(rec));
 t('portada · el respaldo del logotipo imita el lockup oficial', /marca__gob/.test(p)&&/marca__dep/.test(p)&&/Capital de la Transformación/.test(p));
-const d=fs.readFileSync(PRUEBA+'portada.dc.html','utf8');
-t('recursos.dc · mismo video', /youtube-nocookie\.com\/embed\/-CK1wiS2m3Q/.test(fs.readFileSync(PRUEBA+'recursos.dc.html','utf8')));
-t('portada.dc · misma barra de filtros', /class="mapa-filtros" id="mapaFiltros"/.test(d));
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal?1:0);

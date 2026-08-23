@@ -61,12 +61,11 @@ si algo se rompió. Conviene correrlas antes de cada publicación.
 
 | Archivo o carpeta | Qué es |
 |---|---|
-| `estilos.css` | **La hoja de estilos completa.** Una sola, para las tres páginas y las dos versiones. Colores, tipografías y medidas se declaran como variables al principio |
+| `estilos.css` | **La hoja de estilos completa.** Una sola, para las tres páginas. Colores, tipografías y medidas se declaran como variables al principio |
 | `parciales/` | Encabezado y pie, un archivo cada uno. Se insertan en todas las páginas al ensamblar |
 | `cuerpo.html` · `ficha-cuerpo.html` · `recursos-cuerpo.html` | El contenido de cada página |
-| `dc-cuerpo.html` · `ficha-dc-cuerpo.html` · `recursos-dc-cuerpo.html` | Los mismos contenidos para Claude Design |
 | `logica.js` · `ficha-logica.js` | El guion de cada página |
-| `dc-logica.js` · `ficha-dc-logica.js` · `recursos-dc-logica.js` | Los mismos guiones para Claude Design |
+| `modelo-portada.js` · `modelo-ficha.js` · `modelo-recursos.js` | **El modelo de cada página**: calcula lo que se muestra sin tocar el DOM. No se publica; es el arnés con el que las suites prueban los valores sin navegador |
 | `mapa.js` | El mapa: marcadores, filtros, recorte a la Ciudad, ubicación |
 | `leaflet-diferido.js` | Carga Leaflet solo cuando el mapa entra en pantalla |
 | `indicadores.js` | Las cifras del panel y de la franja |
@@ -81,20 +80,22 @@ si algo se rompió. Conviene correrlas antes de cada publicación.
 | `guia-alta.html` · `pendientes.html` | Documentación interna. Solo viajan a la vista previa, nunca al servidor |
 | `assets/` | Imágenes, tipografías, geografía |
 | `construir/` | Los ensambladores |
-| `verificar/` | Las catorce suites |
+| `verificar/` | Las doce suites |
 
 ---
 
-## Las dos versiones del sitio
+## La vista previa
 
-| | Vista previa (`*-vista-previa.html`) | Claude Design (`*.dc.html`) |
-|---|---|---|
-| **Datos** | Congelados al ensamblar | Se leen **en vivo** del CSV publicado |
-| **Archivos** | Uno solo, todo incrustado | HTML + módulos en `assets/js/` |
-| **Se abre** | Con doble clic | Servida por Claude Design |
-| **Sirve para** | Revisar y enseñar sin conexión | Ver el avance de la captura al instante |
+El armado sin argumentos produce `prueba/*-vista-previa.html`: un archivo por página, con todo
+incrustado y los datos congelados. Se abre con doble clic, sin servidor y sin conexión. Sirve para
+revisar y enseñar antes de publicar.
 
-Ninguna de las dos es lo que se publica: lo publicado es `docs/`.
+No es lo que se publica: lo publicado es `docs/`.
+
+**Retirado.** Existió una segunda salida, `*.dc.html`, para servirla desde Claude Design y leer el
+CSV en vivo. Se retiró: eran once archivos, 2 122 líneas y tres suites propias para una vía que ya
+no se usa. Lo único que se conservó fueron sus tres módulos de lógica, renombrados a `modelo-*.js`,
+porque son el único punto donde se puede probar qué muestra cada página sin abrir un navegador.
 
 ---
 

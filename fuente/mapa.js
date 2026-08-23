@@ -29,7 +29,7 @@ const TESELAS = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
 /** Máscara que apaga todo lo que queda fuera de la Ciudad de México y dibuja
  *  su perímetro oficial. Cartografía: INEGI, CVEGEO 09.
  *  Es el objeto GeoJSON, no una ruta: pedirlo por fetch fallaba al abrir el
- *  sitio con file://, al publicar sin la carpeta assets/geo y en Claude Design. */
+ *  sitio con file:// y al publicar sin la carpeta assets/geo. */
 export const MASCARA_CDMX = GEO_CDMX;
 /** Límites de la Ciudad de México: el mapa no se puede arrastrar más allá. */
 export const LIMITES_CDMX = [[18.98, -99.43], [19.66, -98.87]];

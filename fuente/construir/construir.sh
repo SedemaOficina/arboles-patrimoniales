@@ -18,8 +18,6 @@ node armar-recursos.js
 node armar-datos.js
 # La capa geografica del inventario, para QGIS y compania.
 node armar-capa.js
-# Las versiones .dc.html son artefactos de Claude Design, no del servidor.
-[ "$DESTINO" != "produccion" ] && node armar-dc.js
 
 DEST="../../$CARPETA"
 # Los archivos de apoyo viajan con el sitio. Se borra antes de copiar: si no,

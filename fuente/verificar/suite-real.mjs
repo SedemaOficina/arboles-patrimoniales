@@ -9,7 +9,7 @@ class DCLogic{ setState(o){this.state={...this.state,...o};} }
 globalThis.location={hash:''}; globalThis.window={addEventListener(){},removeEventListener(){},scrollTo(){}};
 let ok=0,mal=0; const t=(n,c,d='')=>{c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d));};
 
-const P=new Function('DCLogic',fs.readFileSync('dc-logica.js','utf8')+'; return Component;')(DCLogic);
+const P=new Function('DCLogic',fs.readFileSync('modelo-portada.js','utf8')+'; return Component;')(DCLogic);
 const p=new P(); p.state={estado:'listo',ejemplares:D.ejemplares,meta:D.meta,stats:D.stats,filtro:'',mensajeError:''};
 const v=p.renderVals();
 console.log('══ PORTADA · REGISTRO REAL ══');
@@ -38,7 +38,7 @@ t('Slugs únicos',new Set(D.ejemplares.map(e=>e.slug)).size===13);
 p.state.filtro='NOTABLE';
 t('Filtro Notables da 11',p.renderVals().fichas.length===11,String(p.renderVals().fichas.length));
 
-const F=new Function('DCLogic',fs.readFileSync('ficha-dc-logica.js','utf8')+'; return Component;')(DCLogic);
+const F=new Function('DCLogic',fs.readFileSync('modelo-ficha.js','utf8')+'; return Component;')(DCLogic);
 console.log('\n══ FICHA · REGISTRO REAL ══');
 let f2=0;
 for(const e of D.ejemplares){ const c=new F(); c.state={estado:'listo',ejemplares:D.ejemplares,meta:D.meta,slug:e.slug,mensajeError:''};

@@ -7,7 +7,7 @@ const PRUEBA = '../prueba/';
 let ok=0,mal=0; const t=(n,c,d='')=>{ c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d)); };
 console.log('\n══ IDENTIDAD, ENCABEZADO Y CARTOGRAFÍA ══');
 
-const paginas=[PRUEBA+'portada.dc.html',PRUEBA+'ficha.dc.html',PRUEBA+'portada-vista-previa.html',PRUEBA+'ficha-vista-previa.html'];
+const paginas=[PRUEBA+'portada-vista-previa.html',PRUEBA+'ficha-vista-previa.html'];
 for(const f of paginas){
   const s=fs.readFileSync(f,'utf8');
   // El emblema salió del encabezado por decisión editorial: competía con el
@@ -37,8 +37,6 @@ for(const f of paginas){
   t(f+' · el globo vive dentro de la hilera, no encima',
     /\.bosque__globo\{position:absolute;top:10px/.test(s) && !/margin-top:-162px/.test(s));
 }
-const p=fs.readFileSync(PRUEBA+'portada.dc.html','utf8');
-const geo=JSON.parse(p.split('data-perimetros>')[1].split('</scr')[0]);
 const m=fs.readFileSync('mapa.js','utf8');
 t('mapa.js · máscara de la Ciudad de México incrustada', /MASCARA_CDMX = GEO_CDMX/.test(m) && /import \{ GEO_CDMX \}/.test(m));
 t('mapa.js · límites y pantalla completa', /LIMITES_CDMX/.test(m)&&/maxBounds/.test(m)&&/mapa-marco--pleno/.test(m));

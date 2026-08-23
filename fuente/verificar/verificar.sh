@@ -8,9 +8,9 @@
 # es peor que no tener tablero.
 cd "$(dirname "$0")"
 mal=0
-for f in verifica-dc verifica-ficha-dc verifica-galeria verifica-mapa verifica-panel \
+for f in verifica-galeria verifica-mapa verifica-panel \
          suite-real verifica-identidad verifica-copia verifica-contenido \
-         verifica-design verifica-menu verifica-contrato verifica-lector verifica-sistema \
+         verifica-menu verifica-contrato verifica-lector verifica-sistema \
          verifica-auditoria; do
   salida=$(node "$f.mjs" 2>&1)
   codigo=$?

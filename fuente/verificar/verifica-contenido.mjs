@@ -6,7 +6,7 @@ process.chdir(fileURLToPath(new URL('..', import.meta.url)));
 const PRUEBA = '../prueba/';
 let ok=0,mal=0; const t=(n,c,d='')=>{ c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d)); };
 console.log('\n══ SECCIONES NUEVAS Y CITAS ══');
-for(const f of [PRUEBA+'portada.dc.html',PRUEBA+'portada-vista-previa.html']){
+for(const f of [PRUEBA+'portada-vista-previa.html']){
   const s=fs.readFileSync(f,'utf8');
   t(f+' · sección «patrimonial no es intocable»', /id="cuidado"/.test(s)&&/Patrimonial no quiere decir intocable/.test(s));
   t(f+' · cita el numeral 6 sobre mantenimiento', /NADF-001-RNAT-2015, numeral 6\./.test(s)&&/potencian los servicios ambientales/.test(s));
@@ -75,7 +75,7 @@ t('mapa.js · marcadores uniformes y sin cifra', /TAMANO_PIN = 16/.test(m)&&/htm
 t('mapa.js · botón para borrar filtros', /class="mapa-borrar" data-borrar/.test(m)&&/Borrar filtros/.test(m)&&/\[data-borrar\]/.test(m));
 t('mapa.js · recorte a la Ciudad de México', /MASCARA_CDMX = GEO_CDMX/.test(m)&&/maxBounds/.test(m));
 t('mapa.js · sin capa de perímetros', !/perimetro/i.test(m));
-const dl=fs.readFileSync('dc-logica.js','utf8');
+const dl=fs.readFileSync('modelo-portada.js','utf8');
 t('Design · buscador en el estado', /busqueda: ""/.test(dl)&&/alBuscar/.test(dl));
 t('Design · ya no arma la descarga en el navegador',
   !/descargar\(tipo, ejemplares\)/.test(dl) && !/alDescargarCsv/.test(dl));
@@ -93,7 +93,7 @@ console.log('\n══ EL EXPEDIENTE NO INVENTA FECHAS ══');
      de nominación se retiró del padrón v2 —el lector la deja en null— y no
      debe reaparecer en ninguna ficha. Volvió una vez después de haberse
      pedido que saliera; esto impide la tercera. */
-  for (const f of ['ficha-logica.js', 'ficha-dc-logica.js']) {
+  for (const f of ['ficha-logica.js', 'modelo-ficha.js']) {
     const s2 = fs.readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
     t(f + ' · no publica «Fecha de nominación»', !/Fecha de nominación/.test(s2));
     t(f + ' · sí publica la del decreto', /Fecha del decreto/.test(s2));

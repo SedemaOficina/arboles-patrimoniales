@@ -8,7 +8,7 @@ const D=JSON.parse(fs.readFileSync('verificar/datos/datos-con-fotos.json','utf8'
 const S=await import('../especies.js');
 class DCLogic{ setState(o){this.state={...this.state,...o};} }
 globalThis.location={hash:''}; globalThis.window={addEventListener(){},removeEventListener(){},scrollTo(){}};
-const F=new Function('DCLogic',fs.readFileSync('ficha-dc-logica.js','utf8')+'; return Component;')(DCLogic);
+const F=new Function('DCLogic',fs.readFileSync('modelo-ficha.js','utf8')+'; return Component;')(DCLogic);
 let ok=0,mal=0; const t=(n,c,d='')=>{c?(ok++,console.log('  ✅',n)):(mal++,console.log('  ❌',n,d));};
 const ver=(slug,foto=0)=>{const c=new F(); c._S=S;
   c.state={estado:'listo',ejemplares:D.ejemplares,meta:D.meta,slug,mensajeError:'',foto}; return c.renderVals();};

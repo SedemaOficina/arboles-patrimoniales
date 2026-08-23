@@ -19,21 +19,21 @@ t('css · estado de paso del cursor', /\.barra nav a:hover\{background:rgba\(var
 t('css · la sección activa se distingue', /\.barra nav a\[aria-current="true"\]\{color:#fff;background:var\(--jacaranda\)\}/.test(css));
 t('css · el botón solo aparece cuando hace falta', /\.barra__abrir\{display:none/.test(css)&&/\.barra__abrir\{display:inline-flex\}/.test(css));
 t('css · el menú angosto ya no desaparece', !/\.barra nav\{display:none\}/.test(css));
-for (const f of [PRUEBA+'portada-vista-previa.html',PRUEBA+'ficha-vista-previa.html',PRUEBA+'portada.dc.html',PRUEBA+'ficha.dc.html']) {
+for (const f of [PRUEBA+'portada-vista-previa.html',PRUEBA+'ficha-vista-previa.html']) {
   const s=fs.readFileSync(f,'utf8');
   t(f+' · trae el módulo del menú', /activarMenu/.test(s));
 }
 
 console.log('\n══ HILERA DE EJEMPLARES ══');
 const lg = fs.readFileSync('logica.js','utf8');
-const dc = fs.readFileSync('dc-logica.js','utf8');
+const dc = fs.readFileSync('modelo-portada.js','utf8');
 
 // La ranura sale del dibujo. Con ancho fijo la ilustración de 30 m sobresalía
 // 102 px por lado y los ejemplares se encimaban unos con otros.
 t('logica.js · la ranura se toma del ancho del dibujo montado',
   /querySelectorAll\("\.bosque__arbol"\)/.test(lg) && /a\.style\.width\s*=\s*Math\.max\(ANCHO_MINIMO_RANURA/.test(lg));
 t('logica.js · la ranura tiene piso para el nombre', /ANCHO_MINIMO_RANURA\s*=\s*13\d;/.test(lg));
-t('dc-logica.js · la ranura viaja en los datos', /anchoRanura:\s*Math\.max\(132/.test(dc));
+t('modelo-portada.js · la ranura viaja en los datos', /anchoRanura:\s*Math\.max\(132/.test(dc));
 t('css · el ancho fijo quedó como piso, no como medida',
   /El ancho es un piso, no la medida/.test(css));
 // Al PRINCIPIO, no al final: el renglón fijo del dibujo tiene que arrancar a
@@ -145,12 +145,7 @@ t('css · la entrada se acorta en la franja de 901 a 999 px',
 t('css · el sello no vuelve a separarse 22 px', /\.sello\{display:block;width:132px;height:auto;margin:0 0 12px\}/.test(css));
 
 const portada = fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
-const portadaDC = fs.readFileSync(PRUEBA+'portada.dc.html','utf8');
 t('portada · la hilera pide el modo guía', /data-desliza="guia"/.test(portada));
-t('portada.dc · la hilera pide el modo guía', /data-desliza="guia"/.test(portadaDC));
-t('portada.dc · el globo quedó solo con la llamada a la ficha',
-  /bosque__globo">Ver su ficha/.test(portadaDC) && !/bosque__globo">\{\{ b\.nombre/.test(portadaDC));
-t('portada.dc · la identificación va debajo del árbol', /bosque__pie/.test(portadaDC));
 
 console.log('\n══ LA FLECHA DE PESTAÑA NUEVA NO CUELGA DE LOS ICONOS ══');
 {
@@ -160,7 +155,7 @@ console.log('\n══ LA FLECHA DE PESTAÑA NUEVA NO CUELGA DE LOS ICONOS ══
   const cs = fs.readFileSync('estilos.css', 'utf8');
   t('El pie de redes queda exento de la flecha',
     /\.pie__redes a\[target="_blank"\]::after\{content:none\}/.test(cs));
-  for (const f of ['parciales/pie.html', 'parciales/pie-design.html']) {
+  for (const f of ['parciales/pie.html']) {
     const h = fs.readFileSync(f, 'utf8');
     const redes = (h.match(/<li><a href="https:\/\/[^"]+" target="_blank"[^>]*><svg/g) || []).length;
     t(f.split('/').pop() + ' · las cinco redes siguen siendo enlaces de solo icono', redes === 5, String(redes));

@@ -12,12 +12,12 @@ t('La navegación entre ejemplares se retiró por completo',
   !/pintarVecinos|vecinoIzq/.test(fl)
   && !/vecino/.test(fs.readFileSync('ficha-cuerpo.html','utf8'))
   && !/\.vecino/.test(fs.readFileSync('estilos.css','utf8'))
-  && !/vecinoIzq|vecinoDer/.test(fs.readFileSync('ficha-dc-logica.js','utf8')));
+  && !/vecinoIzq|vecinoDer/.test(fs.readFileSync('modelo-ficha.js','utf8')));
 // El eje del tiempo salió de la ficha: se comprueba que no quede rastro.
 t('El eje del tiempo se retiró por completo',
   !/hayEje|escalaTiempo|germinacion/.test(fl)
   && !/eje__/.test(fs.readFileSync('estilos.css','utf8'))
-  && !/hayEje/.test(fs.readFileSync('ficha-dc-logica.js','utf8')));
+  && !/hayEje/.test(fs.readFileSync('modelo-ficha.js','utf8')));
 
 const m=fs.readFileSync('mapa.js','utf8');
 t('Los avisos del mapa se buscan donde viven', /\(filtros && filtros\.querySelector\("\[data-aviso\]"\)\)\s*\n?\s*\|\| lista/.test(m));
@@ -25,7 +25,7 @@ t('Los avisos del mapa se buscan donde viven', /\(filtros && filtros\.querySelec
 const lg=fs.readFileSync('logica.js','utf8');
 t('El mapa no se reconstruye dos veces', /let mapaCreado = false/.test(lg)&&/\|\| mapaCreado\) return/.test(lg));
 t('Los escuchadores se registran una sola vez', (lg.match(/dataset\.escuchando/g)||[]).length>=6);
-const dl=fs.readFileSync('dc-logica.js','utf8');
+const dl=fs.readFileSync('modelo-portada.js','utf8');
 // El CSV ya no se arma en el navegador: lo genera construir/armar-datos.js.
 const gen=fs.readFileSync('construir/armar-datos.js','utf8');
 t('El CSV neutraliza fórmulas', /\^\[=\+\\-@\\t\\r\]/.test(gen));
@@ -51,7 +51,7 @@ const ind=fs.readFileSync('indicadores.js','utf8');
 t('La unidad se calla cuando no hay cifra', /const uni = /.test(ind));
 t('Sin unidades escritas a mano junto a cifras opcionales',
   !/unidad: "(años|litros al año|kg al año|metros)"/.test(ind), (ind.match(/unidad: "(años|litros al año|kg al año|metros)"/)||[])[0]||'');
-for (const f of ['logica.js','ficha-logica.js','dc-logica.js','ficha-dc-logica.js','indicadores.js']) {
+for (const f of ['logica.js','ficha-logica.js','modelo-portada.js','modelo-ficha.js','indicadores.js']) {
   t(f+' · el año se lee del reloj', !/= 2026;/.test(fs.readFileSync(f,'utf8')));
 }
 
@@ -68,9 +68,7 @@ t('Llaves CSS balanceadas', (()=>{const c=css.replace(/\/\*[\s\S]*?\*\//g,'').re
 const mp=fs.readFileSync('mapa.js','utf8');
 t('mapa.js sin restos de la capa de alcaldías', !/fijarAlcaldia|nombreDeRasgo|Perímetros de las alcaldías/.test(mp));
 t('logica.js sin el eje muerto', !/pintarEje|ejePista/.test(fs.readFileSync('logica.js','utf8')));
-t('dc-logica.js sin el eje muerto', !/marcasEje|arbolesEje|hayDecano/.test(fs.readFileSync('dc-logica.js','utf8')));
-t('El aviso de datos desactualizados ya se pinta',
-  /\{\{ avisoDato \}\}/.test(fs.readFileSync('dc-cuerpo.html','utf8')));
+t('modelo-portada.js sin el eje muerto', !/marcasEje|arbolesEje|hayDecano/.test(fs.readFileSync('modelo-portada.js','utf8')));
 const ar=fs.readFileSync('construir/armar.js','utf8');
 t('El ensamblador falla si se expone algo inexistente', /ya no define/.test(ar));
 
@@ -143,11 +141,10 @@ t('indicadores.js solo conserva el modo agregado',
 t('Y sigue declarando la cobertura de cada suma',
   /function cobertura\(r\)/.test(ind) && /Calculado sobre \$\{r\.con\} de \$\{r\.de\}/.test(ind));
 const fcuerpo=fs.readFileSync('ficha-cuerpo.html','utf8');
-const fdc=fs.readFileSync('ficha-dc-cuerpo.html','utf8');
 t('La ficha avisa cuáles renglones no se pudieron estimar',
   /no se pudieron estimar para este ejemplar/.test(fl) && /haySin/.test(fl));
-t('El glosario metodológico está en las dos versiones',
-  /glosario-servicios/.test(fcuerpo) && /glosario-servicios/.test(fdc) && /\.glosario-servicios\{/.test(cs));
+t('El glosario metodológico está en la ficha',
+  /glosario-servicios/.test(fcuerpo) && /\.glosario-servicios\{/.test(cs));
 t('Explica los cinco contaminantes que reporta i-Tree',
   ['Monóxido de carbono (CO)','Dióxido de nitrógeno (NO₂)','Ozono (O₃)','Partículas (PM 2.5)','Dióxido de azufre (SO₂)']
     .every(x=>fcuerpo.includes(x)));
@@ -155,8 +152,7 @@ t('Explica por qué la energía puede salir en negativo',
   /hoja perenne puede tapar el sol de invierno/.test(fcuerpo));
 t('Dice qué beneficios no lleva cifra', /no pone cifra a todo/.test(fcuerpo));
 t('La versión Design admite más de una nota por grupo',
-  /<sc-for list="\{\{ gr.notas \}\}" as="nt">/.test(fdc)
-  && /notas\.length > 0/.test(fs.readFileSync('ficha-dc-logica.js','utf8')));
+    /notas\.length > 0/.test(fs.readFileSync('modelo-ficha.js','utf8')));
 
 console.log('\n══ ENSAMBLADO ══');
 {
@@ -173,9 +169,9 @@ console.log('\n══ ENSAMBLADO ══');
 console.log('\n══ POSTULACIÓN · secuencia, no rejilla ══');
 {
   const pv=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-        dc=fs.readFileSync(PRUEBA+'portada.dc.html','utf8'),
+  
         cs2=fs.readFileSync('estilos.css','utf8');
-  for (const [nom,s] of [['una pieza',pv],['Design',dc]]) {
+  for (const [nom,s] of [['una pieza', pv]]) {
     t(nom+' · la rejilla de siete tarjetas desapareció',
       !/class="pasos"/.test(s) && !/class="paso__numero"/.test(s));
     t(nom+' · cinco hitos numerados en una sola línea',
@@ -218,8 +214,6 @@ console.log('\n══ AUDITORÍA 360 · lo que se corrigió, para que no vuelva 
   const est = fs.readFileSync('estilos.css','utf8');
   const af = fs.readFileSync('construir/armar-ficha.js','utf8');
   const ar = fs.readFileSync('construir/armar-recursos.js','utf8');
-  const adc = fs.readFileSync('construir/armar-dc.js','utf8');
-  const pied = fs.readFileSync('parciales/pie-design.html','utf8');
   const fl = fs.readFileSync('ficha-logica.js','utf8');
   const reg = JSON.parse(fs.readFileSync('datos/registro.json','utf8'));
 
@@ -256,22 +250,16 @@ console.log('\n══ AUDITORÍA 360 · lo que se corrigió, para que no vuelva 
     /<link rel="canonical" href="\$\{SITIO\.url\(NOMBRES\.recursos\)\}">/.test(ar)
     && /twitter:image/.test(ar));
 
-  /* La expresión sin anclar daba esPortada=true en las tres páginas DC. */
-  t('Design · esPortada solo es cierto en la portada',
-    /\/\^dc-cuerpo\\\.html\$\/\.test\(cuerpo\)/.test(adc));
-  t('Design · su pie usa los mismos testigos que el del sitio',
-    (pied.match(/__PORTADA__/g)||[]).length >= 8 && !/href="#inicio"/.test(pied));
 
   /* Nueve fichas publicaban «1 kg/año» de carbono con cero decimales fijos. */
   t('cifras · los decimales los decide la magnitud',
     /const decimales = \(v\) => \(Math\.abs\(v\) < 10 \? 2 : Math\.abs\(v\) < 100 \? 1 : 0\);/.test(fl));
   t('cifras · el pie de cobertura cuenta bien las tarjetas',
     !/Las cuatro cifras/.test(fs.readFileSync('logica.js','utf8'))
-    && !/Las cuatro cifras/.test(fs.readFileSync('dc-logica.js','utf8')));
+    && !/Las cuatro cifras/.test(fs.readFileSync('modelo-portada.js','utf8')));
 
   t('marcado · no quedan restos del panel retirado',
-    !/panel-datos/.test(fs.readFileSync('cuerpo.html','utf8'))
-    && !/panel-datos/.test(fs.readFileSync('dc-cuerpo.html','utf8')));
+    !/panel-datos/.test(fs.readFileSync('cuerpo.html','utf8')));
 }
 
 console.log('\n══ ENSAMBLADO · las listas de exposición no pueden quedarse cortas ══');
@@ -324,10 +312,10 @@ console.log('\n══ ENSAMBLADO · las listas de exposición no pueden quedarse
 console.log('\n══ FICHA · el recuadro morado es ahora el mapa del ejemplar ══');
 {
   const fv=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8'),
-        fd=fs.readFileSync(PRUEBA+'ficha.dc.html','utf8'),
+  
         cs3=fs.readFileSync('estilos.css','utf8'),
-        fdl=fs.readFileSync('ficha-dc-logica.js','utf8');
-  for (const [nom,s] of [['una pieza',fv],['Design',fd]]) {
+        fdl=fs.readFileSync('modelo-ficha.js','utf8');
+  for (const [nom,s] of [['una pieza', fv]]) {
     t(nom+' · el texto del recuadro morado desapareció',
       !/Abre la ubicación exacta del ejemplar en Google Maps/.test(s));
     t(nom+' · hay lienzo de mapa y su pie', /class="mapa-caja__lienzo"/.test(s) && /mapa-caja__pie/.test(s));
@@ -354,7 +342,7 @@ console.log('\n══ FICHA · el recuadro morado es ahora el mapa del ejemplar 
     /if \(mapaFicha\) \{ mapaFicha\.remove\(\)/.test(fl)
     && /if \(this\._mapa\) \{ this\._mapa\.remove\(\)/.test(fdl));
   t('Sin coordenadas se dice, no se deja un recuadro gris',
-    /mapa-caja__vacio/.test(fl) && /mapa-caja__vacio/.test(fs.readFileSync('ficha-dc-cuerpo.html','utf8')));
+    /mapa-caja__vacio/.test(fl));
   // El punto plano se confundía con los marcadores comerciales del mapa base.
   t('El ejemplar lleva pin propio con silueta de árbol',
     /\.pin-arbol__gota\{fill:var\(--jacaranda\)/.test(cs3) && /pin-arbol__copa/.test(fl));
@@ -389,12 +377,12 @@ console.log('\n══ DATO FALTANTE · el sitio lo dice, no lo disimula ══')
 console.log('\n══ TARJETAS · fuera la barrita del punto verde ══');
 {
   const pv=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-        dc=fs.readFileSync(PRUEBA+'portada.dc.html','utf8'),
+  
         cs4=fs.readFileSync('estilos.css','utf8'),
         lg=fs.readFileSync('logica.js','utf8'),
-        dl=fs.readFileSync('dc-logica.js','utf8');
+        dl=fs.readFileSync('modelo-portada.js','utf8');
   t('El eje desapareció de las dos versiones y de la hoja de estilos',
-    !/ficha__eje/.test(pv) && !/ficha__eje/.test(dc) && !/\.ficha__eje/.test(cs4));
+    !/ficha__eje/.test(pv) && !/\.ficha__eje/.test(cs4));
   t('Y con él su cálculo: no queda código muerto',
     !/tieneEje|posicionEje/.test(dl) && !/construirEscala|anioGerminacion|ANIO_ACTUAL/.test(lg));
   t('La tarjeta conserva nombre, especie, ubicación y etiquetas',
@@ -404,9 +392,9 @@ console.log('\n══ TARJETAS · fuera la barrita del punto verde ══');
 console.log('\n══ «QUÉ SIGNIFICA» · protección sin cerrarle la puerta a la Secretaría ══');
 {
   const pv=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-        dc=fs.readFileSync(PRUEBA+'portada.dc.html','utf8'),
+  
         ind=fs.readFileSync('indicadores.js','utf8');
-  for (const [nom,s] of [['una pieza',pv],['Design',dc]]) {
+  for (const [nom,s] of [['una pieza', pv]]) {
     t(nom+' · el titular ya no es la prohibición',
       /Un árbol declarado patrimonio se cuida distinto/.test(s)
       && !/Un árbol patrimonial no se derriba a cambio de plantar otro/.test(s));
@@ -458,9 +446,8 @@ console.log('\n══ PALETA · el verde no entra al fondo profundo ══');
 console.log('\n══ LA FICHA EN PAPEL ══');
 {
   const cs6=fs.readFileSync('estilos.css','utf8');
-  const fv=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8'),
-        fd=fs.readFileSync(PRUEBA+'ficha.dc.html','utf8');
-  for (const [nom,s] of [['una pieza',fv],['Design',fd]]) {
+  const fv=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
+  for (const [nom,s] of [['una pieza', fv]]) {
     t(nom+' · lleva membrete con los dos logotipos',
       /class="hoja-cabeza"/.test(s) && /hoja-cabeza__gob/.test(s) && /hoja-cabeza__emblema/.test(s)
       && /logo-institucional-grande\.png/.test(s) && /emblema-media\.png/.test(s));
@@ -487,12 +474,12 @@ console.log('\n══ LA FICHA EN PAPEL ══');
 console.log('\n══ NOMBRE DEL SITIO ══');
 {
   const pv=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-        dc=fs.readFileSync(PRUEBA+'portada.dc.html','utf8'),
+  
         fv=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
   t('El titular de la portada dice Árboles patrimoniales',
-    /<h1>Árboles<em>patrimoniales<\/em><\/h1>/.test(pv) && /<h1>Árboles<em>patrimoniales<\/em><\/h1>/.test(dc));
+    /<h1>Árboles<em>patrimoniales<\/em><\/h1>/.test(pv));
   t('«Guardianes del tiempo» ya no aparece en ninguna pieza',
-    !/Guardianes/.test(pv) && !/Guardianes/.test(dc) && !/Guardianes/.test(fv));
+    !/Guardianes/.test(pv) && !/Guardianes/.test(fv));
   t('Título de pestaña y metadatos para compartir, actualizados',
     /<title>Árboles patrimoniales de la Ciudad de México · Secretaría del Medio Ambiente<\/title>/.test(pv)
     && /og:title" content="Árboles patrimoniales de la Ciudad de México"/.test(pv));
@@ -501,11 +488,10 @@ console.log('\n══ NOMBRE DEL SITIO ══');
 console.log('\n══ RESUMEN DE LA FICHA · fuera todo lo derivado de la edad ══');
 {
   const fl2=fs.readFileSync('ficha-logica.js','utf8'),
-        fdl2=fs.readFileSync('ficha-dc-logica.js','utf8'),
-        fdc2=fs.readFileSync('ficha-dc-cuerpo.html','utf8'),
-        fv2=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8'),
-        fd2=fs.readFileSync(PRUEBA+'ficha.dc.html','utf8');
-  for (const [nom,s] of [['una pieza',fv2],['Design',fd2]]) {
+        fdl2=fs.readFileSync('modelo-ficha.js','utf8'),
+  
+        fv2=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
+  for (const [nom,s] of [['una pieza', fv2]]) {
     t(nom+' · sin «Años de edad estimada», «Germinó hacia» ni «Generaciones humanas»',
       !/Años de edad estimada/.test(s) && !/Germinó hacia/.test(s) && !/Generaciones humanas/.test(s));
     t(nom+' · sin la nota de edad no estimada',
@@ -514,21 +500,17 @@ console.log('\n══ RESUMEN DE LA FICHA · fuera todo lo derivado de la edad �
       /Altura total/.test(s) && /Diámetro del tronco/.test(s) && /Extensión de copa/.test(s) && /Alcaldía/.test(s));
   }
   t('Y no queda código muerto del cálculo',
-    !/const generaciones = /.test(fl2) && !/sinEdadEstimada/.test(fdl2) && !/sinEdadEstimada/.test(fdc2));
+    !/const generaciones = /.test(fl2));
 }
 
 console.log('\n══ NAVEGACIÓN ENTRE PÁGINAS ══');
 {
   const pv3=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-        fv3=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8'),
-        pd3=fs.readFileSync(PRUEBA+'portada.dc.html','utf8'),
-        fd3=fs.readFileSync(PRUEBA+'ficha.dc.html','utf8');
+        fv3=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
   t('Ningún testigo de ruta sobrevive al ensamblado',
-    ![pv3,fv3,pd3,fd3].some(x => /__PORTADA__|__FICHA__/.test(x)));
+    ![pv3,fv3].some(x => /__PORTADA__|__FICHA__/.test(x)));
   t('La portada de una pieza apunta al archivo de ficha',
     /RUTA_FICHA = "ficha-vista-previa\.html"/.test(pv3));
-  t('La portada Design apunta a su propia ficha',
-    /RUTA_FICHA = "ficha\.dc\.html"/.test(pd3));
   t('El menú de la ficha regresa a la portada, no a anclas inexistentes',
     /href="portada-vista-previa\.html#listado"/.test(fv3)
     && /href="portada-vista-previa\.html#mapa"/.test(fv3)
@@ -536,7 +518,7 @@ console.log('\n══ NAVEGACIÓN ENTRE PÁGINAS ══');
   t('El mapa del sitio en el pie de la ficha también',
     /href="portada-vista-previa\.html#postula"/.test(fv3));
   t('Los tres ensambladores admiten los nombres de producción',
-    ['construir/armar.js','construir/armar-ficha.js','construir/armar-dc.js'].every(a =>
+    ['construir/armar.js','construir/armar-ficha.js'].every(a =>
       /process\.env\.RUTA_PORTADA/.test(fs.readFileSync(a,'utf8'))
       && /process\.env\.RUTA_FICHA/.test(fs.readFileSync(a,'utf8'))));
   t('Tarjeta, árbol del bosque y globo del mapa usan la misma ruta',
@@ -547,18 +529,17 @@ console.log('\n══ NAVEGACIÓN ENTRE PÁGINAS ══');
 console.log('\n══ PÁGINA DE RECURSOS ══');
 {
   const rec=fs.readFileSync(PRUEBA+'recursos-vista-previa.html','utf8'),
-        recdc=fs.readFileSync(PRUEBA+'recursos.dc.html','utf8'),
+  
         pv4=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-        fv4=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8'),
-        pd4=fs.readFileSync(PRUEBA+'portada.dc.html','utf8');
-  t('Existe en las dos versiones', rec.length>50000 && recdc.length>50000);
+        fv4=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
+  t('La página de recursos está completa', rec.length>50000);
   // El ancla del marco normativo pasó de #normativa a #normatividad: es el
   // destino de la liga que la portada añadió al final de «Lo que dice la ley»,
   // y las dos secciones legales tenían que poder señalarse entre sí.
   t('Trae las cinco secciones', ['id="videos"','id="normatividad"','id="datos"','id="metodologia"','id="directorio"']
     .every(x=>rec.includes(x)));
   t('El video salió de la portada y vive aquí',
-    !/youtube-nocookie/.test(pv4) && !/youtube-nocookie/.test(pd4) && /youtube-nocookie/.test(rec));
+    !/youtube-nocookie/.test(pv4) && /youtube-nocookie/.test(rec));
   t('Explica i-Tree y enlaza al sitio oficial',
     /Qué es i-Tree/.test(rec) && /itreetools\.org/.test(rec)
     && /Servicio Forestal del Departamento de Agricultura/.test(rec));
@@ -569,7 +550,7 @@ console.log('\n══ PÁGINA DE RECURSOS ══');
     /iucnredlist\.org\/es/.test(rec) && /iucnredlist\.org\/es/.test(fv4));
   t('Recursos está en el menú de las tres páginas',
     [rec,pv4,fv4].every(x=>/>Recursos<\/a>/.test(x)));
-  t('Ningún testigo de ruta sobrevive', !/__RECURSOS__/.test(rec+pv4+fv4+pd4+recdc));
+  t('Ningún testigo de ruta sobrevive', !/__RECURSOS__/.test(rec+pv4+fv4));
   t('El ensamblador de Recursos admite el nombre de producción',
     /process\.env\.RUTA_RECURSOS/.test(fs.readFileSync('construir/armar-recursos.js','utf8')));
 }
@@ -594,9 +575,9 @@ console.log('\n══ NOTA DE LA UICN EN LA FICHA ══');
 console.log('\n══ ARTÍCULO 107 · el porqué de este sitio ══');
 {
   const pv6=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-        pd6=fs.readFileSync(PRUEBA+'portada.dc.html','utf8'),
+  
         cs8=fs.readFileSync('estilos.css','utf8');
-  for (const [nom,s] of [['una pieza',pv6],['Design',pd6]]) {
+  for (const [nom,s] of [['una pieza', pv6]]) {
     t(nom+' · el artículo 107 va destacado, no perdido en la lista',
       /class="cumplimiento"/.test(s)
       && /Este sitio web es parte del cumplimiento de la ley/.test(s)
@@ -915,8 +896,7 @@ console.log('\n══ ORGANIZACIÓN DEL PROYECTO ══');
   const pie=fs.readFileSync('parciales/pie.html','utf8');
   t('Encabezado y pie viven en un solo archivo cada uno',
     /<header class="barra">/.test(enc) && /<footer class="pie">/.test(pie));
-  const cuerpos=['cuerpo.html','ficha-cuerpo.html','recursos-cuerpo.html',
-                 'dc-cuerpo.html','ficha-dc-cuerpo.html','recursos-dc-cuerpo.html'];
+  const cuerpos=['cuerpo.html','ficha-cuerpo.html','recursos-cuerpo.html'];
   t('Ningún cuerpo conserva una copia suelta',
     cuerpos.every(c=>{ const s2=fs.readFileSync(c,'utf8');
       return !/<header class="barra">/.test(s2) && !/<footer class="pie">/.test(s2)
@@ -937,7 +917,7 @@ console.log('\n══ ORGANIZACIÓN DEL PROYECTO ══');
     /class="abreviaturas"/.test(met)
     && !/investigaciones del Servicio Forestal del USDA/.test(met));
   t('Los ensambladores escriben según el destino',
-    ['construir/armar.js','construir/armar-ficha.js','construir/armar-dc.js','construir/armar-recursos.js']
+    ['construir/armar.js','construir/armar-ficha.js','construir/armar-recursos.js']
       .every(a=>/DESTINO === 'produccion'/.test(fs.readFileSync(a,'utf8'))));
   t('Y los nombres de archivo cambian con él',
     /portada:'index\.html'/.test(fs.readFileSync('construir/armar.js','utf8')));
@@ -1029,7 +1009,7 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
 {
   const mpj = fs.readFileSync('mapa.js','utf8');
   const flj = fs.readFileSync('ficha-logica.js','utf8');
-  const fdj = fs.readFileSync('ficha-dc-logica.js','utf8');
+  const fdj = fs.readFileSync('modelo-ficha.js','utf8');
   // La base de OSM trae farmacias, cimas y gasolineras: compiten con los
   // marcadores propios en un mapa cuyo único trabajo es ubicar un árbol.
   t('El mapa general usa una base sin puntos de interés',
@@ -1047,7 +1027,7 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
   const sitio = fs.readFileSync('construir/sitio.js','utf8');
   t('La dirección pública vive en un solo archivo', /BASE_SITIO/.test(sitio) && /module\.exports/.test(sitio));
   t('Y ningún armador la trae escrita a mano',
-    ['armar.js','armar-ficha.js','armar-recursos.js','armar-dc.js']
+    ['armar.js','armar-ficha.js','armar-recursos.js']
       .every((f) => !/sedema\.cdmx\.gob\.mx\/arboles-patrimoniales/.test(fs.readFileSync('construir/'+f,'utf8'))));
   // Un canonical hacia un dominio que aún no existe le dice al buscador que
   // ignore la versión publicada, y la imagen para compartir no resuelve.

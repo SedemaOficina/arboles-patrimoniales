@@ -138,7 +138,7 @@ t('escala · nada cuelga bajo el lienzo', !/\.escala__persona b\{[^}]*bottom:-/.
 
 console.log('══ FICHA · sin coordenadas de catastro ══');
 const fc = fs.readFileSync('ficha-cuerpo.html','utf8');
-const fdc = fs.readFileSync('ficha-dc-logica.js','utf8');
+const fdc = fs.readFileSync('modelo-ficha.js','utf8');
 t('ficha · no queda el desplegable de uso técnico',
   !/fUbicacionTecnica/.test(fc) && !/fUbicacionTecnica/.test(fl) && !/datos-tecnicos/.test(css));
 // Se busca en el código, no en los comentarios: el comentario que explica por

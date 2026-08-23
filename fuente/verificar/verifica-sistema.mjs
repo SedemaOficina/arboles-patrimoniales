@@ -221,22 +221,11 @@ console.log('\n-- 8 · lo que la auditoría 360 dejó cerrado --');
 }
 
 
-console.log('\n-- 9 · los pares que hay que editar juntos --');
-{
-  /* Dos parejas de archivos son byte por byte idénticas. No es un error: el
-     armado de Claude Design pide expresamente la variante «-design» / «-dc»
-     para que pueda divergir el día que haga falta. El riesgo es el contrario:
-     que alguien edite uno y no el otro, y se separen sin que nadie avise.
-     Mientras no haya un motivo para que difieran, esto exige que sigan iguales.
-     Si algún día TIENEN que diferir, se borra esta comprobación a conciencia,
-     no se «arregla» copiando un archivo sobre el otro. */
-  const iguales = (a, b) =>
-    fs.readFileSync(a, 'utf8') === fs.readFileSync(b, 'utf8');
-  t('El pie del sitio y el de Claude Design siguen siendo el mismo',
-    iguales('parciales/pie.html', 'parciales/pie-design.html'));
-  t('El cuerpo de Recursos y su variante de Claude Design, también',
-    iguales('recursos-cuerpo.html', 'recursos-dc-cuerpo.html'));
-}
-
+/* El bloque 9 vigilaba dos parejas byte a byte idénticas —pie.html con
+   pie-design.html, recursos-cuerpo.html con recursos-dc-cuerpo.html—. Existían
+   para que la variante de Claude Design pudiera divergir algún día. Retirada
+   esa rama, cada pareja se quedó con un solo archivo y la comprobación no tiene
+   qué comparar. Se retira a conciencia, no copiando un archivo sobre el otro,
+   que es la salida que su propio comentario prohibía. */
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal ? 1 : 0);
