@@ -197,6 +197,36 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
+            <h3>La definición de la categoría HISTÓRICO</h3>
+            <p>Las cuatro definiciones formales ya están montadas en la portada, plegadas bajo «El criterio completo» de cada tarjeta. <b>Falta la de HISTÓRICO</b>: la que llegó era, palabra por palabra, la de CENTENARIO —hablaba de edad igual o superior a 80 años, que es el criterio de la otra categoría y no distingue nada—. Publicarla diría algo falso sobre el criterio de la Secretaría, así que esa tarjeta se quedó solo con su frase ciudadana.</p>
+            <cite>Cuando llegue la redacción correcta se pega en <code>fuente/logica.js</code>, en <code>DEF_CATEGORIA.HISTORICO.definicion</code>, y la tarjeta abre su bloque sola.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>El umbral de CENTENARIO: ¿ochenta años o cien?</h3>
+            <p>El sitio decía «rebasó los cien años de vida». La definición formal fija el umbral en <b>ochenta</b>. Corregí el texto ciudadano a ochenta, porque la definición manda sobre la frase, pero las dos no pueden ser ciertas: <b>hay que confirmar cuál es el criterio real</b> y corregir la otra.</p>
+            <p style="margin-top:9px">De paso, revísalo también en SINGULAR: su definición cierra hablando de «biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa», que es el criterio de NOTABLE. Puede ser deliberado, pero se lee como otro arrastre de copiar y pegar.</p>
+          </div>
+          <span class="pend__quien" data-q="tu">Verificar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Los cuatro distintivos gráficos de las categorías</h3>
+            <p>Cada tarjeta ya tiene <b>el hueco reservado</b>: un recuadro punteado de 56 px con la inicial de la categoría. No es un icono provisional, es un sitio marcado como pendiente, para que se note que falta y no parezca terminado.</p>
+            <cite>Entrégalos cuadrados, mínimo 112 px, fondo transparente. Se colocan en <code>DEF_CATEGORIA</code>, campo <code>icono</code>, y el recuadro punteado desaparece solo.</cite>
+          </div>
+          <span class="pend__quien" data-q="registro">Falta el archivo</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
             <h3>Decreto del Sabino de San Juan</h3>
             <p>Es el único ejemplar sin decreto enlazado. Dijiste que hasta su publicación en la Gaceta.</p>
           </div>
@@ -208,7 +238,7 @@ a{color:var(--jacaranda-hondo)}
 
 
     <div class="pend-grupo">
-      <h2>3 · Decisiones institucionales</h2>
+      <h2>2 · Decisiones institucionales</h2>
       <p>No son técnicas. Alguien tiene que decidirlas antes de publicar.</p>
       <div class="pend-lista">
 
@@ -255,11 +285,30 @@ a{color:var(--jacaranda-hondo)}
     </div>
 
     <div class="pend-grupo">
-      <h2>4 · Antes de publicar</h2>
+      <h2>3 · Antes de publicar</h2>
       <p>Trabajo técnico que queda de mi lado, o que se resuelve al momento del despliegue.</p>
       <div class="pend-lista">
 
         
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Llevar la lámina de campo a la ficha real</h3>
+            <p>La maqueta está validada. Falta implementarla: el ejemplar dibujado a su altura con las cotas sobre el dibujo, «Cómo llegar» en una sola banda —hoy el título aparece dos veces—, la taxonomía en cascada, los cinco documentos como lista de enlaces y la sección «De dónde sale cada dato» retirada.</p>
+            <cite>El encabezado morado plano desaparece. El morado queda para la banda de gobierno y el sello de categoría.</cite>
+          </div>
+          <span class="pend__quien" data-q="registro">Por implementar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>El lector v2 no recoge el programa de manejo</h3>
+            <p>De los cinco enlaces que la ficha debe publicar, el padrón v2 tiene los cinco campos: <code>drive_decreto</code>, <code>url_snib</code>, <code>url_observacion</code>, <code>url_itree</code> y <code>url_programa</code>. El lector ya recoge cuatro. <b><code>url_programa</code> está en el contrato pero el lector lo ignora</b>, así que ese enlace nunca podría aparecer.</p>
+          </div>
+          <span class="pend__quien" data-q="registro">Por corregir</span>
+        </article>
+
         <article class="pend">
           <span class="pend__marca"></span>
           <div>
