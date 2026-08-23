@@ -798,6 +798,18 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
     /Con PDF de decreto publicado/.test(pe) && !/Con decreto enlazado/.test(pe));
   t('Las fotografías siguen abiertas: falta cerrar la portada repetida',
     /<h3>Fotografías<\/h3>/.test(pe) && /No resuelto/.test(pe));
+  // El 22 de agosto se comprobó que un mismo archivo está archivado como dos
+  // ejemplares distintos, y que en uno de ellos es la foto de portada. El
+  // procedimiento para corregirlo vive aquí porque es la reparación de un
+  // defecto concreto, no la receta de captura —esa está en guia-alta.html y
+  // no debe duplicarse—. Lo que esta comprobación protege es la advertencia
+  // del hueco: borrar una foto sin renumerar deja al ejemplar sin galería, y
+  // quien lo haga sin leerla creerá que borró una y habrá borrado todas.
+  t('El duplicado exacto de fotografía está anotado con su procedimiento',
+    /Parque España/.test(pe) && /Ramón López Velarde/.test(pe)
+    && /class="arreglo"/.test(pe)
+    && /se detiene en el primer archivo que falta/.test(pe)
+    && /sin ninguna fotografía/.test(pe));
   t('La auditoría de interfaz sigue sin realizarse',
     /No realizada/.test(pe) && /consistencia del encabezado/.test(pe));
   t('La ficha imprimible espera validación en papel',

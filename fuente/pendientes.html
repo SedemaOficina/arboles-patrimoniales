@@ -77,15 +77,24 @@ a{color:var(--jacaranda-hondo)}
   @media(max-width:360px){.pend{grid-template-columns:1fr;padding:15px 16px;gap:10px}
     .pend__marca{display:none}
     .pend__quien{justify-self:start}
-    .receta{padding:20px 16px}}
+    .arreglo{padding:20px 16px}}
   /* Los identificadores y las direcciones son cadenas sin espacios: sin esto
      estiran su columna y con ella la página entera. */
-  .pend,.pend div,.pend p,.pend cite,.receta p{min-width:0;overflow-wrap:anywhere}
+  .pend,.pend div,.pend p,.pend cite,.arreglo p{min-width:0;overflow-wrap:anywhere}
   code{font-family:ui-monospace,'DejaVu Sans Mono',monospace;font-size:.92em;
     background:rgba(141,73,146,.09);padding:1px 5px;border-radius:2px;color:var(--jacaranda-hondo)}
   /* Auditoría P1.3: --jacaranda-hondo esta hecho para fondo claro; sobre la
      cabecera profunda caia a 2.25:1. La variante clara sube a 5.45:1. */
   .pend-cabeza code{color:var(--jacaranda-luz);background:rgba(199,159,202,.16)}
+  /* Procedimiento paso a paso dentro de una tarjeta. Va numerado porque el
+     orden importa: saltarse un paso deja la galeria rota, no incompleta. */
+  .arreglo{background:var(--verde-niebla);border-left:3px solid var(--verde-vivo);padding:18px 22px;margin:12px 0 0}
+  .arreglo>b{display:block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--verde-bosque);margin:0 0 10px}
+  .arreglo ol{margin:0;padding-left:20px}
+  .arreglo li{font-size:14.5px;line-height:1.55;color:#413647;margin:0 0 8px}
+  .arreglo li:last-child{margin-bottom:0}
+  .arreglo li b{color:var(--tinta)}
   .pend-nota{margin:34px 0 0;padding:20px 24px;background:var(--niebla);border-left:3px solid var(--jacaranda);
     font-size:14.5px;line-height:1.6;color:#413647}
 </style>
@@ -119,7 +128,25 @@ a{color:var(--jacaranda-hondo)}
           <div>
             <h3>Fotografías</h3>
             <p>Los trece ejemplares tienen fotografías: <b>88 imágenes</b> montadas desde la carpeta que entregaste, cada una en dos tamaños —1 400 px para el visor de la galería y 480 px para la miniatura de la tarjeta, del mapa y del tirador—. Se aplicó la orientación EXIF —33 de las 92 venían giradas 90°— y se retiraron los metadatos de cámara, incluidas las coordenadas GPS. Se omitieron <b>4 fotografías repetidas</b> dentro de su propia carpeta.</p>
-            <p style="margin-top:9px"><b>Falta cerrar:</b> la portada de Jardín Ramón López Velarde parece ser una segunda fotografía de Jardín San Fernando. Si es así, esa ficha está mostrando un árbol que no es el suyo.</p>
+            <p style="margin-top:9px"><b>Falta cerrar. Son dos hallazgos distintos, los dos entre los ahuehuetes de Cuauhtémoc:</b></p>
+
+            <p style="margin-top:9px"><b>1. Una fotografía archivada dos veces, comprobado byte por byte.</b> El mismo archivo está como foto <b>02 del Jardín Ramón López Velarde</b> y como foto <b>01 del Parque España</b>. En el Parque España es la 01, es decir la de portada: es la que sale en la tarjeta del listado, en el renglón del mapa y como primera de la ficha. Una de las dos atribuciones es falsa y está publicada.</p>
+
+            <p style="margin-top:9px"><b>2. Una sospecha visual, sin comprobar.</b> La portada del Jardín Ramón López Velarde parece ser una segunda fotografía del Jardín San Fernando. No son el mismo archivo —eso ya se descartó—, así que aquí hay que reconocer el sitio, no comparar archivos.</p>
+
+            <p style="margin-top:9px">Los dos apuntan a lo mismo: durante el montaje se barajaron fotografías de ahuehuetes vecinos de la Roma y el Centro. Vale la pena revisar los cuatro de Cuauhtémoc de una sola pasada —San Fernando, Ramón López Velarde, Parque España y Juarista— y no solo estas dos.</p>
+
+            <div class="arreglo">
+              <b>Cómo se corrige</b>
+              <ol>
+                <li><b>Reconoce el sitio.</b> Abre las carpetas en <code>fuente/assets/img/ejemplares/</code> y decide de qué árbol es cada fotografía. Es lo único que no puede hacer nadie más.</li>
+                <li><b>Borra la copia del ejemplar equivocado</b>, y borra <b>las dos versiones</b>: <code>NN.jpg</code> y <code>NN-chica.jpg</code>. Si dejas la miniatura, el censo la sigue contando.</li>
+                <li><b>Renumera para no dejar hueco.</b> El código pide 01, 02, 03… y <b>se detiene en el primer archivo que falta</b>. Si borras la 02, la 03 y la 04 dejan de existir para el sitio. Y si borras la 01, el ejemplar se queda <b>sin ninguna fotografía</b>. Renombra siempre en cadena, con su miniatura: 03→02, 04→03, y así.</li>
+                <li><b>Reconstruye:</b> <code>fuente/construir/construir.sh produccion</code>. Sin esto la corrección no llega a la página.</li>
+                <li><b>Verifica:</b> <code>sh verificar/verificar.sh</code>. La suite de galería cuenta las fotografías de cada ejemplar y avisa si quedó un hueco.</li>
+                <li><b>Commitea y empuja.</b> Deben aparecer cambios en <code>fuente/</code> <i>y</i> en <code>docs/</code>.</li>
+              </ol>
+            </div>
             <cite>Las especificaciones de nombrado, tamaños y créditos se pasaron a guia-alta.html, paso 4.</cite>
           </div>
           <span class="pend__quien" data-q="tu">No resuelto</span>
