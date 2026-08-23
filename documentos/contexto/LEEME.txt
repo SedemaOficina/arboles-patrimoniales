@@ -1,0 +1,33 @@
+CONTEXTO PARA LAS SESIONES DE CLAUDE
+====================================
+
+Estos tres documentos son lo que una sesión nueva necesita saber para trabajar
+en este micrositio sin volver a descubrirlo todo. No son documentación para la
+ciudadanía ni entregables institucionales: eso vive en la carpeta de arriba.
+
+  1 · sitio y repositorio   Cómo se edita, cómo se construye, qué NO tocar,
+                            y las trampas que ya costaron una vez.
+  2 · padrón y datos        La hoja v2, el lector, la auditoría de la base y
+                            los pendientes sobre los datos reales.
+  3 · diseño y auditorías   Las dos auditorías cerradas, el sistema de valores
+                            con nombre y el rediseño de la ficha.
+
+POR QUÉ VIVEN AQUÍ Y NO EN EL PROYECTO DE CLAUDE
+------------------------------------------------
+Porque aquí viajan con el código. Van en el repositorio, quedan versionados en
+Git junto al cambio que describen, y cualquier sesión que tenga esta carpeta
+conectada los lee sin que nadie los suba a mano. Subidos al proyecto habría que
+volver a subirlos cada vez que cambien, y se separarían del código que explican.
+
+CÓMO SE MANTIENEN
+-----------------
+Cuando una decisión cambie, se corrige el documento en el mismo commit que el
+código. Un documento que contradice al repositorio es peor que no tenerlo: se
+lee con la misma confianza y manda a la sesión en dirección contraria.
+
+Regla que ya se rompió una vez: los nombres tienen que decir DE QUÉ SITIO
+hablan. Hubo dos micrositios con nombres parecidos —este y el de orientación
+ciudadana sobre poda y derribo, en el repositorio Arbolado-Ciudadano— con
+reglas de edición opuestas: en uno se edita fuente/ y se compila a docs/, en el
+otro se edita docs/ directamente. Seguir la instrucción del sitio equivocado
+borra trabajo.
