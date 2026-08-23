@@ -112,8 +112,11 @@ t('El fondo desenfocado usa la misma imagen',V.fotoActual.fondo.includes('viejo-
 t('Pie y crédito de archivo institucional',/grupo al pie/.test(V.pieFoto)&&/Archivo de la Secretaría/.test(V.creditoFoto));
 t('Panorama propio, no el derivado de coordenadas',V.urlVistaCalle.includes('maps/embed?pb=')&&V.urlVistaCalle.includes('3LFEN1OPByfoKtxqiwkaZA'));
 t('El pie declara que el encuadre es propio',/encuadrado sobre el ejemplar/.test(V.pieVistaCalle),V.pieVistaCalle.slice(0,44));
+// Por etiqueta, no por posición: la lista cambió al retirar la nominación.
+const proc=(c)=>V.procedencia.find(f=>(f.clave||f.etiqueta)===c);
 t('Altura en el resumen y decreto legible',
-  V.resumen[0].etiqueta==='Altura total'&&V.procedencia[2].valor==='4 de agosto de 2025');
+  V.resumen[0].etiqueta==='Altura total'&&proc('Fecha del decreto').valor==='4 de agosto de 2025');
+t('La ficha no publica fecha de nominación',!proc('Fecha de nominación'));
 t('Nominado por SEDEMA',V.procedencia[0].valor==='SEDEMA',V.procedencia[0].valor);
 t('Taxonomía ampliada a 15 filas',V.taxonomia.length===15,String(V.taxonomia.length));
 t('Autoridad taxonómica presente',V.taxonomia.find(f=>f.clave==='Autoridad taxonómica').valor==='Ten., 1853');

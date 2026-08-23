@@ -97,7 +97,7 @@ console.log('\n-- la medida de lectura --');
   t('El texto corrido se acoge a la medida',
     (cs.match(/max-width:var\(--medida\)/g)||[]).length >= 9);
   t('Y las notas y pies, a la suya',
-    (cs.match(/max-width:var\(--medida-nota\)/g)||[]).length >= 11);
+    (cs.match(/max-width:var\(--medida-nota\)/g)||[]).length >= 10);
 
   /* Las excepciones se permiten, pero se cuentan y cada una lleva escrito por
      qué su ancho no lo decide la lectura. Si aparece una décima, esto falla. */
@@ -108,7 +108,8 @@ console.log('\n-- la medida de lectura --');
   t('Solo queda un tope en ch sin token, y es el documentado',
     enCh.length === 1 && enCh[0] === '34ch', enCh.join(', '));
   for (const marca of ['EXENTA DE LA MEDIDA','EXENTO: no es un párrafo',
-                       'EXENTO: mensaje de estado','EXENTO: vive dentro de una caja']) {
+                       'EXENTO: mensaje de estado','EXENTO: vive dentro de una caja',
+                       'EXENTO: es el pie de un gráfico']) {
     t(`La excepción «${marca.slice(0, 34)}…» dice por qué`, cs.includes(marca));
   }
 }

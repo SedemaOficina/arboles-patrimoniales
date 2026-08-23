@@ -48,8 +48,14 @@ t('Las 13 fichas renderizan',f2===0,f2+' con problema');
 const c=new F(); c.state={estado:'listo',ejemplares:D.ejemplares,meta:D.meta,slug:'viejo-del-agua',mensajeError:''};
 const r=c.renderVals();
 t('Expectativa de vida con la acentuación restituida',r.permanencia[0].valor==='Más de 40',r.permanencia[0].valor);
-t('Fecha de decreto legible',r.procedencia[2].valor==='4 de agosto de 2025',String(r.procedencia[2].valor));
-t('Fecha de nominación legible',String(r.procedencia[1].valor).includes(' de '),String(r.procedencia[1].valor));
+/* Estas dos afirmaciones iban por posición —procedencia[2]— y se rompieron al
+   retirar la fecha de nominación, que era la fila de en medio. Una prueba que
+   depende del ORDEN de una lista falla cada vez que la lista cambia, aunque el
+   dato siga correcto. Ahora se busca por etiqueta. */
+const filaDe=(lista,clave)=>lista.find(f=>(f.clave||f.etiqueta)===clave);
+t('Fecha de decreto legible',filaDe(r.procedencia,'Fecha del decreto').valor==='4 de agosto de 2025',
+  String(filaDe(r.procedencia,'Fecha del decreto').valor));
+t('Y no se publica ninguna fecha de nominación',!filaDe(r.procedencia,'Fecha de nominación'));
 t('El resumen abre con la altura, no con la edad',
   r.resumen[0].etiqueta==='Altura total' && /m$/.test(r.resumen[0].valor),
   r.resumen[0].etiqueta+': '+r.resumen[0].valor);

@@ -604,9 +604,13 @@ function apagarDecreto(caja) {
 }
 
 function pintarProcedencia(e) {
+  /* «Fecha de nominación» NO se publica. El padrón v2 la retiró —el lector la
+     deja en null a propósito— porque el registro no la levanta: la única fecha
+     que existe como acto es la del decreto. Publicar una fecha de nominación
+     obligaba a inventarla o a repetir la del decreto disfrazada de otra cosa,
+     y las dos salidas mienten sobre el expediente. */
   const filas = [
     ["Nominado por", e.nominadoPor],
-    ["Fecha de nominación", e.fechaNominacion && e.fechaNominacion.legible],
     ["Fecha del decreto", e.fechaDecreto && e.fechaDecreto.legible],
     // El identificador se partia por cualquiera de sus guiones y quedaba a
     // media palabra. Va en una sola linea, mas chico, con su propia clase.

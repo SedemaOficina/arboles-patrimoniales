@@ -599,8 +599,36 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .categorias{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(232px,100%),1fr));gap:16px}
 .categoria{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px;display:flex;flex-direction:column}
 .categoria--dorada{border-top-color:var(--dorado)}
-.categoria h3{color:var(--jacaranda);margin-bottom:8px}
+.categoria h3{color:var(--jacaranda);margin:0}
 .categoria--dorada h3{color:#8A6B3D}
+
+/* El distintivo y el nombre van en un renglón: el icono identifica, el título
+   nombra, y no compiten por el ancho de la tarjeta. */
+.categoria__cabeza{display:flex;align-items:center;gap:14px;margin:0 0 12px}
+.categoria__icono{flex:0 0 auto;width:56px;height:56px;display:block;object-fit:contain}
+/* Hueco reservado mientras no haya archivo. Punteado, no relleno: un recuadro
+   sólido se lee como un icono feo; uno punteado se lee como un sitio pendiente. */
+.categoria__icono--vacio{display:grid;place-content:center;text-align:center;
+  border:1.5px dashed rgba(var(--tinta-jacaranda-rgb),.3);border-radius:var(--radio);
+  color:rgba(var(--tinta-jacaranda-rgb),.42)}
+.categoria--dorada .categoria__icono--vacio{border-color:rgba(var(--dorado-rgb),.5);
+  color:rgba(var(--dorado-rgb),.85)}
+.categoria__icono--vacio{font-family:var(--display);font-weight:400;
+  font-size:var(--t-titulo-3);line-height:1}
+
+/* El criterio formal es de consulta, no de lectura corrida: va plegado. La
+   frase ciudadana de arriba es la que casi todo el mundo necesita; abrir esto
+   es un acto deliberado de quien busca el texto exacto. */
+.categoria__criterio{margin:14px 0 0}
+.categoria__criterio summary{font-size:var(--t-nota);font-weight:700;letter-spacing:.04em;
+  color:var(--jacaranda);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
+.categoria--dorada .categoria__criterio summary{color:#8A6B3D}
+.categoria__criterio summary::-webkit-details-marker{display:none}
+.categoria__criterio summary::before{content:"+";font-family:var(--display);font-weight:400;
+  font-size:var(--t-apoyo);line-height:1}
+.categoria__criterio[open] summary::before{content:"−"}
+.categoria__criterio summary:hover{text-decoration:underline}
+.categoria__criterio p{margin:10px 0 0;font-size:var(--t-nota);line-height:1.6;color:var(--gris)}
 .categoria p{margin:0;font-size:var(--t-cuerpo);color:var(--tinta-suave);flex:1}
 .categoria .cuenta{margin-top:18px;padding-top:14px;border-top:1px dashed rgba(var(--tinta-jacaranda-rgb),.16);font-size:var(--t-nota);font-weight:700;color:var(--gris);letter-spacing:.04em;text-transform:uppercase}
 
@@ -1184,9 +1212,16 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    es la que explica el corte; bajo la figura permanece el mismo dato en texto
    para lector de pantalla. */
 /* El pie es el caption de la ilustración, no un párrafo aparte: pegado al
-   gráfico y con su misma medida, en vez de a 34 px y a todo lo ancho. */
+   gráfico y con su misma medida, en vez de a 34 px y a todo lo ancho.
+   CORREGIDO: «su misma medida» se había interpretado como la medida de lectura
+   de una nota —52ch—, y eso partía el pie en cinco renglones cortos colgando
+   bajo un dibujo de 800 px.
+   EXENTO: es el pie de un gráfico. La medida de un caption la fija el ancho de
+   la figura que describe, no la lectura: un pie más estrecho que su dibujo se
+   lee como un párrafo suelto que quedó debajo, no como su explicación. */
 .escala__pie{margin:14px 0 0;font-size:var(--t-nota);line-height:1.55;color:var(--gris);
-  max-width:var(--medida-nota);padding-left:12px;border-left:2px solid rgba(var(--tinta-jacaranda-rgb),.14)}
+  max-width:none;padding-left:12px;border-left:2px solid rgba(var(--tinta-jacaranda-rgb),.14);
+  text-wrap:pretty}
 /* En pantalla angosta la ilustración a escala real no cabe: se desplaza en
    horizontal antes que encogerse, porque su tamaño ES el dato. */
 /* El lienzo ya no se desplaza en horizontal. Lo hacía para no encoger el
@@ -1416,6 +1451,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 a[target="_blank"]::after{content:"\2197";font-size:.82em;margin-left:.28em;
   color:currentColor;opacity:.7;font-weight:400;text-decoration:none;display:inline-block}
 a[target="_blank"].sin-marca-externa::after{content:none}
+/* Un enlace cuyo contenido es SOLO un icono no lleva la flecha: la marca es un
+   signo tipográfico que se añade al final de un texto, y aquí no hay texto al
+   que añadirse. Colgaba bajo cada logotipo de red social como si fuera parte
+   del dibujo. El aviso de «se abre en otra pestaña» sigue existiendo para
+   lector de pantalla: menu.js lo suma al aria-label, que es donde vive el
+   nombre de estos enlaces. */
+.pie__redes a[target="_blank"]::after{content:none}
 
 /* El aviso de «sin JavaScript». Va arriba del todo y no se puede ignorar:
    quien lo ve está viendo una página incompleta. */

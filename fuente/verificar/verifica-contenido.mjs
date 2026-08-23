@@ -87,5 +87,18 @@ t('Recursos · enlaza el CSV y el JSON publicados',
 t('Recursos · los archivos existen en la salida',
   fs.existsSync(PRUEBA+'datos/arboles-patrimoniales-cdmx.csv')
   && fs.existsSync(PRUEBA+'datos/arboles-patrimoniales-cdmx.json'));
+console.log('\n══ EL EXPEDIENTE NO INVENTA FECHAS ══');
+{
+  /* El registro levanta una sola fecha con valor de acto: la del decreto. La
+     de nominación se retiró del padrón v2 —el lector la deja en null— y no
+     debe reaparecer en ninguna ficha. Volvió una vez después de haberse
+     pedido que saliera; esto impide la tercera. */
+  for (const f of ['ficha-logica.js', 'ficha-dc-logica.js']) {
+    const s2 = fs.readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+    t(f + ' · no publica «Fecha de nominación»', !/Fecha de nominación/.test(s2));
+    t(f + ' · sí publica la del decreto', /Fecha del decreto/.test(s2));
+  }
+}
+
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal?1:0);

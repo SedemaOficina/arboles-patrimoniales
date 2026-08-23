@@ -603,8 +603,36 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .categorias{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(232px,100%),1fr));gap:16px}
 .categoria{background:var(--blanco);border:var(--borde);border-top:3px solid var(--jacaranda);padding:24px;display:flex;flex-direction:column}
 .categoria--dorada{border-top-color:var(--dorado)}
-.categoria h3{color:var(--jacaranda);margin-bottom:8px}
+.categoria h3{color:var(--jacaranda);margin:0}
 .categoria--dorada h3{color:#8A6B3D}
+
+/* El distintivo y el nombre van en un renglón: el icono identifica, el título
+   nombra, y no compiten por el ancho de la tarjeta. */
+.categoria__cabeza{display:flex;align-items:center;gap:14px;margin:0 0 12px}
+.categoria__icono{flex:0 0 auto;width:56px;height:56px;display:block;object-fit:contain}
+/* Hueco reservado mientras no haya archivo. Punteado, no relleno: un recuadro
+   sólido se lee como un icono feo; uno punteado se lee como un sitio pendiente. */
+.categoria__icono--vacio{display:grid;place-content:center;text-align:center;
+  border:1.5px dashed rgba(var(--tinta-jacaranda-rgb),.3);border-radius:var(--radio);
+  color:rgba(var(--tinta-jacaranda-rgb),.42)}
+.categoria--dorada .categoria__icono--vacio{border-color:rgba(var(--dorado-rgb),.5);
+  color:rgba(var(--dorado-rgb),.85)}
+.categoria__icono--vacio{font-family:var(--display);font-weight:400;
+  font-size:var(--t-titulo-3);line-height:1}
+
+/* El criterio formal es de consulta, no de lectura corrida: va plegado. La
+   frase ciudadana de arriba es la que casi todo el mundo necesita; abrir esto
+   es un acto deliberado de quien busca el texto exacto. */
+.categoria__criterio{margin:14px 0 0}
+.categoria__criterio summary{font-size:var(--t-nota);font-weight:700;letter-spacing:.04em;
+  color:var(--jacaranda);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
+.categoria--dorada .categoria__criterio summary{color:#8A6B3D}
+.categoria__criterio summary::-webkit-details-marker{display:none}
+.categoria__criterio summary::before{content:"+";font-family:var(--display);font-weight:400;
+  font-size:var(--t-apoyo);line-height:1}
+.categoria__criterio[open] summary::before{content:"−"}
+.categoria__criterio summary:hover{text-decoration:underline}
+.categoria__criterio p{margin:10px 0 0;font-size:var(--t-nota);line-height:1.6;color:var(--gris)}
 .categoria p{margin:0;font-size:var(--t-cuerpo);color:var(--tinta-suave);flex:1}
 .categoria .cuenta{margin-top:18px;padding-top:14px;border-top:1px dashed rgba(var(--tinta-jacaranda-rgb),.16);font-size:var(--t-nota);font-weight:700;color:var(--gris);letter-spacing:.04em;text-transform:uppercase}
 
@@ -1188,9 +1216,16 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    es la que explica el corte; bajo la figura permanece el mismo dato en texto
    para lector de pantalla. */
 /* El pie es el caption de la ilustración, no un párrafo aparte: pegado al
-   gráfico y con su misma medida, en vez de a 34 px y a todo lo ancho. */
+   gráfico y con su misma medida, en vez de a 34 px y a todo lo ancho.
+   CORREGIDO: «su misma medida» se había interpretado como la medida de lectura
+   de una nota —52ch—, y eso partía el pie en cinco renglones cortos colgando
+   bajo un dibujo de 800 px.
+   EXENTO: es el pie de un gráfico. La medida de un caption la fija el ancho de
+   la figura que describe, no la lectura: un pie más estrecho que su dibujo se
+   lee como un párrafo suelto que quedó debajo, no como su explicación. */
 .escala__pie{margin:14px 0 0;font-size:var(--t-nota);line-height:1.55;color:var(--gris);
-  max-width:var(--medida-nota);padding-left:12px;border-left:2px solid rgba(var(--tinta-jacaranda-rgb),.14)}
+  max-width:none;padding-left:12px;border-left:2px solid rgba(var(--tinta-jacaranda-rgb),.14);
+  text-wrap:pretty}
 /* En pantalla angosta la ilustración a escala real no cabe: se desplaza en
    horizontal antes que encogerse, porque su tamaño ES el dato. */
 /* El lienzo ya no se desplaza en horizontal. Lo hacía para no encoger el
@@ -1420,6 +1455,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 a[target="_blank"]::after{content:"\2197";font-size:.82em;margin-left:.28em;
   color:currentColor;opacity:.7;font-weight:400;text-decoration:none;display:inline-block}
 a[target="_blank"].sin-marca-externa::after{content:none}
+/* Un enlace cuyo contenido es SOLO un icono no lleva la flecha: la marca es un
+   signo tipográfico que se añade al final de un texto, y aquí no hay texto al
+   que añadirse. Colgaba bajo cada logotipo de red social como si fuera parte
+   del dibujo. El aviso de «se abre en otra pestaña» sigue existiendo para
+   lector de pantalla: menu.js lo suma al aria-label, que es donde vive el
+   nombre de estos enlaces. */
+.pie__redes a[target="_blank"]::after{content:none}
 
 /* El aviso de «sin JavaScript». Va arriba del todo y no se puede ignorar:
    quien lo ve está viendo una página incompleta. */
@@ -4422,11 +4464,41 @@ const RUTA_FICHA = "ficha.html";
 
 const LIENZO_BOSQUE = 268;  // altura del ejemplar más alto en la hilera
 
+/* Cada categoría lleva DOS textos y un hueco para su distintivo gráfico.
+   «texto» es la frase en lenguaje ciudadano: es lo que se lee primero y lo
+   que la mayoría necesita. «definicion» es la redacción formal que asigna la
+   Secretaría: va debajo, en letra menor, para quien necesita el criterio
+   exacto. Separarlos evita la tentación de escribir un solo párrafo que ni
+   explica con claridad ni sirve como definición.
+   OJO con «Rebasó los cien años»: decía cien y la definición formal fija el
+   umbral en OCHENTA. Se corrigió el texto ciudadano, no la definición. */
 const DEF_CATEGORIA = {
-  CENTENARIO: { titulo: "Centenario", plural: "Centenarios", texto: "Rebasó los cien años de vida. Germinó cuando la ciudad todavía cabía dentro de sus canales.", dorada: false },
-  HISTORICO:  { titulo: "Histórico",  plural: "Históricos",  texto: "Está ligado a un hecho, una persona o un lugar que la ciudad recuerda. Su valor no está solo en el árbol.", dorada: true },
-  NOTABLE:    { titulo: "Notable",    plural: "Notables",    texto: "Destaca por su tamaño, su porte o su especie frente a cualquier otro ejemplar de la ciudad.", dorada: false },
-  SINGULAR:   { titulo: "Singular",   plural: "Singulares",   texto: "No hay otro igual: una forma, una rareza o una condición que no se repite en el arbolado urbano.", dorada: true },
+  CENTENARIO: {
+    titulo: "Centenario", plural: "Centenarios", dorada: false, icono: null,
+    texto: "Tiene ochenta años o más. Germinó cuando la ciudad todavía cabía dentro de sus canales.",
+    definicion: "Categoría asignada por SEDEMA según las características del ejemplar. La categoría CENTENARIO se refiere a ejemplares arbóreos o arboledas cuya edad estimada es igual o superior a 80 años, determinada mediante métodos directos o indirectos, que constituyen un testigo biológico e histórico del entorno. Su valor patrimonial radica en su longevidad excepcional, representando la memoria viva del paisaje, su evolución ecológica y la identidad histórica de la Ciudad de México.",
+  },
+  HISTORICO: {
+    titulo: "Histórico", plural: "Históricos", dorada: true, icono: null,
+    texto: "Está ligado a un hecho, una persona o un lugar que la ciudad recuerda. Su valor no está solo en el árbol.",
+    /* PENDIENTE. La definición formal que llegó para HISTÓRICO era, palabra por
+       palabra, la de CENTENARIO: hablaba de edad igual o superior a 80 años,
+       que es el criterio de la otra categoría y no distingue nada. Publicarla
+       diría algo falso sobre el criterio de la Secretaría, así que la tarjeta
+       se queda con su frase ciudadana hasta que llegue la redacción correcta.
+       El sitio no deja hueco visible: simplemente no muestra el bloque. */
+    definicion: null,
+  },
+  NOTABLE: {
+    titulo: "Notable", plural: "Notables", dorada: false, icono: null,
+    texto: "Destaca por su tamaño, su porte o su especie frente a cualquier otro ejemplar de la ciudad.",
+    definicion: "Categoría asignada por SEDEMA según las características del ejemplar. La categoría NOTABLE se refiere a ejemplares arbóreos o arboledas que presentan características extraordinarias o dimensiones excepcionalmente superiores con relación a su especie y contexto, incluyendo porte sobresaliente, rareza taxonómica o valor científico, paisajístico o estético. Su valor patrimonial se manifiesta en su singularidad, monumentalidad y en la contribución significativa que ofrece al paisaje, la biodiversidad y el patrimonio natural urbano.",
+  },
+  SINGULAR: {
+    titulo: "Singular", plural: "Singulares", dorada: true, icono: null,
+    texto: "No hay otro igual: una forma, una rareza o una condición que no se repite en el arbolado urbano.",
+    definicion: "Categoría asignada por SEDEMA según las características del ejemplar. La categoría SINGULAR se refiere a ejemplares arbóreos o arboledas de morfología inusual, especie exótica, rara o poco común en la Ciudad de México, que destacan por su importancia paisajística o cultural local. Su valor patrimonial radica en la contribución que realiza a la calidad del paisaje y la identidad urbana mediante su biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa.",
+  },
 };
 
 const SITUACION_CATEGORIA = {
@@ -4647,9 +4719,21 @@ function pintarCategorias(stats) {
   const mapa = { CENTENARIO: "centenarios", HISTORICO: "historicos", NOTABLE: "notables", SINGULAR: "singulares" };
   document.getElementById("categorias").innerHTML = Object.entries(DEF_CATEGORIA).map(([clave, d]) => {
     const n = stats.totalPorCategoria[mapa[clave]] || 0;
+    /* El hueco del distintivo se dibuja SIEMPRE, con o sin archivo. Vacío es
+       un recuadro punteado que dice qué falta ahí: así el diseño ya está
+       resuelto cuando lleguen los cuatro iconos y nadie tiene que rehacer la
+       tarjeta. Cuando `icono` traiga una ruta, se pinta la imagen y el
+       recuadro punteado desaparece solo. */
+    const distintivo = d.icono
+      ? `<img class="categoria__icono" src="${d.icono}" width="56" height="56" alt="">`
+      : `<span class="categoria__icono categoria__icono--vacio" aria-hidden="true">${d.titulo.charAt(0)}</span>`;
     return `<article class="categoria${d.dorada ? " categoria--dorada" : ""}">
-      <h3>${d.titulo}</h3>
+      <div class="categoria__cabeza">${distintivo}<h3>${d.titulo}</h3></div>
       <p>${d.texto}</p>
+      ${d.definicion ? `<details class="categoria__criterio">
+        <summary>El criterio completo</summary>
+        <p>${d.definicion}</p>
+      </details>` : ""}
       <div class="cuenta">${n} ${n === 1 ? "ejemplar" : "ejemplares"}</div>
     </article>`;
   }).join("");

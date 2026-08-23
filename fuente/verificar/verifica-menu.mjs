@@ -152,5 +152,22 @@ t('portada.dc · el globo quedó solo con la llamada a la ficha',
   /bosque__globo">Ver su ficha/.test(portadaDC) && !/bosque__globo">\{\{ b\.nombre/.test(portadaDC));
 t('portada.dc · la identificación va debajo del árbol', /bosque__pie/.test(portadaDC));
 
+console.log('\n══ LA FLECHA DE PESTAÑA NUEVA NO CUELGA DE LOS ICONOS ══');
+{
+  /* La marca «↗» es tipográfica: se pega al final de un texto. Bajo un enlace
+     que solo contiene un <svg> quedaba flotando como si fuera parte del
+     logotipo. Pasó con las cinco redes sociales del pie. */
+  const cs = fs.readFileSync('estilos.css', 'utf8');
+  t('El pie de redes queda exento de la flecha',
+    /\.pie__redes a\[target="_blank"\]::after\{content:none\}/.test(cs));
+  for (const f of ['parciales/pie.html', 'parciales/pie-design.html']) {
+    const h = fs.readFileSync(f, 'utf8');
+    const redes = (h.match(/<li><a href="https:\/\/[^"]+" target="_blank"[^>]*><svg/g) || []).length;
+    t(f.split('/').pop() + ' · las cinco redes siguen siendo enlaces de solo icono', redes === 5, String(redes));
+    t(f.split('/').pop() + ' · y cada una se nombra por aria-label',
+      (h.match(/aria-label="(Facebook|X|Instagram|TikTok|YouTube) de la Secretaría/g) || []).length === 5);
+  }
+}
+
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);
 process.exit(mal?1:0);

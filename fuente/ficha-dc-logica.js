@@ -319,7 +319,8 @@ class Component extends DCLogic {
       .map(([texto, url]) => ({ texto: url ? texto : `${texto} no disponible`, url: url || "#", hay: !!url,
         clase: url ? "enlace" : "enlace enlace--apagado" }));
     const procedencia = [
-      this.fila("Nominado por", e.nominadoPor), this.fila("Fecha de nominación", e.fechaNominacion && e.fechaNominacion.legible),
+      // Sin «Fecha de nominación»: no existe en el registro. Ver ficha-logica.js.
+      this.fila("Nominado por", e.nominadoPor),
       this.fila("Fecha del decreto", e.fechaDecreto && e.fechaDecreto.legible), this.fila("Identificador en el registro", e.id),
     ];
 

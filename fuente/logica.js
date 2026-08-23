@@ -15,11 +15,41 @@ const RUTA_FICHA = "__FICHA__";
 
 const LIENZO_BOSQUE = 268;  // altura del ejemplar más alto en la hilera
 
+/* Cada categoría lleva DOS textos y un hueco para su distintivo gráfico.
+   «texto» es la frase en lenguaje ciudadano: es lo que se lee primero y lo
+   que la mayoría necesita. «definicion» es la redacción formal que asigna la
+   Secretaría: va debajo, en letra menor, para quien necesita el criterio
+   exacto. Separarlos evita la tentación de escribir un solo párrafo que ni
+   explica con claridad ni sirve como definición.
+   OJO con «Rebasó los cien años»: decía cien y la definición formal fija el
+   umbral en OCHENTA. Se corrigió el texto ciudadano, no la definición. */
 const DEF_CATEGORIA = {
-  CENTENARIO: { titulo: "Centenario", plural: "Centenarios", texto: "Rebasó los cien años de vida. Germinó cuando la ciudad todavía cabía dentro de sus canales.", dorada: false },
-  HISTORICO:  { titulo: "Histórico",  plural: "Históricos",  texto: "Está ligado a un hecho, una persona o un lugar que la ciudad recuerda. Su valor no está solo en el árbol.", dorada: true },
-  NOTABLE:    { titulo: "Notable",    plural: "Notables",    texto: "Destaca por su tamaño, su porte o su especie frente a cualquier otro ejemplar de la ciudad.", dorada: false },
-  SINGULAR:   { titulo: "Singular",   plural: "Singulares",   texto: "No hay otro igual: una forma, una rareza o una condición que no se repite en el arbolado urbano.", dorada: true },
+  CENTENARIO: {
+    titulo: "Centenario", plural: "Centenarios", dorada: false, icono: null,
+    texto: "Tiene ochenta años o más. Germinó cuando la ciudad todavía cabía dentro de sus canales.",
+    definicion: "Categoría asignada por SEDEMA según las características del ejemplar. La categoría CENTENARIO se refiere a ejemplares arbóreos o arboledas cuya edad estimada es igual o superior a 80 años, determinada mediante métodos directos o indirectos, que constituyen un testigo biológico e histórico del entorno. Su valor patrimonial radica en su longevidad excepcional, representando la memoria viva del paisaje, su evolución ecológica y la identidad histórica de la Ciudad de México.",
+  },
+  HISTORICO: {
+    titulo: "Histórico", plural: "Históricos", dorada: true, icono: null,
+    texto: "Está ligado a un hecho, una persona o un lugar que la ciudad recuerda. Su valor no está solo en el árbol.",
+    /* PENDIENTE. La definición formal que llegó para HISTÓRICO era, palabra por
+       palabra, la de CENTENARIO: hablaba de edad igual o superior a 80 años,
+       que es el criterio de la otra categoría y no distingue nada. Publicarla
+       diría algo falso sobre el criterio de la Secretaría, así que la tarjeta
+       se queda con su frase ciudadana hasta que llegue la redacción correcta.
+       El sitio no deja hueco visible: simplemente no muestra el bloque. */
+    definicion: null,
+  },
+  NOTABLE: {
+    titulo: "Notable", plural: "Notables", dorada: false, icono: null,
+    texto: "Destaca por su tamaño, su porte o su especie frente a cualquier otro ejemplar de la ciudad.",
+    definicion: "Categoría asignada por SEDEMA según las características del ejemplar. La categoría NOTABLE se refiere a ejemplares arbóreos o arboledas que presentan características extraordinarias o dimensiones excepcionalmente superiores con relación a su especie y contexto, incluyendo porte sobresaliente, rareza taxonómica o valor científico, paisajístico o estético. Su valor patrimonial se manifiesta en su singularidad, monumentalidad y en la contribución significativa que ofrece al paisaje, la biodiversidad y el patrimonio natural urbano.",
+  },
+  SINGULAR: {
+    titulo: "Singular", plural: "Singulares", dorada: true, icono: null,
+    texto: "No hay otro igual: una forma, una rareza o una condición que no se repite en el arbolado urbano.",
+    definicion: "Categoría asignada por SEDEMA según las características del ejemplar. La categoría SINGULAR se refiere a ejemplares arbóreos o arboledas de morfología inusual, especie exótica, rara o poco común en la Ciudad de México, que destacan por su importancia paisajística o cultural local. Su valor patrimonial radica en la contribución que realiza a la calidad del paisaje y la identidad urbana mediante su biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa.",
+  },
 };
 
 const SITUACION_CATEGORIA = {
@@ -240,9 +270,21 @@ function pintarCategorias(stats) {
   const mapa = { CENTENARIO: "centenarios", HISTORICO: "historicos", NOTABLE: "notables", SINGULAR: "singulares" };
   document.getElementById("categorias").innerHTML = Object.entries(DEF_CATEGORIA).map(([clave, d]) => {
     const n = stats.totalPorCategoria[mapa[clave]] || 0;
+    /* El hueco del distintivo se dibuja SIEMPRE, con o sin archivo. Vacío es
+       un recuadro punteado que dice qué falta ahí: así el diseño ya está
+       resuelto cuando lleguen los cuatro iconos y nadie tiene que rehacer la
+       tarjeta. Cuando `icono` traiga una ruta, se pinta la imagen y el
+       recuadro punteado desaparece solo. */
+    const distintivo = d.icono
+      ? `<img class="categoria__icono" src="${d.icono}" width="56" height="56" alt="">`
+      : `<span class="categoria__icono categoria__icono--vacio" aria-hidden="true">${d.titulo.charAt(0)}</span>`;
     return `<article class="categoria${d.dorada ? " categoria--dorada" : ""}">
-      <h3>${d.titulo}</h3>
+      <div class="categoria__cabeza">${distintivo}<h3>${d.titulo}</h3></div>
       <p>${d.texto}</p>
+      ${d.definicion ? `<details class="categoria__criterio">
+        <summary>El criterio completo</summary>
+        <p>${d.definicion}</p>
+      </details>` : ""}
       <div class="cuenta">${n} ${n === 1 ? "ejemplar" : "ejemplares"}</div>
     </article>`;
   }).join("");
