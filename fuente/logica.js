@@ -412,31 +412,104 @@ function pintarPadron(ejemplares, stats) {
   }
 }
 
+/* ─── EL REGISTRO VIGENTE Y LA CAPA EN VIVO ────────────────────────────────
+   La página nace con el registro congelado incrustado en el propio archivo:
+   se ve completa sin esperar a nadie, y se ve igual si Google no responde.
+   Encima de eso, y SOLO si la hoja publicada demuestra que trae algo, se
+   sustituye por lo que el equipo tenga capturado hoy.
+
+   El orden es deliberado: primero lo que ya está, después lo que llega, nunca
+   al revés. Una hoja vacía, una red caída o una publicación retirada dejan la
+   página exactamente como estaba. Hoy la hoja está vacía de verdad, así que
+   este es el camino normal, no el excepcional.
+
+   Las piezas viven fuera —padron/lector-v2.js convierte el CSV en datos y
+   padron/fuente-viva.js va por él—. El ensamblador las incrusta antes que
+   este archivo y las deja en el ámbito global. Si no están —al abrir esta
+   lógica como módulo suelto, o en las maquetas— la capa no arranca y el
+   congelado se queda: es una degradación, no un error. */
+let DATOS_VIGENTES = null;
+let vivaIniciada = false;
+
+function iniciarFuenteViva() {
+  if (vivaIniciada) return;
+  vivaIniciada = true;
+  const g = typeof globalThis !== "undefined" ? globalThis : {};
+  if (typeof g.cargarEnVivo !== "function" || !g.CONTRATO_PADRON) return;
+
+  /* Se pide DESPUÉS del primer pintado, nunca antes: la portada no espera a
+     la red para existir. El motivo de lo que pase se escribe en la consola,
+     porque quien opera el sitio necesita distinguir «la hoja está vacía» de
+     «la hoja no responde», y esas dos cosas se ven igual desde fuera. */
+  setTimeout(() => {
+    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON }).then((r) => {
+      if (r && r.motivo) console.info("[registro] " + r.motivo);
+      if (!r || !r.registro) return;
+      if (typeof g.hayCambio === "function" && !g.hayCambio(DATOS_VIGENTES, r.registro)) return;
+      pintarPortada(r.registro);
+      remontarMapa();
+    }).catch((err) => {
+      console.info("[registro] No se pudo actualizar desde la hoja: " + (err && err.message));
+    });
+  }, 0);
+}
+
 // Leaflet administra su propio árbol y revienta si se le pide construir dos
 // veces sobre el mismo contenedor. Repintar la portada —tras un reintento de
 // red, por ejemplo— abortaba el resto del render a la mitad.
-let mapaCreado = false;
+let mapaCreado = false;   // el montaje ya está programado
+let mapaVivo = null;      // el mapa ya montado, si lo está
 
 function pintarMapa(ejemplares) {
   const lienzo = document.getElementById("mapaLienzo");
   const lista = document.getElementById("mapaLista");
   const filtros = document.getElementById("mapaFiltros");
-  if (!lienzo || !lista || mapaCreado) return;
-  mapaCreado = true;
+  if (!lienzo || !lista) return;
   const conCoords = ejemplares.filter((e) => e.coords).length;
   // Cuando todos tienen coordenadas no hay nada que advertir: el mapa se
-  // explica solo. La guía únicamente aparece si falta alguno.
+  // explica solo. La guía únicamente aparece si falta alguno. Se recalcula en
+  // cada pintado —es texto, no un mapa— para que una actualización en vivo no
+  // deje el aviso hablando del registro anterior.
   const guia = document.getElementById("guiaMapa");
   guia.textContent = conCoords === ejemplares.length ? ""
     : `${conCoords} de los ${ejemplares.length} ejemplares tienen coordenadas capturadas. Los demás aparecen en el listado con su domicilio.`;
   guia.hidden = !guia.textContent;
+  if (mapaCreado) return;
+  mapaCreado = true;
   /* El mapa no se construye al cargar la página: se construye cuando la
      persona se acerca a él, que es también cuando termina de descargarse
      Leaflet. Si la descarga falla, crearMapa recibe el mundo sin L y pinta su
      propio aviso —el listado de al lado sigue siendo la vía completa al mismo
-     contenido—. */
-  const montar = () => crearMapa({ contenedor: lienzo, lista, filtros, ejemplares });
+     contenido—.
+     El montaje lee DATOS_VIGENTES y no la lista que recibió esta función: si
+     la hoja llega mientras el mapa sigue esperando a que alguien baje hasta
+     él, se monta ya con lo nuevo y no hay nada que rehacer. */
+  const montar = () => {
+    const vigentes = (DATOS_VIGENTES && DATOS_VIGENTES.ejemplares) || ejemplares;
+    mapaVivo = crearMapa({ contenedor: lienzo, lista, filtros, ejemplares: vigentes });
+  };
   cuandoSeAcerque(lienzo, montar, montar);
+}
+
+/* Rehacer el mapa cuando el registro cambió debajo de él.
+   Repintar el resto de la portada es cambiar innerHTML; el mapa no: Leaflet
+   deja marcado el contenedor y se niega a construir dos veces sobre él. Hay
+   que devolverlo a cero —quitar la instancia, vaciar el lienzo, borrar la
+   marca y retirar el aviso que el mapa inyecta en su marco— y volver a
+   montar. Si todavía no se había montado no hay nada que hacer: su montaje
+   pendiente ya leerá el registro nuevo. */
+function remontarMapa() {
+  const lienzo = document.getElementById("mapaLienzo");
+  if (!lienzo || !mapaVivo) return;
+  try { if (mapaVivo.mapa) mapaVivo.mapa.remove(); } catch (e) {}
+  mapaVivo = null;
+  mapaCreado = false;
+  lienzo.innerHTML = "";
+  delete lienzo._leaflet_id;
+  const marco = lienzo.closest(".mapa-marco") || lienzo.parentNode;
+  const aviso = marco && marco.querySelector("[data-aviso]");
+  if (aviso) aviso.remove();
+  pintarMapa((DATOS_VIGENTES && DATOS_VIGENTES.ejemplares) || []);
 }
 
 
@@ -444,10 +517,18 @@ function pintarServicios(stats) {
   const cobertura = (s) => s.completo
     ? `Dato completo en los ${s.conDato} ejemplares`
     : `Calculado sobre ${s.conDato} de ${s.conDato + s.sinDato} ejemplares`;
+  /* DOS CIFRAS, NO TRES.
+     Antes había una tercera baldosa, «Carbono que retiran del aire». No es
+     una medición distinta de la de al lado: el CO₂ equivalente ES ese mismo
+     carbono multiplicado por 3.667, la conversión de la convención
+     internacional. Publicadas una junto a otra, un lector razonable suma las
+     dos y cuenta dos veces la misma captura. El contrato del padrón v2 lo
+     resuelve en la fuente —el carbono elemental ya no viaja al CSV— y aquí se
+     refleja: se publica el CO₂ equivalente, que es la unidad en la que se
+     reportan los compromisos climáticos. */
   const datos = [
     [stats.sumatoriaPrecipitacion, "L", "Lluvia que interceptan sus copas al año", 0],
     [stats.sumatoriaCO2, "kg", "CO₂ equivalente que absorben al año", 0],
-    [stats.sumatoriaCarbono, "kg", "Carbono que retiran del aire cada año", 0],
   ];
   document.getElementById("listaServicios").innerHTML = datos.map(([s, u, t, d]) =>
     `<article class="servicio">
@@ -458,7 +539,7 @@ function pintarServicios(stats) {
 
   const incompletos = datos.filter(([s]) => !s.completo).length;
   document.getElementById("coberturaServicios").textContent = incompletos === 0
-    ? `Las tres cifras están calculadas con el dato de los ${stats.totalEjemplares} ejemplares del registro.`
+    ? `Las dos cifras están calculadas con el dato de los ${stats.totalEjemplares} ejemplares del registro.`
     : `Algunas cifras se calculan con menos ejemplares de los que integran el registro; cada tarjeta lo indica.`;
 }
 
@@ -567,7 +648,11 @@ function pintarMensajes() {
   });
 }
 
-export function pintarPortada({ ejemplares, meta, stats }) {
+export function pintarPortada(datos) {
+  const { ejemplares, stats } = datos;
+  // Lo que se está viendo ahora mismo. El mapa y la capa en vivo lo consultan
+  // en lugar de quedarse con la lista que recibieron al arrancar.
+  DATOS_VIGENTES = datos;
   pintarRedaccion();
   pintarBosque(ejemplares);
   pintarCifras(stats, ejemplares);
@@ -576,4 +661,5 @@ export function pintarPortada({ ejemplares, meta, stats }) {
   pintarMapa(ejemplares);
   pintarServicios(stats);
   pintarMensajes();
+  iniciarFuenteViva();
 }

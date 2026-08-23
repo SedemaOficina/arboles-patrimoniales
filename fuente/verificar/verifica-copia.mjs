@@ -20,7 +20,17 @@ for(const f of paginas){
 }
 const p=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
 t('portada · llamada genérica «Conoce el listado»', /Conoce el listado/.test(p));
-t('portada · sin la palabra «padrón» a la vista', !/padrón|Padrón/.test(p.replace(/<!--[\s\S]*?-->/g,'').replace(/\/\/[^\n]*/g,'')), (p.match(/.{0,26}[Pp]adrón.{0,20}/)||[])[0]||'');
+/* Se descuentan tambien los comentarios de bloque del JavaScript incrustado.
+   Desde que el lector del registro viaja con la pagina, sus comentarios —que
+   son documentacion, no copia— entraban en la medicion y la hacian fallar por
+   texto que ninguna persona ve. Lo que se sigue midiendo es lo que importa:
+   las cadenas que el codigo escribe en la pantalla. */
+const sinComentarios = (h) => h
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/\/\/[^\n]*/g, '');
+t('portada · sin la palabra «padrón» a la vista', !/padrón|Padrón/.test(sinComentarios(p)),
+  (sinComentarios(p).match(/.{0,26}[Pp]adrón.{0,20}/)||[])[0]||'');
 t('portada · título genérico del padrón', /Los árboles patrimoniales/.test(p));
 t('portada · rótulo genérico de la franja', /Los ejemplares, a escala real/.test(p));
 t('portada · filtro «Todos» sin cifra', /etiqueta: "Todos"/.test(p));

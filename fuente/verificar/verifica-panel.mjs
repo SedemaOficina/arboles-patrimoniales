@@ -16,7 +16,12 @@ const E=D.ejemplares;
 
 console.log('══ SUMATORIAS DEL REGISTRO ══');
 const A=I.indicadoresPadron(E,13);
-t('Nueve sumatorias',A.length===9,String(A.length));
+/* OCHO, NO NUEVE. Se retiro el indicador «Carbono secuestrado»: era la misma
+   cantidad que el CO2 equivalente de al lado, multiplicada por 3.667, y
+   puestos uno junto al otro se leian como dos capturas distintas. El registro
+   v2 tampoco publica ya el carbono elemental. Queda el CO2 equivalente, que
+   es la unidad de los compromisos climaticos. */
+t('Ocho sumatorias',A.length===8,String(A.length));
 t('Árboles: 13',A[0].cifra==='13'&&A[0].unidad==='ejemplares');
 t('Especies distintas: 3',A[1].cifra==='3');
 t('Y las nombra',/Taxodium mucronatum/.test(A[1].nota));
@@ -28,8 +33,9 @@ t('Y declara que son 2 de 13',/2 de 13 ejemplares/.test(A[4].nota),A[4].nota);
 t('Lluvia interceptada correcta',A[5].cifra==='911,487');
 t('Declarando 5 de 13',/5 de 13/.test(A[5].nota));
 t('Escurrimientos correctos',A[6].cifra==='1,258');
-t('Carbono con dato completo',A[7].cifra==='64.2'&&A[7].nota==='');
-t('CO2 con dato completo',A[8].cifra==='235.4'&&A[8].nota==='');
+/* Una sola comprobacion de clima: la de carbono y la de CO2 equivalente
+   comprobaban la misma cantidad en dos casillas contiguas. */
+t('CO₂ equivalente con dato completo',A[7].cifra==='235.4'&&A[7].nota==='',A[7].cifra+' · '+A[7].nota);
 
 console.log('\n══ EL MODO EJEMPLAR YA NO EXISTE ══');
 t('No se exporta indicadoresEjemplar',I.indicadoresEjemplar===undefined);
@@ -43,7 +49,7 @@ t('Cuenta solo los filtrados',C[0].cifra==='4');
 t('Y aclara que es un subconjunto',/De los 13 que integran el registro/.test(C[0].texto),C[0].texto);
 t('La alcaldía top es la filtrada',C[3].cifra==='Cuauhtémoc');
 const X=I.indicadoresPadron([],13);
-t('Selección vacía no rompe',X.length===9&&X[0].cifra==='0');
+t('Selección vacía no rompe',X.length===8&&X[0].cifra==='0',String(X.length));
 t('Y lo dice sin inventar cifras',X[2].cifra==='—'&&/Aún no hay alturas/.test(X[2].texto));
 
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');

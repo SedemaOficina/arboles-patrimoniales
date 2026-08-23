@@ -423,8 +423,11 @@ function dibujarMapaEjemplar(e, lienzo, centro) {
 function pintarServicios(e) {
   const s = e.serviciosAmbientales;
   const grupos = [
+    /* Una sola línea de clima. El carbono elemental y el CO₂ equivalente son
+       la misma captura en dos unidades —CO₂e = carbono × 3.667—, y puestos en
+       renglones consecutivos se leen como dos servicios distintos. Se publica
+       el CO₂ equivalente, que es la unidad de los compromisos climáticos. */
     ["Clima y carbono", [
-      ["Carbono que retira del aire", s.carbonoSecuestrado_kg, "kg/año"],
       ["CO₂ equivalente absorbido", s.co2Absorbido_kg, "kg/año"],
     ]],
     ["Agua de lluvia", [

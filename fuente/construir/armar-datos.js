@@ -51,7 +51,10 @@ const columnas = [
   ['edad_estimada_anios', (e) => e.edadEstimada],
   ['expectativa_vida', (e) => e.expectativaVida],
   ['categoria_riesgo_uicn', (e) => e.conservacion && e.conservacion.iucn],
-  ['carbono_secuestrado_kg_anio', (e) => e.serviciosAmbientales.carbonoSecuestrado_kg],
+  /* El carbono elemental ya no se publica: el padrón v2 lo captura y no lo
+     exporta, y el CO2 equivalente de la siguiente columna es esa misma
+     cantidad multiplicada por 3.667. Quien necesite el carbono lo obtiene
+     dividiendo; publicar las dos columnas invitaba a sumarlas. */
   ['co2_absorbido_kg_anio', (e) => e.serviciosAmbientales.co2Absorbido_kg],
   ['precipitacion_interceptada_l_anio', (e) => e.serviciosAmbientales.precipitacionInterceptada_L],
   ['escorrentia_reducida_l_anio', (e) => e.serviciosAmbientales.escorrentiaReducida_L],

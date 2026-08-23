@@ -17,7 +17,7 @@
 /* ── 1 · El analizador de CSV ──────────────────────────────────────────────
    Escrito a mano, treinta líneas, sin dependencia de CDN. El CSV del padrón
    trae comas dentro de las comillas («Ten., 1853»), comillas dobladas dentro
-   de los textos («Colectivo ""Los Guardianes"", A.C.») y saltos de línea
+   de los textos («Colectivo ""Los Vecinos del Fresno"", A.C.») y saltos de línea
    dentro de las observaciones. Las tres cosas son RFC 4180 y las tres se
    prueban en las aserciones. */
 export function analizarCSV(texto) {

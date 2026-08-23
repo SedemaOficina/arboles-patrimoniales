@@ -23,7 +23,19 @@ const m=fs.readFileSync('mapa.js','utf8');
 t('Los avisos del mapa se buscan donde viven', /\(filtros && filtros\.querySelector\("\[data-aviso\]"\)\)\s*\n?\s*\|\| lista/.test(m));
 
 const lg=fs.readFileSync('logica.js','utf8');
-t('El mapa no se reconstruye dos veces', /let mapaCreado = false/.test(lg)&&/\|\| mapaCreado\) return/.test(lg));
+/* EL CRITERIO CAMBIO. Antes bastaba con que el mapa no se construyera dos
+   veces: la guardia iba pegada a la condicion de entrada y no habia ningun
+   camino de vuelta. Ahora el registro puede cambiar debajo del mapa —la hoja
+   publicada llega despues del primer pintado— y hay un camino deliberado para
+   rehacerlo. Se comprueba lo que sigue siendo cierto y es lo que importaba:
+   que nadie construya sobre un contenedor ya usado. La guardia sigue ahi, y
+   la unica reconstruccion posible empieza por desmontar. */
+t('El mapa no se reconstruye sobre sí mismo',
+  /let mapaCreado = false/.test(lg) && /if \(mapaCreado\) return;/.test(lg));
+t('Y rehacerlo empieza por desmontar el anterior',
+  /function remontarMapa\(\)/.test(lg)
+  && /mapaVivo\.mapa\) mapaVivo\.mapa\.remove\(\)/.test(lg)
+  && /delete lienzo\._leaflet_id/.test(lg));
 t('Los escuchadores se registran una sola vez', (lg.match(/dataset\.escuchando/g)||[]).length>=6);
 const dl=fs.readFileSync('modelo-portada.js','utf8');
 // El CSV ya no se arma en el navegador: lo genera construir/armar-datos.js.
@@ -801,8 +813,16 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
     /No realizada/.test(pe) && /consistencia del encabezado/.test(pe));
   t('La ficha imprimible espera validación en papel',
     /falta validar el formato en papel/.test(pe));
-  t('Queda anotado que el sitio debe leer la hoja en vivo',
-    /El sitio debe leer la hoja en vivo/.test(pe) && /registro\.json/.test(pe));
+  /* EL CRITERIO CAMBIO. Ya no se comprueba que quede anotado que el sitio
+     «debe» leer la hoja: la portada ya la lee. Lo que ahora tiene que estar
+     anotado es lo que falta —la ficha, que sigue con el congelado— y la regla
+     que hace segura la conexion: una hoja vacia no vacia el micrositio. */
+  t('Queda anotado que la ficha aún no lee la hoja',
+    /La portada ya lee la hoja; falta la ficha/.test(pe)
+    && /La ficha todavía no se actualiza en vivo/.test(pe));
+  t('Y queda escrita la regla que protege al sitio',
+    /una hoja en blanco no puede vaciar el micrositio/i.test(pe)
+    && /fuente-viva\.js/.test(pe));
   t('Y la decisión de que los archivos vienen de Drive',
     /Drive compartido como origen de los archivos/.test(pe));
 }

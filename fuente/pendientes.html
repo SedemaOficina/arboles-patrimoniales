@@ -198,8 +198,17 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__marca"></span>
           <div>
             <h3>La definición de la categoría HISTÓRICO</h3>
-            <p>Las cuatro definiciones formales ya están montadas en la portada, plegadas bajo «El criterio completo» de cada tarjeta. <b>Falta la de HISTÓRICO</b>: la que llegó era, palabra por palabra, la de CENTENARIO —hablaba de edad igual o superior a 80 años, que es el criterio de la otra categoría y no distingue nada—. Publicarla diría algo falso sobre el criterio de la Secretaría, así que esa tarjeta se quedó solo con su frase ciudadana.</p>
-            <cite>Cuando llegue la redacción correcta se pega en <code>fuente/logica.js</code>, en <code>DEF_CATEGORIA.HISTORICO.definicion</code>, y la tarjeta abre su bloque sola.</cite>
+            <p>Las cuatro definiciones formales ya están montadas en la portada, plegadas bajo «El criterio completo» de cada tarjeta. <b>Falta la de HISTÓRICO</b>: la que llegó era, palabra por palabra, la de CENTENARIO. El archivo del 23 de agosto vuelve a traerla igual —se comparó carácter por carácter: la única diferencia entre las dos es el nombre de la categoría—, así que el error sigue en el origen y no se corrigió al recapturar.</p>
+            <p style="margin-top:9px">Ya está decidido que el umbral de ochenta años pertenece a CENTENARIO. Eso significa que HISTÓRICO <b>necesita una redacción nueva desde cero</b>, no un ajuste: su criterio no puede ser la edad, porque la edad ya es de la otra categoría.</p>
+            <div class="arreglo">
+              <b>Borrador sin autorizar, para que el área trabaje sobre algo</b>
+              <ol>
+                <li>«Categoría asignada por SEDEMA según las características del ejemplar. La categoría HISTÓRICO se refiere a ejemplares arbóreos o arboledas vinculados de manera documentada a un acontecimiento, un personaje, una tradición o un sitio relevante para la memoria de la Ciudad de México. Su valor patrimonial no deriva de su edad ni de sus dimensiones, sino del testimonio que conservan: el árbol es el punto físico donde ese hecho ocurrió o donde la comunidad lo conmemora, y su permanencia sostiene la continuidad de esa memoria en el espacio público.»</li>
+                <li>Deja fuera la edad y el porte <b>a propósito</b>: es lo único que impide que HISTÓRICO se solape con CENTENARIO y con NOTABLE.</li>
+                <li>No se publica hasta que lo apruebe el área. Mientras tanto la tarjeta se queda con su frase ciudadana.</li>
+              </ol>
+            </div>
+            <cite>Cuando llegue la redacción autorizada se pega en <code>fuente/logica.js</code>, en <code>DEF_CATEGORIA.HISTORICO.definicion</code>, y la tarjeta abre su bloque sola.</cite>
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
@@ -207,9 +216,8 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
-            <h3>El umbral de CENTENARIO: ¿ochenta años o cien?</h3>
-            <p>El sitio decía «rebasó los cien años de vida». La definición formal fija el umbral en <b>ochenta</b>. Corregí el texto ciudadano a ochenta, porque la definición manda sobre la frase, pero las dos no pueden ser ciertas: <b>hay que confirmar cuál es el criterio real</b> y corregir la otra.</p>
-            <p style="margin-top:9px">De paso, revísalo también en SINGULAR: su definición cierra hablando de «biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa», que es el criterio de NOTABLE. Puede ser deliberado, pero se lee como otro arrastre de copiar y pegar.</p>
+            <h3>SINGULAR cierra con el criterio de NOTABLE</h3>
+            <p>El umbral de CENTENARIO ya está resuelto: son <b>ochenta años</b>, y el texto ciudadano del sitio ya lo dice así. Queda el tercer arrastre del mismo archivo: la definición de SINGULAR cierra hablando de «biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa», que es el criterio de NOTABLE. Puede ser deliberado, pero se lee como copiar y pegar.</p>
           </div>
           <span class="pend__quien" data-q="tu">Verificar</span>
         </article>
@@ -265,11 +273,22 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
-            <h3>El sitio debe leer la hoja en vivo</h3>
-            <p>Hoy el sitio NO lee la hoja: lee <code>fuente/datos/registro.json</code>, un archivo congelado, y no hay ningún paso que lo regenere. Lo que el equipo capture en Sheets es invisible hasta que alguien con acceso al código rehace ese archivo. Como el registro lo mantiene el equipo y el código solo lo toca una persona, esto convierte cada corrección de dato en un cuello de botella.</p>
-            <cite>Trabajo pausado a propósito: el sistema de registro en Sheets se está rehaciendo y mueve las columnas. Se retoma cuando la hoja nueva esté firme. El plan acordado es render inmediato desde el congelado —para que la página nunca salga vacía si Google falla— y actualización en vivo encima. Requiere además incorporar un lector de CSV; se probó PapaParse y se retiró para no publicar 18 KB que todavía no se usan.</cite>
+            <h3>La portada ya lee la hoja; falta la ficha</h3>
+            <p>La portada nace con el registro congelado incrustado —se ve completa sin esperar a nadie— y encima pide la hoja publicada. Si la hoja trae ejemplares, la portada se repinta con ellos y el mapa se rehace. Si llega vacía, si Google no responde o si alguien despublica la hoja, la página se queda exactamente como estaba: <b>una hoja en blanco no puede vaciar el micrositio</b>. Hoy la hoja está vacía, así que ese es el camino que se recorre en cada visita.</p>
+            <p style="margin-top:9px"><b>La ficha todavía no se actualiza en vivo.</b> Sigue leyendo solo el congelado. Mientras la hoja esté vacía las dos páginas muestran lo mismo, pero en cuanto el equipo capture algo, la portada y la ficha podrían decir cosas distintas. Es lo siguiente que hay que cablear.</p>
+            <cite>Las piezas: <code>fuente/padron/lector-v2.js</code> convierte el CSV en datos y <code>fuente/padron/fuente-viva.js</code> va por él, con caché de diez minutos, respaldo de siete días y la guardia del registro vacío. Se prueban en <code>verificar/verifica-fuente-viva.mjs</code>. El congelado se regenera desde la hoja con <code>node construir/armar-registro.js --escribir</code>, que se corre a mano: armar el sitio no puede depender de la red.</cite>
           </div>
-          <span class="pend__quien" data-q="tu">En pausa</span>
+          <span class="pend__quien" data-q="tu">Por implementar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>¿Se publica de dónde salió cada coordenada?</h3>
+            <p>El padrón lleva un catálogo que el sitio no usa: <code>CAT_ORIGEN_COORD</code> —levantamiento en campo, derivada de UTM, fotointerpretación, verificada en gabinete—. Hoy es dato interno: no tiene columna en la salida pública.</p>
+            <p style="margin-top:9px">Vale la pena decidirlo. La procedencia de la coordenada es de las cosas que dan credibilidad a un registro oficial, y distingue un punto medido en campo de uno deducido en escritorio. Cuesta una columna en la hoja y una línea en la ficha.</p>
+          </div>
+          <span class="pend__quien" data-q="tu">Por decidir</span>
         </article>
 
         <article class="pend">
@@ -298,6 +317,36 @@ a{color:var(--jacaranda-hondo)}
             <cite>El encabezado morado plano desaparece. El morado queda para la banda de gobierno y el sello de categoría.</cite>
           </div>
           <span class="pend__quien" data-q="registro">Por implementar</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Comprobar en navegador la actualización en vivo</h3>
+            <p>La capa que lee la hoja está escrita y verificada: cuarenta y una aserciones cubren la caché, los reintentos, el respaldo, la guardia del registro vacío y la huella que evita repintar de balde. <b>Lo que no se puede comprobar sin navegador es el repintado</b>: que la portada se rehaga entera con datos nuevos, que el mapa se desmonte y se vuelva a montar sin dejar el lienzo marcado, y que los filtros y la búsqueda sigan respondiendo después.</p>
+            <p style="margin-top:9px">Hace falta abrir <code>prueba/portada-vista-previa.html</code> con la hoja ya cargada de datos y mirarlo. Con la hoja vacía no se ejercita ese camino: la capa decide no sustituir nada, que es justo lo correcto.</p>
+          </div>
+          <span class="pend__quien" data-q="tu">Falta probar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>La hoja se acaba en el ejemplar 300</h3>
+            <p>Las fórmulas de <code>Salida_Publica</code> llegan hasta la fila 301. El ejemplar 301 no saldría en el CSV y <b>nadie recibiría aviso</b>: el sitio publicaría trescientos árboles y daría la cifra por buena. Con trece no urge, pero es un tope silencioso y los topes silenciosos se descubren tarde.</p>
+            <cite>Se arregla estirando las fórmulas en la hoja. Conviene además que el armado avise cuando el registro se acerque al tope.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Por corregir</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Se publican 40 KB de código que nadie usa</h3>
+            <p><code>patrimoniales-loader.js</code> es el lector de la versión anterior del registro. Ninguna página lo carga —todo el código viaja incrustado en cada archivo—, pero el armado lo sigue copiando a <code>docs/assets/js/</code>, así que se publica. Lleva dentro la dirección del padrón anterior.</p>
+            <cite>Ahí viajan también otros seis archivos por la misma razón: unos 138 KB en total. Antes de retirarlos hay que comprobar qué usan las maquetas <code>modelo-portada.js</code> y <code>modelo-ficha.js</code>, que sí los importan.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Por limpiar</span>
         </article>
 
         <article class="pend">
