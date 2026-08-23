@@ -364,10 +364,16 @@ console.log('\n══ DATO FALTANTE · el sitio lo dice, no lo disimula ══')
   const fl2=fs.readFileSync('ficha-logica.js','utf8');
   t('La ficha declara el dato faltante en lugar de fingir un cero',
     /Sin determinar/.test(fv));
-  t('Las tarjetas sin dato no se dibujan vacías: se omiten',
-    /\.filter\(\(\[, url\]\) => url\)/.test(fl2));
-  t('Y si no queda ninguna fuente, el bloque entero se oculta',
-    /if \(!fuentes\.length\) \{ if \(bloque\) bloque\.style\.display = "none"/.test(fl2));
+  /* CRITERIO INVERTIDO el 23 de agosto. Un documento ausente se omitía. Ahora
+     se dibuja apagado y dice por qué falta: omitirlo hace creer al lector que
+     no se consultó, y esa es una afirmación más fuerte —y falsa— que decir que
+     el registro no lo trae. La regla de no fingir un cero sigue igual; lo que
+     cambió es que un hueco declarado informa más que un hueco invisible. */
+  t('El documento que falta se declara apagado, no se omite',
+    /docs--sin/.test(fl2) && /falta:/.test(fl2)
+    && !/\.filter\(\(\[, url\]\) => url\)/.test(fl2));
+  t('Y ninguno afirma que el documento no exista, solo que no está capturado',
+    /El registro no guarda/.test(fl2) && /todavía no captura este campo/.test(fl2));
   // La cobertura de una suma se declara: 1,200 años salen de 2 de 13 ejemplares.
   const pv7=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
   t('El cintillo declara cuántos ejemplares tienen edad dictaminada',

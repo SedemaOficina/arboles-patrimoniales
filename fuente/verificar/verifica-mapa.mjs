@@ -153,29 +153,41 @@ t('ficha · sigue el botón que abre la ruta', /google\.com\/maps\/search/.test(
 t('ficha · sigue el mapa del ejemplar', /pintarMapaEjemplar\(e\)/.test(fl));
 
 
-console.log('══ FICHA · fuentes y decreto ══');
-// Dos tarjetas: el decreto y la corrida de i-Tree. «Fuente del registro» y
-// «Ejemplar en el SNIB» siguen fuera porque guardaban el MISMO valor en los
-// trece: ninguna llevaba a información de ese ejemplar.
-t('fuentes · están el decreto y la estimación de servicios ambientales',
-  /\["Consultar el decreto"/.test(fl) && /\["Estimación de servicios ambientales"/.test(fl));
-t('fuentes · «Fuente del registro» y el SNIB siguen fuera',
-  !/"Fuente del registro"/.test(fl) && !/"Ejemplar en el SNIB"/.test(fl));
-t('fuentes · nada lee ya urlSNIB ni urlOrigen',
-  !/e\.urlSNIB/.test(fl) && !/e\.urlOrigen/.test(fl)
-  && !/e\.urlSNIB/.test(fdc) && !/e\.urlOrigen/.test(fdc));
+console.log('══ FICHA · documentos del expediente ══');
+/* CAMBIO DE CRITERIO, 23 de agosto de 2026.
+   Antes solo se publicaban dos enlaces —decreto y corrida de i-Tree— y el SNIB
+   y la observación de origen se habían retirado porque los trece ejemplares
+   guardaban el MISMO valor: ninguno llevaba a información de ese árbol.
+   El criterio nuevo publica los cinco documentos que el padrón contempla, y la
+   respuesta al valor repetido ya no es esconder el enlace sino que el renglón
+   diga qué es y de quién es el sistema al que lleva. Un documento que falta se
+   dibuja apagado con el motivo: desaparecer hace creer que no se consultó.
+   Con esto murió la sección «De dónde sale cada dato», que explicaba en prosa
+   lo que ahora dice cada renglón por sí mismo. */
+t('documentos · los cinco del expediente',
+  /Decreto de declaratoria/.test(fl) && /Ficha de la especie en el SNIB/.test(fl)
+  && /Observación de referencia de la especie/.test(fl)
+  && /Corrida de i-Tree de este ejemplar/.test(fl) && /Programa de manejo/.test(fl));
+t('documentos · el SNIB y la observación vuelven a leerse',
+  /e\.urlSNIB/.test(fl) && /e\.urlOrigen/.test(fl));
+t('documentos · cada renglón declara de quién es el sistema',
+  /CONABIO · sistema externo/.test(fl));
+t('documentos · el que falta se dibuja apagado y dice por qué',
+  /docs--sin/.test(fl) && /falta:/.test(fl)
+  && !/\.filter\(\(\[, url\]\) => url\)/.test(fl));
+t('documentos · el programa de manejo no afirma que no exista',
+  /El registro todavía no captura este campo/.test(fl)
+  && !/no tiene uno registrado/.test(fl));
+t('La sección explicativa «De dónde sale cada dato» se retiró',
+  !/De dónde sale cada dato/.test(fs.readFileSync('ficha-cuerpo.html','utf8')));
 // LA REGLA QUE IMPIDE QUE VUELVA EL ENLACE MUERTO.
 // La hoja guardaba el texto «MyTree» —el nombre de la herramienta, no la
 // corrida— en la columna del cálculo, y eso llegó a publicarse como enlace.
 // La tarjeta de i-Tree solo se dibuja si el campo es una dirección de verdad.
-t('fuentes · i-Tree solo aparece si el campo es una dirección',
+t('documentos · i-Tree solo enlaza si el campo es una dirección',
   /function esDireccion\(valor\)/.test(fl)
   && /\^https\?:/.test(fl)
   && /esDireccion\(e\.linkITree\)/.test(fl));
-t('fuentes · las tarjetas sin dirección se filtran, no se dibujan apagadas',
-  /\.filter\(\(\[, url\]\) => url\)/.test(fl));
-t('fuentes · sin ninguna fuente, el bloque entero se oculta',
-  /if \(!fuentes\.length\) \{ if \(bloque\) bloque\.style\.display = "none"/.test(fl));
 // Una petición HEAD a un dominio ajeno la bloquea el navegador por CORS: su
 // resultado no significa nada y apagaría una tarjeta buena.
 t('decreto · la comprobación HEAD solo corre contra este mismo sitio',
@@ -187,9 +199,9 @@ t('decreto · el nombre de archivo se resuelve a la carpeta decretos/',
 t('decreto · una dirección completa se respeta', /if \(\/\^https\?:\\\/\\\/\/i\.test\(bruto\)\) return bruto;/.test(fl));
 t('decreto · el nombre se codifica para la URL', /encodeURIComponent\(archivo\)/.test(fl));
 t('decreto · los espacios sobrantes se limpian', /replace\(\/\\s\+\/g, " "\)/.test(fl));
-t('decreto · si el PDF no está, la tarjeta se apaga en vez de dar 404',
+t('decreto · si el PDF no está, el renglón se apaga en vez de dar 404',
   /method: "HEAD"/.test(fl) && /apagarDecreto\(caja\)/.test(fl)
-  && /aún no está publicado en este sitio/.test(fl));
+  && /Todavía no está publicado en este sitio/.test(fl));
 t('decreto · la construcción copia la carpeta al sitio',
   /cp \.\.\/decretos\/\*\.pdf "\$DEST\/decretos\/"/.test(fs.readFileSync('construir/construir.sh','utf8')));
 

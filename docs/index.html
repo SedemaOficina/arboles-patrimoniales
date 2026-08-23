@@ -636,6 +636,64 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .categoria p{margin:0;font-size:var(--t-cuerpo);color:var(--tinta-suave);flex:1}
 .categoria .cuenta{margin-top:18px;padding-top:14px;border-top:1px dashed rgba(var(--tinta-jacaranda-rgb),.16);font-size:var(--t-nota);font-weight:700;color:var(--gris);letter-spacing:.04em;text-transform:uppercase}
 
+/* ═══ LA CASCADA TAXONÓMICA ═══
+   Quince renglones de etiqueta y valor se leían como quince datos sueltos. La
+   clasificación no es una lista: es un descenso de lo general a este árbol, y
+   el sangrado creciente es lo que lo dice. El último peldaño se destaca porque
+   es el único que habla del ejemplar que se está mirando. */
+.cascada{list-style:none;margin:0 0 26px;padding:0;font-family:var(--editorial)}
+.cascada li{position:relative;padding:6px 0 6px 26px;line-height:1.4;
+  margin-left:calc(var(--peldano, 0) * 20px)}
+.cascada li::before{content:"\21B3";position:absolute;left:0;top:6px;
+  font-family:var(--texto);font-size:var(--t-apoyo);color:var(--jacaranda-luz)}
+.cascada em{font-style:normal;font-size:var(--t-cuerpo-grande);color:var(--tinta)}
+.cascada small{font-family:var(--texto);font-size:var(--t-nota);color:var(--gris);margin-left:8px}
+.cascada i{font-style:italic}
+.cascada__hoja{padding-top:10px}
+.cascada__hoja::before{color:var(--dorado)}
+.cascada__hoja em{font-weight:700;font-size:var(--t-subtitulo);color:var(--jacaranda-hondo)}
+/* En pantalla angosta el sangrado se come el ancho útil: la cascada se aplana
+   y el descenso lo siguen diciendo las flechas. */
+@media(max-width:700px){.cascada li{margin-left:0}}
+
+/* Los atributos de la especie no son escalera taxonómica: describen su estatus.
+   Van en tabla, más apretados, después de la cascada. */
+.tabla-datos--especie{border-top:1px solid rgba(var(--tinta-jacaranda-rgb),.12);padding-top:6px}
+
+/* ═══ DOCUMENTOS DEL EXPEDIENTE ═══
+   Cada renglón se nombra por lo que abre y dice de quién es el sistema. El que
+   falta se dibuja apagado y explica por qué: desaparecer haría creer que no se
+   consultó. */
+.rotulo--docs{margin:26px 0 10px}
+.docs{list-style:none;margin:0;padding:0;display:grid;gap:1px;
+  background:rgba(var(--tinta-jacaranda-rgb),.12);
+  border:1px solid rgba(var(--tinta-jacaranda-rgb),.12)}
+.docs li{background:var(--blanco)}
+.docs a,.docs li > span{display:flex;flex-direction:column;gap:2px;padding:14px 16px;
+  text-decoration:none;color:var(--tinta)}
+.docs a{border-left:3px solid var(--jacaranda)}
+.docs a:hover{background:var(--niebla)}
+.docs a b{font-size:var(--t-apoyo);font-weight:700}
+/* La flecha va DENTRO del título, no como pseudoelemento del enlace: el
+   renglón es una columna flex, así que un ::after del <a> se convertía en un
+   tercer renglón y la flecha caía suelta bajo el texto. */
+.docs__fuera{font-size:.82em;margin-left:.3em;color:var(--jacaranda);font-weight:400}
+.docs a > span{font-size:var(--t-nota);color:var(--gris)}
+.docs--sin{background:var(--niebla)}
+.docs--sin > span{border-left:3px solid rgba(var(--tinta-jacaranda-rgb),.12)}
+.docs--sin b{font-size:var(--t-apoyo);font-weight:700;color:var(--gris)}
+.docs--sin span span{font-size:var(--t-nota);color:var(--gris)}
+
+/* ═══ LLÉVATELO ═══
+   Era una sección propia con su propio título y repetía el enlace al mapa.
+   Ahora cierra la banda de «Cómo llegar», que es de lo que habla. */
+.llevar{margin:38px 0 0;background:var(--niebla);border-left:4px solid var(--jacaranda);
+  padding:22px 24px}
+.llevar h3{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:var(--t-subtitulo);line-height:1.05;color:var(--jacaranda-hondo);margin:0}
+.llevar p{margin:10px 0 18px;font-size:var(--t-apoyo);line-height:1.6;color:var(--tinta-suave);
+  max-width:var(--medida-nota)}
+
 /* --- listado --- */
 .filtros{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 26px}
 /* «transition:all» animaba TAMBIÉN el contorno de foco: al tabular hasta aquí
@@ -1123,17 +1181,27 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-portada .migas a{color:var(--jacaranda-hondo);font-weight:600}
 .recursos-portada .migas a:hover{color:var(--jacaranda);text-decoration:underline}
 
-.ficha-portada{background:var(--tinta-jacaranda);color:#fff;position:relative;overflow:hidden;padding:26px 0 0}
+/* EL ENCABEZADO PASÓ A PAPEL, 23 de agosto de 2026.
+   Era un campo morado macizo, idéntico en los trece ejemplares: ocupaba media
+   pantalla y no decía nada del árbol que presentaba. Sobre papel, el nombre
+   pesa por su tamaño y no por el contraste contra un fondo, y el morado queda
+   donde significa algo —la barra de gobierno, las etiquetas de categoría—.
+   El resplandor radial y la banda de degradado inferior se retiraron: existían
+   para romper la monotonía del campo oscuro, y sin campo oscuro sobran. */
+.ficha-portada{background:var(--papel);color:var(--tinta);position:relative;padding:26px 0 0;
+  border-bottom:2px solid rgba(var(--tinta-jacaranda-rgb),.1)}
 @media(min-width:861px){.ficha-portada h1,.ficha-portada .binomio,.ficha-portada .comun{padding-right:150px}}
-.ficha-portada::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 420px at 88% 0%,rgba(var(--jacaranda-rgb),.5),transparent 62%);pointer-events:none}
 .ficha-portada .envoltura{position:relative;z-index:var(--capa-contenido)}
-.ficha-portada h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(38px,6.6vw,78px);line-height:1;letter-spacing:.005em;margin:16px 0 0;color:#fff}
-.ficha-portada .binomio{font-family:var(--editorial);font-style:italic;font-size:clamp(19px,2.3vw,26px);color:var(--jacaranda-luz);margin:12px 0 0}
-.ficha-portada .comun{font-size:var(--t-cuerpo);color:rgba(255,255,255,.72);margin:6px 0 0}
+.ficha-portada h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(38px,6.6vw,78px);line-height:1;letter-spacing:.005em;margin:16px 0 0;color:var(--tinta)}
+.ficha-portada .binomio{font-family:var(--editorial);font-style:italic;font-size:clamp(19px,2.3vw,26px);color:var(--jacaranda-hondo);margin:12px 0 0}
+.ficha-portada .comun{font-size:var(--t-cuerpo);color:var(--tinta-suave);margin:6px 0 0}
+.ficha-portada .migas{color:var(--gris)}
+.ficha-portada .migas a{color:var(--jacaranda-hondo);border-bottom-color:rgba(var(--jacaranda-hondo-rgb),.35)}
+.ficha-portada .migas a:hover{color:var(--jacaranda);border-bottom-color:var(--jacaranda)}
 /* El registro tiene un campo llamado nombre común; se nombra así, con rótulo,
    en vez de disfrazarlo de frase («Conocido como ahuehuete»). */
 .ficha-portada .comun span{display:inline-block;font-size:var(--t-micro);font-weight:700;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--jacaranda-luz);margin-right:10px;vertical-align:1px}
+  text-transform:uppercase;color:var(--dorado);margin-right:10px;vertical-align:1px}
 
 /* Nota al pie de sección: letra chica, jerarquía de aclaración. Vivía dentro
    del recuadro de medidas, donde competía con las cifras del dictamen. */
@@ -1147,19 +1215,23 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    con una banda propia de 72 px que se degrada al crema del cuerpo. La banda va
    DEBAJO del contenido, no encima: puesta encima aclaraba el fondo detrás de
    las cifras y les comía el contraste. */
-.ficha-portada{position:relative;padding-bottom:72px}
-.ficha-portada::after{content:"";position:absolute;left:0;right:0;bottom:0;height:72px;
-  background:linear-gradient(180deg,var(--tinta-jacaranda),var(--papel));pointer-events:none;z-index:var(--capa-fondo)}
+.ficha-portada{padding-bottom:40px}
 .ficha-portada > .envoltura{position:relative;z-index:var(--capa-contenido)}
+/* Sobre papel la etiqueta deja de ser una pastilla tenue sobre fondo oscuro y
+   se vuelve un timbre: contorno, versalita apretada y la tinta de su familia. */
 .ficha-portada .etiquetas{margin:22px 0 0}
-.ficha-portada .etiqueta{background:rgba(var(--jacaranda-luz-rgb),.2);color:var(--jacaranda-luz)}
-.ficha-portada .etiqueta--dorada{background:rgba(var(--dorado-rgb),.22);color:#DCBE8E}
+.ficha-portada .etiqueta{background:rgba(var(--jacaranda-rgb),.08);color:var(--jacaranda-hondo);
+  border:1px solid rgba(var(--jacaranda-rgb),.3)}
+.ficha-portada .etiqueta--dorada{background:rgba(var(--dorado-rgb),.12);color:#8A6B3D;
+  border-color:rgba(var(--dorado-rgb),.42)}
 
-.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:1px;background:rgba(var(--jacaranda-luz-rgb),.22);margin:36px 0 0}
-.resumen div{background:var(--tinta-jacaranda);padding:20px 18px}
-.resumen strong{display:block;font-family:var(--display);font-size:var(--t-titulo-2);line-height:1;color:#fff}
-.resumen strong.largo{font-family:var(--texto);font-weight:700;font-size:var(--t-subtitulo);line-height:1.15;letter-spacing:0}
-.resumen span{display:block;font-size:var(--t-micro);letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.58);margin-top:8px;font-weight:600}
+.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:1px;
+  background:rgba(var(--tinta-jacaranda-rgb),.12);margin:36px 0 0;
+  border:1px solid rgba(var(--tinta-jacaranda-rgb),.12)}
+.resumen div{background:var(--blanco);padding:20px 18px}
+.resumen strong{display:block;font-family:var(--display);font-size:var(--t-titulo-2);line-height:1;color:var(--verde-bosque)}
+.resumen strong.largo{font-family:var(--texto);font-weight:700;font-size:var(--t-subtitulo);line-height:1.15;letter-spacing:0;color:var(--tinta)}
+.resumen span{display:block;font-size:var(--t-micro);letter-spacing:.09em;text-transform:uppercase;color:var(--gris);margin-top:8px;font-weight:600}
 
 /* eje con el ejemplar resaltado */
 
@@ -1206,6 +1278,44 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @media(max-width:700px){.escala__guia{width:96px}}
 .escala__marca span{position:absolute;right:0;top:-9px;background:var(--verde-niebla);padding:0 6px;font-size:var(--t-micro);font-weight:700;color:var(--gris);letter-spacing:.06em}
 .escala__arbol{position:relative;width:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+
+/* ═══ COTAS SOBRE EL DIBUJO ═══
+   El dorado es tinta de instrumento: no compite con el verde de la regla ni
+   con el jacarandá de la figura humana, y agrupa las tres cotas como un solo
+   sistema de medición. Van dentro de la regla, que ya no recibe puntero. */
+.escala__dibujo{position:relative;display:flex;align-items:flex-end}
+.cota{position:absolute;color:var(--dorado);font-variant-numeric:tabular-nums}
+
+.cota--alto{bottom:0;border-left:1.5px solid var(--dorado)}
+.cota--alto::before,.cota--alto::after{content:"";position:absolute;left:-5px;width:11px;
+  border-top:1.5px solid var(--dorado)}
+.cota--alto::before{top:0}
+.cota--alto::after{bottom:0}
+.cota--alto b{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  font-family:var(--display);font-weight:400;font-size:var(--t-titulo-3);line-height:1;
+  text-align:right;white-space:nowrap}
+.cota--alto i{position:absolute;right:6px;top:calc(50% + 18px);font-style:normal;
+  font-size:var(--t-micro);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+
+.cota--dap{display:flex;align-items:center;gap:8px;flex-direction:row-reverse}
+.cota--dap span{width:44px;border-top:1.5px dotted var(--dorado)}
+.cota--dap b{font-size:var(--t-micro);font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;white-space:nowrap}
+
+.cota--copa{bottom:-30px;border-top:1.5px solid var(--dorado)}
+.cota--copa::before,.cota--copa::after{content:"";position:absolute;top:-6px;height:13px;
+  border-left:1.5px solid var(--dorado)}
+.cota--copa::before{left:0}
+.cota--copa::after{right:0}
+.cota--copa b{position:absolute;left:50%;transform:translateX(-50%);top:6px;white-space:nowrap;
+  font-size:var(--t-micro);font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+
+/* La barra de copa cuelga bajo la línea de suelo: el lienzo necesita ese aire
+   debajo o la cota se monta sobre el pie de la ilustración. */
+.escala__lienzo{margin-bottom:52px}
+/* En pantalla angosta la cota de altura se come el dibujo: se apagan las tres
+   y las medidas se leen en la tabla, que ahí queda debajo y a todo el ancho. */
+@media(max-width:700px){.cota{display:none}.escala__lienzo{margin-bottom:0}}
 .escala__copa{width:100%;border-radius:52% 52% 44% 44%;background:linear-gradient(165deg,#7FBA71,var(--verde-bosque));position:relative}
 .escala__tronco{width:13px;background:linear-gradient(90deg,#6B5030,var(--corteza-luz) 55%,#5A422A);border-radius:var(--radio)}
 .escala__persona{position:relative;flex:0 0 auto;min-width:56px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;color:var(--gris)}

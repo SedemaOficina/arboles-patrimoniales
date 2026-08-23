@@ -93,24 +93,20 @@
       <div class="vista-calle" id="fVistaCalle"></div>
       <p class="vista-calle__pie" id="fVistaCallePie"></p>
     </div>
-  </div>
-</section>
 
-<section class="bloque bloque--niebla" id="fVisita">
-  <div class="envoltura">
-    <div class="visita">
-      <div>
-        <span class="rotulo">Llévatelo</span>
-        <h2>Un árbol patrimonial se visita con papel en la mano</h2>
-        <p>Imprime esta ficha y ve a verlo. Lleva el domicilio, las referencias para llegar, sus medidas y lo que la ley dice sobre él, en una hoja que funciona sin señal de celular y sin batería.</p>
-      </div>
-      <div class="visita__acciones">
-        <button type="button" class="boton boton--solido" id="fImprimir">Imprimir la ficha</button>
-        <a class="visita__mapa" id="fComoLlegar" target="_blank" rel="noopener" href="#">Cómo llegar<span aria-hidden="true"> →</span></a>
-      </div>
+    <!-- «Llévatelo» era una sección aparte y repetía el enlace a Google Maps que
+         ya vive bajo el mapa: «Cómo llegar» aparecía dos veces en la misma
+         página. Ahora cierra esta banda, que es de lo que habla: cómo llegar y
+         qué llevarse. El enlace al mapa se quedó donde estaba argumentado, bajo
+         el mapa; aquí solo queda imprimir. -->
+    <div class="llevar" id="fVisita">
+      <h3>Llévatelo en papel</h3>
+      <p>Imprime esta ficha y ve a verlo. Lleva el domicilio, las referencias para llegar, sus medidas y lo que la ley dice sobre él, en una hoja que funciona sin señal de celular y sin batería.</p>
+      <button type="button" class="boton boton--solido" id="fImprimir">Imprimir la ficha</button>
     </div>
   </div>
 </section>
+
 
 <section class="bloque bloque--oscuro">
   <div class="envoltura">
@@ -151,14 +147,21 @@
         <span class="rotulo">Ficha técnica</span>
         <h2>Qué especie es</h2>
         <p class="guia">Clasificación validada contra el Sistema Nacional de Información sobre Biodiversidad.</p>
-        <dl class="tabla-datos" id="fTaxonomia"></dl>
+        <!-- La escalera taxonómica baja en cascada hasta el ejemplar. En dos
+             columnas de etiqueta y valor se leía como quince datos sueltos;
+             encadenada se lee como lo que es: un descenso de lo general a lo
+             particular que termina en este árbol. -->
+        <ol class="cascada" id="fTaxonomia"></ol>
+        <dl class="tabla-datos tabla-datos--especie" id="fAtributos"></dl>
         <p class="aviso-especie" id="fExotica" style="display:none"></p>
       </div>
       <div>
         <span class="rotulo">Trazabilidad</span>
-        <h2>Cómo llegó al registro</h2>
+        <h2>Su expediente</h2>
         <p class="guia">Todo ejemplar entra por nominación y se incorpora mediante decreto. Este es su expediente público.</p>
         <dl class="tabla-datos" id="fProcedencia"></dl>
+        <span class="rotulo rotulo--docs">Documentos y fuentes</span>
+        <ul class="docs" id="fFuentes"></ul>
       </div>
     </div>
   </div>
@@ -172,17 +175,6 @@
   </div>
 </section>
 
-<!-- Los cuatro enlaces vivían repartidos entre dos columnas y un pie de tabla,
-     con el mismo estilo pero sin relación visible entre ellos. Juntos al final
-     de la ficha se leen por lo que son: el expediente que la sostiene. -->
-<section class="bloque">
-  <div class="envoltura">
-    <span class="rotulo">Fuentes y documentos</span>
-    <h2>De dónde sale cada dato</h2>
-    <p class="guia">El decreto es la fuente oficial del ejemplar y lo publica la Secretaría. La ficha del SNIB abre un sistema externo, de la CONABIO.</p>
-    <div class="enlaces enlaces--fuentes" id="fFuentes"></div>
-  </div>
-</section>
 
 </main>
 

@@ -249,10 +249,24 @@ function pintarEscala(e) {
       arbol = svgSilueta(e.especie, h, copa, alt);
     }
     lienzo.innerHTML = `<div class="escala__regla">${reglas.join("")}</div>
-      ${arbol}
+      <div class="escala__dibujo">${arbol}</div>
       <div class="escala__persona" style="--alto-persona:${px(ALTURA_PERSONA).toFixed(1)}px">
         <span class="escala__guia" aria-hidden="true"><i>1.70 m</i></span>
         ${svgPersona(px(ALTURA_PERSONA))}<b class="vo">Figura humana de referencia: 1.70 metros</b></div>`;
+
+    /* LAS COTAS, SOBRE EL DIBUJO.
+       Las medidas vivían solo en la tabla de al lado. Puestas sobre el dibujo
+       dejan de ser cifras que hay que creer y se vuelven cosas que se ven: la
+       altura acotada contra la regla, el diámetro señalado en el tronco a la
+       altura a la que se mide, y la extensión de copa trazada A ESCALA en el
+       suelo. Esa barra es además la respuesta gráfica a la advertencia que
+       antes solo vivía en letra chica: si el ancho del dibujo no coincide con
+       la barra, se ve por qué el dibujo es el porte típico de la especie y no
+       la copa de este ejemplar.
+       Se posicionan midiendo el dibujo ya montado, no calculando dónde debería
+       estar: la caja del árbol depende del reparto flexible y de la razón de
+       cada ilustración. */
+    anotarCotas(lienzo, { alt, copa, dap: e.morfologia.diametro_cm, px, conIlustracion: !!ilu });
   }
 
   const medidas = [
@@ -474,12 +488,112 @@ function pintarServicios(e) {
 
 }
 
+/*
+ * Nombres llanos de los peldaños taxonómicos.
+ *
+ * DELIBERADAMENTE CASI VACÍO. Traducir «Magnoliopsida» a «magnolias, margaritas
+ * y parientes» es una afirmación botánica, no una traducción: exige una fuente.
+ * Aquí solo están los dos peldaños cuyo nombre llano ES la traducción literal
+ * del término, sin criterio de por medio. Los demás se agregan cuando alguien
+ * con competencia botánica los valide, y mientras tanto la cascada muestra el
+ * rango y el nombre científico, que siempre son ciertos.
+ *
+ * La clave es el nombre científico en minúsculas y sin acentos.
+ */
+const NOMBRE_LLANO = {
+  plantae: "Plantas",
+  tracheophyta: "Plantas vasculares",
+};
+
+const llanoDe = (v) => NOMBRE_LLANO[String(v || "").toLowerCase().trim()] || null;
+
+/**
+ * Dibuja las cotas encima del lienzo de escala, midiendo el dibujo ya montado.
+ *
+ * @param {HTMLElement} lienzo  el contenedor con la regla, el árbol y la figura
+ * @param {{alt:number, copa:number|null, dap:number|null, px:(m:number)=>number,
+ *           conIlustracion:boolean}} d
+ */
+function anotarCotas(lienzo, d) {
+  const dibujo = lienzo.querySelector(".escala__dibujo");
+  const regla = lienzo.querySelector(".escala__regla");
+  if (!dibujo || !regla) return;
+
+  const cajaL = lienzo.getBoundingClientRect();
+  const cajaA = dibujo.getBoundingClientRect();
+  if (!cajaA.width) return;
+  const izq = cajaA.left - cajaL.left;
+  /* El tronco no cae en el centro de la caja. En la silueta dibujada sí, porque
+     se construye simétrica; en las ilustraciones fotográficas está algo a la
+     izquierda —en el fresno, al 47 % del ancho—. Una cota anclada al centro de
+     la caja señalaba copa en vez de tronco. La fracción es una aproximación
+     declarada: por eso la guía del diámetro se detiene ANTES de llegar, que se
+     lee como señalar, mientras que pasarse se lee como error. */
+  const centro = izq + cajaA.width * (d.conIlustracion ? 0.47 : 0.5);
+  const alto = d.px(d.alt);
+
+  const partes = [];
+
+  // Altura: cota vertical a la izquierda del dibujo, con sus dos remates.
+  partes.push(`<div class="cota cota--alto" style="left:${Math.max(2, izq - 30).toFixed(1)}px;height:${alto.toFixed(1)}px">
+    <b>${nf(d.alt, 1)}</b><i>metros</i></div>`);
+
+  // Diámetro: guía punteada que termina en el tronco, a 1.30 m, que es la
+  // altura a la que el DAP se mide en campo.
+  if (d.dap) {
+    partes.push(`<div class="cota cota--dap" style="right:${(cajaL.width - centro + 20).toFixed(1)}px;bottom:${d.px(1.3).toFixed(1)}px">
+      <span></span><b>${nf(d.dap, 1)} cm de diámetro</b></div>`);
+  }
+
+  /* Copa: barra en el suelo, centrada en el tronco. Si la barra no cabe en el
+     lienzo no se dibuja: una barra recortada mide menos de lo que dice, y una
+     cota que miente es peor que ninguna. */
+  if (d.copa) {
+    const ancho = d.px(d.copa);
+    const desde = centro - ancho / 2;
+    if (desde >= 0 && desde + ancho <= cajaL.width) {
+      partes.push(`<div class="cota cota--copa" style="left:${desde.toFixed(1)}px;width:${ancho.toFixed(1)}px">
+        <b>${nf(d.copa, 1)} m de extensión de copa</b></div>`);
+    }
+  }
+
+  regla.insertAdjacentHTML("beforeend", partes.join(""));
+}
+
 function pintarTaxonomia(e) {
   const t = e.taxonomia;
-  const filas = [
-    ["Reino", t.reino], ["División o filo", t.phylum], ["Clase", t.clase],
-    ["Orden", t.orden], ["Familia", t.familia], ["Género", t.genero],
-    ["Especie", e.especie], ["Autoridad taxonómica", t.autor],
+
+  /* La escalera, de lo general a este árbol. Un peldaño sin dato no se dibuja
+     como «Sin determinar»: se salta. Una cascada con huecos rotos deja de
+     leerse como un descenso. Lo que falte se ve en su ausencia, no en un
+     relleno. */
+  const peldanos = [
+    ["reino", t.reino], ["filo", t.phylum], ["clase", t.clase],
+    ["orden", t.orden], ["familia", t.familia], ["género", t.genero],
+  ].filter(([, v]) => v);
+
+  const escalones = peldanos.map(([rango, valor], i) => {
+    const llano = llanoDe(valor);
+    const cursiva = rango === "género";
+    const nombre = cursiva ? `<i>${esc(valor)}</i>` : esc(valor);
+    return `<li style="--peldano:${i}">${llano
+      ? `<em>${esc(llano)}</em><small>${rango} ${nombre}</small>`
+      : `<em>${nombre}</em><small>${rango}</small>`}</li>`;
+  });
+
+  // El último peldaño es el ejemplar: nombre común al frente, binomio y
+  // autoridad como su respaldo. Es el único que se destaca.
+  const autoridad = t.autor ? ` · ${esc(t.autor)}` : "";
+  escalones.push(`<li class="cascada__hoja" style="--peldano:${peldanos.length}">
+    <em>${esc(e.nombreComun ? e.nombreComun.toLowerCase() : e.especie)}</em>
+    <small><i>${esc(e.especie)}</i>${autoridad}</small></li>`);
+
+  document.getElementById("fTaxonomia").innerHTML = escalones.join("");
+
+  /* Lo que NO es escalera taxonómica: atributos de la especie. Vivían mezclados
+     con el reino y el filo, y no son lo mismo —uno clasifica, el otro describe
+     el estatus—. Van aparte, en tabla, que es lo que son. */
+  const atributos = [
     ["Nivel de prioridad", e.conservacion.prioridad],
     ["Forma de crecimiento", t.formaCrecimiento],
     ["Origen en la Ciudad", e.conservacion.exoticaInvasora || e.conservacion.origen],
@@ -488,8 +602,11 @@ function pintarTaxonomia(e) {
     ["CITES", e.conservacion.cites],
     ["Especie prioritaria", e.conservacion.prioritaria],
   ];
-  document.getElementById("fTaxonomia").innerHTML = filas
-    .map(([k, v]) => `<div class="dato-linea"><dt>${k}</dt><dd>${esc(v || "Sin determinar")}</dd></div>`).join("");
+  const cajaAtr = document.getElementById("fAtributos");
+  if (cajaAtr) {
+    cajaAtr.innerHTML = atributos
+      .map(([k, v]) => `<div class="dato-linea"><dt>${k}</dt><dd>${esc(v || "Sin determinar")}</dd></div>`).join("");
+  }
 
   const cajaEx = document.getElementById("fExotica");
   if (cajaEx) {
@@ -558,32 +675,70 @@ function esDireccion(valor) {
 function pintarFuentes(e) {
   const caja = document.getElementById("fFuentes");
   if (!caja) return;
-  const fuentes = [
-    ["Consultar el decreto", rutaDecreto(e.linkDecreto), "propia",
-     "El acuerdo publicado que lo declara patrimonial"],
-    ["Estimación de servicios ambientales", esDireccion(e.linkITree) ? String(e.linkITree).trim() : null, "externa",
-     "La corrida de i-Tree MyTree con la que se calcularon las cifras de este ejemplar"],
-  ].filter(([, url]) => url);
 
-  // Sin ninguna fuente que ofrecer, el bloque entero sobra: un encabezado
-  // seguido de nada se lee como un error de carga.
-  const bloque = caja.closest(".bloque") || caja.parentElement;
-  if (!fuentes.length) { if (bloque) bloque.style.display = "none"; return; }
-  if (bloque) bloque.style.display = "";
+  /* Los cinco documentos que puede tener un ejemplar. Cada renglón se nombra
+     por lo que ABRE y declara de quién es el sistema al que lleva: quien va a
+     salir del sitio debe saberlo antes de hacer clic, no después.
 
-  caja.innerHTML = fuentes.map(([t2, url, tipo, pie]) =>
-    `<a class="enlace enlace--fuente enlace--${tipo}" href="${esc(url)}" target="_blank" rel="noopener">
-       <b>${t2}${tipo === "externa" ? '<span class="enlace__fuera" aria-hidden="true">↗</span><span class="vo">, abre un sitio externo</span>' : ""}</b>
-       <span>${pie}</span></a>`).join("");
+     Un documento que el registro no trae NO desaparece: se dibuja apagado y
+     dice por qué. Desaparecer deja al lector creyendo que no se consultó; el
+     renglón apagado dice que sí y que no lo hay. Esa fue la razón de retirar la
+     sección «De dónde sale cada dato», que explicaba en prosa lo que ahora dice
+     cada renglón por sí mismo. */
+  const documentos = [
+    {
+      titulo: "Decreto de declaratoria",
+      url: rutaDecreto(e.linkDecreto),
+      pie: "El acuerdo publicado que lo declara patrimonial",
+      falta: "Todavía no está publicado en este sitio",
+      propio: true,
+    },
+    {
+      titulo: "Ficha de la especie en el SNIB",
+      url: esDireccion(e.urlSNIB) ? String(e.urlSNIB).trim() : null,
+      pie: "CONABIO · sistema externo",
+      falta: "El registro no guarda la dirección de este ejemplar",
+    },
+    {
+      titulo: "Observación de referencia de la especie",
+      url: esDireccion(e.urlOrigen) ? String(e.urlOrigen).trim() : null,
+      pie: "El avistamiento con el que se respalda la identificación",
+      falta: "El registro no guarda la observación de referencia",
+    },
+    {
+      titulo: "Corrida de i-Tree de este ejemplar",
+      url: esDireccion(e.linkITree) ? String(e.linkITree).trim() : null,
+      pie: "El cálculo con el que se estimaron sus servicios ambientales",
+      falta: "El registro guarda el nombre de la herramienta, no la corrida",
+    },
+    {
+      titulo: "Programa de manejo",
+      // El campo existe en el padrón v2 (`url_programa`) pero el lector todavía
+      // no lo recoge, así que aquí siempre llega vacío. Decir «no tiene uno
+      // registrado» sería afirmar algo que nadie comprobó.
+      url: esDireccion(e.urlPrograma) ? String(e.urlPrograma).trim() : null,
+      pie: "Las medidas de conservación acordadas para el ejemplar",
+      falta: "El registro todavía no captura este campo",
+    },
+  ];
+
+  caja.innerHTML = documentos.map((d) => d.url
+    ? `<li><a href="${esc(d.url)}"${d.propio
+         ? ' class="docs--propio"'
+         : ' target="_blank" rel="noopener" class="sin-marca-externa"'}>
+         <b>${esc(d.titulo)}${d.propio ? "" : '<span class="docs__fuera" aria-hidden="true">\u2197</span>'
+           + '<span class="vo">, abre un sitio externo</span>'}</b>
+         <span>${esc(d.pie)}</span></a></li>`
+    : `<li class="docs--sin"><span><b>${esc(d.titulo)}</b><span>${esc(d.falta)}</span></span></li>`
+  ).join("");
 
   // Un enlace que promete un documento y devuelve un 404 es peor que no
   // ofrecerlo: la persona cree que el decreto no existe. Se comprueba que el
-  // archivo esté publicado y, si no está, la tarjeta se apaga con un texto que
-  // dice la verdad. La comprobación es una sola petición de cabecera, sin
-  // descargar el PDF. Solo se hace con el decreto servido desde este sitio:
-  // una petición a un dominio ajeno la bloquea el navegador por CORS y el
-  // resultado no significaría nada.
-  const enlaceDecreto = caja.querySelector(".enlace--propia");
+  // archivo esté publicado y, si no está, el renglón pasa a apagado con un
+  // texto que dice la verdad. Es una sola petición de cabecera, sin descargar
+  // el PDF, y solo con el decreto servido desde este sitio: una petición a un
+  // dominio ajeno la bloquea el navegador por CORS y no significaría nada.
+  const enlaceDecreto = caja.querySelector(".docs--propio");
   if (enlaceDecreto && typeof fetch === "function") {
     const url = enlaceDecreto.getAttribute("href");
     if (!/^https?:\/\//i.test(url)) {
@@ -595,12 +750,13 @@ function pintarFuentes(e) {
 }
 
 function apagarDecreto(caja) {
-  const a = caja.querySelector(".enlace--propia");
+  const a = caja.querySelector(".docs--propio");
   if (!a) return;
-  const reemplazo = document.createElement("span");
-  reemplazo.className = "enlace enlace--fuente enlace--propia enlace--apagado";
-  reemplazo.innerHTML = "<b>Consultar el decreto</b><span>El documento aún no está publicado en este sitio</span>";
-  a.replaceWith(reemplazo);
+  const fila = a.closest("li");
+  if (!fila) return;
+  fila.className = "docs--sin";
+  fila.innerHTML = "<span><b>Decreto de declaratoria</b>"
+    + "<span>Todavía no está publicado en este sitio</span></span>";
 }
 
 function pintarProcedencia(e) {
@@ -637,15 +793,10 @@ function armarVisita(e) {
     boton.dataset.escuchando = "si";
     boton.addEventListener("click", () => window.print());
   }
-  const ir = document.getElementById("fComoLlegar");
-  if (ir) {
-    if (e.coords) {
-      ir.href = `https://www.google.com/maps/search/?api=1&query=${e.coords.lat},${e.coords.lng}`;
-      ir.hidden = false;
-    } else {
-      ir.hidden = true;
-    }
-  }
+  /* Aquí vivía un segundo enlace a Google Maps, idéntico al que ya está bajo
+     el mapa: «Cómo llegar» salía dos veces en la misma página. Se quedó el de
+     abajo del mapa, cuya posición está argumentada —quien ya vio dónde está el
+     árbol es quien quiere trazar la ruta—. Este bloque solo imprime. */
 }
 
 export function pintarFicha(datos, slug) {

@@ -38,8 +38,13 @@ console.log('\n-- 1 · las capas de apilado --');
   const sueltos = cuerpo.match(/z-index:\s*-?\d+/g) || [];
   t('Ningún z-index numérico suelto en el cuerpo de la hoja',
     sueltos.length === 0, sueltos.join(', '));
+  /* El piso bajó de 30 a 29 el 23 de agosto: el encabezado de la ficha pasó a
+     papel y con él se retiró la banda de degradado que separaba el campo
+     oscuro del cuerpo. Esa regla era uno de los usos contados. Se baja el piso,
+     no se inventa un uso para conservarlo: lo que esta prueba vigila es que
+     nadie escriba un z-index numérico, y de eso se encarga la de arriba. */
   t('Todos los z-index del cuerpo usan un token',
-    (cuerpo.match(/z-index:var\(--capa-/g) || []).length >= 30);
+    (cuerpo.match(/z-index:var\(--capa-/g) || []).length >= 29);
   // Las del mapa no son libres y hay que decir por qué, o alguien las «ordenará».
   t('Se advierte que las capas del mapa las dicta Leaflet',
     /numeración\s*\n?\s*interna de Leaflet/.test(bruto) && /entre 400 y 700/.test(bruto));
