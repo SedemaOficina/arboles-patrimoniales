@@ -2182,18 +2182,46 @@ body.sin-desplazamiento{overflow:hidden}
   /* El enlace de salto se dibujaba encima del texto al imprimir: en papel no
      hay recorrido de teclado del que saltar. */
   .saltar,
-  .barra, .pie, #fVisita, .deslizador, .vista-calle, .galeria, .galeria__pie,
-  .galeria__tira, .mapa-caja, .escala__lienzo, .escala__pie, .eje, .bosque,
+  .barra, .pie, #fVisita, .deslizador, .vista-calle,
+  .galeria__tiras, .galeria__tira, .galeria__contador,
+  .mapa-caja, .eje, .bosque,
   .glosario-servicios, .cobertura, .migas, .sello, .boton, .enlace,
-  .enlace--apagado, .ubicacion__accion, #fTituloGaleria, #fGuiaGaleria,
+  .enlace--apagado, .ubicacion__accion, #fGuiaGaleria,
   .ficha-portada .rotulo, .vista-calle__pie { display: none !important; }
   /* Secciones que se quedan sin contenido al retirar lo interactivo. */
-  .bloque:has(> .envoltura > #fGaleria),
   div:has(> #fVistaCalle) { display: none !important; }
-  /* La ilustración a escala se va; las medidas que la acompañan se quedan,
-     ocupando el ancho completo. */
-  .escala { display: block !important; }
-  .escala + .guia, .bloque:has(#fEscala) > .envoltura > .guia { display: none !important; }
+
+  /* --- la fotografía del ejemplar --- */
+  /* Antes no viajaba ninguna imagen al papel: se imprimía un formulario de
+     texto. Una ficha de campo sin la foto del árbol no sirve para reconocerlo
+     al llegar, que es justo para lo que se imprime. Va una sola —la de
+     portada—, sin la tira de miniaturas ni el contador, que solo sirven para
+     navegar, y sin el relleno desenfocado: en pantalla hace que el encuadre se
+     lea intencional, en papel es una mancha de tinta. */
+  .galeria { display: block !important; }
+  .galeria__principal { height: 62mm !important; width: max-content !important;
+    max-width: 100% !important; margin: 0 auto !important;
+    background: #fff !important; border: .5pt solid #bbb !important;
+    break-inside: avoid; overflow: hidden; }
+  .galeria__principal::before { display: none !important; }
+  .galeria__principal img { height: 100% !important; width: auto !important;
+    max-width: 100% !important; object-fit: contain !important;
+    box-shadow: none !important; }
+  .galeria__pie { font-size: 7.5pt; color: #444; margin: 1.5mm 0 0 !important;
+    max-width: none !important; text-align: left !important; }
+
+  /* --- la lámina a escala --- */
+  /* El dibujo con sus cotas es lo que deja comparar el árbol que tienes
+     enfrente con lo que dice la tabla: en una ficha de campo se queda. Las
+     medidas pasan a una sola columna a su lado, que a este ancho se lee mejor
+     que la retícula de dos.
+     Las cotas se recalculan al ancho de la hoja desde ficha-logica.js. Sin ese
+     repintado están medidas contra el ancho de la pantalla y caen fuera del
+     dibujo. */
+  .escala { display: grid !important; grid-template-columns: 1fr 1fr;
+    gap: 0 6mm; align-items: start; }
+  .escala__lienzo { background: #fff !important; }
+  .escala__pie { font-size: 7pt; color: #444; margin-top: 1mm; }
 
   /* --- membrete --- */
   /* El logotipo institucional mide 13.65 de ancho por 1 de alto: en un
@@ -2212,8 +2240,8 @@ body.sin-desplazamiento{overflow:hidden}
     padding: 0 !important; margin: 0 !important; max-width: none !important; }
   /* Las secciones sí pueden partirse entre hojas: forzarlas enteras dejaba
      media página en blanco antes de cada salto. Lo que no se parte es el
-     bloque pequeño —un grupo de cifras, un renglón— y ningún título queda
-     huérfano al pie gracias a break-after en h2. */
+     bloque pequeño —un grupo de cifras, un renglón— y el título, que viaja
+     pegado a lo que titula. */
   .bloque, .seccion { border-top: .5pt solid #bbb; padding-top: 4mm !important;
     margin-top: 4mm !important; }
   .grupo, .medida, .dato-linea, .hoja-pie, .observacion { break-inside: avoid; }
@@ -2237,9 +2265,14 @@ body.sin-desplazamiento{overflow:hidden}
   .ficha-portada::before, .ficha-portada::after, .bloque--oscuro::before { display: none !important; }
 
   /* --- tipografía y aire --- */
+  /* break-after no basta: sin break-inside el propio título se parte, y en la
+     primera hoja quedaba el acento de «CÓMO LLEGAR» solo al pie. El rótulo que
+     antecede al título viaja con él por la misma razón. */
+  h1, h2, h3 { break-inside: avoid; }
   h1 { font-size: 19pt; line-height: 1.05; margin: 0 0 1mm; }
   h2 { font-size: 12pt; break-after: avoid; margin: 0 0 2mm; }
   h3 { font-size: 9.5pt; break-after: avoid; }
+  .rotulo { break-after: avoid; }
   .guia { font-size: 8.5pt; margin: 0 0 3mm; }
   .binomio { font-size: 12pt; margin: 0 0 1mm; }
   .resumen { gap: 0 !important; grid-template-columns: repeat(4, 1fr) !important; }
@@ -2254,13 +2287,32 @@ body.sin-desplazamiento{overflow:hidden}
     break-inside: avoid; -webkit-column-break-inside: avoid; font-size: 8.5pt; }
   .dato-linea dt { flex: 0 0 26mm; }
   .domicilio { font-size: 11pt; margin: 0 0 3mm; }
-  .medidas { display: grid !important; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+  /* Una sola columna: las medidas ya no ocupan el ancho de la hoja, comparten
+     el renglón con el dibujo. */
+  .medidas { display: grid !important; grid-template-columns: 1fr; }
   .medida { padding: 1.1mm 0 !important; border-top: .4pt solid #ddd !important; }
 
   /* --- servicios: cuatro grupos en dos columnas --- */
   .grupos { grid-template-columns: 1fr 1fr !important; gap: 3mm !important; }
   .grupo__fila { padding: 1.1mm 0; font-size: 8.5pt; border-top: .4pt solid #ddd; }
   .grupo__nota { font-size: 7.5pt; margin-top: 2mm; padding-top: 1.5mm; }
+  /* Las cifras destacadas se rehicieron como .cifra-serv después de escribir
+     esta hoja: el número va en blanco sobre el bloque profundo y en papel
+     salía blanco sobre blanco. Se imprimían solo las unidades, flotando solas.
+     Apagar el fondo no basta: hay que devolverle color al texto, y también al
+     relleno, que es lo que pinta el número. */
+  .grupo--cifras, .grupo--destacada, .cifra-serv { background: #fff !important; }
+  .grupo__cifras { display: grid !important; grid-template-columns: 1fr 1fr;
+    gap: 0 6mm; }
+  .cifra-serv { break-inside: avoid; padding: 1.1mm 0 !important;
+    border-top: .4pt solid #ddd; text-align: left !important; }
+  .cifra-serv b, .cifra-serv b u, .cifra-serv span, .cifra-serv .sin-dato {
+    color: #000 !important; -webkit-text-fill-color: #000 !important;
+    background: none !important; }
+  .cifra-serv b { font-size: 12pt !important; line-height: 1.1 !important;
+    margin: 0 !important; }
+  .cifra-serv b u { font-size: 7.5pt; text-decoration: none; margin-left: 1mm; }
+  .cifra-serv span { font-size: 8pt !important; display: block; line-height: 1.3; }
   .dos-columnas { gap: 8mm !important; }
 
   /* --- pie de la hoja --- */
@@ -2268,11 +2320,17 @@ body.sin-desplazamiento{overflow:hidden}
     border-top: 1pt solid var(--jacaranda); break-inside: avoid; }
   .hoja-pie p { margin: 0 0 1.5mm; font-size: 7.5pt; line-height: 1.4; color: #444; }
 
-  /* Un enlace impreso sin su dirección es un callejón sin salida. Solo se
-     expanden los que alguien va a teclear: el decreto y las fuentes normativas. */
-  #fDecreto a::after, .norma__fuente::after { content: " (" attr(href) ")";
-    font-size: 7pt; word-break: break-all; }
-  #fDecreto a, #fEnlaces a { display: inline; border: 0; padding: 0; }
+  /* Un enlace impreso sin su dirección es un callejón sin salida. La regla
+     apuntaba a #fDecreto y .norma__fuente, que desaparecieron cuando el
+     expediente pasó a ser una lista de enlaces: en papel quedaban los cinco
+     documentos sin una sola dirección. Ojo con la especificidad: la marca de
+     enlace externo se apaga con a[target="_blank"].sin-marca-externa::after,
+     que le gana a .docs a::after por peso, no solo por orden. */
+  .docs a[href]::after { content: " " attr(href) !important; font-size: 6.5pt;
+    word-break: break-all; display: block; color: #333; margin-top: .6mm; }
+  .docs__fuera { display: none !important; }
+  .docs li { break-inside: avoid; }
+  .docs a, .docs li > span { padding: 1.6mm 2.5mm !important; gap: 0 !important; }
   a { color: #000 !important; text-decoration: underline; }
 }
 
@@ -3702,7 +3760,8 @@ function indicadoresPadron(lista, totalPadron) {
   const edad = sumar(lista, (e) => e.edadEstimada);
   const lluvia = sumar(lista, (e) => S(e).precipitacionInterceptada_L);
   const escurr = sumar(lista, (e) => S(e).escorrentiaReducida_L);
-  const carbono = sumar(lista, (e) => S(e).carbonoSecuestrado_kg);
+  // El carbono elemental salió del padrón v2: se publica el CO₂ equivalente,
+  // que es la misma cantidad en la unidad de la convención internacional.
   const co2 = sumar(lista, (e) => S(e).co2Absorbido_kg);
 
   const porAlcaldia = {};
@@ -3743,12 +3802,13 @@ function indicadoresPadron(lista, totalPadron) {
       texto: "Menos agua corriendo por las calles, y con ello menos encharcamientos.",
       nota: cobertura(escurr) },
 
-    { clave: "carbono", titulo: "Carbono secuestrado", cifra: fmt(carbono.valor, 1), unidad: uni(carbono.valor, "kg al año"),
-      texto: "Retirado de la atmósfera y almacenado en el tronco, las ramas y las raíces.",
-      nota: cobertura(carbono) },
-
+    /* Un solo indicador de clima. «Carbono secuestrado» y «Absorción de CO₂
+       equivalente» eran la misma cantidad en dos unidades, una debajo de la
+       otra: quien las leía seguidas contaba dos veces la misma captura. Se
+       conserva el CO₂ equivalente, que es la unidad en la que se reportan los
+       compromisos climáticos, con la explicación de dónde queda el carbono. */
     { clave: "co2", titulo: "Absorción de CO₂ equivalente", cifra: fmt(co2.valor, 1), unidad: uni(co2.valor, "kg al año"),
-      texto: "Gases de efecto invernadero que dejan de estar en el aire de la ciudad.",
+      texto: "Retirado de la atmósfera y almacenado en el tronco, las ramas y las raíces.",
       nota: cobertura(co2) },
   ];
 }
@@ -4557,6 +4617,690 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
 
 window.crearMapa=crearMapa;window.filtrar=filtrar;window.TAMANO_PIN=TAMANO_PIN;window.TOQUE_PIN=TOQUE_PIN;
 })();
+;(function(){
+/**
+ * LECTOR DEL PADRÓN v2
+ * ---------------------------------------------------------------------------
+ * Convierte el CSV publicado de la hoja «Salida_Publica» en la misma estructura
+ * {ejemplares, meta, stats} que hoy consume el sitio, para que el cambio de
+ * fuente sea un reemplazo y no una reescritura.
+ *
+ * NO SE CONECTA A NADA. No pide la red, no toca el DOM, no lee localStorage.
+ * Recibe texto y devuelve datos. Esa es toda su superficie, y es a propósito:
+ * la fase que lo conecta es otra, y hasta entonces este archivo se puede
+ * romper sin tirar el sitio.
+ *
+ * Las reglas no viven aquí: viven en datos/contrato-v2.json, que es el
+ * documento que el área de datos revisa. Este archivo las aplica.
+ */
+
+/* ── 1 · El analizador de CSV ──────────────────────────────────────────────
+   Escrito a mano, treinta líneas, sin dependencia de CDN. El CSV del padrón
+   trae comas dentro de las comillas («Ten., 1853»), comillas dobladas dentro
+   de los textos («Colectivo ""Los Vecinos del Fresno"", A.C.») y saltos de línea
+   dentro de las observaciones. Las tres cosas son RFC 4180 y las tres se
+   prueban en las aserciones. */
+function analizarCSV(texto) {
+  const s = String(texto || "").replace(/^\uFEFF/, "");
+  const filas = [];
+  let fila = [], campo = "", entreComillas = false, i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (entreComillas) {
+      if (c === '"') {
+        if (s[i + 1] === '"') { campo += '"'; i += 2; continue; }
+        entreComillas = false; i++; continue;
+      }
+      campo += c; i++; continue;
+    }
+    if (c === '"') { entreComillas = true; i++; continue; }
+    if (c === ",") { fila.push(campo); campo = ""; i++; continue; }
+    if (c === "\r") { i++; continue; }
+    if (c === "\n") { fila.push(campo); filas.push(fila); fila = []; campo = ""; i++; continue; }
+    campo += c; i++;
+  }
+  if (campo !== "" || fila.length) { fila.push(campo); filas.push(fila); }
+  // Una última fila de un solo campo vacío es el salto final del archivo.
+  return filas.filter((f) => !(f.length === 1 && f[0].trim() === ""));
+}
+
+/* ── 2 · Limpieza de valores ───────────────────────────────────────────── */
+
+/** Vacío, espacios en blanco y los marcadores de nulo del padrón dan null. */
+function limpiar(v) {
+  const t = String(v == null ? "" : v).trim();
+  if (!t) return null;
+  if (/^(n\/?a|s\/?d|sin dato|sin determinar|-{1,2}|\.)$/i.test(t)) return null;
+  return t;
+}
+
+/**
+ * Número tolerante. Hoy la hoja entrega «1240.50» en crudo, pero el CSV se
+ * exporta con el valor MOSTRADO: basta que alguien reformatee una columna en
+ * Sheets para que vuelva «1,240.50», y Number() de eso es NaN. La limpieza se
+ * queda como defensa permanente, no como parche de un defecto ya corregido.
+ */
+function aNumero(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const n = Number(t.replace(/\s/g, "").replace(/,(?=\d{3}\b)/g, "").replace(/[^\d.eE+-]/g, ""));
+  return Number.isFinite(n) ? n : null;
+}
+
+const MESES = ["enero","febrero","marzo","abril","mayo","junio",
+               "julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+/**
+ * Fecha tolerante a las tres formas que la hoja sabe entregar:
+ *   aaaa-mm-dd  · la de hoy, ISO
+ *   dd/mm/aaaa  · la que salía antes de corregir el formato
+ *   46249       · número de serie de la hoja de cálculo
+ * Devuelve la misma forma de objeto que usa el registro v1.
+ */
+function aFecha(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  let a, m, d;
+  let mm;
+  if ((mm = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(t))) {
+    [, a, m, d] = mm;
+  } else if ((mm = /^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/.exec(t))) {
+    [, d, m, a] = mm;
+  } else if (/^\d{5}(\.0+)?$/.test(t)) {
+    // Serie de la hoja: día 1 = 31/dic/1899, y la hoja hereda de Lotus el
+    // 29 de febrero de 1900 que nunca existió; por eso el ajuste de dos días.
+    const ms = (Number(t) - 25569) * 86400000;
+    const f = new Date(ms);
+    a = f.getUTCFullYear(); m = f.getUTCMonth() + 1; d = f.getUTCDate();
+  } else {
+    return { texto: t, iso: null, legible: t, anio: null, sospechosa: true };
+  }
+  a = Number(a); m = Number(m); d = Number(d);
+  if (!(m >= 1 && m <= 12) || !(d >= 1 && d <= 31)) {
+    return { texto: t, iso: null, legible: t, anio: null, sospechosa: true };
+  }
+  const p = (n) => String(n).padStart(2, "0");
+  return {
+    texto: t,
+    iso: `${a}-${p(m)}-${p(d)}`,
+    legible: `${d} de ${MESES[m - 1]} de ${a}`,
+    anio: a,
+  };
+}
+
+/** SÍ/NO del padrón a booleano. Cualquier otra cosa es null, no false. */
+function aSiNo(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  if (/^s[ií]$/i.test(t)) return true;
+  if (/^no$/i.test(t)) return false;
+  return null;
+}
+
+function aSlug(v) {
+  return String(v || "").normalize("NFD").replace(/[\u0300-\u036F]/g, "")
+    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+/** El código postal de la Ciudad lleva cinco dígitos y conserva el cero. */
+function aCP(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const d = t.replace(/\D/g, "");
+  return d ? d.padStart(5, "0").slice(0, 5) : null;
+}
+
+/**
+ * Street View. Llega listo para src, pero nunca se confía: se valida el
+ * prefijo aquí y quien lo pinte debe crear el <iframe> por código, jamás por
+ * innerHTML. Una dirección que no sea de Google Maps no se devuelve.
+ */
+function aVistaCalle(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const url = /<iframe/i.test(t) ? (/\bsrc\s*=\s*"([^"]+)"/i.exec(t) || [])[1] : t;
+  if (!url || !/^https:\/\/www\.google\.com\/maps\/embed\?/.test(url)) return null;
+  return { tipo: "panorama", url };
+}
+
+/** Del vínculo de Drive se extrae el id que va entre /d/ y la diagonal. */
+function idDeDrive(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const m = /\/d\/([A-Za-z0-9_-]+)/.exec(t);
+  return m ? m[1] : null;
+}
+
+/* ── 3 · De una fila del CSV a un ejemplar ─────────────────────────────── */
+
+/**
+ * El rango se cobra sobre el DATO, no sobre la FILA. Un ejemplar con la altura
+ * mal capturada sigue siendo un ejemplar: se publica sin altura y el aviso
+ * queda escrito con nombre y apellido para que alguien lo corrija en la hoja.
+ */
+function enRango(clave, n, rangos, avisos, id) {
+  if (n === null) return null;
+  const r = rangos && rangos[clave];
+  if (!r) return n;
+  if (n < r.min || n > r.max) {
+    avisos.push(`${id || "sin id"} · ${clave} = ${n} queda fuera del rango ${r.min}–${r.max} (${r.de}). No se publica ese dato.`);
+    return null;
+  }
+  return n;
+}
+
+const CATEGORIAS = [
+  ["centenario", "CENTENARIO"], ["historico", "HISTORICO"],
+  ["notable", "NOTABLE"], ["singular", "SINGULAR"],
+];
+
+function construirEjemplar(f, contrato, avisos) {
+  const rangos = (contrato && contrato.rangos) || {};
+  const id = limpiar(f.id);
+  const num = (k) => enRango(k, aNumero(f[k]), rangos, avisos, id);
+
+  // Las banderas mandan sobre la columna concatenada: son cuatro valores de
+  // catálogo, y «categorias» es su resumen. Si discrepan, gana el catálogo.
+  const categorias = CATEGORIAS.filter(([k]) => aSiNo(f[k]) === true).map(([, v]) => v);
+  const resumen = (limpiar(f.categorias) || "").split(/\s*,\s*/).filter(Boolean)
+    .map((s) => aSlug(s).toUpperCase());
+  if (resumen.length && resumen.join("|") !== categorias.join("|")) {
+    avisos.push(`${id} · la columna «categorias» dice «${resumen.join(", ")}» y las banderas dicen «${categorias.join(", ") || "ninguna"}». Se publican las banderas.`);
+  }
+
+  const lat = enRango("latitud", aNumero(f.latitud), rangos, avisos, id);
+  const lng = enRango("longitud", aNumero(f.longitud), rangos, avisos, id);
+
+  // pueblo_barrio nunca llega vacío: son tres estados, y solo uno se publica.
+  const pb = limpiar(f.pueblo_barrio);
+  const puebloBarrio = pb && !/^(no aplica|por confirmar)$/i.test(pb) ? pb : null;
+
+  const e = {
+    id,
+    consecutivo: id ? id.slice(-4) : null,          // el folio ya no viaja aparte
+    codAlcaldia: id ? (id.split("-")[1] || null) : null,
+    nombreAsignado: limpiar(f.nombre_asignado),
+    slug: aSlug(f.nombre_asignado),
+    nombreComun: limpiar(f.nombre_comun),
+    especie: limpiar(f.nombre_cientifico),
+    nominadoPor: limpiar(f.nomino),
+    fechaNominacion: null,                          // retirado en el v2
+    categorias,
+    categoriaDominante: categorias[0] || null,
+    situacionCategoria: categorias.length ? "asignada" : "pendiente",
+    fechaDecreto: aFecha(f.fecha_decreto),
+    linkDecreto: limpiar(f.drive_decreto),
+    idDecretoDrive: idDeDrive(f.drive_decreto),
+    alcaldia: limpiar(f.alcaldia),
+    ubicacion: {
+      calle: limpiar(f.calle),
+      numero: limpiar(f.num_ext),
+      colonia: limpiar(f.colonia),
+      cp: aCP(f.cp),
+      entreCalles: [limpiar(f.entre_1), limpiar(f.entre_2)].filter(Boolean),
+      referencias: limpiar(f.referencias),
+      tipo: limpiar(f.tipo_ubicacion),
+      sueloConservacion: aSiNo(f.suelo_conservacion),
+      puebloBarrio,
+      puebloBarrioEstado: pb,
+    },
+    coords: lat !== null && lng !== null ? { lat, lng } : null,
+    coordsValidas: lat !== null && lng !== null,
+    utm: aNumero(f.utm_x) !== null && aNumero(f.utm_y) !== null
+      ? `${limpiar(f.utm_x)}; ${limpiar(f.utm_y)}` : null,
+    taxonomia: {
+      reino: limpiar(f.reino), phylum: limpiar(f.phylum), clase: limpiar(f.clase),
+      orden: limpiar(f.orden), familia: limpiar(f.familia), genero: limpiar(f.genero),
+      autor: limpiar(f.autor), infraespecie: null,
+      formaCrecimiento: limpiar(f.forma_crecimiento), ambiente: limpiar(f.ambiente),
+    },
+    conservacion: {
+      iucn: limpiar(f.iucn), nom059: limpiar(f.nom059), cites: limpiar(f.cites),
+      prioritaria: limpiar(f.prioritaria), prioridad: limpiar(f.nivel_prioridad),
+      endemismo: limpiar(f.endemismo), origen: null,
+      exoticaInvasora: limpiar(f.exotica_invasora),
+      esExotica: /exótica|exotica/i.test(limpiar(f.exotica_invasora) || ""),
+    },
+    urlSNIB: limpiar(f.url_snib),
+    urlOrigen: limpiar(f.url_observacion),
+    morfologia: {
+      altura_m: num("altura_m"),
+      diametro_cm: num("dap_cm"),
+      circunferencia_cm: num("circunferencia_cm"),
+      anchoCopa_m: num("ancho_copa_m"),
+      largoCopa_m: num("largo_copa_m"),
+      extensionCopa_m: num("extension_copa_m"),
+    },
+    condicion: limpiar(f.condicion_general),
+    estructura: limpiar(f.estructura_general),
+    edadEstimada: num("edad_estimada"),
+    expectativaVida: limpiar(f.expectativa_vida),
+    observaciones: limpiar(f.obs_publicas),
+    vistaCalle: aVistaCalle(f.street_view),
+    fotos: [],                                      // viven en el repositorio
+    _compuertaITree: limpiar(f.validacion_itree),
+  };
+
+  /* El bloque ambiental es todo o nada. La compuerta viaja precisamente para
+     que el sitio sepa DECIR por qué no hay cifras, en lugar de callar. */
+  const validado = e._compuertaITree === "Validado";
+  const moneda = limpiar(f.moneda_itree);
+  const cifra = (k) => (validado ? aNumero(f[k]) : null);
+  e.serviciosAmbientales = {
+    // Sin moneda no se publica el importe: un número sin unidad no dice nada.
+    beneficioEconomico_moneda: validado && moneda ? aNumero(f.beneficio_economico) : null,
+    moneda: validado ? moneda : null,
+    carbonoSecuestrado_kg: null,   // retirado: se publica el CO₂ equivalente
+    co2Absorbido_kg: cifra("co2_eq_kg"),
+    escorrentiaReducida_L: cifra("escorrentia_l"),
+    precipitacionInterceptada_L: cifra("precip_interceptada_l"),
+    coEliminado_g: cifra("elim_co_g"),
+    ozonoEliminado_g: cifra("elim_o3_g"),
+    no2Eliminado_g: cifra("elim_no2_g"),
+    so2Eliminado_g: cifra("elim_so2_g"),
+    pm25Eliminado_g: cifra("elim_pm25_g"),
+    ahorroElectricidad_kWh: cifra("ahorro_kwh"),
+    emisionesEvitadasCO2_kg: cifra("evit_co2_kg"),
+    emisionesEvitadasCO_g: cifra("evit_co_g"),
+    emisionesEvitadasNO2_g: cifra("evit_no2_g"),
+    emisionesEvitadasSO2_g: cifra("evit_so2_g"),
+    emisionesEvitadasPM25_g: cifra("evit_pm25_g"),
+  };
+  e.linkITree = validado && /^https?:\/\/\S+$/i.test(limpiar(f.url_itree) || "")
+    ? limpiar(f.url_itree) : null;
+  e.tieneCifrasAmbientales = Object.entries(e.serviciosAmbientales)
+    .some(([k, v]) => k !== "moneda" && typeof v === "number");
+
+  if (validado && e.tieneCifrasAmbientales && !e.linkITree) {
+    avisos.push(`${id} · el bloque de i-Tree está validado y trae cifras, pero sin la liga de la corrida. La cifra no se puede rastrear.`);
+  }
+  if (validado && aNumero(f.beneficio_economico) !== null && !moneda) {
+    avisos.push(`${id} · hay beneficio económico sin moneda. No se publica el importe.`);
+  }
+  return e;
+}
+
+/* ── 4 · Del texto completo al registro ────────────────────────────────── */
+
+/**
+ * Única puerta de entrada. Recibe el texto del CSV y el contrato ya leído, y
+ * devuelve {ejemplares, meta, stats} con la forma que el sitio ya consume.
+ *
+ * La compuerta del ejemplar («estado» = Publicado) la aplica la hoja, no este
+ * archivo: al CSV público no llegan los no publicados. Aquí solo se descarta
+ * la fila sin id, que es el filtro que el contrato declara suficiente.
+ */
+function construirRegistro(texto, contrato) {
+  const filas = analizarCSV(texto);
+  const avisos = [];
+  const descartadas = [];
+  if (!filas.length) {
+    return { ejemplares: [], meta: metaVacia("El CSV llegó vacío."), stats: calcularStats([]) };
+  }
+
+  const encabezado = filas[0].map((h) => String(h).trim());
+  const esperado = (contrato && contrato.campos || []).map((c) => c.clave);
+  const faltantes = esperado.filter((k) => !encabezado.includes(k));
+  const sobrantes = encabezado.filter((k) => k && !esperado.includes(k));
+
+  const ejemplares = [];
+  for (let i = 1; i < filas.length; i++) {
+    const f = {};
+    encabezado.forEach((h, j) => { f[h] = filas[i][j]; });
+    if (!limpiar(f.id)) {
+      descartadas.push({ fila: i + 1, motivo: "sin id", nombre: limpiar(f.nombre_asignado) });
+      continue;
+    }
+    ejemplares.push(construirEjemplar(f, contrato, avisos));
+  }
+
+  const vistos = new Map();
+  ejemplares.forEach((e) => {
+    if (vistos.has(e.id)) avisos.push(`El id ${e.id} viene repetido. El id es la llave: dos ejemplares no pueden compartirlo.`);
+    vistos.set(e.id, true);
+  });
+  const slugs = new Map();
+  ejemplares.forEach((e) => {
+    if (e.slug && slugs.has(e.slug)) avisos.push(`Dos ejemplares comparten la dirección «${e.slug}»: ${slugs.get(e.slug)} y ${e.id}. La ficha de uno taparía la del otro.`);
+    else if (e.slug) slugs.set(e.slug, e.id);
+  });
+  if (faltantes.length) avisos.push(`La hoja no trae ${faltantes.length} columna(s) del contrato: ${faltantes.join(", ")}.`);
+  if (sobrantes.length) avisos.push(`La hoja trae ${sobrantes.length} columna(s) que el contrato no conoce: ${sobrantes.join(", ")}. No se leen.`);
+
+  const meta = {
+    schemaVersion: 7,
+    origen: "csv-padron-v2",
+    filasLeidas: filas.length - 1,
+    totalEjemplares: ejemplares.length,
+    filasDescartadas: descartadas,
+    columnasFaltantes: faltantes,
+    columnasNoReconocidas: sobrantes,
+    advertencias: avisos,
+    sinCifrasAmbientales: ejemplares.filter((e) => !e.tieneCifrasAmbientales)
+      .map((e) => ({ id: e.id, compuerta: e._compuertaITree })),
+    sinCoordenadas: ejemplares.filter((e) => !e.coordsValidas).map((e) => e.id),
+    sinFoto: ejemplares.filter((e) => !e.fotos.length).map((e) => e.id),
+  };
+  return { ejemplares, meta, stats: calcularStats(ejemplares) };
+}
+
+function metaVacia(motivo) {
+  return { schemaVersion: 7, origen: "csv-padron-v2", filasLeidas: 0, totalEjemplares: 0,
+    filasDescartadas: [], columnasFaltantes: [], columnasNoReconocidas: [],
+    advertencias: [motivo], sinCifrasAmbientales: [], sinCoordenadas: [], sinFoto: [] };
+}
+
+/**
+ * Las sumas dicen sobre cuántos ejemplares se calcularon. Una suma que calla
+ * cuántos datos le faltaron es una suma que miente por omisión: con el bloque
+ * de i-Tree bajo compuerta, la mitad del padrón puede no tener cifras.
+ */
+function sumar(lista, f) {
+  let valor = 0, conDato = 0, sinDato = 0;
+  lista.forEach((e) => {
+    const n = f(e);
+    if (typeof n === "number" && Number.isFinite(n)) { valor += n; conDato++; }
+    else sinDato++;
+  });
+  return { valor: Math.round(valor * 100) / 100, conDato, sinDato, completo: sinDato === 0 };
+}
+
+function calcularStats(ejemplares) {
+  const S = (e) => e.serviciosAmbientales || {};
+  const alcaldias = [...new Set(ejemplares.map((e) => e.alcaldia).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  const especies = [...new Set(ejemplares.map((e) => e.especie).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  const conteoPorAlcaldia = {};
+  ejemplares.forEach((e) => { if (e.alcaldia) conteoPorAlcaldia[e.alcaldia] = (conteoPorAlcaldia[e.alcaldia] || 0) + 1; });
+  const top = Object.entries(conteoPorAlcaldia).sort((a, b) => b[1] - a[1])[0];
+  const edades = ejemplares.map((e) => e.edadEstimada).filter((n) => typeof n === "number");
+  const alturas = ejemplares.map((e) => e.morfologia.altura_m).filter((n) => typeof n === "number");
+  const cuenta = (cat) => ejemplares.filter((e) => e.categorias.includes(cat)).length;
+
+  return {
+    totalEjemplares: ejemplares.length,
+    totalAlcaldias: alcaldias.length,
+    totalEspecies: especies.length,
+    listaAlcaldias: alcaldias,
+    listaEspecies: especies,
+    totalPorCategoria: {
+      centenarios: cuenta("CENTENARIO"), historicos: cuenta("HISTORICO"),
+      notables: cuenta("NOTABLE"), singulares: cuenta("SINGULAR"),
+      otras: ejemplares.filter((e) => !e.categorias.length).length,
+    },
+    conteoPorAlcaldia,
+    alcaldiaTop: top ? { nombre: top[0], cuenta: top[1] } : null,
+    edadMaxima: edades.length ? Math.max(...edades) : null,
+    edadPromedio: edades.length ? Math.round(edades.reduce((a, b) => a + b, 0) / edades.length) : null,
+    alturaMaxima: alturas.length ? Math.max(...alturas) : null,
+    sumatoriaAltura: sumar(ejemplares, (e) => e.morfologia.altura_m),
+    // Ya no hay sumatoria de carbono: la unidad que se publica es el CO₂
+    // equivalente, que es la de la convención internacional. Quien quiera el
+    // carbono elemental lo obtiene dividiendo entre 3.667.
+    sumatoriaCO2: sumar(ejemplares, (e) => S(e).co2Absorbido_kg),
+    sumatoriaPrecipitacion: sumar(ejemplares, (e) => S(e).precipitacionInterceptada_L),
+    sumatoriaEscorrentia: sumar(ejemplares, (e) => S(e).escorrentiaReducida_L),
+    sumatoriaBeneficio: sumar(ejemplares, (e) => S(e).beneficioEconomico_moneda),
+  };
+}
+
+/* ── 5 · Búsquedas, iguales a las del registro v1 ──────────────────────── */
+const lista = (d) => (Array.isArray(d) ? d : (d && d.ejemplares) || []);
+const buscarPorSlug = (d, s) => lista(d).find((e) => e.slug === s) || null;
+const buscarPorId = (d, id) => lista(d).find((e) => e.id === id) || null;
+const porCategoria = (d, c) => lista(d).filter((e) => e.categorias.includes(String(c).toUpperCase()));
+const porAlcaldia = (d, a) => lista(d).filter((e) => e.alcaldia === a);
+const porEspecie = (d, esp) => lista(d).filter((e) => e.especie === esp);
+
+window.construirRegistro=construirRegistro;
+})();
+;(function(){
+/**
+ * LA FUENTE VIVA DEL PADRÓN
+ * ---------------------------------------------------------------------------
+ * Aquí se conecta lo que lector-v2.js deja hecho. Este archivo baja el CSV
+ * publicado de la hoja «Salida_Publica», se lo pasa al lector y devuelve el
+ * registro. No pinta nada, no decide qué se ve y no toca el DOM: de eso se
+ * encarga la portada.
+ *
+ * LA REGLA QUE GOBIERNA ESTE ARCHIVO
+ * El congelado manda hasta que la hoja demuestre que tiene algo. Un registro
+ * vivo que llega vacío no sustituye a nada: se descarta con su motivo escrito
+ * y el sitio sigue mostrando lo que ya tenía. Una hoja en blanco no puede
+ * vaciar el micrositio —ni por error de captura, ni porque Google devuelva
+ * una página de mantenimiento, ni porque alguien despublique la hoja—.
+ *
+ * Por eso todo lo de aquí devuelve `{registro, origen, motivo}` y nunca lanza
+ * hacia afuera: quien llama decide, y su decisión por defecto es no cambiar
+ * nada.
+ */
+
+
+
+/* La dirección de la hoja publicada. Vive también en datos/contrato-v2.json,
+   que es el documento que revisa el área de datos; la suite comprueba que las
+   dos digan lo mismo, para que nadie mueva una sin la otra. */
+const CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb8DIn-UxYrBo-k91vleNcsfQoMVlQjtWp4YurZHgeh-_p0pSWLt-yeWS86wKybtQfj1D4wveAEtyw/pub?gid=283285465&single=true&output=csv";
+
+const ESQUEMA = 7;                       // sube al cambiar la forma del ejemplar
+const CLAVE_CACHE = "arboles_patrimoniales_registro_v7";
+
+/* DIEZ MINUTOS, no una hora.
+   El registro cambia poco, pero cuando cambia suele ser porque alguien
+   corrigió un dato equivocado, y una fe de erratas que tarda una hora en verse
+   se siente rota. Google además sirve el CSV publicado desde su propia caché
+   de unos cinco minutos, así que bajar de diez no compra nada. */
+const VIGENCIA_MS = 10 * 60 * 1000;
+
+/* Respaldo de emergencia: si la red falla, vale más un registro de hace días
+   que ninguno. Nunca sustituye al congelado sin decirlo: viaja marcado. */
+const RESPALDO_MAX_MS = 7 * 24 * 60 * 60 * 1000;
+
+const ESPERA_MS = 12000;
+const REINTENTOS = 2;
+
+/* ── 1 · El almacén ───────────────────────────────────────────────────────
+   localStorage no siempre está: en modo privado, dentro de un iframe con
+   sandbox o con las cookies bloqueadas, el simple hecho de tocarlo lanza. Se
+   prueba escribiendo, que es la única forma honesta de saberlo. */
+function almacen(global) {
+  const g = global || (typeof globalThis !== "undefined" ? globalThis : {});
+  try {
+    const st = g.localStorage;
+    if (!st) return null;
+    const p = "__prueba_arboles__";
+    st.setItem(p, "1");
+    st.removeItem(p);
+    return st;
+  } catch (e) {
+    return null;
+  }
+}
+
+/* ── 2 · La caché ─────────────────────────────────────────────────────────
+   Nunca se guarda un registro vacío y nunca se devuelve uno vacío. Es la
+   misma regla de arriba, aplicada al disco: si lo guardado no tiene
+   ejemplares, es como si no hubiera nada guardado. */
+function leerCache({ permitirRespaldo = false, st = almacen(), ahora = Date.now() } = {}) {
+  if (!st) return null;
+  try {
+    const crudo = st.getItem(CLAVE_CACHE);
+    if (!crudo) return null;
+    const p = JSON.parse(crudo);
+    if (!p || p.esquema !== ESQUEMA) return null;
+    if (!p.registro || !Array.isArray(p.registro.ejemplares) || !p.registro.ejemplares.length) return null;
+    if (typeof p.guardadoEn !== "number") return null;
+    const edad = ahora - p.guardadoEn;
+    if (edad < 0) return null;                    // reloj movido: no se confía
+    const vigente = edad <= VIGENCIA_MS;
+    if (!vigente && !(permitirRespaldo && edad <= RESPALDO_MAX_MS)) return null;
+    return { registro: p.registro, edadMs: edad, vigente };
+  } catch (e) {
+    return null;
+  }
+}
+
+function escribirCache(registro, { st = almacen(), ahora = Date.now() } = {}) {
+  if (!st) return false;
+  if (!registro || !Array.isArray(registro.ejemplares) || !registro.ejemplares.length) return false;
+  try {
+    st.setItem(CLAVE_CACHE, JSON.stringify({ esquema: ESQUEMA, guardadoEn: ahora, registro }));
+    return true;
+  } catch (e) {
+    // Cuota llena. Se borra lo que hubiera y se sigue sin caché: la caché es
+    // una comodidad, no un requisito.
+    try { st.removeItem(CLAVE_CACHE); } catch (_) {}
+    return false;
+  }
+}
+
+function limpiarCache({ st = almacen() } = {}) {
+  if (!st) return;
+  try { st.removeItem(CLAVE_CACHE); } catch (e) {}
+}
+
+/* ── 3 · La descarga ──────────────────────────────────────────────────────
+   Tres cosas que pasan de verdad y que un fetch pelado no distingue:
+   la hoja despublicada devuelve 404; Google contesta a veces con una página
+   HTML de sesión o de mantenimiento en lugar del CSV; y la red se queda
+   colgada sin cerrar nunca. Las tres se convierten en un error con nombre. */
+async function bajarTexto(url, opciones = {}) {
+  const {
+    espera = ESPERA_MS,
+    reintentos = REINTENTOS,
+    traer = (typeof fetch !== "undefined" ? fetch : null),
+    dormir = (ms) => new Promise((r) => setTimeout(r, ms)),
+  } = opciones;
+
+  if (!traer) throw new Error("Este entorno no puede hacer peticiones de red.");
+
+  let ultimo = null;
+  for (let intento = 0; intento <= reintentos; intento++) {
+    const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const reloj = ctrl ? setTimeout(() => ctrl.abort(), espera) : null;
+    try {
+      const res = await traer(url, {
+        cache: "no-store",
+        redirect: "follow",
+        signal: ctrl ? ctrl.signal : undefined,
+      });
+      if (reloj) clearTimeout(reloj);
+      if (!res.ok) {
+        throw new Error(res.status === 404
+          ? "La hoja publicada no responde (404). Puede haberse despublicado o cambiado de dirección."
+          : `La hoja publicada respondió HTTP ${res.status}.`);
+      }
+      const texto = await res.text();
+      if (/^\s*<(!doctype|html)/i.test(texto)) {
+        throw new Error("Google devolvió una página HTML en lugar del CSV. Revisa que la hoja siga publicada en la web.");
+      }
+      return texto;
+    } catch (err) {
+      if (reloj) clearTimeout(reloj);
+      ultimo = err && err.name === "AbortError"
+        ? new Error("La descarga del registro excedió el tiempo de espera.")
+        : err;
+      if (intento < reintentos) await dormir(400 * Math.pow(2, intento));
+    }
+  }
+  throw ultimo || new Error("No fue posible descargar el registro.");
+}
+
+/* ── 4 · La huella ────────────────────────────────────────────────────────
+   Sirve para no repintar cuando no cambió nada. Repintar de balde no es
+   gratis: tira el mapa y lo vuelve a montar delante de quien lo está usando.
+   La huella toma lo que se ve, no el objeto entero, para que un cambio de
+   diagnóstico interno no cuente como cambio de contenido. */
+function huella(registro) {
+  const lista = (registro && registro.ejemplares) || [];
+  return JSON.stringify(lista.map((e) => [
+    e.id, e.nombreAsignado, e.especie, e.alcaldia,
+    (e.categorias || []).join("|"),
+    e.fechaDecreto && e.fechaDecreto.iso,
+    e.coords && e.coords.lat, e.coords && e.coords.lng,
+    e.morfologia && e.morfologia.altura_m,
+    e.edadEstimada, e.condicion, e.tieneCifrasAmbientales,
+  ]).sort());
+}
+
+function hayCambio(anterior, nuevo) {
+  return huella(anterior) !== huella(nuevo);
+}
+
+/* ── 5 · La puerta ────────────────────────────────────────────────────────
+ * Única función que llama la portada. Devuelve SIEMPRE la misma forma:
+ *
+ *   { registro, origen, motivo, edadMs }
+ *
+ * `registro` es null cuando no hay nada que sustituya al congelado, y
+ * entonces `motivo` dice por qué, en una frase que se puede leer en la
+ * consola sin conocer el código. `origen` distingue de dónde salió lo que se
+ * devuelve: "red", "cache", "respaldo".
+ *
+ * No lanza nunca. Un fallo de red no debe tumbar la portada.
+ */
+async function cargarEnVivo(opciones = {}) {
+  const {
+    contrato,
+    url = CSV_URL,
+    forzar = false,
+    st = almacen(),
+    ahora = Date.now(),
+    construir = construirRegistro,
+    bajar = bajarTexto,
+    espera = ESPERA_MS,
+    reintentos = REINTENTOS,
+    traer,
+  } = opciones;
+
+  if (!contrato || !Array.isArray(contrato.campos)) {
+    return { registro: null, origen: null, motivo: "No se recibió el contrato del registro: sin él no se puede leer la hoja." };
+  }
+
+  if (!forzar) {
+    const c = leerCache({ st, ahora });
+    if (c) return { registro: c.registro, origen: "cache", motivo: null, edadMs: c.edadMs };
+  }
+
+  try {
+    const texto = await bajar(url, { espera, reintentos, traer });
+    const registro = construir(texto, contrato);
+
+    /* LA GUARDIA. Aquí es donde el congelado gana.
+       Hoy la hoja está vacía a propósito —el equipo todavía no captura—, así
+       que este camino es el normal, no la excepción. */
+    if (!registro || !registro.ejemplares.length) {
+      const leidas = (registro && registro.meta && registro.meta.filasLeidas) || 0;
+      return {
+        registro: null,
+        origen: "red",
+        motivo: leidas
+          ? `La hoja respondió con ${leidas} fila(s), ninguna con id: no hay ejemplares publicados. Se conserva el registro anterior.`
+          : "La hoja respondió sin ninguna fila. Se conserva el registro anterior.",
+      };
+    }
+
+    escribirCache(registro, { st, ahora });
+    return { registro, origen: "red", motivo: null, edadMs: 0 };
+  } catch (err) {
+    /* Respaldo: antes que dejar el sitio sin actualizar, se acepta lo guardado
+       hasta hace siete días, pero marcado como viejo para que quien lo lea lo
+       sepa. Y si tampoco hay respaldo, no pasa nada: el congelado sigue ahí. */
+    const r = leerCache({ permitirRespaldo: true, st, ahora });
+    if (r) {
+      return {
+        registro: r.registro,
+        origen: "respaldo",
+        edadMs: r.edadMs,
+        motivo: `No se pudo actualizar el registro (${err.message}). Se muestra lo guardado.`,
+      };
+    }
+    return { registro: null, origen: null, motivo: `No se pudo actualizar el registro (${err.message}). Se conserva el registro publicado con el sitio.` };
+  }
+}
+
+window.cargarEnVivo=cargarEnVivo;window.hayCambio=hayCambio;window.CSV_URL=CSV_URL;
+})();
 /* Árboles patrimoniales · lógica de la portada.
    Consume la estructura que emite patrimoniales-loader.js v2. */
 
@@ -4971,31 +5715,104 @@ function pintarPadron(ejemplares, stats) {
   }
 }
 
+/* ─── EL REGISTRO VIGENTE Y LA CAPA EN VIVO ────────────────────────────────
+   La página nace con el registro congelado incrustado en el propio archivo:
+   se ve completa sin esperar a nadie, y se ve igual si Google no responde.
+   Encima de eso, y SOLO si la hoja publicada demuestra que trae algo, se
+   sustituye por lo que el equipo tenga capturado hoy.
+
+   El orden es deliberado: primero lo que ya está, después lo que llega, nunca
+   al revés. Una hoja vacía, una red caída o una publicación retirada dejan la
+   página exactamente como estaba. Hoy la hoja está vacía de verdad, así que
+   este es el camino normal, no el excepcional.
+
+   Las piezas viven fuera —padron/lector-v2.js convierte el CSV en datos y
+   padron/fuente-viva.js va por él—. El ensamblador las incrusta antes que
+   este archivo y las deja en el ámbito global. Si no están —al abrir esta
+   lógica como módulo suelto, o en las maquetas— la capa no arranca y el
+   congelado se queda: es una degradación, no un error. */
+let DATOS_VIGENTES = null;
+let vivaIniciada = false;
+
+function iniciarFuenteViva() {
+  if (vivaIniciada) return;
+  vivaIniciada = true;
+  const g = typeof globalThis !== "undefined" ? globalThis : {};
+  if (typeof g.cargarEnVivo !== "function" || !g.CONTRATO_PADRON) return;
+
+  /* Se pide DESPUÉS del primer pintado, nunca antes: la portada no espera a
+     la red para existir. El motivo de lo que pase se escribe en la consola,
+     porque quien opera el sitio necesita distinguir «la hoja está vacía» de
+     «la hoja no responde», y esas dos cosas se ven igual desde fuera. */
+  setTimeout(() => {
+    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON }).then((r) => {
+      if (r && r.motivo) console.info("[registro] " + r.motivo);
+      if (!r || !r.registro) return;
+      if (typeof g.hayCambio === "function" && !g.hayCambio(DATOS_VIGENTES, r.registro)) return;
+      pintarPortada(r.registro);
+      remontarMapa();
+    }).catch((err) => {
+      console.info("[registro] No se pudo actualizar desde la hoja: " + (err && err.message));
+    });
+  }, 0);
+}
+
 // Leaflet administra su propio árbol y revienta si se le pide construir dos
 // veces sobre el mismo contenedor. Repintar la portada —tras un reintento de
 // red, por ejemplo— abortaba el resto del render a la mitad.
-let mapaCreado = false;
+let mapaCreado = false;   // el montaje ya está programado
+let mapaVivo = null;      // el mapa ya montado, si lo está
 
 function pintarMapa(ejemplares) {
   const lienzo = document.getElementById("mapaLienzo");
   const lista = document.getElementById("mapaLista");
   const filtros = document.getElementById("mapaFiltros");
-  if (!lienzo || !lista || mapaCreado) return;
-  mapaCreado = true;
+  if (!lienzo || !lista) return;
   const conCoords = ejemplares.filter((e) => e.coords).length;
   // Cuando todos tienen coordenadas no hay nada que advertir: el mapa se
-  // explica solo. La guía únicamente aparece si falta alguno.
+  // explica solo. La guía únicamente aparece si falta alguno. Se recalcula en
+  // cada pintado —es texto, no un mapa— para que una actualización en vivo no
+  // deje el aviso hablando del registro anterior.
   const guia = document.getElementById("guiaMapa");
   guia.textContent = conCoords === ejemplares.length ? ""
     : `${conCoords} de los ${ejemplares.length} ejemplares tienen coordenadas capturadas. Los demás aparecen en el listado con su domicilio.`;
   guia.hidden = !guia.textContent;
+  if (mapaCreado) return;
+  mapaCreado = true;
   /* El mapa no se construye al cargar la página: se construye cuando la
      persona se acerca a él, que es también cuando termina de descargarse
      Leaflet. Si la descarga falla, crearMapa recibe el mundo sin L y pinta su
      propio aviso —el listado de al lado sigue siendo la vía completa al mismo
-     contenido—. */
-  const montar = () => crearMapa({ contenedor: lienzo, lista, filtros, ejemplares });
+     contenido—.
+     El montaje lee DATOS_VIGENTES y no la lista que recibió esta función: si
+     la hoja llega mientras el mapa sigue esperando a que alguien baje hasta
+     él, se monta ya con lo nuevo y no hay nada que rehacer. */
+  const montar = () => {
+    const vigentes = (DATOS_VIGENTES && DATOS_VIGENTES.ejemplares) || ejemplares;
+    mapaVivo = crearMapa({ contenedor: lienzo, lista, filtros, ejemplares: vigentes });
+  };
   cuandoSeAcerque(lienzo, montar, montar);
+}
+
+/* Rehacer el mapa cuando el registro cambió debajo de él.
+   Repintar el resto de la portada es cambiar innerHTML; el mapa no: Leaflet
+   deja marcado el contenedor y se niega a construir dos veces sobre él. Hay
+   que devolverlo a cero —quitar la instancia, vaciar el lienzo, borrar la
+   marca y retirar el aviso que el mapa inyecta en su marco— y volver a
+   montar. Si todavía no se había montado no hay nada que hacer: su montaje
+   pendiente ya leerá el registro nuevo. */
+function remontarMapa() {
+  const lienzo = document.getElementById("mapaLienzo");
+  if (!lienzo || !mapaVivo) return;
+  try { if (mapaVivo.mapa) mapaVivo.mapa.remove(); } catch (e) {}
+  mapaVivo = null;
+  mapaCreado = false;
+  lienzo.innerHTML = "";
+  delete lienzo._leaflet_id;
+  const marco = lienzo.closest(".mapa-marco") || lienzo.parentNode;
+  const aviso = marco && marco.querySelector("[data-aviso]");
+  if (aviso) aviso.remove();
+  pintarMapa((DATOS_VIGENTES && DATOS_VIGENTES.ejemplares) || []);
 }
 
 
@@ -5003,10 +5820,18 @@ function pintarServicios(stats) {
   const cobertura = (s) => s.completo
     ? `Dato completo en los ${s.conDato} ejemplares`
     : `Calculado sobre ${s.conDato} de ${s.conDato + s.sinDato} ejemplares`;
+  /* DOS CIFRAS, NO TRES.
+     Antes había una tercera baldosa, «Carbono que retiran del aire». No es
+     una medición distinta de la de al lado: el CO₂ equivalente ES ese mismo
+     carbono multiplicado por 3.667, la conversión de la convención
+     internacional. Publicadas una junto a otra, un lector razonable suma las
+     dos y cuenta dos veces la misma captura. El contrato del padrón v2 lo
+     resuelve en la fuente —el carbono elemental ya no viaja al CSV— y aquí se
+     refleja: se publica el CO₂ equivalente, que es la unidad en la que se
+     reportan los compromisos climáticos. */
   const datos = [
     [stats.sumatoriaPrecipitacion, "L", "Lluvia que interceptan sus copas al año", 0],
     [stats.sumatoriaCO2, "kg", "CO₂ equivalente que absorben al año", 0],
-    [stats.sumatoriaCarbono, "kg", "Carbono que retiran del aire cada año", 0],
   ];
   document.getElementById("listaServicios").innerHTML = datos.map(([s, u, t, d]) =>
     `<article class="servicio">
@@ -5017,7 +5842,7 @@ function pintarServicios(stats) {
 
   const incompletos = datos.filter(([s]) => !s.completo).length;
   document.getElementById("coberturaServicios").textContent = incompletos === 0
-    ? `Las tres cifras están calculadas con el dato de los ${stats.totalEjemplares} ejemplares del registro.`
+    ? `Las dos cifras están calculadas con el dato de los ${stats.totalEjemplares} ejemplares del registro.`
     : `Algunas cifras se calculan con menos ejemplares de los que integran el registro; cada tarjeta lo indica.`;
 }
 
@@ -5126,7 +5951,11 @@ function pintarMensajes() {
   });
 }
 
-function pintarPortada({ ejemplares, meta, stats }) {
+function pintarPortada(datos) {
+  const { ejemplares, stats } = datos;
+  // Lo que se está viendo ahora mismo. El mapa y la capa en vivo lo consultan
+  // en lugar de quedarse con la lista que recibieron al arrancar.
+  DATOS_VIGENTES = datos;
   pintarRedaccion();
   pintarBosque(ejemplares);
   pintarCifras(stats, ejemplares);
@@ -5135,8 +5964,10 @@ function pintarPortada({ ejemplares, meta, stats }) {
   pintarMapa(ejemplares);
   pintarServicios(stats);
   pintarMensajes();
+  iniciarFuenteViva();
 }
 
+window.CONTRATO_PADRON={"campos":[{"clave":"id"},{"clave":"estado"},{"clave":"nomino"},{"clave":"nombre_asignado"},{"clave":"nombre_comun"},{"clave":"nombre_cientifico"},{"clave":"centenario"},{"clave":"historico"},{"clave":"notable"},{"clave":"singular"},{"clave":"categorias"},{"clave":"fecha_decreto"},{"clave":"gaceta"},{"clave":"drive_decreto"},{"clave":"tiene_programa"},{"clave":"url_programa"},{"clave":"alcaldia"},{"clave":"calle"},{"clave":"num_ext"},{"clave":"colonia"},{"clave":"cp"},{"clave":"entre_1"},{"clave":"entre_2"},{"clave":"referencias"},{"clave":"tipo_ubicacion"},{"clave":"nombre_sitio"},{"clave":"suelo_conservacion"},{"clave":"pueblo_barrio"},{"clave":"latitud"},{"clave":"longitud"},{"clave":"utm_x"},{"clave":"utm_y"},{"clave":"street_view"},{"clave":"reino"},{"clave":"phylum"},{"clave":"clase"},{"clave":"orden"},{"clave":"familia"},{"clave":"genero"},{"clave":"autor"},{"clave":"idnombrecat"},{"clave":"endemismo"},{"clave":"cites"},{"clave":"iucn"},{"clave":"nom059"},{"clave":"prioritaria"},{"clave":"nivel_prioridad"},{"clave":"exotica_invasora"},{"clave":"ambiente"},{"clave":"forma_crecimiento"},{"clave":"url_snib"},{"clave":"url_observacion"},{"clave":"altura_m"},{"clave":"dap_cm"},{"clave":"altura_medicion_dap"},{"clave":"circunferencia_cm"},{"clave":"ancho_copa_m"},{"clave":"largo_copa_m"},{"clave":"extension_copa_m"},{"clave":"condicion_general"},{"clave":"estructura_general"},{"clave":"edad_estimada"},{"clave":"expectativa_vida"},{"clave":"fecha_itree"},{"clave":"moneda_itree"},{"clave":"validacion_itree"},{"clave":"url_itree"},{"clave":"beneficio_economico"},{"clave":"co2_eq_kg"},{"clave":"escorrentia_l"},{"clave":"precip_interceptada_l"},{"clave":"elim_co_g"},{"clave":"elim_o3_g"},{"clave":"elim_no2_g"},{"clave":"elim_so2_g"},{"clave":"elim_pm25_g"},{"clave":"ahorro_kwh"},{"clave":"evit_co2_kg"},{"clave":"evit_co_g"},{"clave":"evit_no2_g"},{"clave":"evit_so2_g"},{"clave":"evit_pm25_g"},{"clave":"obs_publicas"}],"rangos":{"latitud":{"min":19.02,"max":19.6,"de":"contrato, campo latitud"},"longitud":{"min":-99.36,"max":-98.94,"de":"contrato, campo longitud"},"altura_m":{"min":1,"max":60,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 4"},"dap_cm":{"min":5,"max":500,"de":"NADF-001-RNAT-2015, numeral 4"},"ancho_copa_m":{"min":1,"max":45,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 6"},"largo_copa_m":{"min":1,"max":45,"de":"contrato, campo largo_copa_m"},"extension_copa_m":{"min":1,"max":45,"de":"derivado de los dos ejes"},"edad_estimada":{"min":1,"max":2000,"de":"contrato, campo edad_estimada"},"circunferencia_cm":{"min":15,"max":1600,"de":"derivado del rango del DAP (π × 5 a π × 500), redondeado"}}};
 const DATOS={
   "ejemplares": [
     {
