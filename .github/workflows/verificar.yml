@@ -1,6 +1,6 @@
-# LAS CATORCE SUITES, EN CADA EMPUJÓN
+# LAS QUINCE SUITES, EN CADA EMPUJÓN
 # -----------------------------------------------------------------------------
-# Hasta ahora las 1,032 aserciones dependían de que alguien se acordara de
+# Hasta ahora las mil y pico de aserciones dependían de que alguien se acordara de
 # escribir verificar.sh antes de subir. La que avisa de la deriva entre la
 # fuente y lo publicado es justo la que importa en ese momento, y era la más
 # fácil de saltarse.
@@ -40,5 +40,5 @@ jobs:
       - name: Armar la vista previa
         run: sh fuente/construir/construir.sh
 
-      - name: Correr las catorce suites
+      - name: Correr las quince suites
         run: sh fuente/verificar/verificar.sh
