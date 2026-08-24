@@ -26,14 +26,28 @@
          alt="Árboles Patrimoniales de la Ciudad de México">
   </picture>
 </div>
+<!-- EL ENCABEZADO MUESTRA AL EJEMPLAR, 24 de agosto de 2026.
+     El campo morado se retiró el 23 porque era idéntico en los trece y no decía
+     nada del árbol que presentaba. Sobre papel el nombre pesaba, pero la página
+     entera pesaba lo mismo en las trece fichas. Ahora la mitad derecha la ocupa
+     la fotografía de portada de ESTE ejemplar, que es lo único que ninguna otra
+     ficha tiene igual. Quien no tiene fotografía enseña la silueta de su
+     especie: el respaldo dice qué especie es, no finge una fotografía. -->
 <section class="ficha-portada">
-  <div class="envoltura">
-    <p class="migas" style="padding:0;margin:0 0 6px"><a href="__PORTADA__#inicio">Inicio</a> · <a href="__PORTADA__#listado">El listado</a></p>
+  <div class="retrato">
+    <div class="envoltura">
+      <div class="retrato__texto">
+        <p class="migas" style="padding:0;margin:0 0 6px"><a href="__PORTADA__#inicio">Inicio</a> · <a href="__PORTADA__#listado">El listado</a></p>
 
-    <h1 id="fNombre"></h1>
-    <p class="binomio especie" id="fBinomio"></p>
-    <p class="comun" id="fComun"></p>
-    <div class="etiquetas" id="fEtiquetas"></div>
+        <h1 id="fNombre"></h1>
+        <p class="binomio especie" id="fBinomio"></p>
+        <p class="comun" id="fComun"></p>
+        <div class="etiquetas" id="fEtiquetas"></div>
+      </div>
+    </div>
+    <figure class="retrato__foto" id="fRetrato"></figure>
+  </div>
+  <div class="envoltura">
     <div class="resumen" id="fResumen"></div>
   </div>
 </section>
@@ -44,7 +58,7 @@
     <h2 id="fTituloGaleria">Así se ve</h2>
     <p class="guia" id="fGuiaGaleria"></p>
     <div class="galeria" id="fGaleria"></div>
-    <p class="galeria__pie" id="fPieFoto"></p>
+    <p class="galeria__pie nota-pie" id="fPieFoto"></p>
   </div>
 </section>
 
@@ -56,7 +70,7 @@
     <div class="escala">
       <div>
         <div class="escala__lienzo" id="fEscala" data-desliza></div>
-        <p class="escala__pie" id="fEscalaPie"></p>
+        <p class="escala__pie nota-pie nota-pie--alcance" id="fEscalaPie"></p>
       </div>
       <div class="medidas" id="fMedidas"></div>
     </div>
@@ -103,7 +117,7 @@
           <div class="mapa-caja__lienzo" id="fMapa" role="img"
                aria-label="Mapa con la ubicación de este ejemplar"></div>
           <div class="ubicacion__accion" id="fAccionMapa"></div>
-          <p class="mapa-caja__pie" id="fMapaPie"></p>
+          <p class="mapa-caja__pie nota-pie" id="fMapaPie"></p>
         </div>
       </div>
 

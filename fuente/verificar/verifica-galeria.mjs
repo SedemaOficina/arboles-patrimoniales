@@ -177,9 +177,29 @@ console.log('\n══ FOTOGRAFÍAS MONTADAS ══');
   const fl = fs.readFileSync('ficha-logica.js','utf8');
   t('El tirador de la galería usa miniaturas', /x\.miniatura \|\| x\.url/.test(fl));
   const cg = fs.readFileSync('estilos.css','utf8');
-  t('La columna de miniaturas no crece sin freno',
-    /\.galeria\{--alto-visor:/.test(cg) && /\.galeria__tiras\{[^}]*height:var\(--alto-visor\)/.test(cg));
-  t('La miniatura recorta en vez de dejar franjas', /\.miniatura img\{[^}]*object-fit:cover/.test(cg));
+  /* CAMBIÓ EL CRITERIO. La galería era un visor con una columna vertical de
+     miniaturas, y estas dos pruebas cuidaban esa columna: que midiera lo mismo
+     que el visor para no crecer sin freno, y que sus miniaturas recortaran en
+     vez de dejar franjas. El 24 de agosto de 2026 la columna desapareció —traía
+     su propia barra de desplazamiento, dos barras verticales pegadas— y la
+     galería pasó a mosaico: todas las fotografías a la vista en una retícula.
+     Lo que hay que cuidar ahora es otra cosa: que la retícula reparta bien
+     cuando hay menos de cinco fotografías —si no, deja celdas vacías— y que la
+     foto grande conserve su criterio de encuadre, que es el que no cambió. */
+  t('El mosaico reparte las celdas según cuántas fotografías haya',
+    /\.galeria\{--alto-visor:/.test(cg)
+    && /\.galeria--1 \.galeria__principal\{grid-column:span 5\}/.test(cg)
+    && /\.galeria--2 \.galeria__pieza\{grid-column:span 2/.test(cg)
+    && /\.galeria--3 \.galeria__pieza\{grid-row:span 2\}/.test(cg)
+    && /\.galeria--4 \.galeria__pieza:last-child\{grid-column:span 2\}/.test(cg));
+  t('Y la clase la pone quien sabe cuántas hay: el pintado',
+    /galeria galeria--\$\{Math\.min\(fotos\.length, 5\)\}/.test(fl));
+  /* La grande NO recorta: en un árbol alto el recorte se lleva la copa, que es
+     justo lo que la fotografía debe mostrar. Las pequeñas sí: son un índice. */
+  t('La foto grande sigue sin recortar, sobre el fondo desenfocado',
+    /\.galeria__principal img\{[^}]*object-fit:contain/.test(cg)
+    && /\.galeria__principal::before\{[^}]*background-image:var\(--foto\)/.test(cg));
+  t('Las piezas del mosaico sí recortan', /\.galeria__pieza img\{[^}]*object-fit:cover/.test(cg));
 }
 
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');

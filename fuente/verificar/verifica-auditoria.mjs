@@ -479,6 +479,10 @@ console.log('\n══ LA FICHA EN PAPEL ══');
   t('Se descarta lo que solo funciona en pantalla',
     ['.mapa-caja','.vista-calle','.glosario-servicios','#fVisita','.barra','.galeria__tiras']
       .every(x => cs6.slice(cs6.indexOf('@media print')).includes(x)));
+  /* La regla de impresión de `.galeria` creció el 24 de agosto de 2026: al
+     pasar la galería a mosaico hay que deshacer también el alto de fila
+     (`grid-auto-rows`), o algunos motores lo siguen aplicando pese al
+     `display:block` y la fotografía sale con el alto de una celda. */
   /* CAMBIÓ EL CRITERIO. Antes esta prueba exigía que la ilustración se fuera al
      papel y que las medidas sobrevivieran solas: «.escala { display: block }».
      Con esa regla la ficha impresa no llevaba NINGUNA imagen —ni la fotografía
@@ -487,7 +491,7 @@ console.log('\n══ LA FICHA EN PAPEL ══');
      cuando llegas: sin imagen no cumple su oficio. Ahora las dos viajan, y lo
      que se comprueba es eso. */
   t('La ficha impresa lleva la fotografía del ejemplar',
-    /\.galeria \{ display: block !important; \}/.test(cs6)
+    /\.galeria \{ display: block !important; grid-auto-rows: auto !important; \}/.test(cs6)
     && /\.galeria__principal \{ height: 62mm/.test(cs6)
     && /\.galeria__principal::before \{ display: none !important; \}/.test(cs6));
   /* CAMBIÓ EL CRITERIO otra vez, y por una razón que solo se ve imprimiendo:

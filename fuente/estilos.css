@@ -1166,8 +1166,53 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    para romper la monotonía del campo oscuro, y sin campo oscuro sobran. */
 .ficha-portada{background:var(--papel);color:var(--tinta);position:relative;padding:26px 0 0;
   border-bottom:2px solid rgba(var(--tinta-jacaranda-rgb),.1)}
-@media(min-width:861px){.ficha-portada h1,.ficha-portada .binomio,.ficha-portada .comun{padding-right:150px}}
 .ficha-portada .envoltura{position:relative;z-index:var(--capa-contenido)}
+
+/* EL RETRATO DEL EJEMPLAR, 24 de agosto de 2026.
+   Sobre papel el nombre pesaba, pero las trece fichas pesaban lo mismo: nada
+   en el encabezado decía de qué árbol se hablaba. La mitad derecha la ocupa
+   ahora la fotografía de portada de ESTE ejemplar.
+   La fotografía sangra hasta el borde de la ventana y el texto sigue alineado
+   con el resto de la página. Por eso NO es una retícula de dos columnas: el
+   texto va en su `.envoltura` de siempre —así hereda el centrado y el sangrado
+   del resto del sitio, sin recalcularlos— y la fotografía se posa encima, a la
+   derecha, en posición absoluta. Una retícula obligaba a reconstruir el
+   sangrado con `calc`, y los porcentajes de `padding` se resuelven contra la
+   celda, no contra la sección: el texto acababa desalineado con las cifras que
+   tiene debajo. */
+.retrato{position:relative}
+.retrato__texto{display:flex;flex-direction:column;min-width:0;padding:26px 0 32px}
+.retrato__foto{position:relative;margin:0;overflow:hidden;
+  background:linear-gradient(165deg,var(--jacaranda-brasa),var(--jacaranda-noche))}
+@media(min-width:861px){
+  .retrato__texto{padding-right:54%;min-height:420px}
+  .retrato__foto{position:absolute;top:0;right:0;bottom:0;width:48%;margin:0}
+}
+.retrato__foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* El papel se derrama sobre la fotografía por la izquierda. Sin ese velo el
+   corte entre la crema y la foto es un filo vertical y el nombre queda pegado
+   a él; con el velo, el encabezado se lee como una sola pieza. */
+.retrato__foto::after{content:"";position:absolute;inset:0;z-index:var(--capa-contenido);
+  background:linear-gradient(102deg,rgba(var(--papel-rgb),1) 0,rgba(var(--papel-rgb),.5) 13%,rgba(var(--papel-rgb),0) 44%)}
+/* Respaldo: quien no tiene fotografía enseña la silueta de su especie. Dice
+   qué especie es, que es lo que sí se sabe; no finge una fotografía. */
+.retrato__foto--silueta{display:flex;align-items:center;justify-content:center;padding:34px}
+.retrato__foto--silueta img,.retrato__foto--silueta svg{position:static;inset:auto;
+  width:auto;max-width:78%;height:auto;max-height:74%;object-fit:contain}
+.retrato__foto--silueta::after{display:none}
+.retrato__credito{position:absolute;left:0;right:0;bottom:0;z-index:var(--capa-realce);
+  margin:0;padding:30px 20px 12px;font-size:var(--t-nota);font-style:italic;
+  color:rgba(255,255,255,.86);
+  background:linear-gradient(to top,rgba(var(--tinta-jacaranda-rgb),.84),rgba(var(--tinta-jacaranda-rgb),0))}
+.retrato__foto--silueta .retrato__credito{background:none;text-align:center;color:rgba(255,255,255,.7)}
+.ficha-portada .resumen{margin:18px 0 0}
+@media(max-width:860px){
+  .retrato__texto{padding:26px 0 22px}
+  .retrato__foto{aspect-ratio:16/10}
+  /* En vertical el velo va de arriba abajo, no de izquierda a derecha. */
+  .retrato__foto::after{background:linear-gradient(to bottom,rgba(var(--papel-rgb),1) 0,rgba(var(--papel-rgb),0) 26%)}
+  .ficha-portada .resumen{margin:0}
+}
 .ficha-portada h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(38px,6.6vw,78px);line-height:1;letter-spacing:.005em;margin:16px 0 0;color:var(--tinta)}
 .ficha-portada .binomio{font-family:var(--editorial);font-style:italic;font-size:clamp(19px,2.3vw,26px);color:var(--jacaranda-hondo);margin:12px 0 0}
 .ficha-portada .comun{font-size:var(--t-cuerpo);color:var(--tinta-suave);margin:6px 0 0}
@@ -1178,6 +1223,41 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    en vez de disfrazarlo de frase («Conocido como ahuehuete»). */
 .ficha-portada .comun span{display:inline-block;font-size:var(--t-micro);font-weight:700;letter-spacing:.11em;
   text-transform:uppercase;color:var(--dorado);margin-right:10px;vertical-align:1px}
+
+/* ===== NOTAS AL PIE · TRES NIVELES =====
+   24 de agosto de 2026. Los pies de foto, de figura y de referencia se leían
+   cada uno a su manera —recuadro con marca, texto centrado, gris suelto— y el
+   lector no tenía forma de saber cuáles matizaban el dato y cuáles solo
+   acreditaban su origen. Ahora todos se leen igual: letra chica, cursiva y un
+   asterisco delante que dice de qué clase de nota se trata.
+
+     *     De dónde salió lo que estás viendo. Crédito de la fotografía,
+           cartografía base, panorama de Street View, corrida de i-Tree.
+     **    Qué NO dice el dato. La fecha de la imagen, el alcance de un dibujo,
+           el signo de una cifra, la ausencia de una estimación.
+     ***   De qué método o norma depende. Cómo se midió, qué norma aplica.
+
+   El asterisco va en dorado, recto y en negrita: es una marca, no texto, y por
+   eso no hereda la cursiva del pie. En dorado porque es el color con el que el
+   sitio ya marca lo accesorio —el rótulo del nombre común, el asterisco del
+   cintillo de cifras—, y nunca carga solo el significado: la nota lo dice
+   igual con palabras. */
+.nota-pie{display:block;font-size:var(--t-nota);line-height:1.55;font-style:italic;color:var(--gris)}
+.nota-pie:empty{display:none}
+.nota-pie::before{content:"*";font-style:normal;font-weight:700;color:var(--dorado);margin-right:6px}
+.nota-pie--alcance::before{content:"**"}
+.nota-pie--metodo::before{content:"***"}
+/* Lo resaltado dentro de una nota vuelve a la redonda: la cursiva ya marca
+   todo el bloque, y una negrita en cursiva sobre letra chica no se lee. */
+.nota-pie b{font-style:normal}
+/* Dos notas seguidas son dos notas, no un párrafo. */
+.nota-pie + .nota-pie{margin-top:6px}
+.bloque--oscuro .nota-pie{color:rgba(255,255,255,.66)}
+.bloque--oscuro .nota-pie::before{color:var(--dorado-luz)}
+/* Sobre la fotografía del encabezado la nota va en blanco, no en gris. */
+.retrato__credito.nota-pie{color:rgba(255,255,255,.86)}
+.retrato__foto--silueta .retrato__credito.nota-pie{color:rgba(255,255,255,.72)}
+.retrato__credito.nota-pie::before{color:var(--dorado-luz)}
 
 /* Nota al pie de sección: letra chica, jerarquía de aclaración. Vivía dentro
    del recuadro de medidas, donde competía con las cifras del dictamen. */
@@ -1195,7 +1275,11 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .ficha-portada > .envoltura{position:relative;z-index:var(--capa-contenido)}
 /* Sobre papel la etiqueta deja de ser una pastilla tenue sobre fondo oscuro y
    se vuelve un timbre: contorno, versalita apretada y la tinta de su familia. */
-.ficha-portada .etiquetas{margin:22px 0 0}
+/* Las etiquetas de categoría cierran la columna a la altura del pie de la
+   fotografía; arriba dejaban un hueco. Va aquí y no junto al resto del retrato
+   porque esta regla es la que gana: misma especificidad, y llega después. */
+.ficha-portada .etiquetas{margin:auto 0 0;padding-top:26px}
+@media(max-width:860px){.ficha-portada .etiquetas{margin-top:22px;padding-top:0}}
 .ficha-portada .etiqueta{background:rgba(var(--jacaranda-rgb),.08);color:var(--jacaranda-hondo);
   border:1px solid rgba(var(--jacaranda-rgb),.3)}
 .ficha-portada .etiqueta--dorada{background:rgba(var(--dorado-rgb),.12);color:#8A6B3D;
@@ -1821,19 +1905,54 @@ a[target="_blank"].sin-marca-externa::after{content:none}
   .bosque__nombre{font-size:var(--t-nota)}.bosque__alcaldia{display:none}}
 
 /* ===== GALERÍA FOTOGRÁFICA DEL EJEMPLAR ===== */
-/* El alto del visor se declara una sola vez: la columna de miniaturas tiene
-   que medir lo mismo para poder desplazarse dentro de él. Con max-height:100%
-   sobre una fila de altura automática, el tope se resolvía contra el propio
-   contenido y la columna crecía sin freno: con nueve fotografías medía 1 250 px
-   y se desbordaba de la sección. */
-.galeria{--alto-visor:clamp(380px,68vh,700px);
-  display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:14px;align-items:start}
-@media(max-width:860px){.galeria{grid-template-columns:minmax(0,1fr)}}
+/* LA GALERÍA PASÓ A MOSAICO, 24 de agosto de 2026.
+   Era un visor con una columna de miniaturas que traía su propia barra de
+   desplazamiento: dos barras verticales pegadas, y el resto sin intención.
+   Ahora todas las fotografías están a la vista en una retícula —una grande y
+   las demás alrededor—; al hacer clic en cualquiera, esa pasa a ser la grande.
+   Ninguna barra de desplazamiento en ninguna parte.
+   La foto grande CONSERVA su criterio: `contain` sobre el fondo desenfocado,
+   porque en un árbol alto el recorte se lleva la copa. Las pequeñas sí van a
+   `cover`: son un índice, no la fotografía. */
+/* Cinco columnas y la grande ocupa tres: a dos de cuatro la celda salía más
+   alta que ancha y una fotografía apaisada —la que casi siempre es la de
+   portada— se quedaba con dos franjas desenfocadas del tamaño de la propia
+   imagen. A tres de cinco la celda es apaisada, que es como se fotografía un
+   árbol de cuerpo entero. */
+.galeria{--alto-visor:clamp(340px,54vh,560px);
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-auto-rows:calc((var(--alto-visor) - 12px) / 2);gap:12px;grid-auto-flow:dense}
+.galeria__principal{grid-column:span 3;grid-row:span 2}
+/* Cuántas fotografías hay cambia el reparto: con menos de cinco, las piezas
+   crecen hasta llenar la retícula en vez de dejar celdas vacías. */
+.galeria--1 .galeria__principal{grid-column:span 5}
+.galeria--2 .galeria__pieza{grid-column:span 2;grid-row:span 2}
+.galeria--3 .galeria__pieza{grid-row:span 2}
+.galeria--4 .galeria__pieza:last-child{grid-column:span 2}
+.galeria__pieza{position:relative;padding:0;border:0;overflow:hidden;cursor:pointer;
+  background:var(--jacaranda-noche);isolation:isolate}
+.galeria__pieza img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform var(--paso) ease, filter var(--paso)}
+.galeria__pieza:hover img,.galeria__pieza:focus-visible img{transform:scale(1.05);filter:brightness(1.06)}
+/* El número iba suelto sobre la imagen con una sombra, y sobre una copa clara
+   no se leía. Va en la misma insignia que el contador de la grande, a la mitad
+   de tamaño: son la misma cosa dicha dos veces. */
+.galeria__pieza__ord{position:absolute;left:8px;bottom:8px;z-index:var(--capa-realce);
+  background:rgba(var(--tinta-jacaranda-rgb),.82);color:#fff;pointer-events:none;
+  font-size:var(--t-micro);font-weight:700;letter-spacing:.06em;
+  padding:4px 8px;border-radius:var(--radio)}
+@media(max-width:860px){
+  .galeria{grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-auto-rows:clamp(120px,26vw,180px)}
+  .galeria__principal{grid-column:span 2;grid-row:span 2}
+  .galeria--1 .galeria__principal,.galeria--2 .galeria__pieza{grid-column:span 2}
+  .galeria--3 .galeria__pieza,.galeria--4 .galeria__pieza:last-child{grid-column:auto;grid-row:auto}
+}
 /* Una foto vertical de un árbol alto deja franjas a los lados. En vez de un
    campo de color plano, el sobrante se llena con la propia imagen desenfocada:
    el encuadre se lee como intencional y la copa nunca se recorta. */
 .galeria__principal{position:relative;background:var(--jacaranda-noche);border:1px solid rgba(var(--tinta-jacaranda-rgb),.12);
-  height:var(--alto-visor);display:flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate}
+  min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate}
 .galeria__principal::before{content:"";position:absolute;inset:-8%;z-index:var(--capa-fondo);
   background-image:var(--foto);background-size:cover;background-position:center;
   filter:blur(34px) brightness(.55) saturate(.85)}
@@ -1843,14 +1962,6 @@ a[target="_blank"].sin-marca-externa::after{content:none}
 .galeria__principal img{height:100%;width:auto;max-width:100%;object-fit:contain;display:block;box-shadow:0 0 40px rgba(0,0,0,.4)}
 .galeria__pie{margin:14px auto 0;max-width:var(--medida-nota);text-align:center;font-size:var(--t-apoyo);color:var(--gris);line-height:1.5}
 .galeria__pie b{display:block;font-weight:400;font-size:var(--t-nota);color:#6F6A79;margin-top:4px;letter-spacing:.02em}
-.galeria__tiras{display:flex;flex-direction:column;gap:10px;overflow-y:auto;
-  height:var(--alto-visor);min-height:0;scrollbar-width:thin;overscroll-behavior:contain}
-@media(max-width:860px){.galeria__tiras{flex-direction:row;overflow-x:auto;overflow-y:hidden;height:auto}}
-.miniatura{flex:0 0 auto;width:118px;height:132px;padding:0;border:2px solid transparent;background:var(--tinta-jacaranda);cursor:pointer;overflow:hidden;transition:border-color var(--paso),opacity var(--paso);opacity:.72}
-.miniatura img{width:100%;height:100%;object-fit:cover;display:block}
-.miniatura{background:linear-gradient(165deg,var(--jacaranda-brasa),var(--jacaranda-noche))}
-.miniatura:hover{opacity:1}
-.miniatura[aria-current="true"]{border-color:var(--jacaranda);opacity:1}
 .galeria__contador{position:absolute;right:12px;bottom:12px;background:rgba(var(--tinta-jacaranda-rgb),.86);color:#fff;font-size:var(--t-nota);font-weight:700;letter-spacing:.06em;padding:6px 10px;border-radius:var(--radio)}
 
 /* silueta de respaldo cuando el ejemplar no tiene fotografía */
@@ -2190,22 +2301,30 @@ body.sin-desplazamiento{overflow:hidden}
      hay recorrido de teclado del que saltar. */
   .saltar,
   .barra, .pie, #fVisita, .deslizador, .vista-calle,
-  .galeria__tiras, .galeria__tira, .galeria__contador,
+  .galeria__pieza, .galeria__contador,
   .mapa-caja, .eje, .bosque,
   .glosario-servicios, .cobertura, .migas, .sello, .boton, .enlace,
   .enlace--apagado, .ubicacion__accion, #fGuiaGaleria,
   .ficha-portada .rotulo, .vista-calle__pie { display: none !important; }
   /* Secciones que se quedan sin contenido al retirar lo interactivo. */
   div:has(> #fVistaCalle) { display: none !important; }
+  /* El retrato del encabezado no viaja al papel: la misma fotografía ya se
+     imprime en «Así se ve», y en A4 la de arriba costaba una hoja entera.
+     Retirada, la columna de texto recupera el ancho completo. */
+  .retrato__foto { display: none !important; }
+  .retrato__texto { padding-right: 0 !important; min-height: 0 !important; }
 
   /* --- la fotografía del ejemplar --- */
   /* Antes no viajaba ninguna imagen al papel: se imprimía un formulario de
      texto. Una ficha de campo sin la foto del árbol no sirve para reconocerlo
      al llegar, que es justo para lo que se imprime. Va una sola —la de
-     portada—, sin la tira de miniaturas ni el contador, que solo sirven para
-     navegar, y sin el relleno desenfocado: en pantalla hace que el encuadre se
-     lea intencional, en papel es una mancha de tinta. */
-  .galeria { display: block !important; }
+     portada—, sin las demás piezas del mosaico ni el contador, que solo sirven
+     para navegar, y sin el relleno desenfocado: en pantalla hace que el
+     encuadre se lea intencional, en papel es una mancha de tinta.
+     CAMBIÓ EL NOMBRE, no el criterio: la tira vertical de miniaturas
+     —`.galeria__tiras`— se retiró el 24 de agosto al pasar la galería a
+     mosaico. Lo que hay que ocultar ahora son `.galeria__pieza`. */
+  .galeria { display: block !important; grid-auto-rows: auto !important; }
   .galeria__principal { height: 62mm !important; width: max-content !important;
     max-width: 100% !important; margin: 0 auto !important;
     background: #fff !important; border: .5pt solid #bbb !important;
