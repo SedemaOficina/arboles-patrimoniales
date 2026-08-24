@@ -526,21 +526,10 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend">
           <span class="pend__marca"></span>
           <div>
-            <h3>Dos archivos del logotipo institucional quedaron sin uso</h3>
-            <p>Al retirar la ficha para impresión el 24 de agosto de 2026 se fue el membrete, que era lo único que pedía la variante <b>grande</b> del logotipo. Son <b>dos archivos</b> —<code>logo-institucional-grande.png</code> y <code>.webp</code>, unos <b>346 KB</b>— en <code>fuente/assets/img/marca/</code>.</p>
-            <p style="margin-top:9px"><b>Ojo: las variantes «chico» y «media» SÍ se usan.</b> Las pide el encabezado de todas las páginas. Solo sobran las dos «grande».</p>
-            <p style="margin-top:9px">Las comprobaciones que las exigían ya se retiraron —<code>verifica-identidad</code> dejó de censarlas y <code>verifica-sistema</code> ahora comprueba lo contrario, que no las pida nadie—, así que se pueden mover cuando quieras. Sus copias en <code>docs/</code> y <code>prueba/</code> desaparecen solas al construir: el armado borra y vuelve a copiar esa carpeta.</p>
-            <div class="arreglo">
-              <b>Cómo se corrige</b>
-              <ol>
-                <li>Desde la raíz del repositorio, en Git Bash:<br>
-                    <code>mkdir -p _a_borrar &amp;&amp; mv fuente/assets/img/marca/logo-institucional-grande.* _a_borrar/</code></li>
-                <li><b>Reconstruye:</b> <code>fuente/construir/construir.sh prueba</code> y luego <code>produccion</code>.</li>
-                <li><b>Verifica:</b> <code>sh fuente/verificar/verificar.sh</code>.</li>
-                <li>Si todo queda en verde, borra <code>_a_borrar/</code> a mano.</li>
-              </ol>
-            </div>
-            <cite>Se dejan en el disco en vez de borrarlos de golpe por si se quiere conservar una copia del logotipo institucional a resolución de impresión.</cite>
+            <h3>Borra la carpeta <code>_a_borrar/</code></h3>
+            <p>Al eliminar la ficha para impresión el 24 de agosto de 2026 quedaron sin uso <code>logo-institucional-grande.png</code> y <code>.webp</code> —solo los pedía el membrete impreso—. Ya se movieron a <code>_a_borrar/</code>, junto con las carpetas <code>assets/</code> y <code>vendor/</code> viejas de <code>docs/</code> y <code>prueba/</code>, que hubo que apartar para poder construir.</p>
+            <p style="margin-top:9px">Son unos <b>66 MB</b>. El sitio ya se construyó y las dieciséis suites pasan sin ellos, así que la carpeta entera se puede borrar. <b>Bórrala tú desde el explorador:</b> desde esta sesión no se puede borrar nada dentro de la carpeta sincronizada, solo mover.</p>
+            <p style="margin-top:9px"><b>Ojo:</b> las variantes <code>chico</code> y <code>media</code> del logotipo institucional <b>sí se usan</b> —las pide el encabezado de todas las páginas— y siguen en su sitio.</p>
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>

@@ -138,8 +138,12 @@ t('css · el sello sobre la acuarela solo aplica de 1000 px en adelante',
 // El <picture> que envuelve al sello es una caja de línea que rompería el
 // posicionamiento si contara en el flujo. display:contents la borra del árbol
 // de cajas sin borrarla del documento.
+/* La lista perdió `.hoja-cabeza>picture` el 24 de agosto de 2026: el membrete
+   de la ficha impresa se retiró con la hoja de impresión y ya no hay tal caja
+   que borrar del flujo. El criterio no cambió —el <picture> que envuelve al
+   sello y al emblema del pie no debe contar como caja—; cambió la lista. */
 t('css · el envoltorio <picture> no estorba a la posición del sello',
-  /\.portada \.envoltura>picture,\.pie__col--sede>picture,\.hoja-cabeza>picture\{display:contents\}/.test(css));
+  /\.portada \.envoltura>picture,\.pie__col--sede>picture\{display:contents\}/.test(css));
 t('css · la entrada se acorta en la franja de 901 a 999 px',
   /@media\(min-width:901px\) and \(max-width:999px\)\{\.entrada\{max-width:400px\}\}/.test(css));
 t('css · el sello no vuelve a separarse 22 px', /\.sello\{display:block;width:132px;height:auto;margin:0 0 12px\}/.test(css));

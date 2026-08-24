@@ -361,8 +361,11 @@ console.log('\n══ FICHA · el recuadro morado es ahora el mapa del ejemplar 
   t('El botón se lee sobre el crema, no solo sobre fondo oscuro',
     /\.enlace--mapa\{border-color:var\(--jacaranda\);color:var\(--jacaranda\)/.test(cs3)
     && /\.bloque--oscuro \.enlace--mapa\{/.test(cs3));
-  t('El mapa interactivo no se imprime',
-    /\.mapa-caja,[\s\S]{0,500}?display: none !important;/.test(cs3.slice(cs3.indexOf('@media print'))));
+  /* RETIRADA EL 24 DE AGOSTO DE 2026. Comprobaba que el mapa interactivo no
+     viajara al papel. Ya no hay papel: la hoja de impresión se eliminó entera
+     y su ausencia se comprueba en «LA FICHA EN PAPEL · RETIRADA». Lo que esta
+     sección cuida del mapa —que sea vista de contexto, que se destruya antes
+     de reconstruir, que sin coordenadas lo diga— sigue arriba, intacto. */
 }
 
 console.log('\n══ DATO FALTANTE · el sitio lo dice, no lo disimula ══');

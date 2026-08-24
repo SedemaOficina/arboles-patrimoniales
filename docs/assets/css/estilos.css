@@ -380,7 +380,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    claro para que el anillo guinda no se pierda. */
 /* El <picture> es un envoltorio de línea que no pinta nada: se le quita del
    medio para que las reglas de posición sigan actuando sobre la imagen. */
-.portada .envoltura>picture,.pie__col--sede>picture,.hoja-cabeza>picture{display:contents}
+.portada .envoltura>picture,.pie__col--sede>picture{display:contents}
 .sello{display:block;width:132px;height:auto;margin:0 0 12px}
 @media(max-width:700px){.sello{width:96px;margin-bottom:10px}}
 @media(max-width:860px){}
@@ -472,15 +472,6 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .boton{display:inline-block;font-family:var(--texto);font-size:var(--t-cuerpo);font-weight:700;padding:14px 24px;border-radius:var(--radio);text-decoration:none;border:1.5px solid transparent;transition:background var(--paso),color var(--paso)}
 .boton--solido{background:var(--jacaranda);color:#fff}
 .boton--solido:hover{background:var(--tinta-jacaranda)}
-/* El botón imprime, pero desde el cuadro de impresión también se guarda en
-   PDF: el icono de documento dice qué se lleva uno, no qué máquina lo hace.
-   Va con máscara y no con SVG incrustado para que herede el color del botón
-   en sus dos estados. */
-.boton--doc{display:inline-flex;align-items:center;gap:10px}
-.boton--doc::before{content:"";width:16px;height:16px;flex:none;background:currentColor;
-  -webkit-mask:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm7 2.4V9h4.6L13 4.4ZM8 12.6h8v1.6H8v-1.6Zm0 3.6h8v1.6H8v-1.6Z'/%3E%3C/svg%3E");
-  mask:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm7 2.4V9h4.6L13 4.4ZM8 12.6h8v1.6H8v-1.6Zm0 3.6h8v1.6H8v-1.6Z'/%3E%3C/svg%3E")}
-
 /* --- eje del tiempo: elemento distintivo --- */
 
 /* --- cintillo de cifras --- */
@@ -664,16 +655,6 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .docs--sin > span{border-left:3px solid rgba(var(--tinta-jacaranda-rgb),.12)}
 .docs--sin b{font-size:var(--t-apoyo);font-weight:700;color:var(--gris)}
 .docs--sin span span{font-size:var(--t-nota);color:var(--gris)}
-
-/* ═══ LLÉVATELO ═══
-   Era una sección propia con su propio título y repetía el enlace al mapa.
-   Ahora cierra la banda de «Cómo llegar», que es de lo que habla. */
-.llevar{margin:38px 0 0;background:var(--niebla);border-left:4px solid var(--jacaranda);
-  padding:22px 24px}
-.llevar h3{font-family:var(--display);font-weight:400;text-transform:uppercase;
-  font-size:var(--t-subtitulo);line-height:1.05;color:var(--jacaranda-hondo);margin:0}
-.llevar p{margin:10px 0 18px;font-size:var(--t-apoyo);line-height:1.6;color:var(--tinta-suave);
-  max-width:var(--medida-nota)}
 
 /* --- listado --- */
 .filtros{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 26px}
@@ -1468,23 +1449,20 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* estado del ejemplar */
 
 /* ubicación */
-/* Dos columnas y dos renglones: los datos arriba a la izquierda, las dos
-   miradas —calle y mapa— apiladas a la derecha, y «Llévatelo en papel» al pie
-   de la izquierda. Apilar la vista de calle sobre el mapa alarga la columna
-   derecha; sin ese tercer bloque la izquierda quedaba medio vacía. Va anclado
-   abajo (align-self:end) para que cierre a la misma altura que el mapa. */
-.ubicacion{display:grid;grid-template-columns:1.1fr .9fr;grid-template-rows:auto 1fr;
-  grid-template-areas:"datos mirador" "llevar mirador";gap:36px;align-items:start}
+/* Dos columnas: los datos a la izquierda y las dos miradas —calle y mapa—
+   apiladas a la derecha. Hubo un tercer bloque al pie de la izquierda
+   —«Llévatelo en papel»—, retirado el 24 de agosto de 2026 junto con la hoja
+   de impresión. Sin él la retícula no necesita el segundo renglón: la columna
+   de datos ya no tiene que cerrar a la altura del mapa. */
+.ubicacion{display:grid;grid-template-columns:1.1fr .9fr;
+  grid-template-areas:"datos mirador";gap:36px;align-items:start}
 .ubicacion__datos{grid-area:datos;min-width:0}
 .ubicacion .mirador{grid-area:mirador}
-.ubicacion .llevar{grid-area:llevar;align-self:end;margin:0}
 /* El llamado dejó de ser franja a todo lo ancho y encabeza la columna de
    datos: ahí manda el ancho de la columna, no la medida de lectura. */
 .ubicacion .llamado{max-width:none;margin:0 0 22px}
 @media(max-width:860px){
-  .ubicacion{grid-template-columns:1fr;grid-template-rows:auto;
-    grid-template-areas:"datos" "mirador" "llevar"}
-  .ubicacion .llevar{align-self:start}
+  .ubicacion{grid-template-columns:1fr;grid-template-areas:"datos" "mirador"}
 }
 .domicilio{font-family:var(--editorial);font-size:var(--t-subtitulo);line-height:1.45;margin:0 0 20px}
 .dato-linea{display:flex;gap:14px;padding:10px 0;border-top:1px solid rgba(var(--tinta-jacaranda-rgb),.1);font-size:var(--t-apoyo)}
@@ -2316,236 +2294,3 @@ body.sin-desplazamiento{overflow:hidden}
   .marca__logo{width:152px}
   .barra .marca{gap:8px}
   .barra .envoltura{padding-left:10px;padding-right:10px}}
-
-/* ===== IMPRESIÓN =====
-   La ficha se lleva en la mano al pie del árbol: sin señal, sin batería.
-   Se imprime lo que sirve en la calle y se retira todo lo que no. */
-/* ===== LA FICHA EN PAPEL =====
-   Objetivo declarado: tres hojas como máximo. Un árbol patrimonial se visita
-   con la ficha en la mano, y una ficha de nueve páginas no se lleva a la calle.
-   Se imprime lo que sirve parado frente al árbol —quién es, dónde está, cuánto
-   mide, qué hace por la ciudad y de qué decreto viene— y se descarta todo lo
-   que solo funciona en pantalla: mapa interactivo, vista de calle, galería,
-   la ilustración a escala, el glosario metodológico y la navegación. */
-
-/* El membrete y el pie solo existen en papel. */
-.hoja-cabeza, .hoja-pie { display: none; }
-
-@media print {
-  @page { size: A4 portrait; margin: 13mm 13mm 12mm; }
-  html { font-size: 9.5pt; }
-  body { background: #fff !important; color: #000; }
-
-  /* --- lo que no viaja al papel --- */
-  /* El enlace de salto se dibujaba encima del texto al imprimir: en papel no
-     hay recorrido de teclado del que saltar. */
-  .saltar,
-  .barra, .pie, #fVisita, .deslizador, .vista-calle,
-  .galeria__pieza, .galeria__contador,
-  .mapa-caja, .eje, .bosque,
-  .glosario-servicios, .cobertura, .migas, .sello, .boton, .enlace,
-  .enlace--apagado, .ubicacion__accion, #fGuiaGaleria,
-  .ficha-portada .rotulo, .vista-calle__pie { display: none !important; }
-  /* Secciones que se quedan sin contenido al retirar lo interactivo. */
-  div:has(> #fVistaCalle) { display: none !important; }
-  /* El retrato del encabezado no viaja al papel: la misma fotografía ya se
-     imprime en «Así se ve», y en A4 la de arriba costaba una hoja entera.
-     Retirada, la columna de texto recupera el ancho completo. */
-  .retrato__foto { display: none !important; }
-  .retrato__texto { padding-right: 0 !important; min-height: 0 !important; }
-
-  /* --- la fotografía del ejemplar --- */
-  /* Antes no viajaba ninguna imagen al papel: se imprimía un formulario de
-     texto. Una ficha de campo sin la foto del árbol no sirve para reconocerlo
-     al llegar, que es justo para lo que se imprime. Va una sola —la de
-     portada—, sin las demás piezas del mosaico ni el contador, que solo sirven
-     para navegar, y sin el relleno desenfocado: en pantalla hace que el
-     encuadre se lea intencional, en papel es una mancha de tinta.
-     CAMBIÓ EL NOMBRE, no el criterio: la tira vertical de miniaturas
-     —`.galeria__tiras`— se retiró el 24 de agosto al pasar la galería a
-     mosaico. Lo que hay que ocultar ahora son `.galeria__pieza`. */
-  .galeria { display: block !important; grid-auto-rows: auto !important; }
-  .galeria__principal { height: 62mm !important; width: max-content !important;
-    max-width: 100% !important; margin: 0 auto !important;
-    background: #fff !important; border: .5pt solid #bbb !important;
-    break-inside: avoid; overflow: hidden; }
-  .galeria__principal::before { display: none !important; }
-  .galeria__principal img { height: 100% !important; width: auto !important;
-    max-width: 100% !important; object-fit: contain !important;
-    box-shadow: none !important; }
-  .galeria__pie { font-size: 7.5pt; color: #444; margin: 1.5mm 0 0 !important;
-    max-width: none !important; text-align: left !important; }
-
-  /* --- la lámina a escala --- */
-  /* El dibujo con sus cotas es lo que deja comparar el árbol que tienes
-     enfrente con lo que dice la tabla: en una ficha de campo se queda. Las
-     medidas pasan a una sola columna a su lado, que a este ancho se lee mejor
-     que la retícula de dos.
-     Las cotas se recalculan al ancho de la hoja desde ficha-logica.js. Sin ese
-     repintado están medidas contra el ancho de la pantalla y caen fuera del
-     dibujo. */
-  /* La lámina ocupa el ancho completo de la hoja y las medidas van debajo.
-     Se probó a dos columnas y no funciona: el ancho del dibujo depende de la
-     especie —el fresno se dibuja dos veces más ancho que alto—, y en media
-     hoja la ilustración se salía de su columna y terminaba impresa encima de
-     la tabla. Peor todavía, el cálculo del dibujo mide el lienzo para elegir
-     su escala, y en una retícula flexible el ancho del lienzo depende a su vez
-     del dibujo: la medición se muerde la cola. A todo el ancho no hay pleito
-     por el sitio y la escala se calcula sobre un ancho que no cambia. */
-  .escala { display: block !important; }
-  /* El lienzo de la hoja es la mitad de ancho que el de la pantalla. El dibujo
-     se alinea a la izquierda y se le abre sitio a la izquierda: el rótulo de
-     la cota de altura va por FUERA de su línea, y sin ese margen se cortaba a
-     media palabra. */
-  .escala__lienzo { background: #fff !important; height: 62mm !important;
-    justify-content: flex-start !important; padding-left: 76px !important; }
-  /* El rótulo de la cota de altura va por FUERA de su línea, a la izquierda.
-     En la hoja esa línea cae cerca del margen y el rótulo se imprimía cortado
-     a media palabra: «IETROS». En papel la línea se ancla al margen y el
-     rótulo pasa a su derecha, donde el sitio no depende del ancho. */
-  .cota--alto { left: 0 !important; }
-  .cota--alto b, .cota--alto i { right: auto !important; left: 8px !important; }
-  /* La cota del diámetro señala el tronco desde la izquierda, y a este ancho
-     su rótulo se sale del lienzo. Una cota cortada mide menos de lo que dice:
-     se retira, y el diámetro se lee en la tabla de al lado, dos renglones más
-     abajo. Las otras tres —altura, copa y la figura de 1.70 m— sí caben. */
-  .cota--dap { display: none !important; }
-  .escala__pie { font-size: 7pt; color: #444; margin-top: 1mm; }
-
-  /* --- membrete --- */
-  /* El logotipo institucional mide 13.65 de ancho por 1 de alto: en un
-     renglón junto al texto y al emblema bajaba a 7.6 mm y el nombre de la
-     Secretaría se volvía una mancha. Ocupa su propio renglón, a todo el ancho
-     útil de la hoja, donde alcanza 13.5 mm y se imprime legible. */
-  .hoja-cabeza { display: flex !important; flex-wrap: wrap; align-items: center; gap: 3mm 6mm;
-    padding-bottom: 3mm; margin-bottom: 5mm; border-bottom: 1.5pt solid var(--jacaranda); }
-  .hoja-cabeza__gob { flex: 1 0 100%; width: 100%; height: auto; }
-  .hoja-cabeza__emblema { height: 13mm; width: 13mm; flex: none; margin-left: auto; }
-  .hoja-cabeza__texto { font-size: 8pt; line-height: 1.35; color: #444; }
-  .hoja-cabeza__texto b { display: block; font-size: 9.5pt; color: #000; letter-spacing: .02em; }
-
-  /* --- estructura general --- */
-  main, .bloque, .seccion, .envoltura {
-    padding: 0 !important; margin: 0 !important; max-width: none !important; }
-  /* CAMBIÓ EL CRITERIO. Antes las secciones podían partirse entre hojas, para
-     no dejar media página en blanco antes de cada salto. Impreso resultó peor
-     de lo previsto: la lámina a escala se partía por la mitad y la ilustración
-     terminaba impresa encima de su propio pie de foto, y una tabla dejaba un
-     renglón suelto en la hoja siguiente. Una ficha de campo se consulta de
-     pie, frente al árbol: una sección partida obliga a pasar hoja a media
-     lectura. Ahora ninguna se parte y se acepta el blanco al pie.
-     Si una sección no cupiera en una hoja entera el navegador la parte de
-     todos modos: es un tope, no una promesa. */
-  .bloque, .seccion { border-top: .5pt solid #bbb; padding-top: 4mm !important;
-    margin-top: 4mm !important; break-inside: avoid; }
-  .grupo, .medida, .dato-linea, .hoja-pie, .observacion { break-inside: avoid; }
-  /* Los conjuntos de dentro tampoco: son los que se partían primero. */
-  .galeria, .escala, .medidas, .ubicacion, .grupos, .cascada, .tabla-datos,
-  .docs { break-inside: avoid; }
-  /* La retícula de «Cómo llegar» tiene dos renglones en pantalla —datos arriba,
-     «Llévatelo en papel» abajo— y en papel el segundo se retira entero. El
-     renglón desaparece pero su separación no: dejaba 36 px de aire que en A4
-     bastaban para empujar una sección a la hoja siguiente. */
-  .ubicacion { grid-template-rows: auto !important; row-gap: 0 !important; }
-  /* «Qué especie es» y «Su expediente» comparten sección pero son dos lecturas
-     distintas, y juntas no caben en una hoja. La unidad que no se parte es cada
-     una, no el par: así el corte cae entre las dos y no a media tabla. */
-  .dos-columnas > div { break-inside: avoid; }
-  .ficha-portada { border-top: 0; margin-top: 0 !important; padding-top: 0 !important; }
-
-  /* Los fondos profundos gastan tinta y no se leen impresos. Hay que apagarlos
-     uno por uno: el degradado de la portada no lo heredan sus hijos, que
-     traen su propio fondo y quedaban en negro sobre negro. */
-  .ficha-portada, .bloque--oscuro, .bloque--niebla, .grupo, .observacion,
-  .resumen, .resumen > *, .medida, .medidas {
-    background: #fff !important; background-image: none !important; color: #000 !important; }
-  .ficha-portada .resumen, .retrato { border: 0 !important; }
-  .resumen > * { border-left: .5pt solid #ccc !important; }
-  .resumen > *:first-child { border-left: 0 !important; }
-  .grupo { border: .5pt solid #bbb; padding: 3mm 4mm; }
-  .ficha-portada h1, .bloque--oscuro h2, .bloque--oscuro .guia, .grupo h3,
-  .resumen strong, .resumen span, .grupo__fila span, .grupo__fila b,
-  .grupo__fila b u, .grupo__nota, .binomio, .comun, .etiqueta {
-    color: #000 !important; }
-  .etiqueta { background: #EEE !important; border: .5pt solid #999; }
-  .ficha-portada::before, .ficha-portada::after, .bloque--oscuro::before { display: none !important; }
-
-  /* --- tipografía y aire --- */
-  /* break-after no basta: sin break-inside el propio título se parte, y en la
-     primera hoja quedaba el acento de «CÓMO LLEGAR» solo al pie. El rótulo que
-     antecede al título viaja con él por la misma razón. */
-  h1, h2, h3 { break-inside: avoid; }
-  h1 { font-size: 19pt; line-height: 1.05; margin: 0 0 1mm; }
-  h2 { font-size: 12pt; break-after: avoid; margin: 0 0 2mm; }
-  h3 { font-size: 9.5pt; break-after: avoid; }
-  .rotulo { break-after: avoid; }
-  .guia { font-size: 8.5pt; margin: 0 0 3mm; }
-  .binomio { font-size: 12pt; margin: 0 0 1mm; }
-  .resumen { gap: 0 !important; grid-template-columns: repeat(4, 1fr) !important; }
-  .resumen > * { padding: 0 4mm !important; }
-  .resumen strong { font-size: 15pt !important; }
-  .resumen span { font-size: 7.5pt !important; }
-  /* Taxonomía y procedencia a dos columnas: catorce renglones en una sola
-     columna se comían una hoja entera. */
-  .tabla-datos { columns: 2; column-gap: 8mm; }
-  .dato-linea { padding: 1.1mm 0; border-top: .4pt solid #ddd;
-    break-inside: avoid; -webkit-column-break-inside: avoid; font-size: 8.5pt; }
-  .dato-linea dt { flex: 0 0 26mm; }
-  .domicilio { font-size: 11pt; margin: 0 0 3mm; }
-  /* Las medidas van debajo del dibujo, a dos columnas: a todo el ancho de la
-     hoja una sola columna dejaba media hoja vacía a la derecha. */
-  .medidas { display: grid !important; grid-template-columns: 1fr 1fr;
-    gap: 0 8mm; margin-top: 3mm !important; }
-  .medida { padding: 1.1mm 0 !important; border-top: .4pt solid #ddd !important; }
-
-  /* --- servicios: cuatro grupos en dos columnas --- */
-  .grupos { grid-template-columns: 1fr 1fr !important; gap: 3mm !important; }
-  .grupo__fila { padding: 1.1mm 0; font-size: 8.5pt; border-top: .4pt solid #ddd; }
-  .grupo__nota { font-size: 7.5pt; margin-top: 2mm; padding-top: 1.5mm; }
-  /* Las cifras destacadas se rehicieron como .cifra-serv después de escribir
-     esta hoja: el número va en blanco sobre el bloque profundo y en papel
-     salía blanco sobre blanco. Se imprimían solo las unidades, flotando solas.
-     Apagar el fondo no basta: hay que devolverle color al texto, y también al
-     relleno, que es lo que pinta el número. */
-  .grupo--cifras, .grupo--destacada, .cifra-serv { background: #fff !important; }
-  /* Dos correcciones de la retícula de cifras en papel. auto-fit y no
-     «1fr 1fr»: el grupo de clima publica una sola cifra, y con dos columnas
-     fijas quedaba media caja vacía a su derecha. Y align-content arriba: en
-     pantalla las cifras se centran en el alto de la tarjeta, que en papel deja
-     el número colgando a media caja y se lee como un renglón que falta. */
-  .grupo__cifras { display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(28mm, 1fr));
-    align-content: start !important; gap: 0 6mm; }
-  .cifra-serv { break-inside: avoid; padding: 1.1mm 0 !important;
-    border-top: .4pt solid #ddd; text-align: left !important; }
-  .cifra-serv b, .cifra-serv b u, .cifra-serv span, .cifra-serv .sin-dato {
-    color: #000 !important; -webkit-text-fill-color: #000 !important;
-    background: none !important; }
-  .cifra-serv b { font-size: 12pt !important; line-height: 1.1 !important;
-    margin: 0 !important; }
-  .cifra-serv b u { font-size: 7.5pt; text-decoration: none; margin-left: 1mm; }
-  .cifra-serv span { font-size: 8pt !important; display: block; line-height: 1.3; }
-  .dos-columnas { gap: 8mm !important; }
-
-  /* --- pie de la hoja --- */
-  /* Las tres fichas impresas terminaban con una hoja enteramente en blanco:
-     unos píxeles de sobra por debajo del pie bastan para que el navegador abra
-     otra. Nada cuelga por debajo del pie. */
-  html, body { height: auto !important; }
-  .hoja-pie { display: block !important; margin: 5mm 0 0; padding: 3mm 0 0;
-    border-top: 1pt solid var(--jacaranda); break-inside: avoid; }
-  .hoja-pie p { margin: 0 0 1.5mm; font-size: 7.5pt; line-height: 1.4; color: #444; }
-
-  /* Un enlace impreso sin su dirección es un callejón sin salida. La regla
-     apuntaba a #fDecreto y .norma__fuente, que desaparecieron cuando el
-     expediente pasó a ser una lista de enlaces: en papel quedaban los cinco
-     documentos sin una sola dirección. Ojo con la especificidad: la marca de
-     enlace externo se apaga con a[target="_blank"].sin-marca-externa::after,
-     que le gana a .docs a::after por peso, no solo por orden. */
-  .docs a[href]::after { content: " " attr(href) !important; font-size: 6.5pt;
-    word-break: break-all; display: block; color: #333; margin-top: .6mm; }
-  .docs__fuera { display: none !important; }
-  .docs li { break-inside: avoid; }
-  .docs a, .docs li > span { padding: 1.6mm 2.5mm !important; gap: 0 !important; }
-  a { color: #000 !important; text-decoration: underline; }
-}
