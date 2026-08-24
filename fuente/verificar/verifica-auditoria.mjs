@@ -490,8 +490,13 @@ console.log('\n══ LA FICHA EN PAPEL ══');
     /\.galeria \{ display: block !important; \}/.test(cs6)
     && /\.galeria__principal \{ height: 62mm/.test(cs6)
     && /\.galeria__principal::before \{ display: none !important; \}/.test(cs6));
-  t('Y la lámina a escala, con las medidas a su lado',
-    /\.escala \{ display: grid !important; grid-template-columns: \.85fr 1fr;/.test(cs6));
+  /* CAMBIÓ EL CRITERIO otra vez, y por una razón que solo se ve imprimiendo:
+     a dos columnas la ilustración del fresno —dos veces más ancha que alta— se
+     salía de su columna y se imprimía encima de la tabla de medidas. La lámina
+     ocupa el ancho completo y las medidas van debajo. */
+  t('Y la lámina a escala a todo el ancho, con las medidas debajo',
+    /\.escala \{ display: block !important; \}/.test(cs6)
+    && /\.medidas \{ display: grid !important; grid-template-columns: 1fr 1fr;/.test(cs6));
   /* A este ancho el rótulo de la cota del diámetro se sale del lienzo. Se
      retira entera en vez de imprimirla cortada. */
   t('La cota del diámetro no se imprime cortada: no se imprime',
@@ -509,16 +514,23 @@ console.log('\n══ LA FICHA EN PAPEL ══');
     /\.docs a\[href\]::after \{ content: " " attr\(href\) !important;/.test(cs6));
   t('Los fondos profundos se apagan hijo por hijo, no solo el contenedor',
     /\.resumen, \.resumen > \*, \.resumen__nota/.test(cs6));
-  /* Las medidas ya no van a dos columnas: comparten renglón con el dibujo a
-     escala, y a la mitad del ancho la retícula de dos partía cada renglón en
-     dos líneas. La taxonomía sí sigue a dos columnas, que es de donde venía el
-     ahorro de hoja. */
   t('La taxonomía va a dos columnas para no comerse una hoja',
     /\.tabla-datos \{ columns: 2;/.test(cs6));
-  t('Las medidas van a una, porque comparten renglón con el dibujo',
-    /\.medidas \{ display: grid !important; grid-template-columns: 1fr; \}/.test(cs6));
-  t('Las secciones pueden partirse; los bloques pequeños no',
+  /* CAMBIÓ EL CRITERIO. Antes se comprobaba lo contrario: que las secciones
+     PUDIERAN partirse, para no dejar media hoja en blanco. Impreso resultó
+     peor: la lámina se partía por la mitad y la ilustración salía encima de su
+     pie de foto. Ahora no se parte ninguna. */
+  t('Ninguna sección se parte entre hojas',
+    /\.bloque, \.seccion \{[^}]*break-inside: avoid;/.test(cs6)
+    && /\.galeria, \.escala, \.medidas, \.ubicacion, \.grupos, \.cascada, \.tabla-datos,\s*\n?\s*\.docs \{ break-inside: avoid; \}/.test(cs6)
+    && /\.dos-columnas > div \{ break-inside: avoid; \}/.test(cs6));
+  t('Y los bloques pequeños tampoco',
     /\.grupo, \.medida, \.dato-linea, \.hoja-pie, \.observacion \{ break-inside: avoid; \}/.test(cs6));
+  t('El rótulo de la cota de altura no se imprime cortado',
+    /\.cota--alto \{ left: 0 !important; \}/.test(cs6)
+    && /\.cota--alto b, \.cota--alto i \{ right: auto !important; left: 8px !important; \}/.test(cs6));
+  t('Nada cuelga por debajo del pie, que abría una hoja en blanco',
+    /html, body \{ height: auto !important; \}/.test(cs6));
 }
 
 console.log('\n══ NOMBRE DEL SITIO ══');
@@ -848,7 +860,7 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
      queda anotado ya no es «falta validar» sino la única decisión abierta:
      cuatro hojas contra las tres del criterio. */
   t('De la ficha imprimible queda anotada la decisión de las hojas',
-    /cuatro hojas y el criterio dice tres/.test(pe)
+    /son cinco hojas y el criterio decía tres/.test(pe)
     && /no llevaba ninguna imagen/.test(pe));
   /* EL CRITERIO CAMBIO. Ya no se comprueba que quede anotado que el sitio
      «debe» leer la hoja: la portada ya la lee. Lo que ahora tiene que estar

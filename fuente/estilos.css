@@ -2186,8 +2186,15 @@ body.sin-desplazamiento{overflow:hidden}
      Las cotas se recalculan al ancho de la hoja desde ficha-logica.js. Sin ese
      repintado están medidas contra el ancho de la pantalla y caen fuera del
      dibujo. */
-  .escala { display: grid !important; grid-template-columns: .85fr 1fr;
-    gap: 0 6mm; align-items: start; }
+  /* La lámina ocupa el ancho completo de la hoja y las medidas van debajo.
+     Se probó a dos columnas y no funciona: el ancho del dibujo depende de la
+     especie —el fresno se dibuja dos veces más ancho que alto—, y en media
+     hoja la ilustración se salía de su columna y terminaba impresa encima de
+     la tabla. Peor todavía, el cálculo del dibujo mide el lienzo para elegir
+     su escala, y en una retícula flexible el ancho del lienzo depende a su vez
+     del dibujo: la medición se muerde la cola. A todo el ancho no hay pleito
+     por el sitio y la escala se calcula sobre un ancho que no cambia. */
+  .escala { display: block !important; }
   /* El lienzo de la hoja es la mitad de ancho que el de la pantalla. El dibujo
      se alinea a la izquierda y se le abre sitio a la izquierda: el rótulo de
      la cota de altura va por FUERA de su línea, y sin ese margen se cortaba a
@@ -2236,7 +2243,11 @@ body.sin-desplazamiento{overflow:hidden}
   .grupo, .medida, .dato-linea, .hoja-pie, .observacion { break-inside: avoid; }
   /* Los conjuntos de dentro tampoco: son los que se partían primero. */
   .galeria, .escala, .medidas, .ubicacion, .grupos, .cascada, .tabla-datos,
-  .docs, .dos-columnas { break-inside: avoid; }
+  .docs { break-inside: avoid; }
+  /* «Qué especie es» y «Su expediente» comparten sección pero son dos lecturas
+     distintas, y juntas no caben en una hoja. La unidad que no se parte es cada
+     una, no el par: así el corte cae entre las dos y no a media tabla. */
+  .dos-columnas > div { break-inside: avoid; }
   .ficha-portada { border-top: 0; margin-top: 0 !important; padding-top: 0 !important; }
 
   /* Los fondos profundos gastan tinta y no se leen impresos. Hay que apagarlos
@@ -2279,9 +2290,10 @@ body.sin-desplazamiento{overflow:hidden}
     break-inside: avoid; -webkit-column-break-inside: avoid; font-size: 8.5pt; }
   .dato-linea dt { flex: 0 0 26mm; }
   .domicilio { font-size: 11pt; margin: 0 0 3mm; }
-  /* Una sola columna: las medidas ya no ocupan el ancho de la hoja, comparten
-     el renglón con el dibujo. */
-  .medidas { display: grid !important; grid-template-columns: 1fr; }
+  /* Las medidas van debajo del dibujo, a dos columnas: a todo el ancho de la
+     hoja una sola columna dejaba media hoja vacía a la derecha. */
+  .medidas { display: grid !important; grid-template-columns: 1fr 1fr;
+    gap: 0 8mm; margin-top: 3mm !important; }
   .medida { padding: 1.1mm 0 !important; border-top: .4pt solid #ddd !important; }
 
   /* --- servicios: cuatro grupos en dos columnas --- */
