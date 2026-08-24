@@ -1929,7 +1929,15 @@ a[target="_blank"].sin-marca-externa::after{content:none}
 /* La nota tenía 53 px de aire por encima —el relleno de la hilera más su
    propio margen— y CERO por debajo: quedaba flotando lejos de los árboles que
    explica y pegada al cintillo morado, como si fuera su encabezado. */
-.bosque__nota{margin:14px 0 0;font-size:var(--t-apoyo);color:var(--gris);max-width:var(--medida-nota)}
+/* La nota va en cursiva: es la leyenda de la hilera —dice cómo leerla—, no
+   un párrafo del texto. En pantalla ancha va además de una sola línea
+   corrida: con la medida de nota partía en dos renglones y la leyenda
+   pesaba más que el dibujo que explica. El corte es 860 —una familia que
+   la hoja ya usa, no un décimo tope— y ahí sobra ancho para los ~107
+   caracteres del texto con el aviso de «sin medir». Por debajo la nota
+   recupera la medida de lectura y fluye, en vez de desbordar. */
+.bosque__nota{margin:14px 0 0;font-size:var(--t-apoyo);font-style:italic;color:var(--gris);max-width:var(--medida-nota)}
+@media(min-width:860px){.bosque__nota{max-width:none;white-space:nowrap}}
 .bosque__nota strong{color:var(--verde-bosque);font-weight:600}
 /* En pantalla tactil no hay raton que pasar: el globo no aplica y el pie hace
    todo el trabajo, que es justo por lo que se bajo la informacion. */
