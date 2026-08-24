@@ -121,6 +121,30 @@ async function cargarFotos(e) {
   return (e.fotos || []).length > 0;
 }
 
+/* La mitad derecha del encabezado. Quien tiene fotografía la enseña; quien no,
+   enseña la ilustración de su especie y, si tampoco la hay, su silueta. El
+   respaldo dice de qué especie es —que es lo que sí se sabe— y lo declara en el
+   pie: nunca se presenta un dibujo como si fuera una fotografía. */
+function pintarRetrato(e) {
+  const caja = document.getElementById("fRetrato");
+  if (!caja) return;
+  const f = (e.fotos && e.fotos[0]) || null;
+  if (f) {
+    caja.className = "retrato__foto";
+    caja.innerHTML = `<img src="${esc(f.url)}" alt="${esc(f.alt)}">`
+      + (f.credito ? `<figcaption class="retrato__credito nota-pie">Fotografía: ${esc(f.credito)}</figcaption>` : "");
+    return;
+  }
+  const p = perfilDe(e.especie);
+  const ilu = ilustracionDe(e.especie);
+  const razon = PROPORCION_ILUSTRACION[p.clave] || 1;
+  caja.className = "retrato__foto retrato__foto--silueta";
+  caja.innerHTML = (ilu
+      ? `<img src="${ilu}" srcset="${srcsetIlustracion(e.especie)}" alt="Ilustración de referencia de ${esc(p.nombre)}" style="aspect-ratio:${razon.toFixed(3)}">`
+      : svgSilueta(e.especie, 300, e.morfologia.extensionCopa_m, e.morfologia.altura_m))
+    + `<figcaption class="retrato__credito nota-pie nota-pie--alcance">Este ejemplar aún no tiene fotografía. El dibujo es de referencia de la especie: ${esc(p.nombre)}.</figcaption>`;
+}
+
 function pintarGaleria(e) {
   const cont = document.getElementById("fGaleria");
   const pie = document.getElementById("fPieFoto");
@@ -143,20 +167,27 @@ function pintarGaleria(e) {
 
   guia.textContent = "";
 
+  /* Mosaico: la elegida ocupa la celda grande y las demás la rodean en el
+     orden en que están en la carpeta, saltándose la que ya está en grande.
+     Al hacer clic en cualquiera, esa pasa al frente y el resto se recorre. */
   const pinta = (i) => {
+    const orden = [i].concat(fotos.map((_, j) => j).filter((j) => j !== i));
+    cont.className = `galeria galeria--${Math.min(fotos.length, 5)}`;
+    cont.innerHTML = orden.map((k, pos) => {
+      const x = fotos[k];
+      if (pos === 0) {
+        return `<div class="galeria__principal" style="--foto:url('${esc(x.url)}')">
+          <img src="${esc(x.url)}" alt="${esc(x.alt)}" loading="lazy">
+          ${fotos.length > 1 ? `<span class="galeria__contador">${k + 1} / ${fotos.length}</span>` : ""}
+        </div>`;
+      }
+      return `<button class="galeria__pieza" data-i="${k}" aria-label="Ver en grande la fotografía ${k + 1} de ${fotos.length}">
+        <img src="${esc(x.miniatura || x.url)}" alt="" loading="lazy">
+        <span class="galeria__pieza__ord" aria-hidden="true">${k + 1}</span></button>`;
+    }).join("");
     const f = fotos[i];
-    cont.innerHTML = `
-      <div>
-        <div class="galeria__principal" style="--foto:url('${esc(f.url)}')">
-          <img src="${esc(f.url)}" alt="${esc(f.alt)}" loading="lazy">
-          ${fotos.length > 1 ? `<span class="galeria__contador">${i + 1} / ${fotos.length}</span>` : ""}
-        </div>
-      </div>
-      ${fotos.length > 1 ? `<div class="galeria__tiras">${fotos.map((x, j) =>
-        `<button class="miniatura" data-i="${j}" aria-current="${j === i}" aria-label="Ver fotografía ${j + 1}">
-          <img src="${esc(x.miniatura || x.url)}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}`;
     pie.innerHTML = `${esc(f.pie || "")}${f.credito ? `<b>Fotografía: ${esc(f.credito)}</b>` : ""}`;
-    cont.querySelectorAll(".miniatura").forEach((b) =>
+    cont.querySelectorAll(".galeria__pieza").forEach((b) =>
       b.addEventListener("click", () => pinta(Number(b.dataset.i))));
   };
   pinta(0);
@@ -179,10 +210,12 @@ function pintarVistaCalle(e) {
   // desaparece con ella. Es además lo que modelo-ficha.js ya devolvía en
   // `pieVistaCalle`, que hasta ahora decía una cosa y la página otra.
   const propio = e.vistaCalle && e.vistaCalle.tipo === "panorama";
-  pie.innerHTML = (propio
-    ? "Panorama de Google Street View encuadrado sobre el ejemplar. "
-    : "Panorama de Google Street View sobre las coordenadas registradas. ")
-    + "La imagen <b>puede corresponder a una fecha anterior al dictamen</b> y no sustituye la verificación en campo.";
+  // Dos notas, no una: de dónde salió la imagen (*) y qué no dice (**). Iban
+  // en la misma frase y se leían como un solo aviso.
+  pie.innerHTML = `<span class="nota-pie">${propio
+      ? "Panorama de Google Street View encuadrado sobre el ejemplar."
+      : "Panorama de Google Street View sobre las coordenadas registradas."}</span>`
+    + '<span class="nota-pie nota-pie--alcance">La imagen <b>puede corresponder a una fecha anterior al dictamen</b> y no sustituye la verificación en campo.</span>';
 }
 
 /** Espacio que hay que dejar libre a la derecha para las etiquetas del eje. */
@@ -481,7 +514,7 @@ function pintarServicios(e) {
     const notas = [];
     if (haySin) notas.push('Los renglones marcados como "Sin dato" no se pudieron estimar para este ejemplar con la información disponible.');
     if (i === 3 && hayNeg) notas.push("Los valores negativos indican mayor consumo o emisión, no un ahorro: así lo reporta i-Tree cuando la sombra del árbol incrementa la demanda de calefacción.");
-    const nota = notas.map((x) => `<p class="grupo__nota">${x}</p>`).join("");
+    const nota = notas.map((x) => `<p class="grupo__nota nota-pie nota-pie--alcance">${x}</p>`).join("");
     // El primer grupo es el gancho: carbono y CO₂ son la cifra que la gente
     // repite. Se marca para que no pese lo mismo que los otros tres.
     const clases = ["grupo", enGrande ? "grupo--cifras" : "", i === 0 ? "grupo--destacada" : ""].filter(Boolean).join(" ");
@@ -865,9 +898,11 @@ export function pintarFicha(datos, slug) {
   const foto = (e.fotos && e.fotos.length && e.fotos[0].url) || null;
   if (foto) { meta('meta[property="og:image"]', foto); meta('meta[name="twitter:image"]', foto); }
   pintarEncabezado(e);
+  pintarRetrato(e);
   pintarGaleria(e);
   cargarFotos(e).then((hay) => {
     if (!hay) return;
+    pintarRetrato(e);
     pintarGaleria(e);
     // La imagen para compartir solo se conoce después del descubrimiento.
     const f = e.fotos && e.fotos[0] && e.fotos[0].url;

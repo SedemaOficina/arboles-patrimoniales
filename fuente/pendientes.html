@@ -263,6 +263,26 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend">
           <span class="pend__marca"></span>
           <div>
+            <h3>El rótulo «Origen en la Ciudad» y lo que de verdad trae</h3>
+            <p>La fila se llama ahora <b>«Exótica / invasora»</b>, igual que la columna del padrón, porque eso es lo que trae: una fórmula heredada de la especie desde la hoja <code>Taxonomia_SNIB</code>, no un dato capturado por ejemplar. Doce de los trece la traen vacía y la ficha dice «Sin determinar», que con este rótulo se lee bien: el SNIB no clasificó a esa especie como exótica.</p>
+            <p style="margin-top:9px">Queda la decisión de fondo: <b>si el sitio debe decir el origen de verdad</b> —nativa de la Cuenca de México, introducida, naturalizada—, eso es una columna nueva en <code>Taxonomia_SNIB</code>, no un cambio de rótulo. Hoy no existe y no se inventa.</p>
+          </div>
+          <span class="pend__quien" data-q="registro">Por decidir</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Si el logotipo no carga, el encabezado se desborda</h3>
+            <p>El <code>onerror</code> del logotipo institucional pone la clase <code>marca--sin-logo</code> y retira la imagen. Se dispara <b>dos veces</b> —el navegador reintenta con el <code>srcset</code>—, y en la segunda el nodo ya está fuera del documento: <code>this.closest('.marca')</code> devuelve <code>null</code> y revienta con un error en consola. Con el logotipo ausente y la clase a medio aplicar, el nombre del sitio se sale 66 px del ancho de un teléfono de 390.</p>
+            <cite>Se ve solo si el archivo del logotipo no llega —un despliegue a medias, un servidor con la carpeta incompleta—. La corrección es de una línea: guardar el <code>closest</code> antes de retirar el nodo, o marcar el elemento para no repetir el manejador. Detectado el 24 de agosto de 2026 sirviendo la ficha sin la carpeta de marca.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Por implementar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
             <h3>El crédito de las ilustraciones de árboles</h3>
             <p>Las fotografías del registro son todas de la Secretaría, así que su crédito deja de ser un dato capturado y pasa a ser una constante escrita una sola vez en el código. Las <b>ilustraciones</b> de las especies tendrán otra procedencia, y ahí esa constante ya no sirve.</p>
             <cite>Hay que decidir dónde vive ese crédito —en el padrón, junto a los archivos del repositorio, o en la sección de créditos de Recursos— antes de publicar la primera ilustración de fuente ajena.</cite>
