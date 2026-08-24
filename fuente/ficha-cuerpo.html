@@ -73,37 +73,45 @@
       autorización, repórtalo a tu Alcaldía o a la Procuraduría Ambiental y del Ordenamiento Territorial.</span>
     </p>
     <div class="ubicacion">
-      <div>
+      <div class="ubicacion__datos">
         <p class="domicilio" id="fDomicilio"></p>
         <dl class="tabla-datos" id="fUbicacion"></dl>
       </div>
       <!-- El recuadro ya no explica dónde está el árbol: lo muestra. El botón
-           va debajo del mapa: es el remate de esa mirada, no de la tabla. -->
-      <div class="mapa-caja">
-        <div class="mapa-caja__lienzo" id="fMapa" role="img"
-             aria-label="Mapa con la ubicación de este ejemplar"></div>
-        <div class="ubicacion__accion" id="fAccionMapa"></div>
-        <p class="mapa-caja__pie" id="fMapaPie"></p>
+           va debajo del mapa: es el remate de esa mirada, no de la tabla.
+           La vista de calle era una banda aparte, a todo lo ancho: a dieciséis
+           novenos son más de 600 px de alto que empujaban el resto de la ficha
+           fuera de la pantalla. Ahora comparte columna con el mapa, que
+           responde la misma pregunta —dónde está— y se lee de corrido: primero
+           cómo se ve desde la banqueta, luego en qué punto de la ciudad queda. -->
+      <div class="mirador">
+        <div class="mirador__calle">
+          <span class="rotulo rotulo--mirador">Vista desde la calle</span>
+          <p class="aviso-fecha" id="fVistaCalleAviso"></p>
+          <div class="vista-calle" id="fVistaCalle"></div>
+          <p class="vista-calle__pie" id="fVistaCallePie"></p>
+        </div>
+        <div class="mapa-caja">
+          <div class="mapa-caja__lienzo" id="fMapa" role="img"
+               aria-label="Mapa con la ubicación de este ejemplar"></div>
+          <div class="ubicacion__accion" id="fAccionMapa"></div>
+          <p class="mapa-caja__pie" id="fMapaPie"></p>
+        </div>
+      </div>
+
+      <!-- «Llévatelo» era una sección aparte y repetía el enlace a Google Maps
+           que ya vive bajo el mapa: «Cómo llegar» aparecía dos veces en la
+           misma página. Entró a esta retícula, al pie de la columna de datos:
+           apilar la vista de calle sobre el mapa alargó la columna derecha y
+           dejaba media pantalla en blanco a la izquierda. Aquí llena ese hueco
+           y cierra la banda donde se lee lo que hay que llevarse. -->
+      <div class="llevar" id="fVisita">
+        <h3>Llévatelo en papel</h3>
+        <p>Imprime esta ficha y ve a verlo. Lleva el domicilio, las referencias para llegar, sus medidas y lo que la ley dice sobre él, en una hoja que funciona sin señal de celular y sin batería.</p>
+        <button type="button" class="boton boton--solido" id="fImprimir">Imprimir la ficha</button>
       </div>
     </div>
 
-    <div style="margin-top:38px">
-      <span class="rotulo" style="color:var(--jacaranda);display:block;margin-bottom:12px">Vista desde la calle</span>
-      <p class="aviso-fecha" id="fVistaCalleAviso"></p>
-      <div class="vista-calle" id="fVistaCalle"></div>
-      <p class="vista-calle__pie" id="fVistaCallePie"></p>
-    </div>
-
-    <!-- «Llévatelo» era una sección aparte y repetía el enlace a Google Maps que
-         ya vive bajo el mapa: «Cómo llegar» aparecía dos veces en la misma
-         página. Ahora cierra esta banda, que es de lo que habla: cómo llegar y
-         qué llevarse. El enlace al mapa se quedó donde estaba argumentado, bajo
-         el mapa; aquí solo queda imprimir. -->
-    <div class="llevar" id="fVisita">
-      <h3>Llévatelo en papel</h3>
-      <p>Imprime esta ficha y ve a verlo. Lleva el domicilio, las referencias para llegar, sus medidas y lo que la ley dice sobre él, en una hoja que funciona sin señal de celular y sin batería.</p>
-      <button type="button" class="boton boton--solido" id="fImprimir">Imprimir la ficha</button>
-    </div>
   </div>
 </section>
 
