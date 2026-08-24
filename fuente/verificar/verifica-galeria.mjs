@@ -132,7 +132,18 @@ console.log('\n══ LAUREANO · ESPECIE EXÓTICA PUBLICADA ══');
 const L2=ver('laureano');
 t('Se marca como exótica',L2.esExotica===true);
 t('Con la explicación de por qué sigue siendo patrimonial',/no es originaria de la Cuenca de México/.test(L2.notaExotica));
-t('Y aparece en la ficha técnica',L2.taxonomia.find(f=>f.clave==='Origen en la Ciudad').valor==='Exótica');
+/* CAMBIÓ EL CRITERIO. La fila se llamaba «Origen en la Ciudad» y el dato que
+   trae responde otra pregunta: es la columna «Exótica / invasora» del padrón,
+   fórmula heredada de la especie desde Taxonomia_SNIB. Doce de trece ejemplares
+   la traen vacía, así que doce fichas publicaban «Origen en la Ciudad · Sin
+   determinar», que un vecino lee como «no se sabe de dónde es este árbol»
+   cuando lo que pasa es que el SNIB no clasificó a la especie como exótica.
+   Ahora la fila lleva el rótulo del padrón y se comprueba eso: que el rótulo
+   sea el mismo de la columna, y que la ausencia se declare, no se rellene. */
+t('Y aparece en la ficha técnica con el rótulo del padrón',
+  L2.taxonomia.find(f=>f.clave==='Exótica / invasora').valor==='Exótica');
+t('Sin dato en el padrón, la ficha lo declara en vez de suponer origen',
+  ver('tacuba').taxonomia.find(f=>f.clave==='Exótica / invasora').valor==='Sin determinar');
 
 console.log('\n══ FOTOGRAFÍAS MONTADAS ══');
 {

@@ -4352,7 +4352,14 @@ function pintarTaxonomia(e) {
   const atributos = [
     ["Nivel de prioridad", e.conservacion.prioridad],
     ["Forma de crecimiento", t.formaCrecimiento],
-    ["Origen en la Ciudad", e.conservacion.exoticaInvasora || e.conservacion.origen],
+    // El rótulo decía «Origen en la Ciudad» y el dato responde otra pregunta:
+    // la columna del padrón es «Exótica / invasora», fórmula heredada de la
+    // especie desde la hoja Taxonomia_SNIB. Doce de trece ejemplares la traen
+    // vacía, así que doce fichas decían «Origen en la Ciudad · Sin determinar»
+    // —que se lee como «no sabemos de dónde es»— cuando lo que ocurre es que
+    // el SNIB no clasificó a la especie como exótica. Con el rótulo del padrón,
+    // la ausencia se lee como lo que es: un dato que no está.
+    ["Exótica / invasora", e.conservacion.exoticaInvasora],
     ["Endemismo", e.conservacion.endemismo],
     ["NOM-059-SEMARNAT", e.conservacion.nom059],
     ["CITES", e.conservacion.cites],

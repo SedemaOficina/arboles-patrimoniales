@@ -4947,7 +4947,7 @@ function construirEjemplar(f, contrato, avisos) {
     conservacion: {
       iucn: limpiar(f.iucn), nom059: limpiar(f.nom059), cites: limpiar(f.cites),
       prioritaria: limpiar(f.prioritaria), prioridad: limpiar(f.nivel_prioridad),
-      endemismo: limpiar(f.endemismo), origen: null,
+      endemismo: limpiar(f.endemismo),
       exoticaInvasora: limpiar(f.exotica_invasora),
       esExotica: /exótica|exotica/i.test(limpiar(f.exotica_invasora) || ""),
     },

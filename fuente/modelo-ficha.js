@@ -305,7 +305,10 @@ class Component extends DCLogic {
       this.fila("Especie", e.especie), this.fila("Autoridad taxonómica", t.autor),
       this.fila("Nivel de prioridad", e.conservacion.prioridad),
       this.fila("Forma de crecimiento", t.formaCrecimiento),
-      this.fila("Origen en la Ciudad", e.conservacion.exoticaInvasora || e.conservacion.origen),
+      // Ver ficha-logica.js: el rótulo es el de la columna del padrón,
+      // «Exótica / invasora». El respaldo `conservacion.origen` se retiró:
+      // lector-v2 lo devolvía fijo en null, no leía ninguna columna.
+      this.fila("Exótica / invasora", e.conservacion.exoticaInvasora),
       this.fila("Endemismo", e.conservacion.endemismo),
       this.fila("NOM-059-SEMARNAT", e.conservacion.nom059),
       this.fila("CITES", e.conservacion.cites),
