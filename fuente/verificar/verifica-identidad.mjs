@@ -48,9 +48,15 @@ const cssI = fs.readFileSync('estilos.css','utf8');
 t('css · logotipo y nombre del sitio comparten renglón con el menú',
   /\.barra \.marca\{display:flex;align-items:center/.test(cssI) && !/\.franja-gob\{/.test(cssI));
 t('css · el logotipo cede ancho para caber en la tira', /\.marca__logo\{display:block;width:372px/.test(cssI));
-t('css · el encabezado no se imprime: el membrete lo sustituye', /\.barra, \.pie/.test(cssI));
-t('css · el membrete impreso da renglón propio al logotipo',
-  /\.hoja-cabeza__gob \{ flex: 1 0 100%/.test(cssI));
+/* RETIRADAS EL 24 DE AGOSTO DE 2026, con la hoja de impresión.
+   Comprobaban que el membrete impreso sustituyera al encabezado y que el
+   logotipo institucional tuviera renglón propio en el papel. Ya no hay papel:
+   la ficha se retiró de la impresión por decisión de contenido —el registro se
+   consulta en pantalla— y con ella se fueron `@media print`, `.hoja-cabeza`,
+   `.hoja-pie` y el botón «Imprimir o guardar en PDF». No se borran en
+   silencio: cambió el criterio, no el resultado. */
+t('css · ya no queda hoja de impresión que mantener',
+  !/@media print/.test(cssI) && !/hoja-cabeza|hoja-pie/.test(cssI));
 t('css · la tilde del titular ya no se encima con el rótulo', /\.portada h1\{[^}]*padding-top:\.16em/.test(cssI));
 t('css · no quedan reglas de la franja retirada', !/franja-gob/.test(cssI));
 t('fuente · el archivo del logotipo anterior fue borrado', !fs.existsSync('assets/img/logo-sedema.svg'));
@@ -94,8 +100,12 @@ console.log('\n-- la medida de lectura --');
     /62ch se leen como unos 68 caracteres reales/.test(cs));
   t('El texto corrido se acoge a la medida',
     (cs.match(/max-width:var\(--medida\)/g)||[]).length >= 9);
+  /* Eran diez hasta el 24 de agosto de 2026. La décima era `.llevar p`, el
+     texto de «Llévatelo en papel», que se retiró con la hoja de impresión.
+     El criterio no cambió —toda nota se acoge a su medida—; cambió el censo
+     porque desapareció una nota. */
   t('Y las notas y pies, a la suya',
-    (cs.match(/max-width:var\(--medida-nota\)/g)||[]).length >= 10);
+    (cs.match(/max-width:var\(--medida-nota\)/g)||[]).length >= 9);
 
   /* Las excepciones se permiten, pero se cuentan y cada una lleva escrito por
      qué su ancho no lo decide la lectura. Si aparece una décima, esto falla. */

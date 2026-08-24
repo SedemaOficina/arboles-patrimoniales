@@ -829,52 +829,10 @@ function pintarProcedencia(e) {
 
 /* ---------- entrada ---------- */
 
-/** Ficha imprimible: el árbol se visita en la calle, y ahí no hay señal. */
-function armarVisita(e) {
-  const boton = document.getElementById("fImprimir");
-  if (boton && boton.dataset.escuchando !== "si") {
-    boton.dataset.escuchando = "si";
-    boton.addEventListener("click", () => window.print());
-  }
-  /* Aquí vivía un segundo enlace a Google Maps, idéntico al que ya está bajo
-     el mapa: «Cómo llegar» salía dos veces en la misma página. Se quedó el de
-     abajo del mapa, cuya posición está argumentada —quien ya vio dónde está el
-     árbol es quien quiere trazar la ruta—. Este bloque solo imprime. */
-}
-
-/* EL EJEMPLAR ABIERTO, PARA VOLVER A DIBUJAR LA LÁMINA EN PAPEL.
-   La lámina no se maqueta con reglas: se calcula midiendo el dibujo ya montado
-   —la caja del árbol depende del reparto flexible y de la razón de cada
-   ilustración—. Esos píxeles valen para el ancho que el lienzo tiene EN
-   PANTALLA. La hoja es más angosta: sin volver a medir, la cota de altura se
-   encima en el tronco y la barra de copa dibuja un ancho que no es el suyo. */
-let ejemplarAbierto = null;
-
-/* «beforeprint» NO sirve para esto: se dispara con la maqueta de pantalla
-   todavía puesta, así que volvería a medir lo mismo. La consulta de medios
-   «print» cambia cuando la maqueta ya es la de la hoja, y lo que se toque ahí
-   alcanza a la impresión —comprobado imprimiendo—. El cambio a «false»
-   devuelve la lámina a la pantalla al salir.
-
-   Safari no emite ese cambio al imprimir: ahí el ajuste llega con afterprint,
-   es decir cuando la hoja ya salió. Queda declarado; no hay forma de medir el
-   ancho de la hoja antes de tenerla. */
-function conectarLaminaImpresa() {
-  const repintar = () => { if (ejemplarAbierto) pintarEscala(ejemplarAbierto); };
-  if (window.matchMedia) {
-    const mq = window.matchMedia("print");
-    if (mq.addEventListener) mq.addEventListener("change", repintar);
-    else if (mq.addListener) mq.addListener(repintar);
-  }
-  window.addEventListener("afterprint", repintar);
-}
-conectarLaminaImpresa();
-
 export function pintarFicha(datos, slug) {
   const todos = datos.ejemplares;
   const e = todos.find((x) => x.slug === slug) || todos[0];
   if (!e) return;
-  ejemplarAbierto = e;
   document.title = `${e.nombreAsignado} · Árboles patrimoniales de la Ciudad de México`;
   // La tarjeta de compartir sigue al ejemplar abierto. Ojo: los rastreadores
   // que no ejecutan JavaScript solo verán la tarjeta general del sitio; para
@@ -919,5 +877,4 @@ export function pintarFicha(datos, slug) {
   pintarTaxonomia(e);
   pintarProcedencia(e);
   pintarFuentes(e);
-  armarVisita(e);
 }

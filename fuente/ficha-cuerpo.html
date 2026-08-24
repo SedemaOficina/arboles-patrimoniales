@@ -2,30 +2,6 @@
 <!--#encabezado-->
 
 <main id="contenido">
-<!-- Membrete y pie de la ficha impresa. Invisibles en pantalla. -->
-<div class="hoja-cabeza" aria-hidden="true">
-  <!-- OJO: este membrete está oculto en pantalla y solo se ve al imprimir,
-       PERO el navegador descarga la imagen igual. Eran 215 KB en cada visita
-       para algo que casi nadie imprime. En WebP son 123, misma imagen. Se
-       conserva el tamaño «grande» porque a 180 mm de ancho el papel pide
-       2 126 px a 300 ppp y este tiene 2 294. -->
-  <picture>
-    <source type="image/webp" srcset="assets/img/marca/logo-institucional-grande.webp">
-    <img class="hoja-cabeza__gob" src="assets/img/marca/logo-institucional-grande.png"
-         width="2294" height="168"
-         alt="Gobierno de la Ciudad de México · Secretaría del Medio Ambiente · Sistema de Información Ambiental de la Ciudad de México">
-  </picture>
-  <span class="hoja-cabeza__texto">
-    <b>Árboles patrimoniales de la Ciudad de México</b>
-    Registro público · Secretaría del Medio Ambiente
-  </span>
-  <picture>
-    <source type="image/webp" srcset="assets/img/marca/emblema-color-media.webp">
-    <img class="hoja-cabeza__emblema" src="assets/img/marca/emblema-media.png"
-         width="256" height="255"
-         alt="Árboles Patrimoniales de la Ciudad de México">
-  </picture>
-</div>
 <!-- EL ENCABEZADO MUESTRA AL EJEMPLAR, 24 de agosto de 2026.
      El campo morado se retiró el 23 porque era idéntico en los trece y no decía
      nada del árbol que presentaba. Sobre papel el nombre pesaba, pero la página
@@ -121,17 +97,6 @@
         </div>
       </div>
 
-      <!-- «Llévatelo» era una sección aparte y repetía el enlace a Google Maps
-           que ya vive bajo el mapa: «Cómo llegar» aparecía dos veces en la
-           misma página. Entró a esta retícula, al pie de la columna de datos:
-           apilar la vista de calle sobre el mapa alargó la columna derecha y
-           dejaba media pantalla en blanco a la izquierda. Aquí llena ese hueco
-           y cierra la banda donde se lee lo que hay que llevarse. -->
-      <div class="llevar" id="fVisita">
-        <h3>Llévatelo en papel</h3>
-        <p>Un árbol patrimonial se visita con la ficha en mano. Si tu teléfono te acompaña, mejor no la imprimas: el papel también sale de un árbol. Y si vas a donde no hay señal, aquí está completa —domicilio, referencias, medidas y lo que la ley dice sobre él—, en una hoja que funciona sin batería.</p>
-        <button type="button" class="boton boton--solido boton--doc" id="fImprimir">Imprimir o guardar en PDF</button>
-      </div>
     </div>
 
   </div>
@@ -207,10 +172,5 @@
 
 
 </main>
-
-<div class="hoja-pie" aria-hidden="true">
-  <p>Ficha generada desde el registro público de árboles patrimoniales de la Ciudad de México, que se actualiza de forma continua. Las cifras de servicios ambientales son estimaciones anuales calculadas con i-Tree y no sustituyen un dictamen técnico.</p>
-  <p>Secretaría del Medio Ambiente · sedema.cdmx.gob.mx/arboles-patrimoniales · Denuncias ante la PAOT: 55 5265 0780</p>
-</div>
 
 <!--#pie-->

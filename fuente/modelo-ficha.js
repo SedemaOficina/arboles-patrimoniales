@@ -333,7 +333,6 @@ class Component extends DCLogic {
       binomio: e.especie || "Especie por determinar",
       hayComun: !!e.nombreComun,
       comun: e.nombreComun ? e.nombreComun.toLowerCase() : "",
-      alImprimir: () => window.print(),
       etiquetas, resumen,
       notaCategoria, hayNotaCategoria: Boolean(notaCategoria),
       hayAltura: alt != null,
