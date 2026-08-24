@@ -49,7 +49,8 @@ export function indicadoresPadron(lista, totalPadron) {
   const edad = sumar(lista, (e) => e.edadEstimada);
   const lluvia = sumar(lista, (e) => S(e).precipitacionInterceptada_L);
   const escurr = sumar(lista, (e) => S(e).escorrentiaReducida_L);
-  const carbono = sumar(lista, (e) => S(e).carbonoSecuestrado_kg);
+  // El carbono elemental salió del padrón v2: se publica el CO₂ equivalente,
+  // que es la misma cantidad en la unidad de la convención internacional.
   const co2 = sumar(lista, (e) => S(e).co2Absorbido_kg);
 
   const porAlcaldia = {};
@@ -90,12 +91,13 @@ export function indicadoresPadron(lista, totalPadron) {
       texto: "Menos agua corriendo por las calles, y con ello menos encharcamientos.",
       nota: cobertura(escurr) },
 
-    { clave: "carbono", titulo: "Carbono secuestrado", cifra: fmt(carbono.valor, 1), unidad: uni(carbono.valor, "kg al año"),
-      texto: "Retirado de la atmósfera y almacenado en el tronco, las ramas y las raíces.",
-      nota: cobertura(carbono) },
-
+    /* Un solo indicador de clima. «Carbono secuestrado» y «Absorción de CO₂
+       equivalente» eran la misma cantidad en dos unidades, una debajo de la
+       otra: quien las leía seguidas contaba dos veces la misma captura. Se
+       conserva el CO₂ equivalente, que es la unidad en la que se reportan los
+       compromisos climáticos, con la explicación de dónde queda el carbono. */
     { clave: "co2", titulo: "Absorción de CO₂ equivalente", cifra: fmt(co2.valor, 1), unidad: uni(co2.valor, "kg al año"),
-      texto: "Gases de efecto invernadero que dejan de estar en el aire de la ciudad.",
+      texto: "Retirado de la atmósfera y almacenado en el tronco, las ramas y las raíces.",
       nota: cobertura(co2) },
   ];
 }

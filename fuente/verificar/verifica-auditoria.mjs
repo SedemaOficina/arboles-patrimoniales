@@ -477,14 +477,46 @@ console.log('\n══ LA FICHA EN PAPEL ══');
   t('En papel sí, y con el filete institucional',
     /\.hoja-cabeza \{ display: flex !important;[\s\S]{0,220}?var\(--jacaranda\)/.test(cs6));
   t('Se descarta lo que solo funciona en pantalla',
-    ['.galeria','.mapa-caja','.escala__lienzo','.vista-calle','.glosario-servicios','#fVisita','.barra']
+    ['.mapa-caja','.vista-calle','.glosario-servicios','#fVisita','.barra','.galeria__tiras']
       .every(x => cs6.slice(cs6.indexOf('@media print')).includes(x)));
-  t('Las medidas sobreviven a que se vaya la ilustración',
-    /\.escala \{ display: block !important; \}/.test(cs6));
+  /* CAMBIÓ EL CRITERIO. Antes esta prueba exigía que la ilustración se fuera al
+     papel y que las medidas sobrevivieran solas: «.escala { display: block }».
+     Con esa regla la ficha impresa no llevaba NINGUNA imagen —ni la fotografía
+     del ejemplar, ni el dibujo a escala— y se imprimía como un formulario de
+     texto. Una ficha de campo se imprime justamente para reconocer el árbol
+     cuando llegas: sin imagen no cumple su oficio. Ahora las dos viajan, y lo
+     que se comprueba es eso. */
+  t('La ficha impresa lleva la fotografía del ejemplar',
+    /\.galeria \{ display: block !important; \}/.test(cs6)
+    && /\.galeria__principal \{ height: 62mm/.test(cs6)
+    && /\.galeria__principal::before \{ display: none !important; \}/.test(cs6));
+  t('Y la lámina a escala, con las medidas a su lado',
+    /\.escala \{ display: grid !important; grid-template-columns: \.85fr 1fr;/.test(cs6));
+  /* A este ancho el rótulo de la cota del diámetro se sale del lienzo. Se
+     retira entera en vez de imprimirla cortada. */
+  t('La cota del diámetro no se imprime cortada: no se imprime',
+    /\.cota--dap \{ display: none !important; \}/.test(cs6));
+  t('Las cotas se recalculan al ancho de la hoja, no al de la pantalla',
+    /matchMedia\("print"\)/.test(fs.readFileSync('ficha-logica.js','utf8'))
+    && /ejemplarAbierto/.test(fs.readFileSync('ficha-logica.js','utf8')));
+  t('Las cifras destacadas de servicios se imprimen en negro, no en blanco',
+    /-webkit-text-fill-color: #000 !important;/.test(cs6)
+    && /\.cifra-serv b, \.cifra-serv b u, \.cifra-serv span, \.cifra-serv \.sin-dato/.test(cs6));
+  t('Ningún título se parte entre dos hojas',
+    /h1, h2, h3 \{ break-inside: avoid; \}/.test(cs6)
+    && /\.rotulo \{ break-after: avoid; \}/.test(cs6));
+  t('Los enlaces del expediente se imprimen con su dirección',
+    /\.docs a\[href\]::after \{ content: " " attr\(href\) !important;/.test(cs6));
   t('Los fondos profundos se apagan hijo por hijo, no solo el contenedor',
     /\.resumen, \.resumen > \*, \.resumen__nota/.test(cs6));
-  t('Taxonomía y medidas van a dos columnas para no comerse una hoja',
-    /\.tabla-datos \{ columns: 2;/.test(cs6) && /\.medidas \{ display: grid !important; grid-template-columns: 1fr 1fr/.test(cs6));
+  /* Las medidas ya no van a dos columnas: comparten renglón con el dibujo a
+     escala, y a la mitad del ancho la retícula de dos partía cada renglón en
+     dos líneas. La taxonomía sí sigue a dos columnas, que es de donde venía el
+     ahorro de hoja. */
+  t('La taxonomía va a dos columnas para no comerse una hoja',
+    /\.tabla-datos \{ columns: 2;/.test(cs6));
+  t('Las medidas van a una, porque comparten renglón con el dibujo',
+    /\.medidas \{ display: grid !important; grid-template-columns: 1fr; \}/.test(cs6));
   t('Las secciones pueden partirse; los bloques pequeños no',
     /\.grupo, \.medida, \.dato-linea, \.hoja-pie, \.observacion \{ break-inside: avoid; \}/.test(cs6));
 }
@@ -811,8 +843,13 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
     && /sin ninguna fotografía/.test(pe));
   t('La auditoría de interfaz sigue sin realizarse',
     /No realizada/.test(pe) && /consistencia del encabezado/.test(pe));
-  t('La ficha imprimible espera validación en papel',
-    /falta validar el formato en papel/.test(pe));
+  /* CAMBIÓ EL CRITERIO. El formato ya se validó en carta y en A4, y se
+     corrigieron los cuatro defectos que solo se veían imprimiendo. Lo que
+     queda anotado ya no es «falta validar» sino la única decisión abierta:
+     cuatro hojas contra las tres del criterio. */
+  t('De la ficha imprimible queda anotada la decisión de las hojas',
+    /cuatro hojas y el criterio dice tres/.test(pe)
+    && /no llevaba ninguna imagen/.test(pe));
   /* EL CRITERIO CAMBIO. Ya no se comprueba que quede anotado que el sitio
      «debe» leer la hoja: la portada ya la lee. Lo que ahora tiene que estar
      anotado es lo que falta —la ficha, que sigue con el congelado— y la regla

@@ -2217,9 +2217,19 @@ body.sin-desplazamiento{overflow:hidden}
      Las cotas se recalculan al ancho de la hoja desde ficha-logica.js. Sin ese
      repintado están medidas contra el ancho de la pantalla y caen fuera del
      dibujo. */
-  .escala { display: grid !important; grid-template-columns: 1fr 1fr;
+  .escala { display: grid !important; grid-template-columns: .85fr 1fr;
     gap: 0 6mm; align-items: start; }
-  .escala__lienzo { background: #fff !important; }
+  /* El lienzo de la hoja es la mitad de ancho que el de la pantalla. El dibujo
+     se alinea a la izquierda y se le abre sitio a la izquierda: el rótulo de
+     la cota de altura va por FUERA de su línea, y sin ese margen se cortaba a
+     media palabra. */
+  .escala__lienzo { background: #fff !important; height: 62mm !important;
+    justify-content: flex-start !important; padding-left: 96px !important; }
+  /* La cota del diámetro señala el tronco desde la izquierda, y a este ancho
+     su rótulo se sale del lienzo. Una cota cortada mide menos de lo que dice:
+     se retira, y el diámetro se lee en la tabla de al lado, dos renglones más
+     abajo. Las otras tres —altura, copa y la figura de 1.70 m— sí caben. */
+  .cota--dap { display: none !important; }
   .escala__pie { font-size: 7pt; color: #444; margin-top: 1mm; }
 
   /* --- membrete --- */
@@ -2301,8 +2311,14 @@ body.sin-desplazamiento{overflow:hidden}
      Apagar el fondo no basta: hay que devolverle color al texto, y también al
      relleno, que es lo que pinta el número. */
   .grupo--cifras, .grupo--destacada, .cifra-serv { background: #fff !important; }
-  .grupo__cifras { display: grid !important; grid-template-columns: 1fr 1fr;
-    gap: 0 6mm; }
+  /* Dos correcciones de la retícula de cifras en papel. auto-fit y no
+     «1fr 1fr»: el grupo de clima publica una sola cifra, y con dos columnas
+     fijas quedaba media caja vacía a su derecha. Y align-content arriba: en
+     pantalla las cifras se centran en el alto de la tarjeta, que en papel deja
+     el número colgando a media caja y se lee como un renglón que falta. */
+  .grupo__cifras { display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(28mm, 1fr));
+    align-content: start !important; gap: 0 6mm; }
   .cifra-serv { break-inside: avoid; padding: 1.1mm 0 !important;
     border-top: .4pt solid #ddd; text-align: left !important; }
   .cifra-serv b, .cifra-serv b u, .cifra-serv span, .cifra-serv .sin-dato {
