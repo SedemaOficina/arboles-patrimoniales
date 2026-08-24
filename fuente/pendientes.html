@@ -526,12 +526,23 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend">
           <span class="pend__marca"></span>
           <div>
-            <h3>El logotipo institucional quedó sin uso</h3>
-            <p>Al retirar la ficha para impresión el 24 de agosto de 2026 se fue el membrete, que era lo único que usaba <code>assets/img/marca/logo-institucional-*</code>: seis archivos, unos <b>730 KB</b>. Ya no los pide ninguna página.</p>
-            <p style="margin-top:9px">Se conservan a propósito, porque la suite de identidad todavía comprueba que estén entregados. Si se borran hay que retirar también esas tres comprobaciones, y entonces el sitio se queda sin ninguna copia del logotipo institucional en el repositorio.</p>
-            <cite>Decisión pendiente: borrarlos y quitar las comprobaciones, o dejarlos como archivo de marca.</cite>
+            <h3>Dos archivos del logotipo institucional quedaron sin uso</h3>
+            <p>Al retirar la ficha para impresión el 24 de agosto de 2026 se fue el membrete, que era lo único que pedía la variante <b>grande</b> del logotipo. Son <b>dos archivos</b> —<code>logo-institucional-grande.png</code> y <code>.webp</code>, unos <b>346 KB</b>— en <code>fuente/assets/img/marca/</code>.</p>
+            <p style="margin-top:9px"><b>Ojo: las variantes «chico» y «media» SÍ se usan.</b> Las pide el encabezado de todas las páginas. Solo sobran las dos «grande».</p>
+            <p style="margin-top:9px">Las comprobaciones que las exigían ya se retiraron —<code>verifica-identidad</code> dejó de censarlas y <code>verifica-sistema</code> ahora comprueba lo contrario, que no las pida nadie—, así que se pueden mover cuando quieras. Sus copias en <code>docs/</code> y <code>prueba/</code> desaparecen solas al construir: el armado borra y vuelve a copiar esa carpeta.</p>
+            <div class="arreglo">
+              <b>Cómo se corrige</b>
+              <ol>
+                <li>Desde la raíz del repositorio, en Git Bash:<br>
+                    <code>mkdir -p _a_borrar &amp;&amp; mv fuente/assets/img/marca/logo-institucional-grande.* _a_borrar/</code></li>
+                <li><b>Reconstruye:</b> <code>fuente/construir/construir.sh prueba</code> y luego <code>produccion</code>.</li>
+                <li><b>Verifica:</b> <code>sh fuente/verificar/verificar.sh</code>.</li>
+                <li>Si todo queda en verde, borra <code>_a_borrar/</code> a mano.</li>
+              </ol>
+            </div>
+            <cite>Se dejan en el disco en vez de borrarlos de golpe por si se quiere conservar una copia del logotipo institucional a resolución de impresión.</cite>
           </div>
-          <span class="pend__quien" data-q="decidido">Por decidir</span>
+          <span class="pend__quien" data-q="tu">Tú</span>
         </article>
 
       </div>

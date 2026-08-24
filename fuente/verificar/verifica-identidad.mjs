@@ -60,7 +60,11 @@ t('css · ya no queda hoja de impresión que mantener',
 t('css · la tilde del titular ya no se encima con el rótulo', /\.portada h1\{[^}]*padding-top:\.16em/.test(cssI));
 t('css · no quedan reglas de la franja retirada', !/franja-gob/.test(cssI));
 t('fuente · el archivo del logotipo anterior fue borrado', !fs.existsSync('assets/img/logo-sedema.svg'));
-for (const n of ['chico','media','grande'])
+/* «grande» salió de la lista el 24 de agosto de 2026: solo lo usaba el membrete
+   de la ficha impresa, que se retiró. Los dos archivos quedan en el disco a la
+   espera de que el usuario los borre; el encabezado del sitio sigue pidiendo
+   «chico» y «media», y esos sí tienen que estar entregados. */
+for (const n of ['chico','media'])
   for (const e of ['png','webp'])
     t(`assets · logo-institucional-${n}.${e} entregado`, fs.existsSync(`assets/img/marca/logo-institucional-${n}.${e}`));
 

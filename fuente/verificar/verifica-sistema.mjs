@@ -178,16 +178,21 @@ console.log('\n-- 8 · lo que la auditoría 360 dejó cerrado --');
     /<source type="image\/webp"[^>]*emblema-color-media\.webp 128w/.test(cu));
   t('El emblema del pie, también',
     /<source type="image\/webp"[^>]*emblema-color-media\.webp 1x/.test(fs.readFileSync('parciales/pie.html','utf8')));
-  t('Y el membrete impreso de la ficha, que se descarga aunque no se vea',
-    /<source type="image\/webp" srcset="assets\/img\/marca\/logo-institucional-grande\.webp">/
-      .test(fs.readFileSync('ficha-cuerpo.html','utf8')));
-  t('Se explica por qué el membrete oculto igual pesaba',
-    /el navegador descarga la imagen igual/.test(fs.readFileSync('ficha-cuerpo.html','utf8')));
+  /* RETIRADAS EL 24 DE AGOSTO DE 2026. Comprobaban que el membrete impreso de
+     la ficha ofreciera WebP antes que PNG y que estuviera escrito por qué una
+     imagen oculta igual pesa. Ya no hay membrete: la ficha para impresión se
+     eliminó entera. El criterio —toda imagen de marca se sirve en WebP— sigue
+     vivo en las dos aserciones de arriba y en la del cintillo. */
   t('La marca de agua del cintillo usa image-set con WebP',
     /background:image-set\(url\("assets\/img\/marca\/emblema-color-grande\.webp"\) type\("image\/webp"\)/.test(css));
-  t('Ninguna página pide ya el PNG grande del logotipo institucional',
-    !/logo-institucional-grande\.png[^)]*\)/.test(css) &&
-    /logo-institucional-grande\.png/.test(fs.readFileSync('ficha-cuerpo.html','utf8')));  // solo como respaldo del <picture>
+  /* CAMBIÓ EL CRITERIO, 24 de agosto de 2026. Antes se exigía que el PNG grande
+     siguiera EXISTIENDO en ficha-cuerpo.html como respaldo del <picture> del
+     membrete. Retirada la hoja de impresión, ese respaldo desapareció con él:
+     ahora se exige lo contrario, que no lo pida nadie. El encabezado del sitio
+     sigue usando las variantes «chico» y «media», que no se tocaron. */
+  t('Ninguna página pide ya el logotipo institucional grande',
+    !/logo-institucional-grande/.test(css) &&
+    !/logo-institucional-grande/.test(fs.readFileSync('ficha-cuerpo.html','utf8')));
 
   /* FOCO. El anillo existía, pero «transition:all» lo desvanecía durante 200 ms:
      un indicador de foco que se desvanece es peor que uno que aparece. */

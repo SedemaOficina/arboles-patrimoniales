@@ -461,86 +461,42 @@ console.log('\n══ PALETA · el verde no entra al fondo profundo ══');
     /\.bosque__nota strong\{color:var\(--verde-bosque\)/.test(cs5));
 }
 
-console.log('\n══ LA FICHA EN PAPEL ══');
+console.log('\n══ LA FICHA EN PAPEL · RETIRADA ══');
 {
+  /* CAMBIÓ EL CRITERIO POR DECISIÓN DE CONTENIDO, 24 de agosto de 2026.
+     Aquí vivían dieciocho aserciones que cuidaban la hoja de impresión de la
+     ficha: el membrete y el pie de papel, la lámina a escala recalculada al
+     ancho de la hoja, las cifras en negro sobre blanco, los cortes de página y
+     los enlaces del expediente impresos con su dirección. Todas eran correctas
+     y todas pasaban.
+
+     El usuario decidió eliminar la ficha para impresión: el registro se
+     consulta en pantalla y el papel dejó de ser necesario. Se retiró todo —el
+     `@media print` entero, `.hoja-cabeza`, `.hoja-pie`, `.llevar`,
+     `.boton--doc`, el botón «Imprimir o guardar en PDF», `armarVisita()`,
+     `conectarLaminaImpresa()` y `alImprimir`— sin dejar un reset mínimo: un
+     Ctrl+P imprime la maqueta de pantalla tal cual.
+
+     No se borran en silencio. Lo que se comprueba ahora es que el retiro sea
+     completo, para que nadie reintroduzca media hoja de impresión sin darse
+     cuenta y para que no queden restos que nadie mantiene. */
   const cs6=fs.readFileSync('estilos.css','utf8');
+  const fc=fs.readFileSync('ficha-cuerpo.html','utf8');
+  const fl=fs.readFileSync('ficha-logica.js','utf8');
+  const mf=fs.readFileSync('modelo-ficha.js','utf8');
   const fv=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
-  for (const [nom,s] of [['una pieza', fv]]) {
-    t(nom+' · lleva membrete con los dos logotipos',
-      /class="hoja-cabeza"/.test(s) && /hoja-cabeza__gob/.test(s) && /hoja-cabeza__emblema/.test(s)
-      && /logo-institucional-grande\.png/.test(s) && /emblema-media\.png/.test(s));
-    t(nom+' · y pie de hoja con la fuente y el teléfono de denuncias',
-      /class="hoja-pie"/.test(s) && /55 5265 0780/.test(s));
-  }
-  t('Membrete y pie no se ven en pantalla',
-    /\.hoja-cabeza, \.hoja-pie \{ display: none; \}/.test(cs6));
-  t('En papel sí, y con el filete institucional',
-    /\.hoja-cabeza \{ display: flex !important;[\s\S]{0,220}?var\(--jacaranda\)/.test(cs6));
-  t('Se descarta lo que solo funciona en pantalla',
-    ['.mapa-caja','.vista-calle','.glosario-servicios','#fVisita','.barra','.galeria__tiras']
-      .every(x => cs6.slice(cs6.indexOf('@media print')).includes(x)));
-  /* La regla de impresión de `.galeria` creció el 24 de agosto de 2026: al
-     pasar la galería a mosaico hay que deshacer también el alto de fila
-     (`grid-auto-rows`), o algunos motores lo siguen aplicando pese al
-     `display:block` y la fotografía sale con el alto de una celda. */
-  /* CAMBIÓ EL CRITERIO. Antes esta prueba exigía que la ilustración se fuera al
-     papel y que las medidas sobrevivieran solas: «.escala { display: block }».
-     Con esa regla la ficha impresa no llevaba NINGUNA imagen —ni la fotografía
-     del ejemplar, ni el dibujo a escala— y se imprimía como un formulario de
-     texto. Una ficha de campo se imprime justamente para reconocer el árbol
-     cuando llegas: sin imagen no cumple su oficio. Ahora las dos viajan, y lo
-     que se comprueba es eso. */
-  t('La ficha impresa lleva la fotografía del ejemplar',
-    /\.galeria \{ display: block !important; grid-auto-rows: auto !important; \}/.test(cs6)
-    && /\.galeria__principal \{ height: 62mm/.test(cs6)
-    && /\.galeria__principal::before \{ display: none !important; \}/.test(cs6));
-  /* CAMBIÓ EL CRITERIO otra vez, y por una razón que solo se ve imprimiendo:
-     a dos columnas la ilustración del fresno —dos veces más ancha que alta— se
-     salía de su columna y se imprimía encima de la tabla de medidas. La lámina
-     ocupa el ancho completo y las medidas van debajo. */
-  t('Y la lámina a escala a todo el ancho, con las medidas debajo',
-    /\.escala \{ display: block !important; \}/.test(cs6)
-    && /\.medidas \{ display: grid !important; grid-template-columns: 1fr 1fr;/.test(cs6));
-  /* A este ancho el rótulo de la cota del diámetro se sale del lienzo. Se
-     retira entera en vez de imprimirla cortada. */
-  t('La cota del diámetro no se imprime cortada: no se imprime',
-    /\.cota--dap \{ display: none !important; \}/.test(cs6));
-  t('Las cotas se recalculan al ancho de la hoja, no al de la pantalla',
-    /matchMedia\("print"\)/.test(fs.readFileSync('ficha-logica.js','utf8'))
-    && /ejemplarAbierto/.test(fs.readFileSync('ficha-logica.js','utf8')));
-  t('Las cifras destacadas de servicios se imprimen en negro, no en blanco',
-    /-webkit-text-fill-color: #000 !important;/.test(cs6)
-    && /\.cifra-serv b, \.cifra-serv b u, \.cifra-serv span, \.cifra-serv \.sin-dato/.test(cs6));
-  t('Ningún título se parte entre dos hojas',
-    /h1, h2, h3 \{ break-inside: avoid; \}/.test(cs6)
-    && /\.rotulo \{ break-after: avoid; \}/.test(cs6));
-  t('Los enlaces del expediente se imprimen con su dirección',
-    /\.docs a\[href\]::after \{ content: " " attr\(href\) !important;/.test(cs6));
-  /* CAMBIÓ EL CRITERIO, 24 de agosto de 2026. La lista comprobada incluía
-     .resumen__nota, que se retiró de la hoja: ninguna página la emitía —ni el
-     armado, ni ficha-logica.js, ni los modelos, ni la guía—, así que la regla
-     no podía alcanzarse. Lo que esta aserción cuida no cambió: que los hijos
-     del resumen se apaguen uno por uno y no solo el contenedor, porque traen
-     su propio fondo y quedaban en negro sobre negro. */
-  t('Los fondos profundos se apagan hijo por hijo, no solo el contenedor',
-    /\.resumen, \.resumen > \*, \.medida, \.medidas/.test(cs6));
-  t('La taxonomía va a dos columnas para no comerse una hoja',
-    /\.tabla-datos \{ columns: 2;/.test(cs6));
-  /* CAMBIÓ EL CRITERIO. Antes se comprobaba lo contrario: que las secciones
-     PUDIERAN partirse, para no dejar media hoja en blanco. Impreso resultó
-     peor: la lámina se partía por la mitad y la ilustración salía encima de su
-     pie de foto. Ahora no se parte ninguna. */
-  t('Ninguna sección se parte entre hojas',
-    /\.bloque, \.seccion \{[^}]*break-inside: avoid;/.test(cs6)
-    && /\.galeria, \.escala, \.medidas, \.ubicacion, \.grupos, \.cascada, \.tabla-datos,\s*\n?\s*\.docs \{ break-inside: avoid; \}/.test(cs6)
-    && /\.dos-columnas > div \{ break-inside: avoid; \}/.test(cs6));
-  t('Y los bloques pequeños tampoco',
-    /\.grupo, \.medida, \.dato-linea, \.hoja-pie, \.observacion \{ break-inside: avoid; \}/.test(cs6));
-  t('El rótulo de la cota de altura no se imprime cortado',
-    /\.cota--alto \{ left: 0 !important; \}/.test(cs6)
-    && /\.cota--alto b, \.cota--alto i \{ right: auto !important; left: 8px !important; \}/.test(cs6));
-  t('Nada cuelga por debajo del pie, que abría una hoja en blanco',
-    /html, body \{ height: auto !important; \}/.test(cs6));
+  t('La hoja no lleva reglas de impresión',
+    !/@media print/.test(cs6) && !/@page/.test(cs6));
+  t('Ni restos del membrete, el pie de papel o el llamado a imprimir',
+    !/hoja-cabeza|hoja-pie|boton--doc/.test(cs6) && !/\.llevar\{|grid-area:llevar/.test(cs6));
+  t('La ficha ya no emite membrete, pie de papel ni botón de imprimir',
+    !/hoja-cabeza|hoja-pie|fImprimir/.test(fc) && !/hoja-cabeza|hoja-pie|fImprimir/.test(fv));
+  t('Y no queda código que escuche a la impresora',
+    !/matchMedia\("print"\)|afterprint|window\.print\(\)/.test(fl)
+    && !/ejemplarAbierto|armarVisita|conectarLaminaImpresa/.test(fl)
+    && !/alImprimir|window\.print\(\)/.test(mf));
+  t('El PNG grande del logotipo ya no lo pide nadie',
+    !/logo-institucional-grande/.test(cs6) && !/logo-institucional-grande/.test(fc));
 }
 
 console.log('\n══ NOMBRE DEL SITIO ══');
