@@ -409,6 +409,60 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="tu">Decidir</span>
         </article>
 
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Un huérfano de 48 KB en la salida</h3>
+            <p><code>docs/assets/js/ficha-logica.js</code> no lo produce el armado: la ficha lleva ese código incrustado. Llegó ahí de una copia a mano. <b>Ninguna página lo carga y aun así se publica.</b> <code>construir.sh</code> lo habría borrado —empieza limpiando <code>docs/assets</code>—, pero el rodeo de correr los <code>armar-*.js</code> sueltos, que es el que se usa cuando la herramienta no puede borrar, nunca limpia.</p>
+            <cite>Se va solo con un <code>construir.sh produccion</code> completo. <code>verificar/verifica-deriva.mjs</code> ya lo detecta y lo seguirá detectando.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Por limpiar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3><code>modelo-recursos.js</code> no lo usa nadie</h3>
+            <p>456 bytes que <b>no lee el armado, no carga ninguna página y no toca ninguna de las catorce suites</b>. Sus dos hermanos sí tienen oficio: <code>modelo-ficha.js</code> y <code>modelo-portada.js</code> son el oráculo contra el que comparan cinco y cuatro suites. Este quedó suelto.</p>
+            <cite>Antes de retirarlo, confirmar que no era el arranque de un modelo de la página de recursos que se dejó a medias.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Por limpiar</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Las catorce suites solo corren si alguien se acuerda</h3>
+            <p>No hay integración continua. Las 1,032 aserciones dependen de que alguien escriba <code>verificar.sh</code> antes de subir, y <b>la que avisa de la deriva es justo la que importa en ese momento</b>. Un flujo de trabajo de GitHub Actions que corra <code>verificar.sh</code> en cada push cuesta un archivo de quince líneas y convierte el aviso en un bloqueo.</p>
+            <cite>Sin red no se puede comprobar aquí: el flujo hay que probarlo en el propio GitHub.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Por hacer</span>
+        </article>
+
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Ocho nombres de CSS que ninguna página alcanza</h3>
+            <p>Buscados en los 74 archivos de texto del repositorio, sin encontrarse en ninguno: <code>.visita__mapa</code>, <code>.visita__acciones</code>, <code>.girador</code>, <code>.escala__arbol</code>, <code>.escala__tronco</code>, <code>.escala__copa</code>, <code>.enlace__fuera</code> y la variable <code>--mariposa</code>. Restos de funciones retiradas.</p>
+            <p style="margin-top:9px"><b>Dos más no se pueden retirar en silencio:</b> <code>.resumen__nota</code> y <code>--jacaranda-bruma</code> no los usa ninguna página, pero <code>verifica-auditoria.mjs</code> sí los comprueba. Hay una aserción cuidando código que nadie alcanza. Al retirarlos hay que actualizar la aserción declarando por qué cambió el criterio.</p>
+            <cite>Siete nombres más —<code>.muestras</code>, <code>.muestra__color</code>, <code>.tipo__cabeza</code> y las cuatro variantes de <code>.tipo__muestra</code>— solo los usa la guía de identidad, que nunca viaja a <code>docs/</code>. Viajan igual en la hoja pública.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Por limpiar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Las tres páginas cargan la hoja de estilos entera</h3>
+            <p><code>estilos.css</code> pesa 172 KB y se incrusta completa en las tres páginas. Medido regla por regla contra lo que cada página puede alcanzar: la portada usa 106 KB, la ficha 108 KB y <b>recursos solo 63 KB</b>. Partirla por página ahorraría 66 KB en la portada, 64 en la ficha y 109 en recursos.</p>
+            <p style="margin-top:9px"><b>Antes de emprenderlo, el número que importa:</b> comprimida son 50 KB, y la portada entera pesa 133 KB comprimida. La hoja no es lo que pesa: el <b>JavaScript incrustado sí</b> —216 KB crudos, 64 comprimidos en la portada—. Partir el CSS es un tercio del problema y toca los cinco <code>armar-*.js</code>.</p>
+            <cite>La auditoría de CSS muerto ya se hizo y salió limpia: apenas 2.2 KB de reglas inalcanzables sobre 172 KB, un 1.3%. No hay ahí un problema que resolver.</cite>
+          </div>
+          <span class="pend__quien" data-q="registro">Decidir</span>
+        </article>
+
       </div>
     </div>
 

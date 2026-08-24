@@ -1,0 +1,44 @@
+# LAS CATORCE SUITES, EN CADA EMPUJÓN
+# -----------------------------------------------------------------------------
+# Hasta ahora las 1,032 aserciones dependían de que alguien se acordara de
+# escribir verificar.sh antes de subir. La que avisa de la deriva entre la
+# fuente y lo publicado es justo la que importa en ese momento, y era la más
+# fácil de saltarse.
+#
+# DOS DECISIONES QUE NO SON OBVIAS:
+#
+# 1. Se arma la VISTA PREVIA, no producción. Trece suites leen prueba/, que no
+#    viaja al repositorio porque duplica 28 MB de fotografías; hay que armarla
+#    aquí para que tengan qué leer.
+#
+# 2. NO se rearma docs/. Sería lo cómodo y arruinaría el portón: verifica-deriva
+#    compara lo publicado contra la fuente, y si el propio flujo lo rearma antes
+#    de comparar, siempre cuadraría. docs/ se juzga tal como viene en el commit,
+#    que es como lo va a servir GitHub Pages.
+#
+# No hay dependencias que instalar: el proyecto no tiene package.json y todo el
+# armado es Node a secas.
+
+name: Verificar
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  suites:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # La misma versión mayor con la que se trabaja en local.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Armar la vista previa
+        run: sh fuente/construir/construir.sh
+
+      - name: Correr las catorce suites
+        run: sh fuente/verificar/verificar.sh

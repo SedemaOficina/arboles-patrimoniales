@@ -49,6 +49,11 @@ if [ "$DESTINO" != "produccion" ]; then
   cp ../guia-alta.html "$DEST/"
 fi
 
+# El recibo del armado: la huella de cada fuente que se acaba de leer. Es lo
+# que permite a verifica-deriva.mjs saber si lo publicado sigue el paso de la
+# fuente sin tener que volver a armar.
+node sellar.js
+
 echo ""
 echo "Listo. Sitio en $DEST/"
 ls -1 "$DEST" | sed 's/^/  /'

@@ -1208,11 +1208,33 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   color:rgba(255,255,255,.86);
   background:linear-gradient(to top,rgba(var(--tinta-jacaranda-rgb),.84),rgba(var(--tinta-jacaranda-rgb),0))}
 .retrato__foto--silueta .retrato__credito{background:none;text-align:center;color:rgba(255,255,255,.7)}
-/* Las tarjetas son el único punto claro del encabezado y ahí es donde el verde
-   institucional puede ir. El filete que las separa deja de ser tinta sobre
-   crema y pasa al morado claro, o desaparece contra el fondo. */
-.ficha-portada .resumen{margin:22px 0 0;background:rgba(var(--jacaranda-luz-rgb),.34);
-  border-color:rgba(var(--jacaranda-luz-rgb),.34)}
+/* LAS CIFRAS DEJARON DE SER TARJETAS, 24 de agosto de 2026.
+   Sobre el crema eran cuatro tarjetas blancas y no se notaban. Sobre el morado
+   sí: un rectángulo claro flotando en el campo oscuro, que además terminaba en
+   el borde de la caja de texto mientras la fotografía seguía hasta el borde de
+   la ventana. Leía como un parche pegado encima, no como parte del encabezado.
+   Ahora no hay caja: las cifras son tipografía sobre el mismo campo, separadas
+   por filetes finos y colgadas de una línea que cierra la sección.
+   El verde se va con la caja, y está bien: la regla de la paleta es que el
+   verde solo va sobre fondo claro y que sobre el morado profundo el acento es
+   el dorado. Aquí el dorado claro da 9.26:1. */
+/* La línea de la que cuelgan las cifras va en `.retrato`, que ocupa el ancho
+   completo, y no en `.resumen`, que se detiene en el borde de la caja de texto:
+   ahí se quedaba a media fotografía, cortada en el aire. */
+.retrato{border-bottom:1px solid rgba(var(--jacaranda-luz-rgb),.32)}
+.ficha-portada .resumen{margin:0;gap:0;background:none;border:0}
+.ficha-portada .resumen div{background:none;padding:20px 26px 0 24px;
+  border-left:1px solid rgba(var(--jacaranda-luz-rgb),.2)}
+.ficha-portada .resumen div:first-child{border-left:0;padding-left:0}
+.ficha-portada .resumen strong{color:var(--dorado-luz)}
+.ficha-portada .resumen strong.largo{color:#fff}
+.ficha-portada .resumen span{color:rgba(255,255,255,.6)}
+/* Apiladas, el filete vertical no separa nada: pasa a horizontal. */
+@media(max-width:700px){
+  .ficha-portada .resumen div{border-left:0;padding:16px 0 0;
+    border-top:1px solid rgba(var(--jacaranda-luz-rgb),.16)}
+  .ficha-portada .resumen div:first-child{border-top:0}
+}
 @media(max-width:860px){
   .retrato__texto{padding:26px 0 22px}
   .retrato__foto{aspect-ratio:16/10}
@@ -2426,6 +2448,7 @@ body.sin-desplazamiento{overflow:hidden}
   .ficha-portada, .bloque--oscuro, .bloque--niebla, .grupo, .observacion,
   .resumen, .resumen > *, .resumen__nota, .medida, .medidas {
     background: #fff !important; background-image: none !important; color: #000 !important; }
+  .ficha-portada .resumen, .retrato { border: 0 !important; }
   .resumen > * { border-left: .5pt solid #ccc !important; }
   .resumen > *:first-child { border-left: 0 !important; }
   .resumen__nota { border: .5pt solid #ccc !important; padding: 2mm 3mm !important; }
