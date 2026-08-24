@@ -35,7 +35,10 @@
   --jacaranda:#8D4992;         /* primario institucional (logotipo) */
   --jacaranda-hondo:#7A3E7F;   /* texto pequeno sobre papel: contraste 6.96:1 */
   --jacaranda-luz:#C79FCA;     /* acento sobre fondo profundo: contraste 7.36:1 */
-  --jacaranda-bruma:#967DA5;   /* jacarandas al fondo de la ilustracion */
+  /* Sin usar por ninguna regla: documenta el color de las jacarandas del
+     fondo de la ilustracion. No es tinta de texto —da 3.40:1— y verifica-
+     auditoria comprueba que nadie lo use como tal. */
+  --jacaranda-bruma:#967DA5;
   --niebla:#F4E9F3;            /* fondo suave institucional */
 
   /* Verdes: lo vivo y la cartografia. REGLA: el verde solo va sobre fondo
@@ -67,7 +70,9 @@
   /* Marca del Gobierno de la Ciudad de Mexico. NO pertenece a este sistema:
      es una identidad ajena que el sitio hospeda y no se altera. */
   --guinda-gobierno:#9D2148;
-  --mariposa:#BE4728;          /* acento calido: las mariposas de la ilustracion */
+  /* Sin usar por ninguna regla: documenta el acento calido de las mariposas
+     de la ilustracion, para que quien la retoque no lo invente. */
+  --mariposa:#BE4728;
   --tinta:#1A1A1A;         /* texto principal */
   --tinta-suave:#413647;   /* cuerpo sobre papel: 10.65:1. Es el color que se
                               lee en el 80 % de la pagina */
@@ -773,7 +778,6 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   border:0;background:none;color:var(--gris);font-size:var(--t-subtitulo);line-height:1;cursor:pointer;border-radius:var(--radio)}
 .buscador__borrar:hover{color:var(--jacaranda);background:var(--niebla)}
 .padron-barra .filtros{margin:0;flex:0 1 auto}
-.resumen__nota{margin:14px 0 0;font-size:var(--t-apoyo);line-height:1.5;color:rgba(255,255,255,.72);max-width:var(--medida-nota)}
 .padron-conteo{margin:0 0 16px;font-size:var(--t-nota);font-weight:600;color:var(--gris);letter-spacing:.02em;min-height:1em}
 .padron-conteo:empty{margin-bottom:0}
 .padron-vacio{grid-column:1/-1;padding:52px 24px;text-align:center;color:var(--gris);font-size:var(--t-cuerpo);line-height:1.6;
@@ -927,7 +931,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* Un enlace de texto suelto mide lo que mide su renglón: en un teléfono
    quedaban blancos de 15 px de alto. Se les da altura de toque sin cambiar su
    aspecto, y en pantallas de dedo se separan entre sí. */
-.norma__fuente,.migas a,.visita__mapa,.recurso__nota a,.nota-asterisco a,
+.norma__fuente,.migas a,.recurso__nota a,.nota-asterisco a,
 .cuidado__contacto a,.pie__lista a{
   display:inline-block;min-height:24px;line-height:24px;
   /* Y ANCHO, que faltaba. «911» medía 22 px de ancho: el objetivo de toque más
@@ -935,7 +939,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
      24×24. En enlaces largos esta regla no hace nada. */
   min-width:24px;text-align:center}
 @media(pointer:coarse){
-  .norma__fuente,.migas a,.visita__mapa,.recurso__nota a,.nota-asterisco a,
+  .norma__fuente,.migas a,.recurso__nota a,.nota-asterisco a,
   .cuidado__contacto a,.pie__lista a{min-height:32px;line-height:32px;min-width:32px}
   .pie__lista li{margin-bottom:2px}
 }
@@ -1099,10 +1103,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .visita{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:24px 40px}
 .visita h2{font-size:clamp(26px,3.4vw,38px);margin:8px 0 0}
 .visita p{margin:14px 0 0;font-size:var(--t-cuerpo);line-height:1.6;color:var(--tinta-suave);max-width:var(--medida-nota)}
-.visita__acciones{display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:0 0 auto}
-.visita__mapa{font-size:var(--t-apoyo);font-weight:700;color:var(--jacaranda-hondo);text-decoration:none;
-  border-bottom:1.5px solid rgba(var(--jacaranda-hondo-rgb),.35);padding-bottom:1px}
-.visita__mapa:hover{color:var(--jacaranda);border-bottom-color:var(--jacaranda)}
+/* La columna de acciones y su enlace al mapa se retiraron con el bloque: la
+   llamada a visitar quedó como título y párrafo, y el «cómo llegar» vive en su
+   propia sección con el mapa dentro. */
 
 /* El título y el pie del video se retiraron: el reproductor ya anuncia su
    contenido y el canal vive en el pie del sitio. */
@@ -1139,8 +1142,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* --- estados --- */
 .aviso{background:#FDF6E7;border-left:4px solid var(--dorado);padding:14px 20px;font-size:var(--t-apoyo);color:#6B5220}
 .cargando{display:flex;align-items:center;gap:14px;padding:96px 28px;color:var(--gris);justify-content:center}
-.girador{width:26px;height:26px;border-radius:50%;border:3px solid rgba(var(--jacaranda-rgb),.2);border-top-color:var(--jacaranda);animation:girar .8s linear infinite}
-@keyframes girar{to{transform:rotate(360deg)}}
+/* El girador se retiró: la espera se resuelve con el texto de .cargando, que
+   dice qué se está cargando en vez de girar sin decir nada. Con él se va su
+   animación, que no tenía otro usuario. */
 
 /* ================= FICHA DE EJEMPLAR ================= */
 /* Las migas nacieron sobre el fondo profundo de la ficha. En Recursos van
@@ -1366,7 +1370,6 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   background:var(--verde-niebla);padding:0 6px;white-space:nowrap}
 @media(max-width:700px){.escala__guia{width:96px}}
 .escala__marca span{position:absolute;right:0;top:-9px;background:var(--verde-niebla);padding:0 6px;font-size:var(--t-micro);font-weight:700;color:var(--gris);letter-spacing:.06em}
-.escala__arbol{position:relative;width:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
 
 /* ═══ COTAS SOBRE EL DIBUJO ═══
    El dorado es tinta de instrumento: no compite con el verde de la regla ni
@@ -1405,8 +1408,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* En pantalla angosta la cota de altura se come el dibujo: se apagan las tres
    y las medidas se leen en la tabla, que ahí queda debajo y a todo el ancho. */
 @media(max-width:700px){.cota{display:none}.escala__lienzo{margin-bottom:0}}
-.escala__copa{width:100%;border-radius:52% 52% 44% 44%;background:linear-gradient(165deg,#7FBA71,var(--verde-bosque));position:relative}
-.escala__tronco{width:13px;background:linear-gradient(90deg,#6B5030,var(--corteza-luz) 55%,#5A422A);border-radius:var(--radio)}
+/* El árbol dibujado con CSS —copa ovalada, tronco de degradado -- se retiró:
+   la ilustración la resuelve ahora la silueta por especie de especies.js, que
+   respeta la copa medida en campo en vez de aproximarla con un borde. */
 .escala__persona{position:relative;flex:0 0 auto;min-width:56px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;color:var(--gris)}
 
 /* El «1.70 m» se rotulaba dos veces: sobre la línea punteada de referencia y
@@ -1669,7 +1673,6 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    diferencia se ve antes de leer la flecha. */
 .enlace.enlace--propia{border-left-width:4px}
 .enlace.enlace--externa{border-style:dashed}
-.enlace__fuera{font-size:var(--t-nota);line-height:1;color:var(--jacaranda-hondo)}
 .enlace--fuente.enlace--apagado b{color:var(--gris)}
 /* Solo para lectores de pantalla: la flecha es un adorno, la frase es el dato. */
 /* AVISO DE PESTAÑA NUEVA.
@@ -2446,12 +2449,11 @@ body.sin-desplazamiento{overflow:hidden}
      uno por uno: el degradado de la portada no lo heredan sus hijos, que
      traen su propio fondo y quedaban en negro sobre negro. */
   .ficha-portada, .bloque--oscuro, .bloque--niebla, .grupo, .observacion,
-  .resumen, .resumen > *, .resumen__nota, .medida, .medidas {
+  .resumen, .resumen > *, .medida, .medidas {
     background: #fff !important; background-image: none !important; color: #000 !important; }
   .ficha-portada .resumen, .retrato { border: 0 !important; }
   .resumen > * { border-left: .5pt solid #ccc !important; }
   .resumen > *:first-child { border-left: 0 !important; }
-  .resumen__nota { border: .5pt solid #ccc !important; padding: 2mm 3mm !important; }
   .grupo { border: .5pt solid #bbb; padding: 3mm 4mm; }
   .ficha-portada h1, .bloque--oscuro h2, .bloque--oscuro .guia, .grupo h3,
   .resumen strong, .resumen span, .grupo__fila span, .grupo__fila b,
@@ -2473,7 +2475,6 @@ body.sin-desplazamiento{overflow:hidden}
   .binomio { font-size: 12pt; margin: 0 0 1mm; }
   .resumen { gap: 0 !important; grid-template-columns: repeat(4, 1fr) !important; }
   .resumen > * { padding: 0 4mm !important; }
-  .resumen__nota { grid-column: 1 / -1 !important; margin-top: 3mm !important; }
   .resumen strong { font-size: 15pt !important; }
   .resumen span { font-size: 7.5pt !important; }
   /* Taxonomía y procedencia a dos columnas: catorce renglones en una sola

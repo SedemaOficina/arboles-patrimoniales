@@ -516,8 +516,14 @@ console.log('\n══ LA FICHA EN PAPEL ══');
     && /\.rotulo \{ break-after: avoid; \}/.test(cs6));
   t('Los enlaces del expediente se imprimen con su dirección',
     /\.docs a\[href\]::after \{ content: " " attr\(href\) !important;/.test(cs6));
+  /* CAMBIÓ EL CRITERIO, 24 de agosto de 2026. La lista comprobada incluía
+     .resumen__nota, que se retiró de la hoja: ninguna página la emitía —ni el
+     armado, ni ficha-logica.js, ni los modelos, ni la guía—, así que la regla
+     no podía alcanzarse. Lo que esta aserción cuida no cambió: que los hijos
+     del resumen se apaguen uno por uno y no solo el contenedor, porque traen
+     su propio fondo y quedaban en negro sobre negro. */
   t('Los fondos profundos se apagan hijo por hijo, no solo el contenedor',
-    /\.resumen, \.resumen > \*, \.resumen__nota/.test(cs6));
+    /\.resumen, \.resumen > \*, \.medida, \.medidas/.test(cs6));
   t('La taxonomía va a dos columnas para no comerse una hoja',
     /\.tabla-datos \{ columns: 2;/.test(cs6));
   /* CAMBIÓ EL CRITERIO. Antes se comprobaba lo contrario: que las secciones
