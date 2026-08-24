@@ -1157,15 +1157,18 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-portada .migas a{color:var(--jacaranda-hondo);font-weight:600}
 .recursos-portada .migas a:hover{color:var(--jacaranda);text-decoration:underline}
 
-/* EL ENCABEZADO PASÓ A PAPEL, 23 de agosto de 2026.
-   Era un campo morado macizo, idéntico en los trece ejemplares: ocupaba media
-   pantalla y no decía nada del árbol que presentaba. Sobre papel, el nombre
-   pesa por su tamaño y no por el contraste contra un fondo, y el morado queda
-   donde significa algo —la barra de gobierno, las etiquetas de categoría—.
-   El resplandor radial y la banda de degradado inferior se retiraron: existían
-   para romper la monotonía del campo oscuro, y sin campo oscuro sobran. */
-.ficha-portada{background:var(--papel);color:var(--tinta);position:relative;padding:26px 0 0;
-  border-bottom:2px solid rgba(var(--tinta-jacaranda-rgb),.1)}
+/* EL ENCABEZADO VUELVE AL MORADO, 24 de agosto de 2026.
+   El 23 pasó a papel con un argumento correcto: el campo morado era macizo e
+   idéntico en los trece ejemplares y no decía nada del árbol que presentaba.
+   Lo que cambió no es ese argumento sino el hecho: desde hoy la mitad derecha
+   del encabezado es la fotografía de ESTE ejemplar, así que el campo ya no es
+   idéntico ni macizo. Y sobre papel el conjunto se quedaba sin peso: crema
+   sobre crema hasta la primera sección.
+   El morado vuelve como fondo del que emerge la fotografía —el velo que las
+   funde es el mismo morado, no el crema—, y las cifras se quedan en tarjetas
+   claras: son el único sitio donde el verde institucional puede ir, porque la
+   regla de la paleta es que el verde solo va sobre fondo claro. */
+.ficha-portada{background:var(--tinta-jacaranda);color:#fff;position:relative;padding:26px 0 0}
 .ficha-portada .envoltura{position:relative;z-index:var(--capa-contenido)}
 
 /* EL RETRATO DEL EJEMPLAR, 24 de agosto de 2026.
@@ -1193,7 +1196,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    corte entre la crema y la foto es un filo vertical y el nombre queda pegado
    a él; con el velo, el encabezado se lee como una sola pieza. */
 .retrato__foto::after{content:"";position:absolute;inset:0;z-index:var(--capa-contenido);
-  background:linear-gradient(102deg,rgba(var(--papel-rgb),1) 0,rgba(var(--papel-rgb),.5) 13%,rgba(var(--papel-rgb),0) 44%)}
+  background:linear-gradient(101deg,rgba(var(--tinta-jacaranda-rgb),1) 0,rgba(var(--tinta-jacaranda-rgb),.74) 11%,rgba(var(--tinta-jacaranda-rgb),.3) 27%,rgba(var(--tinta-jacaranda-rgb),0) 50%)}
 /* Respaldo: quien no tiene fotografía enseña la silueta de su especie. Dice
    qué especie es, que es lo que sí se sabe; no finge una fotografía. */
 .retrato__foto--silueta{display:flex;align-items:center;justify-content:center;padding:34px}
@@ -1205,24 +1208,27 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   color:rgba(255,255,255,.86);
   background:linear-gradient(to top,rgba(var(--tinta-jacaranda-rgb),.84),rgba(var(--tinta-jacaranda-rgb),0))}
 .retrato__foto--silueta .retrato__credito{background:none;text-align:center;color:rgba(255,255,255,.7)}
-.ficha-portada .resumen{margin:18px 0 0}
+/* Las tarjetas son el único punto claro del encabezado y ahí es donde el verde
+   institucional puede ir. El filete que las separa deja de ser tinta sobre
+   crema y pasa al morado claro, o desaparece contra el fondo. */
+.ficha-portada .resumen{margin:22px 0 0;background:rgba(var(--jacaranda-luz-rgb),.34);
+  border-color:rgba(var(--jacaranda-luz-rgb),.34)}
 @media(max-width:860px){
   .retrato__texto{padding:26px 0 22px}
   .retrato__foto{aspect-ratio:16/10}
   /* En vertical el velo va de arriba abajo, no de izquierda a derecha. */
-  .retrato__foto::after{background:linear-gradient(to bottom,rgba(var(--papel-rgb),1) 0,rgba(var(--papel-rgb),0) 26%)}
+  .retrato__foto::after{background:linear-gradient(to bottom,rgba(var(--tinta-jacaranda-rgb),1) 0,rgba(var(--tinta-jacaranda-rgb),0) 26%)}
   .ficha-portada .resumen{margin:0}
 }
-.ficha-portada h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(38px,6.6vw,78px);line-height:1;letter-spacing:.005em;margin:16px 0 0;color:var(--tinta)}
-.ficha-portada .binomio{font-family:var(--editorial);font-style:italic;font-size:clamp(19px,2.3vw,26px);color:var(--jacaranda-hondo);margin:12px 0 0}
-.ficha-portada .comun{font-size:var(--t-cuerpo);color:var(--tinta-suave);margin:6px 0 0}
-.ficha-portada .migas{color:var(--gris)}
-.ficha-portada .migas a{color:var(--jacaranda-hondo);border-bottom-color:rgba(var(--jacaranda-hondo-rgb),.35)}
-.ficha-portada .migas a:hover{color:var(--jacaranda);border-bottom-color:var(--jacaranda)}
+.ficha-portada h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(38px,6.6vw,78px);line-height:1;letter-spacing:.005em;margin:16px 0 0;color:#fff}
+/* 7.36:1 sobre el morado profundo: es el acento que la paleta reserva para
+   este fondo. */
+.ficha-portada .binomio{font-family:var(--editorial);font-style:italic;font-size:clamp(19px,2.3vw,26px);color:var(--jacaranda-luz);margin:12px 0 0}
+.ficha-portada .comun{font-size:var(--t-cuerpo);color:rgba(255,255,255,.82);margin:6px 0 0}
 /* El registro tiene un campo llamado nombre común; se nombra así, con rótulo,
    en vez de disfrazarlo de frase («Conocido como ahuehuete»). */
 .ficha-portada .comun span{display:inline-block;font-size:var(--t-micro);font-weight:700;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--dorado);margin-right:10px;vertical-align:1px}
+  text-transform:uppercase;color:var(--dorado-luz);margin-right:10px;vertical-align:1px}
 
 /* ===== NOTAS AL PIE · TRES NIVELES =====
    24 de agosto de 2026. Los pies de foto, de figura y de referencia se leían
@@ -1273,17 +1279,18 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    las cifras y les comía el contraste. */
 .ficha-portada{padding-bottom:40px}
 .ficha-portada > .envoltura{position:relative;z-index:var(--capa-contenido)}
-/* Sobre papel la etiqueta deja de ser una pastilla tenue sobre fondo oscuro y
-   se vuelve un timbre: contorno, versalita apretada y la tinta de su familia. */
+/* La etiqueta es un timbre —contorno, versalita apretada y la tinta de su
+   familia—, ahora en los tonos claros de cada familia: sobre el morado profundo
+   el jacarandá hondo y el dorado oscuro no se despegan del fondo. */
 /* Las etiquetas de categoría cierran la columna a la altura del pie de la
    fotografía; arriba dejaban un hueco. Va aquí y no junto al resto del retrato
    porque esta regla es la que gana: misma especificidad, y llega después. */
 .ficha-portada .etiquetas{margin:auto 0 0;padding-top:26px}
 @media(max-width:860px){.ficha-portada .etiquetas{margin-top:22px;padding-top:0}}
-.ficha-portada .etiqueta{background:rgba(var(--jacaranda-rgb),.08);color:var(--jacaranda-hondo);
-  border:1px solid rgba(var(--jacaranda-rgb),.3)}
-.ficha-portada .etiqueta--dorada{background:rgba(var(--dorado-rgb),.12);color:#8A6B3D;
-  border-color:rgba(var(--dorado-rgb),.42)}
+.ficha-portada .etiqueta{background:rgba(var(--jacaranda-luz-rgb),.14);color:var(--jacaranda-luz);
+  border:1px solid rgba(var(--jacaranda-luz-rgb),.42)}
+.ficha-portada .etiqueta--dorada{background:rgba(var(--dorado-luz-rgb),.14);color:var(--dorado-luz);
+  border-color:rgba(var(--dorado-luz-rgb),.46)}
 
 .resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:1px;
   background:rgba(var(--tinta-jacaranda-rgb),.12);margin:36px 0 0;
