@@ -126,6 +126,46 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
+            <h3>La hoja publicada perdió 60 de sus 83 columnas</h3>
+            <p><b>El sitio publicado está degradado ahora mismo.</b> Comprobado el 24 de agosto de 2026 contra la hoja <code>Salida_Publica</code>, leyendo el CSV publicado: responde correctamente, con sus 83 columnas y 13 renglones, pero <b>60 columnas vienen en blanco en todos los ejemplares</b>.</p>
+            <p style="margin-top:9px"><b>Lo que sobrevive</b> son solo dos bloques: la identidad —<code>id</code>, <code>estado</code>, <code>nomino</code>, <code>nombre_asignado</code>, <code>nombre_comun</code>, <code>nombre_cientifico</code>— y la taxonomía —<code>reino</code> a <code>autor</code>, <code>idnombrecat</code>, <code>iucn</code>, <code>ambiente</code>, <code>forma_crecimiento</code>, <code>url_snib</code>, <code>url_observacion</code>—.</p>
+            <p style="margin-top:9px"><b>Lo que viene vacío</b> es todo lo que describe al ejemplar: las cuatro categorías y <code>categorias</code>, <code>fecha_decreto</code>, <code>gaceta</code>, <code>drive_decreto</code>, toda la ubicación —<code>alcaldia</code>, <code>calle</code>, <code>colonia</code>, <code>cp</code>, <code>referencias</code>, <code>tipo_ubicacion</code>—, las coordenadas —<code>latitud</code>, <code>longitud</code>, <code>utm_x</code>, <code>utm_y</code>, <code>street_view</code>— y todas las medidas —<code>altura_m</code>, <code>dap_cm</code>, copa, edad, expectativa— con las cifras de i-Tree que se calculan de ellas.</p>
+            <p style="margin-top:9px"><b>Dónde está la falla.</b> El patrón lo dice solo: lo que sigue llegando es lo que se resuelve <i>desde el nombre científico</i>; lo que se perdió es lo que se resuelve <i>desde el renglón del ejemplar</i>. Se rompió el vínculo de <code>Salida_Publica</code> hacia la hoja del padrón —una columna insertada, movida o renombrada del otro lado deja las búsquedas devolviendo blanco sin marcar error—.</p>
+            <p style="margin-top:9px"><b>Y hay un renglón de más:</b> el 8 de la hoja no tiene <code>id</code>. Por eso el sitio enseña 12 ejemplares y no 13.</p>
+            <p style="margin-top:9px">Qué se ve por esto: «Ubicación por determinar · sin coordenadas» en los doce, el mapa con su mensaje de respaldo, la hilera «a escala real» sin alturas y las cifras de servicios ambientales sin dato.</p>
+            <div class="arreglo">
+              <b>Cómo se corrige</b>
+              <ol>
+                <li><b>Repara la hoja</b>, que es donde está el problema: revisa las fórmulas de <code>Salida_Publica</code> que traen los datos del ejemplar y borra el renglón 8, que está vacío.</li>
+                <li><b>Comprueba</b> abriendo el CSV publicado: las columnas <code>latitud</code> y <code>longitud</code> deben traer valor en los trece.</li>
+                <li><b>Espera diez minutos</b> o abre el sitio en una ventana privada: el registro vivo se guarda en el navegador y se refresca cada diez minutos.</li>
+              </ol>
+            </div>
+            <cite>No hay que tocar el código para esto. El sitio congelado que viaja dentro de la página sí tiene los trece ejemplares con sus coordenadas; lo que se ve es el registro vivo sustituyéndolo.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>El registro vivo puede sustituir al congelado aunque llegue roto</h3>
+            <p><code>fuente-viva.js</code> declara la regla correcta —«el congelado manda hasta que la hoja demuestre que tiene algo»— pero la aplica solo contra el vacío: comprueba que el registro vivo <b>tenga ejemplares</b>, no que traiga <b>datos</b>.</p>
+            <p style="margin-top:9px">El 24 de agosto de 2026 eso dejó pasar una hoja que había perdido 60 de sus 83 columnas: como los doce ejemplares seguían teniendo nombre, el guardián los dio por buenos y sustituyó a los trece congelados que sí tenían coordenadas y medidas. Una hoja en blanco no puede vaciar el micrositio, pero una hoja a medias sí lo vació.</p>
+            <div class="arreglo">
+              <b>Cómo se corrige</b>
+              <ol>
+                <li><b>Medir la cobertura, no el conteo.</b> Que el guardián calcule qué proporción de los campos que importan —coordenadas, alcaldía, altura, categorías, fecha de decreto— viene con dato.</li>
+                <li><b>Comparar contra el congelado</b>, no contra cero: si el vivo trae bastante menos cobertura que el que ya está en la página, se descarta con su motivo escrito y el sitio no cambia.</li>
+                <li><b>Decirlo.</b> El aviso de dato degradado ya existe en la portada; que se encienda también en este caso.</li>
+              </ol>
+            </div>
+            <cite>Falta acordar el umbral. Es una decisión de criterio, no de código: qué tanta pérdida es «la hoja está en obra» y qué tanta es «la hoja se rompió».</cite>
+          </div>
+          <span class="pend__quien" data-q="decidido">Por decidir</span>
+        </article>
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
             <h3>Fotografías</h3>
             <p>Los trece ejemplares tienen fotografías: <b>88 imágenes</b> montadas desde la carpeta que entregaste, cada una en dos tamaños —1 400 px para el visor de la galería y 480 px para la miniatura de la tarjeta, del mapa y del tirador—. Se aplicó la orientación EXIF —33 de las 92 venían giradas 90°— y se retiraron los metadatos de cámara, incluidas las coordenadas GPS. Se omitieron <b>4 fotografías repetidas</b> dentro de su propia carpeta.</p>
             <p style="margin-top:9px"><b>Falta cerrar. Son dos hallazgos distintos, los dos entre los ahuehuetes de Cuauhtémoc:</b></p>
