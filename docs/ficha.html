@@ -498,6 +498,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .boton{display:inline-block;font-family:var(--texto);font-size:var(--t-cuerpo);font-weight:700;padding:14px 24px;border-radius:var(--radio);text-decoration:none;border:1.5px solid transparent;transition:background var(--paso),color var(--paso)}
 .boton--solido{background:var(--jacaranda);color:#fff}
 .boton--solido:hover{background:var(--tinta-jacaranda)}
+/* El botón imprime, pero desde el cuadro de impresión también se guarda en
+   PDF: el icono de documento dice qué se lleva uno, no qué máquina lo hace.
+   Va con máscara y no con SVG incrustado para que herede el color del botón
+   en sus dos estados. */
+.boton--doc{display:inline-flex;align-items:center;gap:10px}
+.boton--doc::before{content:"";width:16px;height:16px;flex:none;background:currentColor;
+  -webkit-mask:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm7 2.4V9h4.6L13 4.4ZM8 12.6h8v1.6H8v-1.6Zm0 3.6h8v1.6H8v-1.6Z'/%3E%3C/svg%3E");
+  mask:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm7 2.4V9h4.6L13 4.4ZM8 12.6h8v1.6H8v-1.6Zm0 3.6h8v1.6H8v-1.6Z'/%3E%3C/svg%3E")}
 
 /* --- eje del tiempo: elemento distintivo --- */
 
@@ -1384,6 +1392,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .ubicacion__datos{grid-area:datos;min-width:0}
 .ubicacion .mirador{grid-area:mirador}
 .ubicacion .llevar{grid-area:llevar;align-self:end;margin:0}
+/* El llamado dejó de ser franja a todo lo ancho y encabeza la columna de
+   datos: ahí manda el ancho de la columna, no la medida de lectura. */
+.ubicacion .llamado{max-width:none;margin:0 0 22px}
 @media(max-width:860px){
   .ubicacion{grid-template-columns:1fr;grid-template-rows:auto;
     grid-template-areas:"datos" "mirador" "llevar"}
@@ -1884,7 +1895,10 @@ a[target="_blank"].sin-marca-externa::after{content:none}
 .vista-calle{border:1px solid rgba(var(--tinta-jacaranda-rgb),.12);background:var(--jacaranda-noche);aspect-ratio:16/9;overflow:hidden;position:relative}
 .vista-calle iframe{width:100%;height:100%;border:0;display:block}
 .vista-calle__aviso{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:28px;text-align:center;color:rgba(255,255,255,.66);font-size:var(--t-apoyo);line-height:1.55}
-.vista-calle__pie{margin:12px 0 0;font-size:var(--t-nota);color:var(--gris)}
+.vista-calle__pie{margin:12px 0 0;font-size:var(--t-nota);line-height:1.5;color:var(--gris)}
+/* La advertencia de la fecha vive aquí desde que dejó de ser recuadro: se
+   resalta lo que cambia la lectura, no la frase entera. */
+.vista-calle__pie b{color:var(--corteza)}
 
 /* ===== SILUETAS POR ESPECIE ===== */
 .silueta{display:block}
@@ -2530,13 +2544,17 @@ body.sin-desplazamiento{overflow:hidden}
   <div class="envoltura">
     <span class="rotulo">Dónde está</span>
     <h2>Cómo llegar</h2>
-    <p class="llamado">
-      <span class="llamado__marca" aria-hidden="true">!</span>
-      <span><b>Puedes visitarlo.</b> Si notas que está dañado, en riesgo o que alguien lo interviene sin
-      autorización, repórtalo a tu Alcaldía o a la Procuraduría Ambiental y del Ordenamiento Territorial.</span>
-    </p>
+    <!-- El llamado estaba en una franja a todo lo ancho, entre el título y la
+         retícula: empujaba la columna de la derecha casi 300 px hacia abajo y
+         dejaba ese hueco vacío al lado del título. Bajó a la columna de datos,
+         que es donde se lee lo que hay que hacer al llegar. -->
     <div class="ubicacion">
       <div class="ubicacion__datos">
+        <p class="llamado">
+          <span class="llamado__marca" aria-hidden="true">!</span>
+          <span><b>Puedes visitarlo.</b> Si notas que está dañado, en riesgo o que alguien lo interviene sin
+          autorización, repórtalo a tu Alcaldía o a la Procuraduría Ambiental y del Ordenamiento Territorial.</span>
+        </p>
         <p class="domicilio" id="fDomicilio"></p>
         <dl class="tabla-datos" id="fUbicacion"></dl>
       </div>
@@ -2550,7 +2568,11 @@ body.sin-desplazamiento{overflow:hidden}
       <div class="mirador">
         <div class="mirador__calle">
           <span class="rotulo rotulo--mirador">Vista desde la calle</span>
-          <p class="aviso-fecha" id="fVistaCalleAviso"></p>
+          <!-- El aviso de que la imagen puede ser anterior al dictamen era un
+               recuadro ENTRE el rótulo y la imagen: 86 px de advertencia antes
+               de dejar ver el árbol, y seguía ahí incluso cuando no había
+               panorama que advertir. Ahora va en el pie, junto con el origen
+               del panorama, que es donde el modelo de la ficha ya lo tenía. -->
           <div class="vista-calle" id="fVistaCalle"></div>
           <p class="vista-calle__pie" id="fVistaCallePie"></p>
         </div>
@@ -2570,8 +2592,8 @@ body.sin-desplazamiento{overflow:hidden}
            y cierra la banda donde se lee lo que hay que llevarse. -->
       <div class="llevar" id="fVisita">
         <h3>Llévatelo en papel</h3>
-        <p>Imprime esta ficha y ve a verlo. Lleva el domicilio, las referencias para llegar, sus medidas y lo que la ley dice sobre él, en una hoja que funciona sin señal de celular y sin batería.</p>
-        <button type="button" class="boton boton--solido" id="fImprimir">Imprimir la ficha</button>
+        <p>Un árbol patrimonial se visita con la ficha en mano. Si tu teléfono te acompaña, mejor no la imprimas: el papel también sale de un árbol. Y si vas a donde no hay señal, aquí está completa —domicilio, referencias, medidas y lo que la ley dice sobre él—, en una hoja que funciona sin batería.</p>
+        <button type="button" class="boton boton--solido boton--doc" id="fImprimir">Imprimir o guardar en PDF</button>
       </div>
     </div>
 
@@ -3895,12 +3917,6 @@ function pintarGaleria(e) {
 
 function pintarVistaCalle(e) {
   const caja = document.getElementById("fVistaCalle");
-  const alerta = document.getElementById("fVistaCalleAviso");
-  if (alerta) {
-    alerta.innerHTML = '<span class="aviso-fecha__marca" aria-hidden="true">!</span>'
-      + '<span>La imagen <b>puede ser anterior al dictamen</b>: el árbol pudo cambiar desde entonces. '
-      + 'No sustituye la verificación en campo.</span>';
-  }
   const pie = document.getElementById("fVistaCallePie");
   const url = urlVistaCalle(e.coords, e.vistaCalle);
   if (!url) {
@@ -3910,10 +3926,16 @@ function pintarVistaCalle(e) {
   }
   caja.innerHTML = `<iframe src="${esc(url)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
      title="Vista desde la calle del ejemplar ${esc(e.nombreAsignado || "")}" allowfullscreen></iframe>`;
+  // El aviso de la fecha era un recuadro sobre la imagen y se pintaba incluso
+  // cuando no había panorama que advertir. Va aquí, en el pie, junto con el
+  // origen del panorama: es la misma nota sobre la misma imagen, y así
+  // desaparece con ella. Es además lo que modelo-ficha.js ya devolvía en
+  // `pieVistaCalle`, que hasta ahora decía una cosa y la página otra.
   const propio = e.vistaCalle && e.vistaCalle.tipo === "panorama";
-  pie.textContent = propio
-    ? "Panorama de Google Street View encuadrado sobre el ejemplar."
-    : "Panorama de Google Street View sobre las coordenadas registradas.";
+  pie.innerHTML = (propio
+    ? "Panorama de Google Street View encuadrado sobre el ejemplar. "
+    : "Panorama de Google Street View sobre las coordenadas registradas. ")
+    + "La imagen <b>puede corresponder a una fecha anterior al dictamen</b> y no sustituye la verificación en campo.";
 }
 
 /** Espacio que hay que dejar libre a la derecha para las etiquetas del eje. */

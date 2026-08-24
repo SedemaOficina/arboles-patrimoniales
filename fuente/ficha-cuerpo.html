@@ -67,13 +67,17 @@
   <div class="envoltura">
     <span class="rotulo">Dónde está</span>
     <h2>Cómo llegar</h2>
-    <p class="llamado">
-      <span class="llamado__marca" aria-hidden="true">!</span>
-      <span><b>Puedes visitarlo.</b> Si notas que está dañado, en riesgo o que alguien lo interviene sin
-      autorización, repórtalo a tu Alcaldía o a la Procuraduría Ambiental y del Ordenamiento Territorial.</span>
-    </p>
+    <!-- El llamado estaba en una franja a todo lo ancho, entre el título y la
+         retícula: empujaba la columna de la derecha casi 300 px hacia abajo y
+         dejaba ese hueco vacío al lado del título. Bajó a la columna de datos,
+         que es donde se lee lo que hay que hacer al llegar. -->
     <div class="ubicacion">
       <div class="ubicacion__datos">
+        <p class="llamado">
+          <span class="llamado__marca" aria-hidden="true">!</span>
+          <span><b>Puedes visitarlo.</b> Si notas que está dañado, en riesgo o que alguien lo interviene sin
+          autorización, repórtalo a tu Alcaldía o a la Procuraduría Ambiental y del Ordenamiento Territorial.</span>
+        </p>
         <p class="domicilio" id="fDomicilio"></p>
         <dl class="tabla-datos" id="fUbicacion"></dl>
       </div>
@@ -87,7 +91,11 @@
       <div class="mirador">
         <div class="mirador__calle">
           <span class="rotulo rotulo--mirador">Vista desde la calle</span>
-          <p class="aviso-fecha" id="fVistaCalleAviso"></p>
+          <!-- El aviso de que la imagen puede ser anterior al dictamen era un
+               recuadro ENTRE el rótulo y la imagen: 86 px de advertencia antes
+               de dejar ver el árbol, y seguía ahí incluso cuando no había
+               panorama que advertir. Ahora va en el pie, junto con el origen
+               del panorama, que es donde el modelo de la ficha ya lo tenía. -->
           <div class="vista-calle" id="fVistaCalle"></div>
           <p class="vista-calle__pie" id="fVistaCallePie"></p>
         </div>
@@ -107,8 +115,8 @@
            y cierra la banda donde se lee lo que hay que llevarse. -->
       <div class="llevar" id="fVisita">
         <h3>Llévatelo en papel</h3>
-        <p>Imprime esta ficha y ve a verlo. Lleva el domicilio, las referencias para llegar, sus medidas y lo que la ley dice sobre él, en una hoja que funciona sin señal de celular y sin batería.</p>
-        <button type="button" class="boton boton--solido" id="fImprimir">Imprimir la ficha</button>
+        <p>Un árbol patrimonial se visita con la ficha en mano. Si tu teléfono te acompaña, mejor no la imprimas: el papel también sale de un árbol. Y si vas a donde no hay señal, aquí está completa —domicilio, referencias, medidas y lo que la ley dice sobre él—, en una hoja que funciona sin batería.</p>
+        <button type="button" class="boton boton--solido boton--doc" id="fImprimir">Imprimir o guardar en PDF</button>
       </div>
     </div>
 
