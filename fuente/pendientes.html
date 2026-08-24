@@ -463,6 +463,48 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="registro">Decidir</span>
         </article>
 
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Hoy ninguna ficha puede mostrar su decreto</h3>
+            <p>La carpeta <code>fuente/decretos/</code> no tiene <b>ningún PDF</b>. Once ejemplares citan un nombre de archivo que no existe y uno —el Sabino de San Juan— no tiene nombre capturado en la hoja. Las trece tarjetas salen apagadas con «El documento aún no está publicado en este sitio».</p>
+            <p style="margin-top:9px">No se rompe nada, y esa es justamente la trampa: el sitio se ve bien. Pero <b>un registro que declara árboles patrimoniales sin publicar el decreto que los declara deja fuera lo único que da respaldo jurídico a la declaratoria.</b> Es el hueco más visible que tiene el micrositio hoy.</p>
+            <cite>Los nombres exactos que el registro espera están en <code>fuente/decretos/LEEME.txt</code>. Deben coincidir carácter por carácter, acentos y espacios incluidos. <code>verifica-integridad.mjs</code> los cuenta en cada corrida.</cite>
+          </div>
+          <span class="pend__quien" data-q="registro">Por publicar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Un mismo decreto para dos árboles: ¿es uno o son dos?</h3>
+            <p><code>DECRETO VIEJO DL AGUA LAUREANO.pdf</code> lo citan <b>Viejo del Agua y Laureano</b>. Si son dos declaratorias distintas, cada una necesita su archivo y su nombre propio en la hoja. Si es una sola que ampara a los dos, no hay nada que corregir —pero conviene dejarlo dicho, porque a simple vista parece un error de captura.</p>
+            <cite>Ya venía señalado en el LEEME. Es la única pregunta que la auditoría de integridad no puede responder sola.</cite>
+          </div>
+          <span class="pend__quien" data-q="registro">Confirmar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Cuatro campos de conservación vacíos en los trece</h3>
+            <p><code>nom059</code>, <code>cites</code>, <code>origen</code> y <code>endemismo</code> están en nulo para <b>todos</b> los ejemplares. La ficha lo maneja bien: declara que no hay dato en vez de suponerlo. Pero son cuatro de los campos que un registro patrimonial debería llevar, y hoy ninguno se publica.</p>
+            <cite>Es captura en la hoja, no código. La categoría de riesgo bajo la NOM-059 y el origen —nativa o introducida— son los dos que más se echan de menos en una ficha de este tipo.</cite>
+          </div>
+          <span class="pend__quien" data-q="registro">Por capturar</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>La galería se detiene en el primer hueco</h3>
+            <p><code>descubrirFotos</code> pide 01, 02, 03… y para en la primera que no encuentra. <b>Si algún día falta la 03, las de la 04 en adelante existen en el servidor y no las ve nadie.</b> Sin error, sin aviso. Hoy no hay ningún hueco —lo comprueba <code>verifica-integridad.mjs</code>—, pero conviene saberlo antes de reorganizar fotografías a mano.</p>
+            <cite>Del mismo tipo: <code>TOPE_FOTOS</code> vale 12, así que la fotografía trece de un ejemplar no se busca nunca. San Diego Churubusco y Santa Catarina tienen once.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Saber que existe</span>
+        </article>
+
       </div>
     </div>
 
