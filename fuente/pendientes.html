@@ -126,6 +126,25 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
+            <h3>La fuente viva está apagada a propósito</h3>
+            <p>Desde el 24 de agosto de 2026 el sitio <b>no consulta la hoja publicada</b>. Se muestra el registro congelado que viaja incrustado en la página —los trece ejemplares con sus coordenadas, medidas y servicios—, que es lo que se pidió para poder ver cómo se verá el sitio con los datos ya capturados.</p>
+            <p style="margin-top:9px">El interruptor es una sola línea en <code>fuente/logica.js</code>: <code>const FUENTE_VIVA_ACTIVA = false;</code>, con el motivo escrito encima. Al apagarse se olvida además lo que el navegador tuviera guardado, para que un registro degradado de ayer no vuelva a entrar el día que se encienda.</p>
+            <p style="margin-top:9px"><b>Esto no arregla la hoja: la desconecta.</b> Mientras siga apagado, una corrección capturada en el padrón no se ve en el sitio hasta que alguien vuelva a construir.</p>
+            <div class="arreglo">
+              <b>Cómo se vuelve a encender</b>
+              <ol>
+                <li><b>Primero arregla la hoja</b> —ver el pendiente de las sesenta columnas en blanco— y comprueba en el CSV publicado que <code>latitud</code> y <code>longitud</code> traigan valor en los trece.</li>
+                <li>Pon el interruptor en <code>true</code> en <code>fuente/logica.js</code>.</li>
+                <li><b>Construye</b> las dos salidas y <b>verifica</b>.</li>
+              </ol>
+            </div>
+            <cite>Un sitio congelado para siempre deja de ser un registro. Este pendiente existe para que el interruptor no se olvide encendido en apagado.</cite>
+          </div>
+          <span class="pend__quien" data-q="decidido">En pausa</span>
+        </article>
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
             <h3>La hoja publicada perdió 60 de sus 83 columnas</h3>
             <p><b>El sitio publicado está degradado ahora mismo.</b> Comprobado el 24 de agosto de 2026 contra la hoja <code>Salida_Publica</code>, leyendo el CSV publicado: responde correctamente, con sus 83 columnas y 13 renglones, pero <b>60 columnas vienen en blanco en todos los ejemplares</b>.</p>
             <p style="margin-top:9px"><b>Lo que sobrevive</b> son solo dos bloques: la identidad —<code>id</code>, <code>estado</code>, <code>nomino</code>, <code>nombre_asignado</code>, <code>nombre_comun</code>, <code>nombre_cientifico</code>— y la taxonomía —<code>reino</code> a <code>autor</code>, <code>idnombrecat</code>, <code>iucn</code>, <code>ambiente</code>, <code>forma_crecimiento</code>, <code>url_snib</code>, <code>url_observacion</code>—.</p>

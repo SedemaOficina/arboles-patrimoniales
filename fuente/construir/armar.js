@@ -78,7 +78,7 @@ const mapa=envolver('mapa.js',['crearMapa','filtrar','TAMANO_PIN','TOQUE_PIN'])
    portada se queda con el registro congelado que lleva incrustado, que es lo
    que se ve hoy mientras la hoja está vacía. */
 const lector = envolver('padron/lector-v2.js', ['construirRegistro']);
-const viva = envolver('padron/fuente-viva.js', ['cargarEnVivo', 'hayCambio', 'CSV_URL'])
+const viva = envolver('padron/fuente-viva.js', ['cargarEnVivo', 'hayCambio', 'CSV_URL', 'CLAVE_CACHE'])
   .replace(/^import .*lector-v2.js";$/m, '');
 
 /* EL CONTRATO, RECORTADO.

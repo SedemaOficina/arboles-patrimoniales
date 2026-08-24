@@ -5292,7 +5292,7 @@ async function cargarEnVivo(opciones = {}) {
   }
 }
 
-window.cargarEnVivo=cargarEnVivo;window.hayCambio=hayCambio;window.CSV_URL=CSV_URL;
+window.cargarEnVivo=cargarEnVivo;window.hayCambio=hayCambio;window.CSV_URL=CSV_URL;window.CLAVE_CACHE=CLAVE_CACHE;
 })();
 /* Árboles patrimoniales · lógica de la portada.
    Consume la estructura que emite patrimoniales-loader.js v2. */
@@ -5727,10 +5727,42 @@ function pintarPadron(ejemplares, stats) {
 let DATOS_VIGENTES = null;
 let vivaIniciada = false;
 
+/* ═══ INTERRUPTOR DE LA FUENTE VIVA ═══ APAGADO el 24 de agosto de 2026.
+
+   POR QUÉ. La hoja publicada perdió sesenta de sus ochenta y tres columnas:
+   llegan la identidad y la taxonomía, y vienen en blanco las categorías, el
+   decreto, la ubicación entera, las coordenadas y todas las medidas. El
+   guardián de fuente-viva.js solo rechaza un registro VACÍO, y ese no lo
+   estaba —los doce ejemplares conservaban su nombre—, así que pasó el filtro y
+   sustituyó a los trece congelados que sí traen coordenadas. El sitio quedó
+   sin mapa, sin alturas y sin servicios ambientales.
+
+   MIENTRAS TANTO. El usuario pidió trabajar contra el registro congelado
+   —`datos/registro.json`, el que el armado incrusta en la página— para poder
+   ver cómo se verá el sitio con los datos ya capturados. Esto NO arregla la
+   hoja: la desconecta.
+
+   CÓMO SE VUELVE A ENCENDER. Se pone en `true`. No hace falta nada más: se
+   olvida la caché al apagar, así que al encender se pide la hoja de nuevo.
+   Está anotado en pendientes.html; no lo dejes apagado sin que alguien lo
+   sepa, porque un sitio congelado para siempre deja de ser un registro. */
+const FUENTE_VIVA_ACTIVA = false;
+
 function iniciarFuenteViva() {
   if (vivaIniciada) return;
   vivaIniciada = true;
   const g = typeof globalThis !== "undefined" ? globalThis : {};
+
+  if (!FUENTE_VIVA_ACTIVA) {
+    /* Se olvida lo guardado. La caché no se lee si no se llama a cargarEnVivo,
+       pero un registro degradado guardado ayer volvería a entrar el día que
+       alguien encienda el interruptor, antes de pedir la hoja: la caché manda
+       sobre la red mientras esté vigente. Se borra ahora, no después. */
+    try { if (g.localStorage && g.CLAVE_CACHE) g.localStorage.removeItem(g.CLAVE_CACHE); } catch (_) {}
+    console.info("[registro] Fuente viva apagada a propósito: se muestra el registro congelado que viaja con el sitio.");
+    return;
+  }
+
   if (typeof g.cargarEnVivo !== "function" || !g.CONTRATO_PADRON) return;
 
   /* Se pide DESPUÉS del primer pintado, nunca antes: la portada no espera a
