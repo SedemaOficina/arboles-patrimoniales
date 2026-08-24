@@ -2225,7 +2225,13 @@ body.sin-desplazamiento{overflow:hidden}
      la cota de altura va por FUERA de su línea, y sin ese margen se cortaba a
      media palabra. */
   .escala__lienzo { background: #fff !important; height: 62mm !important;
-    justify-content: flex-start !important; padding-left: 96px !important; }
+    justify-content: flex-start !important; padding-left: 76px !important; }
+  /* El rótulo de la cota de altura va por FUERA de su línea, a la izquierda.
+     En la hoja esa línea cae cerca del margen y el rótulo se imprimía cortado
+     a media palabra: «IETROS». En papel la línea se ancla al margen y el
+     rótulo pasa a su derecha, donde el sitio no depende del ancho. */
+  .cota--alto { left: 0 !important; }
+  .cota--alto b, .cota--alto i { right: auto !important; left: 8px !important; }
   /* La cota del diámetro señala el tronco desde la izquierda, y a este ancho
      su rótulo se sale del lienzo. Una cota cortada mide menos de lo que dice:
      se retira, y el diámetro se lee en la tabla de al lado, dos renglones más
@@ -2248,13 +2254,21 @@ body.sin-desplazamiento{overflow:hidden}
   /* --- estructura general --- */
   main, .bloque, .seccion, .envoltura {
     padding: 0 !important; margin: 0 !important; max-width: none !important; }
-  /* Las secciones sí pueden partirse entre hojas: forzarlas enteras dejaba
-     media página en blanco antes de cada salto. Lo que no se parte es el
-     bloque pequeño —un grupo de cifras, un renglón— y el título, que viaja
-     pegado a lo que titula. */
+  /* CAMBIÓ EL CRITERIO. Antes las secciones podían partirse entre hojas, para
+     no dejar media página en blanco antes de cada salto. Impreso resultó peor
+     de lo previsto: la lámina a escala se partía por la mitad y la ilustración
+     terminaba impresa encima de su propio pie de foto, y una tabla dejaba un
+     renglón suelto en la hoja siguiente. Una ficha de campo se consulta de
+     pie, frente al árbol: una sección partida obliga a pasar hoja a media
+     lectura. Ahora ninguna se parte y se acepta el blanco al pie.
+     Si una sección no cupiera en una hoja entera el navegador la parte de
+     todos modos: es un tope, no una promesa. */
   .bloque, .seccion { border-top: .5pt solid #bbb; padding-top: 4mm !important;
-    margin-top: 4mm !important; }
+    margin-top: 4mm !important; break-inside: avoid; }
   .grupo, .medida, .dato-linea, .hoja-pie, .observacion { break-inside: avoid; }
+  /* Los conjuntos de dentro tampoco: son los que se partían primero. */
+  .galeria, .escala, .medidas, .ubicacion, .grupos, .cascada, .tabla-datos,
+  .docs, .dos-columnas { break-inside: avoid; }
   .ficha-portada { border-top: 0; margin-top: 0 !important; padding-top: 0 !important; }
 
   /* Los fondos profundos gastan tinta y no se leen impresos. Hay que apagarlos
@@ -2332,7 +2346,11 @@ body.sin-desplazamiento{overflow:hidden}
   .dos-columnas { gap: 8mm !important; }
 
   /* --- pie de la hoja --- */
-  .hoja-pie { display: block !important; margin-top: 5mm; padding-top: 3mm;
+  /* Las tres fichas impresas terminaban con una hoja enteramente en blanco:
+     unos píxeles de sobra por debajo del pie bastan para que el navegador abra
+     otra. Nada cuelga por debajo del pie. */
+  html, body { height: auto !important; }
+  .hoja-pie { display: block !important; margin: 5mm 0 0; padding: 3mm 0 0;
     border-top: 1pt solid var(--jacaranda); break-inside: avoid; }
   .hoja-pie p { margin: 0 0 1.5mm; font-size: 7.5pt; line-height: 1.4; color: #444; }
 
