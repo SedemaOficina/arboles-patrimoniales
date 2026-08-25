@@ -120,6 +120,30 @@ a{color:var(--jacaranda-hondo)}
 
     <div class="pend-grupo">
       <h2>0 · Lo que se cerró el 25 de agosto de 2026</h2>
+      <div class="pend-lista">
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Segunda tanda: cinco cierres más</h3>
+            <ol>
+              <li><b>La salida de producción va sin comentarios.</b> Módulo <code>construir/aligerar.js</code>. La fuente no se toca y la vista previa los conserva. Medido: la portada pasó de 129 a <b>80 KB comprimidos</b>, la ficha de 106 a 66 y Recursos de 60 a 31. Son <b>118 KB menos por visita</b> entre las tres.</li>
+              <li><b>El cintillo ya no llama «protegidos» a los trece.</b> Uno tiene la declaratoria en trámite y ahora se dice, contado, no escrito a mano. En la ficha, «Fecha del decreto · Sin determinar» pasó a «Declaratoria en trámite»: no es lo mismo un hueco de captura que un expediente en curso.</li>
+              <li><b>El registro se lee sin JavaScript.</b> Los trece van escritos en el HTML de la portada, dentro de <code>noscript</code>, con su enlace a la ficha propia.</li>
+              <li><b>Hay diccionario de datos.</b> <code>datos/diccionario-de-datos.csv</code>, 28 columnas con descripción, tipo, unidad y origen, y ahí se dice cuáles son medición de campo y cuáles estimación de i-Tree. Se genera junto al CSV que describe y <b>el armado falla si alguien agrega una columna sin describirla</b>.</li>
+              <li><b>Las citas jurídicas, hasta donde se podía llegar solo.</b> Ver abajo.</li>
+            </ol>
+            <div class="arreglo">
+              <b>Lo jurídico: qué se hizo y qué NO</b>
+              <p>De las cinco afirmaciones sin fundamento, una se resolvió sola: «la norma ambiental pide tomar las medidas necesarias…» es, palabra por palabra, lo que este mismo sitio cita bien 130 líneas más abajo como <b>NADF-001-RNAT-2015, numeral 7.5</b>. Nombrarla ahí no es inventar un dato: es dejar de contradecirse.</p>
+              <p style="margin-top:9px"><b>Las otras cuatro no se fundaron, se desactivaron.</b> No se puede citar un artículo del que no hay certeza, así que se reescribieron para que no afirmen lo que nadie ha fundado: «comete una infracción» pasó a enunciar la prohibición —que el sitio sí cita—, y «la ley lo pone como deber de quien se entera» pasó a «la Procuraduría solo puede investigar lo que conoce». La guía práctica no se perdió; la afirmación jurídica sin respaldo, sí.</p>
+              <p style="margin-top:9px">También salió la frase que atribuía el dictamen a la Secretaría «caso por caso»: no citaba norma y <b>contradecía a la página de Recursos</b>, que lo atribuye a la Alcaldía. Mientras jurídico no diga cuál describe el trámite real, el sitio enuncia lo que las dos versiones comparten y no elige por su cuenta. <b>El pendiente sigue abierto</b> y está en <code>documentos/auditorias/Consulta_juridica_arbolado_patrimonial.html</code>.</p>
+            </div>
+            <cite>Un dato normativo del que no hay certeza se declara, no se rellena. Cuatro de cinco siguen esperando a quien sí puede fundarlas.</cite>
+          </div>
+          <span class="pend__quien" data-q="decidido">Cerrado</span>
+        </article>
+      </div>
+
       <p>De la Auditoría 360 v3. Todo lo de esta lista está armado, publicado en <code>docs/</code> y con las dieciséis suites en verde. Se deja escrito para que la próxima sesión no lo vuelva a buscar.</p>
       <div class="pend-lista">
         <article class="pend">

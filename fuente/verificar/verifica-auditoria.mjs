@@ -421,8 +421,20 @@ console.log('\n══ «QUÉ SIGNIFICA» · protección sin cerrarle la puerta a
       && !/Un árbol patrimonial no se derriba a cambio de plantar otro/.test(s));
     t(nom+' · la entrada no afirma que solo se pueda intervenir por riesgo',
       !/solo puede intervenirse si representa un riesgo real y presente/.test(s));
-    t(nom+' · la entrada sí dice que la Secretaría dictamina caso por caso',
-      /dictamen técnico de la Secretaría del Medio Ambiente, que lo resuelve caso por caso/.test(s));
+    /* CAMBIÓ EL CRITERIO. Esta aserción exigía que la entrada dijera que el
+       dictamen lo resuelve la Secretaría «caso por caso». Esa frase afirmaba
+       una competencia sin citar norma, y además CONTRADECÍA a la página de
+       Recursos, que atribuye la autorización a la Alcaldía previo dictamen.
+       Mientras el área jurídica no diga cuál de las dos describe el trámite
+       real, el sitio no elige por su cuenta: enuncia lo que las dos versiones
+       comparten —que nada se interviene sin autorización y sin dictamen
+       previo— y nombra la norma que el propio sitio ya cita bien.
+       Lo que hay que seguir garantizando es que la entrada NO se quede muda
+       sobre el requisito, que es para lo que se escribió esta comprobación. */
+    t(nom+' · la entrada sí exige autorización y dictamen previo, con su norma',
+      /NADF-001-RNAT-2015, en su numeral 7\.5/.test(s)
+      && /sin autorización y sin dictamen técnico previo, caso por caso/.test(s)
+      && !/dictamen técnico de la Secretaría del Medio Ambiente, que lo resuelve/.test(s));
     t(nom+' · la restricción vive en la sección jurídica, con su numeral',
       s.indexOf('NADF-001-RNAT-2015 · numeral 7.5')>0
       && /No son susceptibles de ser derribados a cambio de una restitución/.test(s)
