@@ -223,11 +223,17 @@ console.log('\n-- 8 · lo que la auditoría 360 dejó cerrado --');
     /__RECURSOS__#datos/.test(enc));
   t('Y llega a la página armada', /<noscript>/.test(pv));
 
-  /* MAPA DEL SITIO. Con su alcance dicho: son tres direcciones, no dieciséis. */
+  /* MAPA DEL SITIO. Ya no son tres direcciones: son dieciséis.
+     CAMBIÓ EL CRITERIO, no se borró la comprobación. Esta suite exigía que el
+     armado ADVIRTIERA que las fichas no tenían dirección propia: mientras eso
+     fuera cierto, callarlo habría sido deshonesto. Desde el armado del 25 de
+     agosto de 2026 cada ejemplar tiene la suya, así que lo que hay que exigir
+     es lo contrario: que el mapa del sitio las liste todas y no solo las tres
+     páginas fijas. La advertencia sobraría porque ya no describe el sitio. */
   t('El armado genera sitemap.xml, y solo en producción',
     /DESTINO === 'produccion'[\s\S]{0,900}sitemap\.xml/.test(armar));
-  t('Se advierte que las fichas no tienen dirección propia',
-    /no tienen dirección propia/.test(armar));
+  t('El mapa del sitio lista una dirección por ejemplar',
+    /_ejemplares\.map\(\(e\) => \[SITIO\.url\('arbol-' \+ e\.slug \+ '\.html'\)/.test(armar));
 }
 
 

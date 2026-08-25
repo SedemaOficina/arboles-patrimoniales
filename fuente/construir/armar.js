@@ -7,6 +7,7 @@ process.chdir(__dirname + '/..');
 const DESTINO = process.env.DESTINO === 'produccion' ? 'produccion' : 'prueba';
 // La dirección pública vive en un solo archivo: ver sitio.js.
 const SITIO = require('./sitio.js');
+const ARRANQUE = require('./arranque.js');
 // La carpeta publicada se llama docs/ porque es el nombre que GitHub Pages
 // reconoce para servir un sitio desde una subcarpeta de la rama principal.
 const CARPETA = DESTINO === 'produccion' ? 'docs' : 'prueba';
@@ -152,29 +153,32 @@ ${mapa}
 ${lector}
 ${viva}
 ${js}
+${ARRANQUE.GUARDIA}
 window.CONTRATO_PADRON=${contratoMin};
 const DATOS=${datos};
-pintarPortada(DATOS);
+${ARRANQUE.proteger('pintarPortada(DATOS);')}
 <\/script>
 </body>
 </html>`;
 fs.writeFileSync(SALIDA+NOMBRES.portada,enlazar(html));
+require('./sellar.js').marcarCorrida(SALIDA,'portada');
 console.log(DESTINO+'/'+NOMBRES.portada+' ·',Math.round(html.length/1024),'KB');
 
 /* EL MAPA DEL SITIO, solo en producción.
-   Honestidad sobre su alcance: son TRES direcciones, no dieciséis. Las trece
-   fichas no tienen dirección propia —viven todas en ficha.html y se distinguen
-   por el fragmento «#ficha-slug», que los buscadores no indexan por separado—,
-   así que este archivo no sirve para que aparezcan los ejemplares. Sirve para
-   declarar cuáles son las páginas canónicas y cuándo cambiaron, que es poco
-   pero es cierto. Si algún día cada ficha tiene su propia dirección, aquí es
-   donde se listan. */
+   Ya no son tres direcciones: desde que cada ejemplar tiene su archivo propio
+   —«arbol-<slug>.html», ver construir/armar-ficha.js— aquí se listan también
+   las trece fichas. Era el día que anunciaba el comentario anterior.
+   La genérica ficha.html se conserva en la lista con prioridad menor: sigue
+   resolviendo los enlaces viejos, pero la página canónica de cada árbol es la
+   suya. */
 if (DESTINO === 'produccion') {
   const hoy = new Date().toISOString().slice(0, 10);
+  const _ejemplares = (JSON.parse(fs.readFileSync('datos/registro.json', 'utf8')).ejemplares) || [];
   const paginas = [
     [SITIO.BASE, '1.0'],
-    [SITIO.url(NOMBRES.ficha), '0.8'],
     [SITIO.url(NOMBRES.recursos), '0.6'],
+    [SITIO.url(NOMBRES.ficha), '0.4'],
+    ..._ejemplares.map((e) => [SITIO.url('arbol-' + e.slug + '.html'), '0.8']),
   ];
   const mapa = '<?xml version="1.0" encoding="UTF-8"?>\n'
     + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -182,5 +186,5 @@ if (DESTINO === 'produccion') {
         `  <url><loc>${u}</loc><lastmod>${hoy}</lastmod><priority>${p}</priority></url>`).join('\n')
     + '\n</urlset>\n';
   fs.writeFileSync(SALIDA + 'sitemap.xml', mapa);
-  console.log(DESTINO + '/sitemap.xml · 3 direcciones');
+  console.log(DESTINO + '/sitemap.xml · ' + paginas.length + ' direcciones');
 }

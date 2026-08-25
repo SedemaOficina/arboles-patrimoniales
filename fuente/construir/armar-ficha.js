@@ -7,6 +7,7 @@ process.chdir(__dirname + '/..');
 const DESTINO = process.env.DESTINO === 'produccion' ? 'produccion' : 'prueba';
 // La dirección pública vive en un solo archivo: ver sitio.js.
 const SITIO = require('./sitio.js');
+const ARRANQUE = require('./arranque.js');
 // La carpeta publicada se llama docs/ porque es el nombre que GitHub Pages
 // reconoce para servir un sitio desde una subcarpeta de la rama principal.
 const CARPETA = DESTINO === 'produccion' ? 'docs' : 'prueba';
@@ -65,7 +66,34 @@ const dif=';(function(){\n'+fs.readFileSync('leaflet-diferido.js','utf8')
 const js=exigir(fs.readFileSync('ficha-logica.js','utf8'),'export function pintarFicha','ficha-logica.js').replace('export function pintarFicha','function pintarFicha').replace(/^import .*geo-cdmx.js";$/m,()=>geo).replace(/^import .*especies.js";$/m,'').replace(/^import .*fotos.js";$/m,'').replace(/^import .*leaflet-diferido.js";$/m,'');const esp=';(function(){\n'+fs.readFileSync('especies.js','utf8').replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\nwindow.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.siluetaPlana=siluetaPlana;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.PERSONA=PERSONA;window.srcsetIlustracion=srcsetIlustracion;\n})();';
 const menu=';(function(){\n'+fs.readFileSync('menu.js','utf8').replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\n})();';
 const datos=fs.readFileSync('datos/registro.json','utf8');
-const slug=process.argv[2]||'el-sargento';
+/* UNA DIRECCIÓN POR EJEMPLAR.
+   Hasta hoy las trece fichas vivían en una sola página y se distinguían por el
+   fragmento «#ficha-slug». Los buscadores descartan el fragmento: las trece se
+   consolidaban en ficha.html, así que doce de trece ejemplares no podían
+   aparecer en una búsqueda por su nombre, y cualquier enlace compartido —fuera
+   cual fuera el árbol abierto— enseñaba el título y la foto del que se hubiera
+   armado ese día.
+   Ahora cada ejemplar tiene su archivo, «arbol-<slug>.html», con su canónica,
+   su título, su descripción y su tarjeta. El nombre del archivo es el mismo en
+   la vista previa y en producción a propósito: los enlaces del listado y de los
+   globos del mapa se escriben una sola vez y valen en las dos.
+   `ficha.html` se conserva: es lo que enlazan los buscadores y los mensajes que
+   ya guardaron la dirección vieja, y sigue resolviendo el fragmento del lado
+   del cliente. Lo que cambia es su canónica, que ya no apunta a un fragmento
+   —cosa que ningún buscador respeta— sino a sí misma. */
+const _REG_TODOS = (JSON.parse(fs.readFileSync('datos/registro.json','utf8')).ejemplares) || [];
+const SLUG_POR_DEFECTO = process.argv[2] || 'viejo-del-agua';
+const archivoDe = (s) => 'arbol-' + s + '.html';
+{
+  const vistos = new Set();
+  for (const e of _REG_TODOS) {
+    if (!e.slug) throw new Error('armar-ficha.js: hay un ejemplar sin slug; no puede tener dirección propia.');
+    if (vistos.has(e.slug)) throw new Error(`armar-ficha.js: el slug «${e.slug}» está repetido; dos ejemplares pisarían el mismo archivo.`);
+    vistos.add(e.slug);
+  }
+}
+
+const armarUno = (slug, archivo, esGenerica) => {
 /* Metadatos por EJEMPLAR.
    La ficha heredaba el título, la descripción, el canonical, el og:url y la
    og:image de la portada. Un canonical que apunta a otra página le dice al
@@ -86,7 +114,8 @@ const _partes = [
   _ej.morfologia && _ej.morfologia.altura_m != null ? `${_ej.morfologia.altura_m} metros de altura.` : '',
 ].filter(Boolean).join(' ');
 const _desc = `${_nombre}: ${_partes} Ficha del registro de árboles patrimoniales de la Ciudad de México, con su ubicación, sus medidas de campo y el decreto que lo declara.`;
-const _urlFicha = SITIO.url(NOMBRES.ficha) + '#ficha-' + slug;
+/* La genérica se apunta a sí misma; cada ficha propia, a su archivo. */
+const _urlFicha = esGenerica ? SITIO.url(NOMBRES.ficha) : SITIO.url(archivo);
 const html=`<!DOCTYPE html>
 <html lang="es-MX">
 <head>
@@ -129,11 +158,30 @@ ${fot}
 ${menu}
 ${dif}
 ${js}
+${ARRANQUE.GUARDIA}
 const DATOS=${datos};
-pintarFicha(DATOS, (location.hash.replace('#ficha-','')||'${slug}'));
-window.addEventListener('hashchange',()=>{pintarFicha(DATOS,location.hash.replace('#ficha-','')||'${slug}');window.scrollTo(0,0);});
+/* EL FRAGMENTO SOLO MANDA SI NOMBRA UN EJEMPLAR.
+   «#contenido» —el destino del enlace «Saltar al contenido»— no es un slug.
+   Tomarlo como tal hacía que la ficha caiga al primer ejemplar de la lista:
+   el atajo pensado para quien navega por teclado cambiaba de árbol y mandaba
+   la página al inicio. Ahora un fragmento ajeno no repinta nada y el navegador
+   hace lo suyo, que es saltar al ancla. */
+const ES_FICHA=(h)=>h.indexOf('#ficha-')===0;
+const slugDelHash=()=>ES_FICHA(location.hash)?location.hash.slice(7):'${slug}';
+${ARRANQUE.proteger('pintarFicha(DATOS, slugDelHash());')}
+window.addEventListener('hashchange',()=>{if(location.hash&&!ES_FICHA(location.hash))return;${ARRANQUE.proteger('pintarFicha(DATOS, slugDelHash());')}window.scrollTo(0,0);});
 <\/script>
 </body>
 </html>`;
-fs.writeFileSync(SALIDA+NOMBRES.ficha,enlazar(html));
-console.log(DESTINO+'/'+NOMBRES.ficha+' ·',Math.round(html.length/1024),'KB');
+fs.writeFileSync(SALIDA+archivo,enlazar(html));
+return html.length;
+};
+
+const _bytesGenerica = armarUno(SLUG_POR_DEFECTO, NOMBRES.ficha, true);
+require('./sellar.js').marcarCorrida(SALIDA,'ficha');
+console.log(DESTINO+'/'+NOMBRES.ficha+' ·',Math.round(_bytesGenerica/1024),'KB');
+
+let _bytes = 0;
+for (const _e of _REG_TODOS) _bytes += armarUno(_e.slug, archivoDe(_e.slug), false);
+console.log(DESTINO+'/arbol-*.html · '+_REG_TODOS.length+' fichas con dirección propia ·',
+  Math.round(_bytes/1024),'KB en total');

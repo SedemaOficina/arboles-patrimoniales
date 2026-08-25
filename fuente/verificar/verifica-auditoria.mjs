@@ -447,8 +447,14 @@ console.log('\n══ PALETA · el verde no entra al fondo profundo ══');
   t('Ningún componente sobre jacaranda profundo usa verde',
     bloqueOscuro.length >= 7 && !bloqueOscuro.some(l => /verde-luz|143,199,127|verde-bosque/.test(l)),
     bloqueOscuro.filter(l=>/verde/.test(l)).join(' | '));
+  /* LA CIFRA ESTABA MAL, no el criterio. El comentario del CSS decía 9.26:1 y
+     esta aserción lo daba por bueno. Medido el 25 de agosto de 2026 sobre el
+     par real —#D9BC91 sobre #2A1630— son 9.1986, que se redondea a 9.20:1, que
+     es lo que el manual de identidad decía desde el principio. Se corrigió el
+     comentario y se corrige aquí: una comprobación que fija un número
+     equivocado convierte el error en obligación. */
   t('El acento de ese fondo es el dorado claro, declarado con su contraste',
-    /--dorado-luz:#D9BC91;.*9\.26:1/.test(cs5)
+    /--dorado-luz:#D9BC91;.*9\.20:1/.test(cs5)
     && /\.cifra strong\{[^}]*var\(--dorado-luz\)/.test(cs5)
     && /\.grupo h3\{[^}]*var\(--dorado-luz\)/.test(cs5));
   t('La regla queda escrita en la propia paleta',
@@ -540,8 +546,25 @@ console.log('\n══ NAVEGACIÓN ENTRE PÁGINAS ══');
         fv3=fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8');
   t('Ningún testigo de ruta sobrevive al ensamblado',
     ![pv3,fv3].some(x => /__PORTADA__|__FICHA__/.test(x)));
-  t('La portada de una pieza apunta al archivo de ficha',
-    /RUTA_FICHA = "ficha-vista-previa\.html"/.test(pv3));
+  /* CAMBIÓ EL CRITERIO. Esto comprobaba que el testigo __FICHA__ se resolviera
+     al nombre real del archivo en la vista previa. Los enlaces del listado y
+     del mapa ya no pasan por ese testigo: cada ejemplar tiene su archivo, que
+     se llama igual en las dos salidas. Lo que hay que seguir garantizando es
+     que la portada armada enlace a fichas que EXISTEN, y eso ahora se puede
+     comprobar de verdad, contra el disco, en vez de contra una cadena. */
+  t('La portada armada enlaza a fichas que existen',
+    (() => {
+      /* El listado lo pinta el guion al cargar, así que la portada armada no
+         trae los enlaces resueltos: trae la regla que los produce. Se comprueba
+         esa regla, y aparte que el archivo de cada ejemplar del registro esté
+         de verdad en la carpeta. Comprobar solo la cadena dejaría pasar una
+         portada que enlaza a trece páginas que nadie armó. */
+      const reglaViva = /const urlFicha = \(slug\) => `arbol-\$\{slug\}\.html`;/.test(pv3)
+        && /href="\$\{urlFicha\(esc\(e\.slug\)\)\}"/.test(pv3);
+      const reg = JSON.parse(fs.readFileSync('datos/registro.json', 'utf8')).ejemplares || [];
+      const faltan = reg.filter((e) => !fs.existsSync(PRUEBA + 'arbol-' + e.slug + '.html'));
+      return reglaViva && reg.length >= 13 && faltan.length === 0;
+    })());
   t('El menú de la ficha regresa a la portada, no a anclas inexistentes',
     /href="portada-vista-previa\.html#listado"/.test(fv3)
     && /href="portada-vista-previa\.html#mapa"/.test(fv3)
@@ -552,9 +575,15 @@ console.log('\n══ NAVEGACIÓN ENTRE PÁGINAS ══');
     ['construir/armar.js','construir/armar-ficha.js'].every(a =>
       /process\.env\.RUTA_PORTADA/.test(fs.readFileSync(a,'utf8'))
       && /process\.env\.RUTA_FICHA/.test(fs.readFileSync(a,'utf8'))));
+  /* CAMBIÓ EL CRITERIO, no se borró la comprobación. Hasta el 25 de agosto de
+     2026 los tres enlaces apuntaban a «ficha.html#ficha-slug» y esta aserción
+     exigía esa forma. Desde que cada ejemplar tiene archivo propio, lo que hay
+     que garantizar es lo mismo de siempre —que los tres usen la MISMA regla y
+     no tres inventadas— pero sobre la regla nueva: el ayudante urlFicha(). */
   t('Tarjeta, árbol del bosque y globo del mapa usan la misma ruta',
-    (fs.readFileSync('logica.js','utf8').match(/\$\{RUTA_FICHA\}#ficha-/g)||[]).length===2
-    && /\$\{RUTA_FICHA\}#ficha-/.test(fs.readFileSync('mapa.js','utf8')));
+    (fs.readFileSync('logica.js','utf8').match(/\$\{urlFicha\(esc\(e\.slug\)\)\}/g)||[]).length===2
+    && /\$\{urlFicha\(esc\(e\.slug\)\)\}/.test(fs.readFileSync('mapa.js','utf8'))
+    && ['logica.js','mapa.js'].every(a=>/const urlFicha = \(slug\) => `arbol-\$\{slug\}\.html`;/.test(fs.readFileSync(a,'utf8'))));
 }
 
 console.log('\n══ PÁGINA DE RECURSOS ══');
@@ -981,7 +1010,7 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
     /class="bosque__globo" aria-hidden="true">Ver su ficha/.test(lg)
     && !/bosque__globo-nombre|bosque__globo-especie|bosque__globo-alcaldia/.test(lg));
   t('El árbol entero sigue siendo el enlace: se llega sin ratón',
-    /<a class="bosque__arbol" href="\$\{RUTA_FICHA\}#ficha-/.test(lg));
+    /<a class="bosque__arbol" href="\$\{urlFicha\(esc\(e\.slug\)\)\}"/.test(lg));
   t('El nombre no estira su columna: dos renglones y corta',
     /-webkit-line-clamp:2/.test(cs) && /\.bosque__arbol\{flex:0 0 auto;width:clamp\(112px,13vw,168px\)/.test(cs));
   t('El globo no invade la guía: se posa sobre la copa',

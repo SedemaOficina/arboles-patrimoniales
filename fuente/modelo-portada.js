@@ -148,7 +148,7 @@ class Component extends DCLogic {
       const ilu = sil && sil.ilustracion ? sil.ilustracion : null;
       const razonIlu = ilu && this._S ? (this._S.PROPORCION_ILUSTRACION[sil.clave] || 1) : 1;
       return {
-        enlace: `${this.RUTA_FICHA}#ficha-${x.slug}`,
+        enlace: `arbol-${x.slug}.html`,
         nombre: x.nombreAsignado || "Sin nombre",
         detalle: x.nombreComun || x.especie || "",
         accesible: `${x.nombreAsignado || "Ejemplar"}, ${this.nf(x.morfologia.altura_m, 1)} metros`,
@@ -210,7 +210,7 @@ class Component extends DCLogic {
       const a = this.germinacion(e);
       const foto = (e.fotos && e.fotos.length) ? e.fotos[0] : null;
       return {
-        enlace: `${this.RUTA_FICHA}#ficha-${e.slug}`,
+        enlace: `arbol-${e.slug}.html`,
         hayFoto: Boolean(foto),
         urlFoto: foto ? foto.url : "",
         claseRetrato: "ficha__retrato" + (foto ? " ficha__retrato--foto" : ""),

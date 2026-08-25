@@ -119,6 +119,39 @@ a{color:var(--jacaranda-hondo)}
   <div class="envoltura">
 
     <div class="pend-grupo">
+      <h2>0 · Lo que se cerró el 25 de agosto de 2026</h2>
+      <p>De la Auditoría 360 v3. Todo lo de esta lista está armado, publicado en <code>docs/</code> y con las dieciséis suites en verde. Se deja escrito para que la próxima sesión no lo vuelva a buscar.</p>
+      <div class="pend-lista">
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Nueve cierres, y lo que quedó abierto de cada uno</h3>
+            <ol>
+              <li><b>«Saltar al contenido» ya no cambia de árbol.</b> El fragmento solo manda si empieza por <code>#ficha-</code>. <code>construir/armar-ficha.js</code>.</li>
+              <li><b>Un error de arranque ya no deja la página en blanco.</b> <code>construir/arranque.js</code> pinta el mismo cintillo del caso sin JavaScript y manda a los datos abiertos.</li>
+              <li><b>La galería devuelve el foco y anuncia el cambio de fotografía.</b> Región <code>aria-live</code> nueva en <code>ficha-cuerpo.html</code>.</li>
+              <li><b>Las cotas de la regla pasaron de dorado a corteza</b>: 2.60:1 → 6.29:1. Era la única violación de axe en seis mediciones. No se inventó un tono: la corteza ya estaba en la paleta.</li>
+              <li><b>El recibo del armado ya no se puede firmar sin armar.</b> Los tres armadores dejan su marca con el identificador de la corrida y <code>sellar.js</code> se niega si no coinciden. <code>verifica-deriva</code> comprueba además el <b>JavaScript</b> incrustado, no solo el CSS.</li>
+              <li><b>Cada ejemplar tiene su dirección:</b> <code>arbol-&lt;slug&gt;.html</code>, con su canónica, su título y su tarjeta. El mapa del sitio pasó de 3 a 16 direcciones. <code>ficha.html</code> se conserva para los enlaces viejos y ahora se apunta a sí misma.</li>
+              <li><b>Aviso de privacidad, licencia y terceros</b>, en Recursos y enlazado desde el pie de las tres páginas. La fecha de publicación la escribe el armado.</li>
+              <li><b>El manual de identidad quedó al día</b>: nueve desfases corregidos y cinco tokens documentados, entre ellos <code>--tinta-suave</code>, el color del 80 % del texto del sitio.</li>
+              <li><b>Este registro</b>, que tenía cuatro afirmaciones que ya no eran ciertas.</li>
+            </ol>
+            <div class="arreglo">
+              <b>Lo que quedó abierto y hay que recordar</b>
+              <ul>
+                <li><b>El diccionario de datos no se publicó.</b> El contrato de campos vive en <code>fuente/datos/contrato-v2.json</code> y no sale al sitio. Sin él, «datos abiertos» es una descarga, no un conjunto reutilizable. Media jornada.</li>
+                <li><b>El aviso de privacidad integral</b> de la Secretaría no está enlazado: hace falta la dirección, que la aporta el área competente. El texto publicado describe lo que este sitio hace de verdad, que es lo que sí se podía escribir sin inventar.</li>
+                <li><b>Las trece fichas propias pesan 4.5 MB en el repositorio</b> —cada una lleva la hoja de estilo y el guion incrustados—. Comprimidas son unos 105 KB por visita, así que el visitante no lo nota. Quitar los comentarios solo en la salida de producción bajaría eso un 40 %: sigue siendo el pendiente de peso más rentable.</li>
+                <li><b>Sin tocar, por decisión de esta sesión:</b> las sumas de servicios ambientales siguen publicadas, <code>nominadoPor</code> sigue en el JSON descargable, la validación de rangos sigue sin correr en el armado, el sondeo de fotografías sigue lanzando 22 peticiones fallidas y el Sabino sigue contado como declarado. Los cinco están en la Auditoría 360 v3 con su número.</li>
+              </ul>
+            </div>
+            <cite>Un registro vivo solo sirve mientras se le pueda creer. Cuatro de sus afirmaciones habían dejado de ser ciertas en tres días.</cite>
+          </div>
+          <span class="pend__quien" data-q="decidido">Cerrado</span>
+        </article>
+      </div>
+
       <h2>1 · Bloqueado en ti</h2>
       <p>Nada de esto lo puedo resolver yo. Sin estos insumos el sitio funciona, pero se publica incompleto.</p>
       <div class="pend-lista">
@@ -175,7 +208,7 @@ a{color:var(--jacaranda-hondo)}
               <ol>
                 <li><b>Medir la cobertura, no el conteo.</b> Que el guardián calcule qué proporción de los campos que importan —coordenadas, alcaldía, altura, categorías, fecha de decreto— viene con dato.</li>
                 <li><b>Comparar contra el congelado</b>, no contra cero: si el vivo trae bastante menos cobertura que el que ya está en la página, se descarta con su motivo escrito y el sitio no cambia.</li>
-                <li><b>Decirlo.</b> El aviso de dato degradado ya existe en la portada; que se encienda también en este caso.</li>
+                <li><b>Decirlo.</b> Que el sitio lo <b>diga en la portada</b>. Cuidado: hoy ese aviso <b>no existe</b> —solo hay una traza en la consola del navegador—, así que este punto incluye construirlo, no solo encenderlo. (Corregido el 25 de agosto de 2026: este pendiente daba por hecha una pieza que nunca se escribió.)</li>
               </ol>
             </div>
             <cite>Falta acordar el umbral. Es una decisión de criterio, no de código: qué tanta pérdida es «la hoja está en obra» y qué tanta es «la hoja se rompió».</cite>
@@ -483,7 +516,7 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__marca"></span>
           <div>
             <h3><code>modelo-recursos.js</code> no lo usa nadie</h3>
-            <p>456 bytes que <b>no lee el armado, no carga ninguna página y no toca ninguna de las catorce suites</b>. Sus dos hermanos sí tienen oficio: <code>modelo-ficha.js</code> y <code>modelo-portada.js</code> son el oráculo contra el que comparan cinco y cuatro suites. Este quedó suelto.</p>
+            <p>456 bytes que <b>no lee el armado, no carga ninguna página y no toca ninguna de las dieciséis suites</b>. Sus dos hermanos sí tienen oficio: <code>modelo-ficha.js</code> y <code>modelo-portada.js</code> son el oráculo contra el que comparan cinco y cuatro suites. Este quedó suelto.</p>
             <cite>Antes de retirarlo, confirmar que no era el arranque de un modelo de la página de recursos que se dejó a medias.</cite>
           </div>
           <span class="pend__quien" data-q="tu">Por limpiar</span>
@@ -492,7 +525,7 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
-            <h3>Las catorce suites solo corren si alguien se acuerda</h3>
+            <h3>Las dieciséis suites solo corren si alguien se acuerda</h3>
             <p>No hay integración continua. Las 1,032 aserciones dependen de que alguien escriba <code>verificar.sh</code> antes de subir, y <b>la que avisa de la deriva es justo la que importa en ese momento</b>. Un flujo de trabajo de GitHub Actions que corra <code>verificar.sh</code> en cada push cuesta un archivo de quince líneas y convierte el aviso en un bloqueo.</p>
             <cite>Sin red no se puede comprobar aquí: el flujo hay que probarlo en el propio GitHub.</cite>
           </div>
@@ -515,9 +548,9 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__marca"></span>
           <div>
             <h3>Las tres páginas cargan la hoja de estilos entera</h3>
-            <p><code>estilos.css</code> pesa 172 KB y se incrusta completa en las tres páginas. Medido regla por regla contra lo que cada página puede alcanzar: la portada usa 106 KB, la ficha 108 KB y <b>recursos solo 63 KB</b>. Partirla por página ahorraría 66 KB en la portada, 64 en la ficha y 109 en recursos.</p>
+            <p><code>estilos.css</code> pesa 156 KB y se incrusta completa en las tres páginas. Medido regla por regla contra lo que cada página puede alcanzar: la portada usa 106 KB, la ficha 108 KB y <b>recursos solo 63 KB</b>. Partirla por página ahorraría 66 KB en la portada, 64 en la ficha y 109 en recursos.</p>
             <p style="margin-top:9px"><b>Antes de emprenderlo, el número que importa:</b> comprimida son 50 KB, y la portada entera pesa 133 KB comprimida. La hoja no es lo que pesa: el <b>JavaScript incrustado sí</b> —216 KB crudos, 64 comprimidos en la portada—. Partir el CSS es un tercio del problema y toca los cinco <code>armar-*.js</code>.</p>
-            <cite>La auditoría de CSS muerto ya se hizo y salió limpia: apenas 2.2 KB de reglas inalcanzables sobre 172 KB, un 1.3%. No hay ahí un problema que resolver.</cite>
+            <cite>La auditoría de CSS muerto ya se hizo y salió limpia: apenas 2.2 KB de reglas inalcanzables sobre 156 KB, un 1.3%. No hay ahí un problema que resolver.</cite>
           </div>
           <span class="pend__quien" data-q="registro">Decidir</span>
         </article>

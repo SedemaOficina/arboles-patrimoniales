@@ -36,7 +36,7 @@ process.chdir(path.resolve(__dirname, '..'));   // se planta en fuente/
 const SELLADOS = [
   'construir/armar-capa.js', 'construir/armar-datos.js', 'construir/armar-ficha.js',
   'construir/armar-recursos.js', 'construir/armar.js', 'construir/shapefile.js',
-  'construir/sitio.js',
+  'construir/arranque.js', 'construir/sitio.js',
   'cuerpo.html', 'ficha-cuerpo.html', 'recursos-cuerpo.html',
   'parciales/encabezado.html', 'parciales/pie.html',
   'datos/contrato-v2.json', 'datos/registro.json',
@@ -48,11 +48,52 @@ const SELLADOS = [
 const huella = (f) =>
   crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex').slice(0, 16);
 
+/* EL RECIBO NO SE FIRMA SI NADIE ARMÓ.
+   `sellar.js` no compara la salida con la fuente: sella la fuente del momento
+   en que se le llama. Correrlo suelto —el rodeo que se usa cuando la
+   herramienta no puede borrar la carpeta de destino— ponía la alarma en verde
+   con la salida vieja. La alarma se apagaba sola, sin que nadie armara nada.
+
+   Ahora cada armador deja su marca con el identificador de la corrida que
+   `construir.sh` exporta, y el recibo solo se firma si las tres marcas son de
+   ESTA corrida. Correr `node sellar.js` a secas ya no firma nada: avisa y
+   termina en error.
+
+   La marca va en un archivo aparte y no dentro de las páginas a propósito: si
+   el identificador viajara incrustado, cada armado cambiaría las tres páginas
+   aunque no hubiera cambiado nada, y el historial se llenaría de diferencias
+   que no dicen nada. */
+const MARCA = '.armado.json';
+
+const marcarCorrida = (salida, pagina) => {
+  const id = process.env.ARMADO_ID || '';
+  const f = path.join(salida, MARCA);
+  let m = {};
+  try { m = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (_) { m = {}; }
+  if (m.armado_id !== id) m = { armado_id: id, paginas: {} };
+  m.paginas[pagina] = true;
+  fs.writeFileSync(f, JSON.stringify(m, null, 1) + '\n');
+};
+
 /* La lista se publica para que `verifica-deriva.mjs` la lea de aquí y no de una
    copia suya: dos listas que hay que recordar actualizar a la vez acaban
    separándose. Al importarse, este archivo no escribe nada. */
-module.exports = { SELLADOS, huella };
+module.exports = { SELLADOS, huella, marcarCorrida, MARCA };
 if (require.main !== module) return;
+
+/* La comprobación, antes de firmar. */
+const ID = process.env.ARMADO_ID || '';
+let marca = null;
+try { marca = JSON.parse(fs.readFileSync(path.join(SALIDA, MARCA), 'utf8')); } catch (_) {}
+const alDia = marca && ID && marca.armado_id === ID &&
+  ['portada', 'ficha', 'recursos'].every((p) => marca.paginas && marca.paginas[p]);
+if (!alDia) {
+  console.error('sellar.js: no firmo el recibo. Las páginas de ' + CARPETA + '/ no las armó esta corrida.');
+  console.error('  Corre el armado entero:  fuente/construir/construir.sh ' +
+    (DESTINO === 'produccion' ? 'produccion' : '') );
+  console.error('  Un recibo firmado sin armar apaga la alarma de deriva y deja el sitio atrasado en silencio.');
+  process.exit(1);
+}
 
 const fuentes = {};
 for (const f of SELLADOS) fuentes[f] = huella(f);
@@ -62,6 +103,7 @@ const sello = {
   destino: DESTINO,
   base: sitio.BASE,
   version_tarjeta: sitio.VERSION_TARJETA,
+  armado_id: ID,
   fuentes,
 };
 

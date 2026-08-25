@@ -44,17 +44,22 @@ La paleta parte del **logotipo de Árboles Patrimoniales**: un morado jacaranda 
 | Papel | `#FEF7E4` | Superficie clara principal: la crema del logotipo |
 | Papel hondo | `#F7EDD6` | Alterna para franjas y portadas de sección |
 | Blanco | `#FFFDF7` | Tarjetas sobre papel. No es blanco puro: rompería la calidez |
-| Dorado | `#B28E5C` | Patrimonio y decretos, sobre fondo claro |
+| Dorado | `#B28E5C` | Patrimonio y decretos, sobre fondo claro. **No sirve para texto pequeño ni para líneas: sobre las superficies claras da entre 2.57 y 2.98:1** |
+| Foco | `#8F6E3E` | El anillo de foco, y solo eso. Nace de que el dorado de marca no llega al 3:1 que WCAG pide a un indicador de interfaz. 4.40:1 sobre papel |
 | Dorado luz | `#D9BC91` | El acento del fondo profundo. Cifras y títulos sobre tinta jacaranda |
-| Corteza | `#6B5136` | Notas de cobertura y madera |
+| Corteza | `#6B5136` | Notas de cobertura, madera, y **las cotas de la regla de alturas**: 6.29:1 sobre el verde niebla, donde el dorado de marca daba 2.60 |
 | Corteza luz | `#8B6F47` | Acento secundario |
 | Mariposa | `#BE4728` | Acento cálido de la ilustración |
+| Jacarandá noche | `#1D0F23` | Extremo oscuro del degradado de las superficies profundas |
+| Jacarandá brasa | `#4A2A50` | Extremo claro del mismo degradado |
+| Guinda del Gobierno | `#9D2148` | Identidad del Gobierno de la Ciudad. **No pertenece a este sistema: se hospeda y no se altera** |
 
 ## 1.5 Texto y alerta
 
 | Nombre | Valor | Uso |
 |---|---|---|
 | Tinta | `#1A1A1A` | Texto principal |
+| Tinta suave | `#413647` | **El color en el que está escrito cerca del 80 % del sitio.** 10.65:1 sobre papel |
 | Gris | `#5E5563` | Texto secundario, notas al pie |
 | Alerta | `#C0392B` | Emergencias y sanciones. Se usa con parquedad |
 
@@ -85,7 +90,7 @@ El mínimo exigido es 4.5:1 para texto normal y 3:1 para texto grande. **Ninguna
 
 ## 2.1 Las tres familias
 
-El sitio usa tres familias y **solo tres**. Cada una tiene una función y no se intercambian.
+El sitio usa tres familias para todo lo que se lee, y una cuarta reservada a un solo dato. No se intercambian.
 
 | Variable | Familia | Función |
 |---|---|---|
@@ -93,7 +98,9 @@ El sitio usa tres familias y **solo tres**. Cada una tiene una función y no se 
 | `--editorial` | **Fraunces** | Nombres científicos, domicilios, entradas de sección. Serif con carácter: da el registro de documento |
 | `--texto` | **Source Sans 3** | Todo el cuerpo, la interfaz y los rótulos. Neutra y legible en pantalla |
 
-Cada una declara respaldos del sistema por si las fuentes web no cargan: `Arial Narrow` e `Impact` para Anton, `Georgia` para Fraunces, `system-ui` para Source Sans.
+**La cuarta.** El identificador del ejemplar —`25-AZC-TAX-19405GIMNO-0006`— se escribe en la monoespaciada del sistema (`ui-monospace`). Es una cadena de código, no prosa: en monoespaciada se lee dígito a dígito y no se parte por sus guiones. Es la única excepción y no se extiende a nada más.
+
+Cada una declara respaldos del sistema por si las fuentes web no cargan: `Arial Narrow`, `Impact` y `DejaVu Sans Condensed` para Anton; `Georgia` y `DejaVu Serif` para Fraunces; `system-ui` y `DejaVu Sans` para Source Sans.
 
 > **Nota técnica.** Leaflet, la biblioteca del mapa, impone sus propias familias —Helvetica Neue en el lienzo y Lucida Console en los botones de zoom—. El sitio las sobrescribe para no acabar usando cinco familias donde debe usar tres.
 
@@ -104,15 +111,16 @@ Cada una declara respaldos del sistema por si las fuentes web no cargan: `Arial 
 | Titular de portada | 34 a 124 px, fluido | 400 | Anton |
 | Título de sección (`h2`) | 26 a 44 px, fluido | 400 | Anton |
 | Título de tarjeta (`h3`) | 17 a 19 px | 400 a 700 | Anton o Source Sans según el bloque |
-| Cuerpo | 17 px | 400 | Source Sans 3 |
+| Cuerpo | 16 px | 400 | Source Sans 3 |
 | Entrada de sección | 17 a 21 px | 400 | Fraunces |
-| Rótulo de sección | 12 px, interletra 0.18em, versalitas | 700 | Source Sans 3 |
+| Rótulo de sección | 11 px, interletra 0.18em, versalitas | 700 | Source Sans 3 |
 | Etiqueta de categoría | 11 px, interletra 0.08em, versalitas | 700 | Source Sans 3 |
-| Nota al pie y cita | 13 a 14.5 px | 400 | Fraunces cursiva o Source Sans |
+| Nota al pie | 12.5 px | 400 | Fraunces cursiva o Source Sans |
+| Texto de apoyo | 14 px | 400 | Source Sans 3 |
 
 Los tamaños fluidos usan `clamp()`: crecen con la pantalla entre un mínimo y un máximo, sin saltos bruscos.
 
-**Interlínea:** 1.6 en el cuerpo, 1.1 a 1.2 en títulos. **Ancho de lectura:** máximo 78 caracteres por renglón.
+**Interlínea:** 1.6 en el cuerpo, 1.1 a 1.2 en títulos. **Ancho de lectura:** 62 `ch`, que en la tipografía del sitio da unos 68 caracteres por renglón.
 
 ---
 
@@ -129,13 +137,18 @@ Los tamaños fluidos usan `clamp()`: crecen con la pantalla entre un mínimo y u
 | Ancho | Qué cambia |
 |---|---|
 | 1240 px | Se aprieta la navegación antes que la marca |
-| 1090 px | El logotipo cede a 246 px |
+| 1100 px | El logotipo cede |
 | 1000 px | El menú pasa a botón desplegable |
 | 900 px | La ilustración de portada baja a banda inferior |
-| 820 px | Las rejillas de dos columnas pasan a una |
+| 860 px | Las rejillas de dos columnas pasan a una |
+| 700 px | Ajustes de la regla de alturas y de las hileras |
 | 560 px | El logotipo institucional baja a 210 px |
 | 430 px | El logotipo institucional baja a 186 px |
 | 345 px | Ajuste final para teléfonos angostos |
+
+**Son nueve familias de corte y la lista está cerrada:** 345, 430, 560, 700, 860, 900, 1000, 1100, 1240. `verifica-sistema` rechaza cualquier `@media` con un ancho nuevo. Los valores a dos píxeles o menos de distancia cuentan como una sola familia.
+
+**Radio:** 2 px en todo el sistema —nada redondeado— con una excepción declarada: las pastillas de filtro y los marcadores del mapa usan `--radio-pastilla`, que es completo.
 
 Verificado sin desbordamiento horizontal en once anchuras, de 320 a 1920 px.
 

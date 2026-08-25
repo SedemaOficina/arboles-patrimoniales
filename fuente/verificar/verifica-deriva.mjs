@@ -133,6 +133,64 @@ for (const pag of ['index.html', 'ficha.html', 'recursos.html']) {
     'la página se armó con una versión anterior de estilos.css');
 }
 
+console.log('\n══ EL JAVASCRIPT QUE DE VERDAD SE SIRVE ══');
+/* La comprobación de arriba solo miraba el CSS. La lógica también viaja
+   incrustada, y era justo la mitad que nadie comprobaba: se podía editar
+   `logica.js`, copiar el archivo suelto y publicar páginas con el guion
+   anterior sin que nada chistara.
+   Los armadores incrustan cada módulo con la misma regla —quitar los `export`
+   y las líneas de `import`—, así que aquí se repite esa normalización y se
+   exige que el resultado esté, tal cual, dentro de la página. Los trozos
+   cortos se ignoran: lo que se busca es el cuerpo del módulo, no una línea
+   suelta que podría coincidir por casualidad. */
+const normalizar = (src) => src
+  .replace(/^export const /gm, 'const ')
+  .replace(/^export function /gm, 'function ')
+  .replace(/^export /gm, '')
+  /* Los testigos de enlace también se sustituyen dentro del guion incrustado
+     —el armado los resuelve en todo el documento, no solo en el cuerpo—, así
+     que aquí se resuelven igual o la comparación falla por una diferencia que
+     no es deriva. En producción son estos tres nombres. */
+  .split('__PORTADA__').join('index.html')
+  .split('__FICHA__').join('ficha.html')
+  .split('__RECURSOS__').join('recursos.html');
+/* Las líneas de `import` se sustituyen por vacío —o, en la ficha, por el
+   perímetro de la Ciudad—, así que parten el texto: se comprueba trozo a
+   trozo en vez de exigir el módulo entero de una pieza. */
+const trozos = (src) => normalizar(src).split(/^import .*$/gm)
+  .map((x) => x.trim()).filter((x) => x.length > 400);
+
+const INCRUSTADOS = {
+  'index.html':   ['especies.js', 'fotos.js', 'menu.js', 'indicadores.js',
+                   'leaflet-diferido.js', 'mapa.js', 'geo-cdmx.js',
+                   'padron/lector-v2.js', 'padron/fuente-viva.js', 'logica.js'],
+  'ficha.html':   ['especies.js', 'fotos.js', 'menu.js', 'leaflet-diferido.js',
+                   'geo-cdmx.js', 'ficha-logica.js'],
+  'recursos.html': ['menu.js'],
+};
+for (const [pag, modulos] of Object.entries(INCRUSTADOS)) {
+  const h = hay(DOCS + pag) ? fs.readFileSync(DOCS + pag, 'utf8') : '';
+  const viejos = modulos.filter((m) =>
+    !hay(m) || !trozos(fs.readFileSync(m, 'utf8')).every((x) => h.includes(x)));
+  t(pag + ' lleva incrustado el guion de hoy', h !== '' && viejos.length === 0,
+    viejos.length ? viejos.join(', ') + ' → corre fuente/construir/construir.sh produccion' : 'no se pudo leer la página');
+}
+
+console.log('\n══ EL RECIBO LO FIRMÓ UN ARMADO DE VERDAD ══');
+/* `sellar.js` sella la fuente del momento en que se le llama: no compara nada
+   con la salida. Correrlo suelto ponía la alarma en verde con las páginas
+   viejas. Ahora los armadores dejan su marca y el recibo la copia; si las dos
+   no coinciden, el recibo se firmó sin armar. */
+const MARCA = DOCS + '.armado.json';
+const marca = hay(MARCA) ? JSON.parse(fs.readFileSync(MARCA, 'utf8')) : null;
+t('Las tres páginas dejaron su marca de armado',
+  !!(marca && marca.paginas && marca.paginas.portada && marca.paginas.ficha && marca.paginas.recursos),
+  'falta docs/.armado.json o alguna página no se armó en la última corrida');
+if (HAY_RECIBO)
+  t('El recibo es de la misma corrida que las páginas',
+    !!(marca && sello.armado_id && sello.armado_id === marca.armado_id),
+    'el recibo se firmó en una corrida distinta de la que armó las páginas');
+
 console.log('\n══ NADA DE MÁS EN LO PUBLICADO ══');
 /* Un archivo que se retira de la fuente sobrevive en la salida si nadie lo
    borra. `construir.sh` limpia assets/ y vendor/ antes de copiar; el rodeo de

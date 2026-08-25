@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auditoría 360 · Árboles Patrimoniales · 25 de agosto de 2026</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --jacaranda:#8D4992; --tinta:#2A1630; --bosque:#1E4D2B; --vivo:#2D7A3E;
+  --papel:#FEF7E4; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta-suave:#4A3552; --linea:#E4D9C4; --nube:#FBF3DC;
+  --texto:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --editorial:"Fraunces",Georgia,"Times New Roman",serif;
+  --display:"Anton","Arial Narrow",Impact,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.hoja{max-width:52rem;margin:0 auto;padding:0 1.5rem 5rem}
+header.portada{border-bottom:4px solid var(--jacaranda);padding:3rem 0 2rem;margin-bottom:2.5rem}
+.sello{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dorado);font-weight:700;margin:0 0 1.2rem}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.6rem,7vw,4.2rem);line-height:.98;letter-spacing:.01em;margin:0 0 .6rem;color:var(--jacaranda);text-transform:uppercase}
+.subtitulo{font-family:var(--editorial);font-size:1.22rem;line-height:1.45;color:var(--tinta-suave);margin:0 0 1.6rem;max-width:42rem}
+h2{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;font-size:1.9rem;line-height:1.1;color:var(--bosque);margin:3.4rem 0 1rem;padding-top:1.2rem;border-top:2px solid var(--linea)}
+h2 .num{color:var(--dorado);margin-right:.5rem}
+h3{font-family:var(--editorial);font-size:1.25rem;line-height:1.3;margin:2.2rem 0 .5rem;color:var(--tinta)}
+h4{font-size:.95rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tinta-suave);margin:1.8rem 0 .4rem}
+p{margin:0 0 1rem}
+a{color:var(--jacaranda)}
+strong{font-weight:700}
+code,.mono{font-family:ui-monospace,"Cascadia Mono","SFMono-Regular",Consolas,monospace;font-size:.86em;background:var(--nube);padding:.1em .35em;border-radius:3px;border:1px solid var(--linea)}
+.veredicto{background:var(--nube);border:1px solid var(--linea);border-left:6px solid var(--jacaranda);padding:1.4rem 1.6rem;margin:2rem 0}
+.veredicto p:last-child{margin-bottom:0}
+.marca{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.2em .6em;border-radius:2px;vertical-align:.15em;white-space:nowrap}
+.m-critico{background:var(--alerta);color:#fff}
+.m-alto{background:#E07A2F;color:#fff}
+.m-medio{background:var(--dorado);color:#2A1630}
+.m-bajo{background:var(--linea);color:var(--tinta-suave)}
+.m-sano{background:var(--vivo);color:#fff}
+.m-mejora{background:var(--jacaranda);color:#fff}
+.m-hecho{background:var(--bosque);color:#fff}
+.m-abierto{background:#fff;color:var(--alerta);box-shadow:inset 0 0 0 1.5px var(--alerta)}
+.hallazgo.cerrado{border-left:4px solid var(--vivo)}
+.cierre{font-size:.94rem;background:#F1F7EE;border:1px solid #CFE0C6;padding:.7rem .9rem;border-radius:2px;margin-top:.8rem}
+.cierre::before{content:"Cerrado el 25 de agosto · ";font-weight:700;color:var(--bosque);text-transform:uppercase;font-size:.72rem;letter-spacing:.08em}
+.franja{background:var(--bosque);color:#F3F8F0;padding:1.5rem 1.7rem;margin:2.2rem 0;border-radius:2px}
+.franja h3{color:#fff;margin:0 0 .6rem;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;font-size:1.4rem}
+.franja p{margin:0 0 .7rem}
+.franja p:last-child{margin-bottom:0}
+.franja code{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#F3F8F0}
+.franja a{color:#CDE8C4}
+.hallazgo{border:1px solid var(--linea);background:#fff;padding:1.1rem 1.3rem;margin:1.1rem 0;border-radius:2px}
+.hallazgo>h3{margin-top:0;font-family:var(--texto);font-weight:700;font-size:1.05rem;line-height:1.35}
+.hallazgo p:last-child{margin-bottom:0}
+.ev{font-size:.9rem;color:var(--tinta-suave);border-left:3px solid var(--linea);padding-left:.9rem;margin:.7rem 0}
+.arreglo{font-size:.94rem;background:var(--nube);padding:.7rem .9rem;border-radius:2px;margin-top:.8rem}
+.arreglo::before{content:"Qué hacer · ";font-weight:700;color:var(--bosque);text-transform:uppercase;font-size:.75rem;letter-spacing:.08em}
+table{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:.93rem}
+.envoltura{overflow-x:auto;-webkit-overflow-scrolling:touch}
+th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--linea);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tinta-suave);border-bottom:2px solid var(--dorado);white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.mal td{background:#FDF0EE}
+.indice{background:#fff;border:1px solid var(--linea);padding:1.2rem 1.5rem;margin:2rem 0}
+.indice ol{margin:.4rem 0 0;padding-left:1.3rem;columns:2;column-gap:2rem}
+.indice li{margin:.2rem 0;break-inside:avoid}
+.indice a{text-decoration:none}
+.indice a:hover{text-decoration:underline}
+ul.limpia{list-style:none;padding-left:0}
+ul.limpia li{padding-left:1.4rem;position:relative;margin:.45rem 0}
+ul.limpia li::before{content:"▸";position:absolute;left:0;color:var(--dorado)}
+.cifra{font-family:var(--display);font-size:2.4rem;line-height:1;color:var(--jacaranda);display:block}
+.tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.9rem;margin:1.6rem 0}
+.tarjeta{background:#fff;border:1px solid var(--linea);padding:.9rem 1rem;border-radius:2px}
+.tarjeta small{display:block;font-size:.78rem;color:var(--tinta-suave);margin-top:.3rem;line-height:1.35}
+blockquote{margin:1rem 0;padding:.8rem 1.1rem;background:var(--nube);border-left:4px solid var(--alerta);font-family:var(--editorial);font-size:1rem}
+footer{border-top:4px solid var(--jacaranda);margin-top:4rem;padding-top:1.4rem;font-size:.86rem;color:var(--tinta-suave)}
+@media (max-width:640px){.indice ol{columns:1}body{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<header class="portada">
+  <p class="sello">Secretaría del Medio Ambiente · Oficina de la Secretaría</p>
+  <h1>Auditoría 360</h1>
+  <p class="subtitulo">Diez dimensiones del micrositio de Árboles Patrimoniales, medidas una por una el 25 de agosto de 2026 sobre el sitio armado y contra el sitio publicado. Tercera corrida. Todas las cifras son mediciones; ninguna es estimación.</p>
+  <p class="subtitulo" style="font-family:var(--texto);font-size:1rem"><b>Este documento incluye el registro de cierre del mismo día.</b> Nueve de los veintitrés puntos del plan se resolvieron, se armaron y se publicaron en las horas siguientes a la medición. Cada hallazgo cerrado lleva su marca y dice con qué quedó resuelto; los que siguen abiertos también.</p>
+  <div class="tarjetas">
+    <div class="tarjeta"><span class="cifra">9</span><small>puntos del plan cerrados, armados y verificados el mismo día</small></div>
+    <div class="tarjeta"><span class="cifra">4</span><small>hallazgos críticos, tres de ellos de contenido y no de código</small></div>
+    <div class="tarjeta"><span class="cifra">16</span><small>suites en verde · 1&nbsp;039 aserciones tras los cambios</small></div>
+    <div class="tarjeta"><span class="cifra">16</span><small>direcciones en el mapa del sitio, donde antes había 3</small></div>
+  </div>
+</header>
+
+<div class="veredicto">
+  <p><strong>Veredicto.</strong> El código está sano y el tablero de comprobación es real: dieciséis suites en verde, cero inyecciones en 51 usos de <span class="mono">innerHTML</span>, la salida corresponde exactamente a la fuente y el sitio en línea sirve este armado. <strong>Los cuatro hallazgos críticos son de contenido, no de programación</strong>, y tres de ellos publican hoy algo que no debería estar publicado: dos declaraciones sin autorizar atribuidas a la Jefa de Gobierno y a la Secretaria, cifras de servicios ambientales físicamente imposibles, y el nombre completo de una persona física en el descargable de datos abiertos.</p>
+  <p>Ninguno se cierra programando. Los tres se cierran con una decisión y quince minutos de edición.</p>
+  <p><b>Lo que sí se cerró.</b> En las horas siguientes a esta medición se resolvieron nueve puntos del plan: el atajo de accesibilidad que cambiaba de árbol, la página en blanco sin mensaje, el foco de la galería, la única violación de contraste, el recibo del armado que se podía firmar sin armar, la dirección propia de cada ejemplar, el aviso de privacidad con su licencia, el manual de identidad y este registro de pendientes. Todo armado, publicado y con las dieciséis suites en verde. <a href="#cierre">El detalle está al final</a>.</p>
+</div>
+
+<nav class="indice" aria-label="Contenido">
+  <h4 style="margin-top:0">Contenido</h4>
+  <ol>
+    <li><a href="#m1">Lo que se midió</a></li>
+    <li><a href="#m2">Veredicto por dimensión</a></li>
+    <li><a href="#d1">Contenido publicado</a></li>
+    <li><a href="#d2">Datos y coherencia física</a></li>
+    <li><a href="#d3">Privacidad</a></li>
+    <li><a href="#d4">Accesibilidad</a></li>
+    <li><a href="#d5">Rendimiento</a></li>
+    <li><a href="#d6">Robustez del código</a></li>
+    <li><a href="#d7">Cadena de publicación</a></li>
+    <li><a href="#d8">Buscadores y datos abiertos</a></li>
+    <li><a href="#d9">Lenguaje y marco jurídico</a></li>
+    <li><a href="#d10">Diseño e identidad</a></li>
+    <li><a href="#vivo">El sitio en línea</a></li>
+    <li><a href="#falsos">Falsos positivos descartados</a></li>
+    <li><a href="#nomedido">Lo que no se pudo medir</a></li>
+    <li><a href="#plan">Qué hacer, en orden</a></li>
+    <li><a href="#cierre">Lo que se cerró el mismo día</a></li>
+  </ol>
+</nav>
+
+<h2 id="m1"><span class="num">1</span>Lo que se midió</h2>
+<p><strong>Accesibilidad.</strong> axe-core con reglas WCAG 2.1 A, AA y buenas prácticas sobre las tres páginas a 1&nbsp;440 y 390&nbsp;px, más una segunda pasada con el mapa cargado, los desplegables abiertos y el menú extendido. Además, a mano: 186 paradas de tabulación reales, 568 combinaciones únicas de contraste sobre 1&nbsp;639 nodos, tamaño de objetivo táctil, zoom al 200&nbsp;% y 400&nbsp;%, y comportamiento con <span class="mono">prefers-reduced-motion</span>.</p>
+<p><strong>Rendimiento.</strong> Bytes reales comprimidos con <span class="mono">gzip&nbsp;-9</span> y <span class="mono">brotli&nbsp;-q&nbsp;11</span>, y carga instrumentada con Chromium en perfil móvil (1.6&nbsp;Mbps, 150&nbsp;ms de latencia, procesador a un cuarto de velocidad).</p>
+<p><strong>Datos.</strong> Los trece ejemplares del registro congelado, campo por campo, más correlación de rangos entre diámetro del tronco y los doce servicios ambientales, y validación de los cuatro formatos publicados entre sí.</p>
+<p><strong>Código.</strong> Las dieciséis suites corridas en la máquina del usuario, las veintiséis huellas <span class="mono">sha256</span> del recibo de armado comparadas contra la fuente de hoy, y los 5&nbsp;017 renglones de JavaScript incrustado en las tres páginas leídos línea a línea contra su origen.</p>
+<p>Y lo que no se pudo medir también se dice: tiene su propia sección, y otra los hallazgos que resultaron falsos.</p>
+
+<h2 id="m2"><span class="num">2</span>Veredicto por dimensión</h2>
+<div class="envoltura">
+<table>
+  <thead><tr><th>Dimensión</th><th>Estado</th><th>El dato que lo resume</th></tr></thead>
+  <tbody>
+    <tr class="mal"><td>Contenido publicado</td><td><span class="marca m-critico">crítico</span></td><td>Dos borradores sin autorizar, con nombre y cargo, están en línea.</td></tr>
+    <tr class="mal"><td>Datos</td><td><span class="marca m-critico">crítico</span></td><td>Correlación diámetro–carbono de −0.89. Sigue sin corregirse desde el 22 de agosto.</td></tr>
+    <tr class="mal"><td>Privacidad</td><td><span class="marca m-critico">crítico</span></td><td>El nombre de una persona física sí viaja al descargable. Sin aviso de privacidad.</td></tr>
+    <tr><td>Accesibilidad</td><td><span class="marca m-hecho">cerrado</span></td><td>La violación de contraste y los dos fallos de foco, resueltos. Quedan roces menores.</td></tr>
+    <tr><td>Rendimiento</td><td><span class="marca m-alto">alto</span></td><td>39–51&nbsp;% del peso comprimido son comentarios. −122&nbsp;KB por visita. <b>Sin tocar.</b></td></tr>
+    <tr><td>Robustez</td><td><span class="marca m-hecho">cerrado</span></td><td>El arranque ya no puede dejar la página en blanco sin mensaje.</td></tr>
+    <tr><td>Publicación</td><td><span class="marca m-hecho">cerrado</span></td><td>El recibo ya no se firma sin armar, y la deriva comprueba también el JavaScript.</td></tr>
+    <tr><td>Buscadores</td><td><span class="marca m-hecho">cerrado</span></td><td>Cada ejemplar tiene su dirección. El mapa del sitio pasó de 3 a 16.</td></tr>
+    <tr><td>Lenguaje</td><td><span class="marca m-medio">medio</span></td><td>Cinco afirmaciones jurídicas sin artículo y una contradicción entre páginas. <b>Es del área jurídica.</b></td></tr>
+    <tr><td>Diseño</td><td><span class="marca m-hecho">cerrado</span></td><td>El manual quedó al día: nueve desfases y cinco tokens sin documentar.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="d1"><span class="num">3</span>Contenido publicado</h2>
+
+<div class="hallazgo">
+<h3><span class="marca m-critico">crítico</span> Dos declaraciones sin autorizar, atribuidas a la Jefa de Gobierno y a la Secretaria, están publicadas</h3>
+<p>El propio código lo advierte en mayúsculas y el sitio las publica de todos modos. El comentario dice, literal:</p>
+<blockquote>«ATENCIÓN: los dos textos de abajo son BORRADORES SIN AUTORIZAR. Son palabras que se atribuyen a personas con nombre y cargo, así que no deben publicarse tal cual».</blockquote>
+<p>La trampa está en el mecanismo que se diseñó para protegerlos: <span class="mono">pintarMensajes()</span> oculta la sección solo si los dos textos están <em>vacíos</em>. Se dejaron escritos para poder maquetar sobre algo, y eso mismo los publica. Hoy se leen en la portada, con nombre completo, cargo y medallón.</p>
+<p class="ev"><span class="mono">fuente/logica.js:612-639</span> · publicado en <span class="mono">docs/index.html:5921</span> y <span class="mono">:5929</span> · verificado en el armado de hoy.</p>
+<p>Es el hallazgo de mayor riesgo institucional de esta auditoría, y no es un defecto técnico: es un texto de relleno que se quedó puesto. Atribuir palabras no aprobadas a la Jefa de Gobierno en un sitio del Gobierno de la Ciudad es un problema de otra naturaleza que un error de contraste.</p>
+<p class="arreglo">Vaciar hoy mismo los dos campos <span class="mono">mensaje</span> y volver a armar: la sección desaparece sola, sin hueco ni relleno, y vuelve cuando cada oficina entregue su texto. Después, una comprobación en <span class="mono">verifica-contenido.mjs</span> que falle si un mensaje trae texto y no existe un campo <span class="mono">autorizado: true</span>. Diez minutos lo primero, media hora lo segundo.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> Los restos de captura de la hoja siguen en el sitio, tres días después</h3>
+<p>La auditoría del 22 de agosto los señaló y siguen ahí: <span class="mono">SEDEMA-Fernando Venegas Rosas**</span> arrastra un asterisco doble de nota al pie, y <span class="mono">Colectivo de Vecinos de Cerrada de Eugenia”</span> arrastra una comilla de cierre sin apertura. Se ven en la ficha y viajan al JSON descargable.</p>
+<p class="ev"><span class="mono">fuente/datos/registro.json:740</span> y el registro de Eugenio · ambos confirmados hoy en <span class="mono">docs/ficha.html</span> y en <span class="mono">docs/datos/arboles-patrimoniales-cdmx.json</span>.</p>
+<p class="arreglo">Se corrigen en la hoja de origen, no en el código. Dos minutos.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> El Sabino de San Juan se cuenta entre los trece sin tener decreto ni categoría</h3>
+<p>De los trece ejemplares, doce traen fecha de decreto y once traen categoría. El Ahuehuete de San Juan no trae ninguna de las dos —<span class="mono">fechaDecreto: null</span>, <span class="mono">categorias: []</span>— y Eugenio tampoco trae categoría. Aun así los trece se presentan juntos, sin distinguir al que todavía está en trámite del que ya está declarado.</p>
+<p class="ev">Censo campo por campo sobre <span class="mono">fuente/datos/registro.json</span>: decreto en 12 de 13, categorías en 11 de 13, edad estimada en 2 de 13.</p>
+<p class="arreglo">El sitio ya sabe declarar sus huecos con honestidad —«calculado sobre 2 de 13»—. Aplicar el mismo criterio al estado del expediente: una etiqueta «en trámite» en la tarjeta y en la ficha de quien no tiene decreto. Media jornada.</p>
+</div>
+
+<h2 id="d2"><span class="num">4</span>Datos y coherencia física</h2>
+
+<div class="hallazgo">
+<h3><span class="marca m-critico">crítico</span> Las cifras de servicios ambientales siguen siendo físicamente imposibles</h3>
+<p>Es el mismo hallazgo del 22 de agosto, sin corregir, y esta corrida lo mide mejor. La correlación de rangos entre diámetro del tronco y carbono secuestrado es <strong>ρ = −0.890</strong>: cuanto más grueso el tronco, menos carbono. <strong>Diez de los doce servicios ambientales correlacionan en sentido negativo.</strong></p>
+<div class="envoltura">
+<table>
+  <thead><tr><th>Ejemplar</th><th class="n">Diámetro</th><th class="n">Carbono/año</th><th class="n">Por cm de tronco</th></tr></thead>
+  <tbody>
+    <tr class="mal"><td>Glorieta de Ahuehuetes</td><td class="n">92 cm</td><td class="n">48.95 kg</td><td class="n">0.5321</td></tr>
+    <tr class="mal"><td>Ahuehuete de San Juan</td><td class="n">590 cm</td><td class="n">0.61 kg</td><td class="n">0.0010</td></tr>
+    <tr><td>Viejo del Agua</td><td class="n">440 cm</td><td class="n">1.13 kg</td><td class="n">0.0026</td></tr>
+    <tr><td>Tacuba</td><td class="n">320 cm</td><td class="n">0.79 kg</td><td class="n">0.0025</td></tr>
+  </tbody>
+</table>
+</div>
+<p>El árbol más delgado del padrón aparece secuestrando <strong>ochenta veces más carbono</strong> que el más grueso, con un rendimiento por centímetro de tronco <strong>532 veces mayor</strong>. Once de los trece ejemplares caen entre 0.61 y 2.72 kg al año, cifras propias de un arbolito joven, no de ahuehuetes centenarios. El patrón sugiere una corrida de i-Tree con parámetros distintos para un ejemplar, o unidades mezcladas en los otros doce; la auditoría no puede decidir cuál de las dos sin volver a la corrida original.</p>
+<p><strong>Lo que agrava el hallazgo:</strong> de la suma del cintillo de portada —235 kg de CO₂ al año— <strong>179.48 kg, el 76&nbsp;%, los aporta un solo árbol de 92 cm de diámetro</strong>. Y la cifra viaja a los datos abiertos: la columna <span class="mono">co2_absorbido_kg_anio</span> está entre las 28 del CSV publicado, y el JSON descargable trae los trece valores de <span class="mono">carbonoSecuestrado_kg</span> literales. Un dato abierto malo llega más lejos que un dato mostrado malo.</p>
+<p>El bloque hídrico tiene el mismo problema: la razón entre precipitación interceptada y escorrentía reducida es constante en 711–728 en todos los ejemplares, lo que delata una operación aritmética y no una medición independiente. Contra la geometría de copa, la precipitación implícita va de 56 a 1&nbsp;681 mm entre árboles de la misma ciudad, donde la lluvia real ronda los 700 mm.</p>
+<p class="ev">Medido sobre los 13 ejemplares de <span class="mono">fuente/datos/registro.json</span>. El contrato del padrón documenta que <span class="mono">co2_eq_kg</span> es la misma cantidad multiplicada por 3.667 —comprobado: la razón está entre 3.655 y 3.681 en los trece—, así que no es una segunda fuente que confirme nada.</p>
+<p class="arreglo">Rehacer las corridas de i-Tree con parámetros homogéneos y volver a cargar. Mientras tanto —y esto sí es de esta semana— <strong>retirar del cintillo y de las fichas las tres sumas de servicios ambientales</strong>, y decir por qué: «cifras en revisión». El sitio ya tiene la costumbre de declarar lo que no sabe; publicar una cifra que se sabe falsa es lo único que rompe ese estándar.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> Cuatro medidas violan los rangos del propio contrato, y la validación no se ejecuta</h3>
+<p>El Río Magdalena se publica con una copa de <strong>106 m de largo por 15 m de ancho</strong> y 113.5 m de extensión. El contrato del padrón fija el rango de copa en 1 a 45 m y ordena descartar y advertir fuera de él. Una copa de quince por ciento seis metros no es un árbol.</p>
+<p>El Sabino de San Juan aparece con 590 cm de diámetro y 1&nbsp;853.44 cm de circunferencia, fuera de los rangos [5, 500] y [15, 1600]. Aquí lo que está mal es el rango, no el dato: esos topes vienen de la norma de arbolado urbano común y un ahuehuete patrimonial los rebasa de manera legítima.</p>
+<p class="ev">Rangos declarados en <span class="mono">fuente/datos/contrato-v2.json</span>. La validación existe en <span class="mono">fuente/padron/lector-v2.js</span> pero <strong>ninguna etapa del armado la corre</strong>: los valores pasan de la hoja al sitio sin que nadie los mire.</p>
+<p class="arreglo">Conectar la validación del lector como paso obligatorio de <span class="mono">construir.sh</span>, que aborte el armado ante un valor fuera de rango. Y ampliar los rangos de diámetro y circunferencia para ejemplares patrimoniales, dejando escrito en el contrato por qué se separan de la norma de arbolado común. Una jornada.</p>
+</div>
+
+<h2 id="d3"><span class="num">5</span>Privacidad</h2>
+
+<div class="hallazgo">
+<h3><span class="marca m-critico">crítico</span> El nombre de una persona física sí viaja a los datos abiertos — la auditoría anterior lo acotó de menos</h3>
+<p>La auditoría del 22 de agosto concluyó que el nombre no llegaba al conjunto descargable. Es cierto del CSV y del GeoJSON. <strong>Es falso del JSON</strong>, que es un volcado del registro interno y publica el campo completo:</p>
+<p class="ev"><span class="mono">docs/datos/arboles-patrimoniales-cdmx.json:744</span> → <span class="mono">"nominadoPor": "SEDEMA-Fernando Venegas Rosas**"</span> · también en pantalla, en <span class="mono">docs/ficha.html</span> · ausente del CSV (0 coincidencias) y del GeoJSON.</p>
+<p>El contrato del padrón clasifica <span class="mono">nomino</span> dentro del bloque de <strong>control interno</strong> y marca su presencia como «siempre». Ninguna compuerta del armado autoriza expresamente su publicación: llega al descargable porque el JSON no filtra, no porque alguien haya decidido publicarlo.</p>
+<p>Hoy es una persona en trece registros. Con veintitrés más por portar, cada nueva nominación ciudadana añadirá un nombre al descargable.</p>
+<p class="arreglo">Dos acciones separadas. <strong>Técnica, esta semana:</strong> excluir <span class="mono">nominadoPor</span> del JSON público igual que ya se excluye del CSV, o sustituirlo por el tipo de nominante («Secretaría», «ciudadanía», «colectivo»). <strong>Institucional, antes de portar:</strong> preguntar al área jurídica si el nombre de quien nomina es dato público del expediente o dato personal. Esta auditoría no dictamina el régimen aplicable.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-critico">crítico</span> <span class="marca m-hecho">cerrado</span> No hay aviso de privacidad en ninguna página</h3>
+<p>Cero coincidencias de «privacidad» o «datos personales» en las tres páginas publicadas. El micrositio publica el nombre de una persona física, ofrece geolocalización del visitante para calcular el árbol más cercano, y carga contenido de terceros que recibe la dirección IP de quien lo visita: vista de calle de Google, video de YouTube, teselas cartográficas de CARTO y tipografías de Google Fonts.</p>
+<p class="arreglo">Enlazar el aviso de privacidad integral de la Secretaría desde el pie, en las tres páginas, y añadir el aviso simplificado que corresponda al tratamiento propio del micrositio. Es requisito de un sitio del Gobierno de la Ciudad y hoy no está. La redacción es del área competente; el enlace y el bloque de pie los pongo yo en media jornada.</p>
+<p class="cierre">Publicada la sección <b>«Privacidad, licencia y terceros»</b> en Recursos, enlazada dos veces desde el pie de las tres páginas. Declara qué datos maneja el sitio —incluida la geolocalización, que el texto genérico del Gobierno de la Ciudad negaba—, nombra los cinco terceros que reciben la visita, y explica la ruta para ejercer los derechos ARCO. <b>Queda pendiente</b> la dirección del aviso integral de la Secretaría: no se inventa.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> Los datos abiertos no tienen licencia nombrada, ni diccionario, ni fecha de corte</h3>
+<p>La única declaración de licencia es la frase «Uso libre citando la fuente», escondida dentro del propio JSON. En la página de Recursos se dice «puede reutilizarse citando la fuente», que es una intención, no una licencia con la que un tercero pueda operar. Tampoco hay diccionario de datos publicado —el contrato existe pero vive en <span class="mono">fuente/</span>— ni fecha de corte del padrón en ninguna cifra del sitio.</p>
+<p class="arreglo">Nombrar una licencia estándar y ponerla en la página de Recursos y en la cabecera de cada formato; publicar el diccionario de las 28 columnas como página propia; añadir «datos al DD de MM de AAAA» junto a cada cifra agregada. Una jornada.</p>
+<p class="cierre">Adoptada la <b>Licencia de Gobierno Abierto de la Ciudad de México</b>, con sus permisos y sus dos límites escritos en claro y su equivalencia internacional a una Creative Commons Atribución 4.0. La fecha de publicación del registro ya no se escribe a mano: la resuelve el armado, así que no puede envejecer sin que nadie se dé cuenta. <b>Queda pendiente el diccionario de datos</b> —el contrato de campos existe pero no sale al sitio—: media jornada.</p>
+</div>
+
+<h2 id="d4"><span class="num">6</span>Accesibilidad</h2>
+<p><strong>Cinco de seis mediciones con cero violaciones de axe.</strong> Es un resultado poco común y conviene decirlo antes que los peros: un solo <span class="mono">h1</span> por página, ningún salto de jerarquía, ningún identificador repetido, cero imágenes sin texto alternativo, las cuatro regiones de referencia, <span class="mono">lang="es-MX"</span>, y <strong>el 100&nbsp;% de las 186 paradas de tabulación con indicador de foco visible</strong> —cero <span class="mono">outline:none</span> en toda la hoja de estilos—. Con <span class="mono">prefers-reduced-motion</span> activo: cero animaciones y cero transiciones vivas en las tres páginas.</p>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> <span class="marca m-hecho">cerrado</span> El atajo «Saltar al contenido» cambia de árbol en la ficha</h3>
+<p>La ficha decide qué ejemplar mostrar leyendo el fragmento de la dirección: <span class="mono">location.hash.replace('#ficha-','')</span>. Al pulsar el enlace de salto, el fragmento pasa a ser <span class="mono">#contenido</span>, que no coincide con ningún ejemplar, y la ficha cae al primero de la lista. <strong>Quien navega por teclado y usa el atajo diseñado para ayudarle acaba en otro árbol y con la página desplazada al inicio.</strong></p>
+<p class="ev"><span class="mono">fuente/construir/armar-ficha.js:133-134</span> · el <span class="mono">|| todos[0]</span> de <span class="mono">fuente/ficha-logica.js:835</span> · el enlace, en <span class="mono">fuente/ficha-cuerpo.html:1</span> · reproducido en <span class="mono">docs/ficha.html</span>.</p>
+<p class="arreglo">Que el manejador ignore cualquier fragmento que no empiece por <span class="mono">#ficha-</span>. Una línea. Es la corrección de mejor relación esfuerzo–daño de toda la auditoría.</p>
+<p class="cierre">Hecho. El fragmento solo manda si nombra un ejemplar; cualquier otro deja que el navegador salte al ancla, que es lo que se esperaba desde el principio.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> <span class="marca m-hecho">cerrado</span> La galería de la ficha pierde el foco cada vez que se cambia de fotografía</h3>
+<p>Al avanzar de foto, la función que repinta reescribe el contenedor completo con <span class="mono">innerHTML</span>. Medido: el elemento con foco pasa de ser el botón de la galería a ser <span class="mono">BODY</span>. El contador cambia de «1/3» a «2/3» y <strong>no hay ninguna región <span class="mono">aria-live</span> en la página</strong> que lo anuncie: quien usa lector de pantalla pierde la posición y no se entera de que la imagen cambió.</p>
+<p class="ev"><span class="mono">fuente/ficha-logica.js:173-192</span> · WCAG 2.4.3 y 4.1.3 · cero elementos con <span class="mono">aria-live</span> en la ficha.</p>
+<p class="arreglo">Devolver el foco al control equivalente después de repintar y anunciar el cambio en una región discreta. Dos horas.</p>
+<p class="cierre">El foco vuelve al azulejo que intercambió lugar con la fotografía elegida —que es donde el ojo también va— y una región <span class="mono">aria-live</span> nueva anuncia «Fotografía N de M» con su pie. Solo al pulsar: el primer pintado no roba el foco.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> <span class="marca m-hecho">cerrado</span> Contraste de 2.60:1 en las cotas de la regla de alturas</h3>
+<p>La única violación que axe encontró en las seis mediciones: dorado <span class="mono">#B28E5C</span> sobre verde claro <span class="mono">#E7F0E1</span>. Hacen falta 4.5:1 para el texto de 11 px en negrita y 3.0:1 para el número. Las líneas de la propia regla usan el mismo color, así que además incumplen el criterio de contraste de elementos no textuales, que axe no revisa.</p>
+<p class="ev"><span class="mono">fuente/estilos.css:1360</span>, y las líneas en <span class="mono">:1362</span>, <span class="mono">:1374</span>, <span class="mono">:1378</span> · 4 nodos en <span class="mono">ficha.html</span> a 1&nbsp;440 px.</p>
+<p class="arreglo">Sustituir por <span class="mono">#7A5C33</span>, que da 5.27:1 sobre ese fondo y conserva el mismo tono dorado. Quince minutos, y hay que añadirlo a la paleta como variante de texto para que la suite de identidad no lo rechace como valor suelto.</p>
+<p class="cierre">Se hizo mejor que lo propuesto: <b>no hizo falta un tono nuevo</b>. La corteza <span class="mono">#6B5136</span> ya estaba en la paleta y da <b>6.29:1</b> sobre el verde niebla —frente a los 5.27 del tono inventado—, así que el sistema no creció en un color. Los seis usos, texto y líneas, quedaron cubiertos.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> Tres roces menores en el mapa y el menú</h3>
+<ul class="limpia">
+<li>El conteo del mapa cambia de «13 de 13» a «4 de 13» al filtrar <strong>sin anunciarlo</strong>: sin <span class="mono">role</span> ni <span class="mono">aria-live</span>. El conteo del listado sí los tiene. <span class="mono">fuente/mapa.js:673</span>.</li>
+<li>El lienzo del mapa es una parada de tabulación con <span class="mono">tabindex="0"</span> y sin nombre accesible, y es la primera de treinta paradas dentro del mapa.</li>
+<li>Escape cierra el menú angosto y deja el foco en <span class="mono">BODY</span> en lugar de devolverlo al botón que lo abrió. <span class="mono">fuente/menu.js:38</span>.</li>
+<li>La página de Recursos desborda 26 px a 320 px de ancho —zoom del 400&nbsp;%—, por las direcciones literales de las citas sin <span class="mono">overflow-wrap</span>. <span class="mono">fuente/estilos.css:1033</span>. Portada y ficha: cero.</li>
+<li>Los controles de Leaflet hablan inglés en una página declarada <span class="mono">es-MX</span>: «Close popup», «Zoom in».</li>
+</ul>
+<p class="arreglo">Todo junto es media jornada y ninguno depende de otro.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> Regresión: la hoja de impresión ya no existe</h3>
+<p>La auditoría del 22 de agosto celebró la hoja de impresión —«101 líneas, bien resuelta», con <span class="mono">@page</span>, direcciones impresas con <span class="mono">attr(href)</span> y control de cortes—. Hoy hay <strong>cero apariciones de <span class="mono">print</span> en las 2&nbsp;296 líneas de la hoja de estilos</strong>. Se fue con la ficha para impresión que se retiró el 24 de agosto.</p>
+<p>La retirada fue limpia —no quedó una sola regla huérfana, y hay una suite que lo exige— pero se llevó por delante algo que servía a las tres páginas: hoy imprimir cualquiera de ellas produce los estilos de pantalla.</p>
+<p class="arreglo">Decidir si la impresión sigue siendo un requisito. Si lo es, restituir el bloque mínimo —tamaño de página, direcciones visibles, control de cortes— sin la maquetación de la ficha impresa. Tres horas.</p>
+</div>
+
+<h2 id="d5"><span class="num">7</span>Rendimiento</h2>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> Entre el 39 y el 51&nbsp;% del peso comprimido de cada página son comentarios de código</h3>
+<div class="envoltura">
+<table>
+  <thead><tr><th>Página</th><th class="n">Hoy (gzip)</th><th class="n">Sin comentarios</th><th class="n">Ahorro</th></tr></thead>
+  <tbody>
+    <tr><td>Portada</td><td class="n">129.4 KB</td><td class="n">79.2 KB</td><td class="n">−38.8 %</td></tr>
+    <tr><td>Ficha</td><td class="n">105.9 KB</td><td class="n">64.1 KB</td><td class="n">−39.5 %</td></tr>
+    <tr><td>Recursos</td><td class="n">59.5 KB</td><td class="n">29.1 KB</td><td class="n">−51.1 %</td></tr>
+  </tbody>
+</table>
+</div>
+<p>La hoja de estilos es un 40.6&nbsp;% comentarios y viaja incrustada en las tres páginas: 27.5&nbsp;KB comprimidos por página, 82.5&nbsp;KB en total, solo de comentarios de CSS. Medido en perfil móvil, quitarlos mueve el primer pintado de 1&nbsp;080 a <strong>764&nbsp;ms</strong>, el pintado mayor de 2&nbsp;456 a <strong>1&nbsp;876&nbsp;ms</strong>, y el primer ejemplar en pantalla de 2&nbsp;931 a <strong>2&nbsp;357&nbsp;ms</strong>.</p>
+<p><strong>Lo que no hay que hacer:</strong> borrar los comentarios de la fuente. Son buenos y explican decisiones que nadie recordaría en seis meses.</p>
+<p class="arreglo">Que el armado los retire <em>solo en la salida de producción</em>, dejando intacta la fuente. Es un paso en <span class="mono">armar.js</span> y una comprobación en <span class="mono">verifica-peso.mjs</span> que fije el techo. Media jornada, −122 KB por visita.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> La ficha lanza 22 peticiones fallidas de 34, aun con todas las fotografías en su sitio</h3>
+<p>El descubrimiento de fotografías prueba cinco extensiones a la vez para la primera imagen —ocho fallan— y después sondea de la 2 a la 12 en paralelo —diez más—. El comentario del propio archivo asegura que el sondeo se detiene en el primer hueco de numeración; medido, <strong>no ahorra nada</strong>, porque las once sondas ya salieron juntas antes de que el corte se evalúe.</p>
+<p class="ev"><span class="mono">fuente/fotos.js:96</span> y <span class="mono">:101</span>; el corte inútil en <span class="mono">:105-111</span>, y el comentario que lo justifica en <span class="mono">:14-16</span>. Efecto colateral conocido: el tope de doce nunca busca la foto trece, y hay tres ejemplares con diez y once.</p>
+<p class="arreglo">Escribir un manifiesto de fotografías en el armado —qué carpetas hay y qué archivos tiene cada una— y que la ficha lo lea. Cuesta 1.2 KB comprimidos, elimina las 22 peticiones fallidas, quita el tope de doce y cierra el hueco de numeración. Media jornada y resuelve tres hallazgos a la vez.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> Se publican 108 KB de JavaScript que ninguna página carga</h3>
+<p>Las tres páginas llevan todo su código incrustado: no hay un solo <span class="mono">&lt;script src&gt;</span> ni una referencia a <span class="mono">assets/js/</span>. Los siete archivos que el armado copia ahí son código muerto publicado. Uno de ellos, además, expone en el sitio la dirección de la hoja de cálculo anterior del padrón.</p>
+<p class="ev"><span class="mono">fuente/construir/construir.sh:31</span> · la lista <span class="mono">COPIADOS_JS</span> de <span class="mono">verifica-deriva.mjs:38-41</span> los declara obligatorios, así que la suite protege el error en vez de detectarlo · <span class="mono">fuente/patrimoniales-loader.js:24</span>.</p>
+<p class="arreglo">Dejar de copiarlos y actualizar la aserción de la suite declarando por qué cambió el criterio. Dos horas.</p>
+</div>
+
+<p><strong>Confirmado sano, para que nadie pierda el tiempo ahí:</strong> Leaflet se difiere de verdad —no se pide hasta que el mapa entra en pantalla, y nunca en Recursos—. Las tipografías de Google no son cuello de botella: bloquearlas no mejora el primer pintado. Y las fotografías ya están bien optimizadas: la auditoría anterior probó a recomprimirlas a cinco calidades y el ahorro máximo fue del 4&nbsp;%. El desplazamiento de contenido al cargar es despreciable en las tres páginas.</p>
+
+<h2 id="d6"><span class="num">8</span>Robustez del código</h2>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> <span class="marca m-hecho">cerrado</span> Un error en el arranque deja la página en blanco, sin un solo mensaje</h3>
+<p>Todo el JavaScript de cada página va en un bloque único que termina llamando a la función de pintado, sin <span class="mono">try/catch</span>, y los contenedores se publican vacíos. Cualquier excepción —un campo inesperado, un navegador sin una API— deja al visitante frente a una página que parece completa y no tiene nada dentro.</p>
+<p>Lo irónico: el modelo que sí contempla el estado de error, y que cuatro suites comprueban, <strong>no es el código que corre en el navegador</strong>. Es el oráculo de las pruebas.</p>
+<p class="ev"><span class="mono">fuente/construir/armar.js:157</span> y <span class="mono">fuente/construir/armar-ficha.js:133</span> · el estado de error existe en <span class="mono">fuente/modelo-portada.js:79-84</span>, que no viaja.</p>
+<p class="arreglo">Envolver la llamada de arranque y pintar, si falla, el mismo aviso que ya existe para el caso sin JavaScript, con el enlace a los datos abiertos. Dos horas.</p>
+<p class="cierre">Módulo nuevo <span class="mono">construir/arranque.js</span>, uno solo para los tres armadores. Pinta el mismo cintillo que ya existía para quien llega sin guiones —misma clase, ninguna regla de estilo nueva— con <span class="mono">role="alert"</span> y el enlace a los datos abiertos. Se arma con el DOM y no con <span class="mono">innerHTML</span>, para que siga siendo cierto que ningún dato del padrón se escribe sin escapar.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> Dos mensajes que culpan a la causa equivocada</h3>
+<p>El mapa decide si algo salió mal con <span class="mono">typeof L !== "undefined" &amp;&amp; conCoords.length</span> y, si no hay coordenadas que dibujar, muestra «El mapa no pudo cargarse»: culpa a la descarga cuando el problema son los datos. Ya pasó el 24 de agosto y mandó a buscar el fallo en el lugar equivocado. El caso sin coordenadas se calcula bien unas líneas antes y se dice bien más abajo, pero esa rama solo se alcanza si el mapa llegó a montarse.</p>
+<p class="ev"><span class="mono">fuente/mapa.js:95</span> y <span class="mono">:289-290</span> · el cálculo correcto, en <span class="mono">:70</span> y <span class="mono">:574</span>. Segundo caso del mismo patrón en <span class="mono">fuente/ficha-logica.js:404-405</span>, donde el gestor de fallo es la propia función que acaba de fallar.</p>
+<p class="arreglo">Separar los dos casos: «no hay coordenadas que mostrar» y «el mapa no pudo cargarse». Una hora.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> La guarda de la fuente viva sigue igual que el día que dejó pasar el padrón degradado</h3>
+<p>La regla declarada —«el congelado manda hasta que la hoja demuestre que tiene algo»— se comprueba solo con <span class="mono">!ejemplares.length</span>: basta con que la hoja devuelva filas con nombre para que sustituya a un registro congelado completo. Es lo que ocurrió el 24 de agosto, cuando la hoja publicada perdió 60 de sus 83 columnas y el sitio prefirió doce ejemplares sin coordenadas a trece con todo.</p>
+<p>Hoy no hace daño porque el interruptor está apagado y el sitio sirve el congelado. <strong>Pero ninguna suite comprueba el estado del interruptor</strong>: si alguien lo enciende, nada avisa.</p>
+<p class="ev"><span class="mono">fuente/padron/fuente-viva.js:216</span> y <span class="mono">fuente/logica.js:453</span> · la misma guarda débil se repite al escribir la caché, en <span class="mono">:89</span> · <span class="mono">FUENTE_VIVA_ACTIVA = false</span>, confirmado también en <span class="mono">docs/index.html</span>.</p>
+<p class="arreglo">Antes de volver a encenderla: medir <em>cobertura de campos</em>, no número de ejemplares, y quedarse con el congelado si la hoja trae menos campos poblados. Y una aserción que declare cuál es el estado esperado del interruptor, para que encenderlo sea una decisión y no un descuido. Media jornada, y no toca hacerla hasta que se reconecte la hoja.</p>
+</div>
+
+<p><strong>Seguridad, confirmada sana.</strong> Cero inyecciones en los 51 usos de <span class="mono">innerHTML</span> y unas 180 interpolaciones: el escape se aplica de forma sistemática, incluso en los selectores de alcaldía y especie. Todos los enlaces externos llevan <span class="mono">rel="noopener"</span>. No hay claves ni direcciones internas en el código publicado. Leaflet viaja vendorizada, sin depender de una red de distribución ajena. Lo que no se puede hacer desde GitHub Pages es fijar cabeceras de seguridad, y por etiqueta <span class="mono">meta</span> la directiva que impediría el enmarcado se ignora: es una limitación de la plataforma, no un defecto del sitio.</p>
+
+<h2 id="d7"><span class="num">9</span>Cadena de publicación</h2>
+<p><strong>Hoy no hay deriva.</strong> Veinticinco de las veintiséis huellas del recibo coinciden con la fuente —la que falta no estaba montada en el entorno de auditoría—, y la comprobación se llevó más lejos: los 5&nbsp;017 renglones de JavaScript incrustado en las tres páginas, leídos línea a línea contra su origen. Cero diferencias en la ficha y en Recursos; en la portada, las tres únicas ausencias son el testigo que el armado sustituye a propósito. <strong><span class="mono">docs/</span> corresponde a <span class="mono">fuente/</span>.</strong></p>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> <span class="marca m-hecho">cerrado</span> El recibo del armado es falsificable sin querer</h3>
+<p>El sellador no compara la salida con la fuente: sella la fuente del momento en que se le llama. Correrlo suelto, sin armar, pone la alarma en verde con la salida vieja. Y ese es exactamente el rodeo que el propio código recomienda cuando el armado no puede borrar la carpeta de destino. Además, la suite comprueba que el CSS incrustado sea el de hoy pero <strong>no comprueba el JavaScript incrustado</strong>, que es donde vive la lógica.</p>
+<p class="ev"><span class="mono">fuente/construir/sellar.js:76-88</span> · <span class="mono">fuente/verificar/verifica-deriva.mjs:24-27</span>, <span class="mono">:53-72</span> y <span class="mono">:129-137</span>.</p>
+<p class="arreglo">Que el sellador se niegue a escribir si no lo invocó el armado en la misma corrida, y extender la comprobación de incrustado al JavaScript, no solo al CSS. Tres horas. Cierra de verdad el fallo que ya ocurrió una vez: subir código sin armar y no cambiar nada de lo publicado.</p>
+<p class="cierre">Las dos cosas. El armado exporta un identificador de corrida, cada armador deja su marca en <span class="mono">.armado.json</span>, y el sellador <b>termina en error</b> si las tres marcas no son de esa corrida: correr <span class="mono">sellar.js</span> a solas ya no apaga la alarma. Y la suite compara ahora los diez módulos incrustados, no solo la hoja de estilo. La marca va en un archivo aparte, no dentro de las páginas, para que armar dos veces sin cambios no llene el historial de diferencias que no dicen nada.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> <span class="marca m-hecho">cerrado</span> El registro de pendientes se ha desfasado de la realidad</h3>
+<p>Cuatro contradicciones comprobadas entre <span class="mono">fuente/pendientes.html</span> y el código de hoy: dice que ya existe un aviso de dato degradado en la portada —no existe, solo hay una traza en consola, y la corrección que ahí se propone se apoya en esa pieza inexistente—; cuenta catorce suites en dos lugares y dieciséis en otro; afirma que la hoja de estilos pesa 172 KB cuando son 156; y sigue listando como abierto un huérfano que ya se cerró.</p>
+<p class="arreglo">Media hora de puesta al día. El registro vivo solo sirve mientras se le pueda creer.</p>
+<p class="cierre">Las cuatro corregidas, y la más importante con su nota: el pendiente que daba por hecho el aviso de dato degradado ahora dice que <b>esa pieza no existe</b> y que hay que construirla, no solo encenderla. Se añadió al frente un bloque con los nueve cierres de hoy y con lo que quedó abierto de cada uno.</p>
+</div>
+
+<h2 id="d8"><span class="num">10</span>Buscadores y datos abiertos</h2>
+<p>Metadatos completos en las tres páginas: título propio, descripción escrita a mano, canónica, tarjeta social con sus medidas, color de tema y viewport. La canónica apunta a la dirección real. El sitemap responde en línea con las tres direcciones y fecha del 24 de agosto. El aviso para quien navega sin JavaScript existe y está bien redactado: dice qué se pierde y manda a los datos abiertos.</p>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> <span class="marca m-hecho">cerrado</span> Los trece ejemplares comparten una sola dirección</h3>
+<p>La ficha se resuelve por fragmento, y los buscadores descartan el fragmento. Canónica, título, descripción y tarjeta social están congelados en «Viejo del Agua»: <strong>doce de los trece árboles no pueden aparecer en una búsqueda por su nombre</strong>, y cualquier enlace compartido dice «Viejo del Agua» sea cual sea el árbol abierto.</p>
+<p>No es un descuido: el código lo advierte y hay una suite que lo comprueba. Es una decisión de arquitectura con un costo que hoy no se ve.</p>
+<p class="arreglo">Generar en el armado una página por ejemplar —trece archivos con sus propios metadatos, todos alimentados del mismo registro— y que el fragmento actual redirija. Una jornada, y multiplica por trece la superficie del registro en buscadores. Es la mejora de mayor alcance del catálogo.</p>
+<p class="cierre">Trece archivos <span class="mono">arbol-&lt;slug&gt;.html</span>, cada uno con su canónica, su título, su descripción y su tarjeta social. <b>El mapa del sitio pasó de 3 a 16 direcciones.</b> El listado y los globos del mapa enlazan ya a la ficha propia; <span class="mono">ficha.html</span> se conserva para los enlaces viejos y ahora se apunta a sí misma en vez de a un fragmento que ningún buscador respeta. El nombre del archivo es el mismo en la vista previa y en producción, así que los enlaces se escriben una vez.<br><b>El costo, dicho:</b> las trece páginas suman 4.5&nbsp;MB en el repositorio porque cada una lleva la hoja y el guion incrustados. Comprimidas son unos 105&nbsp;KB por visita, así que el visitante no lo nota; quitar los comentarios en producción lo bajaría un 40&nbsp;%.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-mejora">mejora</span> Sin datos estructurados</h3>
+<p>Para un registro público de bienes patrimoniales con ubicación, un marcado <span class="mono">Place</span> por ejemplar y un <span class="mono">Dataset</span> para los datos abiertos harían que las fichas pudieran aparecer en resultados enriquecidos y que el conjunto fuera descubrible desde los buscadores de datos. Media jornada, y se aprovecha mucho más si se hace junto con la página por ejemplar.</p>
+</div>
+
+<p><strong>Los cuatro formatos son consistentes:</strong> trece registros en CSV, JSON, GeoJSON y shapefile, cero discrepancias valor a valor. El GeoJSON es válido, con el orden longitud–latitud correcto y los trece puntos dentro de la Ciudad de México. El CSV lleva marca de orden y saltos de Windows, que es lo correcto para abrirlo en Excel en español y no un defecto. Tres vocabularios distintos conviven para el mismo campo —<span class="mono">diametro_cm</span>, <span class="mono">morfologia.diametro_cm</span>, <span class="mono">DAP_CM</span>—; el tercero viene de la limitación de nombres del formato shapefile y es inevitable, los dos primeros no.</p>
+
+<h2 id="d9"><span class="num">11</span>Lenguaje y marco jurídico</h2>
+<p>La prosa cumple el estándar con soltura: voz activa, frases cortas, segunda persona, y la regla de no nombrar Direcciones Generales se cumple <strong>sin una sola excepción</strong>. La palabra «padrón» aparece 47 veces en el código y cero en el texto que lee el ciudadano. Las notas de cobertura —«calculado sobre 2 de 13»— están implementadas de verdad.</p>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> Cinco afirmaciones con implicación jurídica sin artículo ni norma</h3>
+<p>Entre ellas, dos que imponen consecuencias al ciudadano: «si alguien poda, derriba o trasplanta uno de estos ejemplares sin autorización, <strong>comete una infracción</strong>» y «cuando el bien está declarado, avisar no es una opción: <strong>la ley lo pone como deber</strong> de quien se entera». Un deber ciudadano y una infracción, fundados en «la ley».</p>
+<p class="arreglo">Citar artículo, fracción y norma en las cinco. La auditoría no propone los números: el proyecto prohíbe inventar datos normativos y ninguna de las citas del sitio se cotejó contra texto vigente. Se entrega la lista de los cinco pasajes localizados para que el área competente los complete.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-alto">alto</span> El sitio se contradice sobre quién autoriza una poda</h3>
+<p>La portada atribuye la autorización a la Secretaría; la página de Recursos, a la Alcaldía. Quien lea las dos no sabe a dónde ir, y este micrositio es precisamente la vía por la que se publica esa información.</p>
+<p class="arreglo">Definir cuál es el supuesto de cada una —probablemente dependa de si el árbol está declarado o no— y decirlo en las dos páginas con la misma frase y la misma cita. Dos horas, una vez resuelta la duda de fondo.</p>
+</div>
+
+<div class="hallazgo">
+<h3><span class="marca m-medio">medio</span> La portada promete dos cosas que la ficha no entrega</h3>
+<p>La portada ofrece «su historia» y «su estado» de cada ejemplar. La ficha no tiene ninguna de las dos secciones. Lo llamativo es que <strong>el registro sí captura <span class="mono">condicion</span> y <span class="mono">estructura</span></strong>: el dato existe y no se dibuja.</p>
+<p class="arreglo">O se añade el bloque de estado a la ficha con los campos que ya están capturados —media jornada—, o se corrige la promesa de la portada —cinco minutos—. La primera opción es mejor: el dato ya está pagado.</p>
+</div>
+
+<h2 id="d10"><span class="num">12</span>Diseño e identidad</h2>
+<p>El sistema de diseño está cerrado y con suite propia que rechaza el valor suelto: cero <span class="mono">z-index</span> sueltos, nueve familias de corte, dos radios, dos duraciones, colores atados a la paleta. Ninguno de los catorce colores que aún viven sueltos reprueba el criterio de contraste AA —el más bajo da 4.62:1—.</p>
+<p><strong>Lo que se desfasó fue el manual, no el sitio.</strong> El manual de identidad digital diverge de la hoja de estilos en nueve puntos, y en los nueve el CSS parece ser el correcto. El más llamativo: <span class="mono">--tinta-suave</span>, el color con el que está escrito cerca del 80&nbsp;% del texto del sitio, no está documentado en el manual. Y hay una cuarta familia tipográfica en uso —la monoespaciada del identificador del ejemplar— que el manual niega que exista.</p>
+<p class="arreglo" style="margin-left:0">Actualizar el manual contra el CSS, no al revés. Tres horas, y conviene hacerlo ahora que el sistema acaba de cerrarse: dentro de dos meses nadie recordará cuál de los dos tenía razón.</p>
+<p class="cierre">Hecho: nueve filas corregidas —escala, cortes, ancho de lectura, respaldos tipográficos— y los cinco tokens documentados, <span class="mono">--tinta-suave</span> el primero. También se declaró la cuarta familia, la monoespaciada del identificador, que existía y el manual negaba.<br><b>Una corrección en sentido contrario:</b> en el noveno punto el manual tenía razón y el CSS estaba mal. El contraste del dorado claro sobre tinta jacarandá son <b>9.20:1</b> —medido: 9.1986—, no los 9.26 que decía el comentario. Y una suite fijaba ese número equivocado, con lo que convertía el error en obligación: se corrigieron los dos.</p>
+
+<h2 id="vivo"><span class="num">13</span>El sitio en línea</h2>
+<p>El sitio responde y <strong>sirve este armado</strong>: el sitemap publicado lista las tres direcciones con fecha del 24 de agosto de 2026, la misma del recibo local. No hay retraso entre lo que está en la carpeta y lo que ven los visitantes.</p>
+<p>Sin JavaScript, la portada conserva sus 1&nbsp;932 palabras de prosa y <strong>cero de los trece ejemplares</strong>. El aviso para ese caso ya existe —fue una corrección de la auditoría anterior y está verificada en línea— y manda a los datos abiertos, que sí se leen sin guiones.</p>
+<p>Vale la pena decir el tamaño real del problema, porque se ha exagerado antes: <strong>el registro completo ya viaja incrustado en la portada</strong>, 7.6 KB comprimidos. Escribir el listado de los trece nombres como HTML durante el armado cuesta <strong>0.4 KB comprimidos</strong> —una décima parte de lo que pesa el ícono del sitio— y haría que el registro fuera legible por un archivador web, por un rastreador que no ejecuta guiones y por cualquiera cuya conexión falle a mitad de carga. Para un registro de patrimonio natural que aspira a seguir consultándose en diez años, eso pesa más que el posicionamiento.</p>
+
+<h2 id="falsos"><span class="num">14</span>Falsos positivos descartados</h2>
+<p>Se dejan escritos porque un auditor que no comprueba sus propios hallazgos solo reparte inquietud, y porque cada uno de estos habría costado media jornada a quien intentara arreglarlo.</p>
+<ul class="limpia">
+<li><strong>«El KML y el shapefile dan 404».</strong> Falso: los cinco formatos existen y están armados con fecha del 24 de agosto. El error venía del montaje parcial del entorno de auditoría, no del sitio.</li>
+<li><strong>«<span class="mono">construir/shapefile.js</span> ya no existe».</strong> Falso: está ahí, 8.3 KB.</li>
+<li><strong>«Lo publicado no es este armado».</strong> Falso: comprobado contra el sitemap en línea.</li>
+<li><strong>«Las fotografías están guardadas a calidad excesiva».</strong> Refutado en la auditoría anterior recomprimiéndolas a cinco calidades: el ahorro máximo es del 4&nbsp;%. Nadie debe volver ahí.</li>
+<li><strong>«Faltan <span class="mono">width</span> y <span class="mono">height</span> en las imágenes».</strong> El desplazamiento de contenido medido es despreciable en las tres páginas. No hay problema que resolver.</li>
+<li><strong>«Entre el 55 y el 81&nbsp;% del CSS está muerto».</strong> Es una cota superior del navegador, no una medición: doce clases de Leaflet se arman por concatenación y varias del sitio por plantilla literal. Las reglas muertas confirmadas una a una son 57, unos 6 KB por página.</li>
+<li><strong>«El corte del sondeo de fotos ahorra peticiones».</strong> Lo dice el comentario del propio archivo y es falso: las once sondas ya salieron juntas.</li>
+</ul>
+
+<h2 id="nomedido"><span class="num">15</span>Lo que no se pudo medir</h2>
+<ul class="limpia">
+<li><strong>Las cabeceras del sitio publicado.</strong> Compresión, caché, certificado y tiempos reales de descarga: el canal disponible devuelve el texto ya convertido. Hace falta abrir el sitio con las herramientas de desarrollo del navegador.</li>
+<li><strong>Lectores de pantalla reales.</strong> axe-core encuentra entre el 30 y el 40&nbsp;% de los problemas de accesibilidad. Cero violaciones no equivale a «probado con una persona que usa NVDA o VoiceOver». Todo se midió en Chromium.</li>
+<li><strong>El texto sobre las fotografías reales.</strong> Es la laguna más importante de la medición de contraste: las imágenes no estaban montadas.</li>
+<li><strong>Las otras doce fichas.</strong> Solo está armada la de «Viejo del Agua»; combinaciones de datos distintas pueden producir resultados distintos.</li>
+<li><strong>Lo jurídico.</strong> Ninguna cita normativa del sitio se cotejó contra texto vigente, y esta auditoría no dictamina el régimen aplicable a la publicación del nombre de quien nomina. Las dos cosas son del área competente.</li>
+<li><strong>Si el 106 es un 10.6 mal capturado.</strong> Es una hipótesis razonable, no un hallazgo. Hay que abrir el dictamen del Río Magdalena.</li>
+</ul>
+
+<h2 id="plan"><span class="num">16</span>Qué hacer, en orden</h2>
+<div class="envoltura">
+<table>
+  <thead><tr><th class="n">#</th><th>Qué</th><th>Estado</th><th>Quién</th><th>Por qué ahí</th></tr></thead>
+  <tbody>
+    <tr class="mal"><td class="n">1</td><td>Vaciar los dos mensajes sin autorizar y volver a armar</td><td><span class="marca m-abierto">abierto</span></td><td>Tú · 10 min</td><td>Hoy se atribuyen palabras no aprobadas a la Jefa de Gobierno y a la Secretaria.</td></tr>
+    <tr class="mal"><td class="n">2</td><td>Retirar las sumas de servicios ambientales del cintillo y de las fichas</td><td><span class="marca m-abierto">abierto</span></td><td>Yo · 2 h</td><td>Es lo único que el sitio afirma y se sabe falso. Vuelve cuando la corrida se rehaga.</td></tr>
+    <tr class="mal"><td class="n">3</td><td>Excluir <span class="mono">nominadoPor</span> del JSON descargable</td><td><span class="marca m-abierto">abierto</span></td><td>Yo · 1 h</td><td>Es un dato personal en un archivo pensado para reutilizarse.</td></tr>
+    <tr><td class="n">4</td><td>Enlazar el aviso de privacidad en las tres páginas</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Requisito de un sitio de gobierno de la Ciudad. Falta el enlace al aviso integral.</td></tr>
+    <tr><td class="n">5</td><td>Limpiar los dos restos de captura en la hoja</td><td><span class="marca m-abierto">abierto</span></td><td>Tú · 2 min</td><td>Señalados hace tres días y siguen en línea.</td></tr>
+    <tr><td class="n">6</td><td>Que «Saltar al contenido» no cambie de árbol</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>El atajo de accesibilidad rompía la página para quien navega por teclado.</td></tr>
+    <tr><td class="n">7</td><td>Rehacer las corridas de i-Tree con parámetros homogéneos</td><td><span class="marca m-abierto">abierto</span></td><td>Tú</td><td>La causa raíz del hallazgo 2. No es trabajo de código.</td></tr>
+    <tr><td class="n">8</td><td>Consultar a jurídico el nombre de quien nomina</td><td><span class="marca m-abierto">abierto</span></td><td>Tú</td><td>Antes de portar: después serán 23 filas en lugar de una. Va en la consulta jurídica.</td></tr>
+    <tr><td class="n">9</td><td>Conectar la validación de rangos al armado</td><td><span class="marca m-abierto">abierto</span></td><td>Yo · 1 jornada</td><td>La copa de 106 m pasó porque nadie la mira.</td></tr>
+    <tr><td class="n">10</td><td>Quitar comentarios solo en la salida de producción</td><td><span class="marca m-abierto">abierto</span></td><td>Yo · ½ jornada</td><td>−122 KB por visita, y ahora también en las trece fichas nuevas.</td></tr>
+    <tr><td class="n">11</td><td>Manifiesto de fotografías en el armado</td><td><span class="marca m-abierto">abierto</span></td><td>Yo · ½ jornada</td><td>Cierra tres hallazgos: 22 peticiones fallidas, el tope de 12 y el hueco de numeración.</td></tr>
+    <tr><td class="n">12</td><td>Envolver el arranque y pintar el error</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Un fallo ya no deja la página en blanco y muda.</td></tr>
+    <tr><td class="n">13</td><td>Foco y anuncio en la galería de la ficha</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Quien usa lector de pantalla perdía la posición al cambiar de foto.</td></tr>
+    <tr><td class="n">14</td><td>Cotas de la regla con contraste suficiente</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Única violación de axe en seis mediciones. Resuelta con un token que ya existía.</td></tr>
+    <tr><td class="n">15</td><td>Sellador que exija haber armado, y comprobar el JS incrustado</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Cierra de verdad el fallo de subir sin armar.</td></tr>
+    <tr><td class="n">16</td><td>Etiqueta «en trámite» para quien no tiene decreto</td><td><span class="marca m-abierto">abierto</span></td><td>Yo · ½ jornada</td><td>Hoy los trece se presentan como si estuvieran igual de protegidos.</td></tr>
+    <tr><td class="n">17</td><td>Citar artículo y norma en las cinco afirmaciones jurídicas</td><td><span class="marca m-abierto">abierto</span></td><td>Tú</td><td>Dos de ellas imponen un deber o una infracción al ciudadano. Entregado aparte.</td></tr>
+    <tr><td class="n">18</td><td>Resolver la contradicción sobre quién autoriza una poda</td><td><span class="marca m-abierto">abierto</span></td><td>Tú</td><td>Portada y Recursos dicen cosas distintas. Entregado aparte.</td></tr>
+    <tr><td class="n">19</td><td>Una página por ejemplar, con sus metadatos</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Doce de trece árboles no eran buscables por su nombre. El sitemap pasó de 3 a 16.</td></tr>
+    <tr><td class="n">20</td><td>Listado legible sin JavaScript</td><td><span class="marca m-abierto">abierto</span></td><td>Yo · 3 h</td><td>Cuesta 0.4 KB. El registro ya viaja incrustado.</td></tr>
+    <tr><td class="n">21</td><td>Licencia nombrada, diccionario y fecha de corte</td><td><span class="marca m-medio">a medias</span></td><td>Yo · ½ jornada</td><td>Licencia y fecha, hechas. Falta el diccionario de las 28 columnas.</td></tr>
+    <tr><td class="n">22</td><td>Actualizar el manual de identidad contra el CSS</td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Nueve desfases y cinco tokens. Y una corrección al revés: el CSS decía 9.26 y son 9.20.</td></tr>
+    <tr><td class="n">23</td><td>Poner al día <span class="mono">pendientes.html</span></td><td><span class="marca m-hecho">hecho</span></td><td>—</td><td>Cuatro de sus afirmaciones ya no eran ciertas.</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Nueve cerrados, catorce abiertos.</strong> De los catorce que siguen, <b>seis son tuyos y ninguno es de código</b>: dos ediciones en la hoja de cálculo, una corrida de i-Tree que hay que rehacer y tres consultas al área jurídica. Los otros ocho suman unas cuatro jornadas, y el más rentable sigue siendo el 11: un manifiesto de fotografías cierra tres hallazgos de una vez.</p>
+<p><strong>El primero de la lista sigue sin hacerse.</strong> Es el de mayor riesgo institucional de todo el tablero, cuesta diez minutos y no lo puede hacer nadie más que tú.</p>
+
+<h2 id="cierre"><span class="num">17</span>Lo que se cerró el mismo día</h2>
+<p>La auditoría se midió por la mañana del 25 de agosto de 2026. Lo que sigue se hizo por la tarde, se armó con <span class="mono">construir.sh produccion</span> y quedó publicado en <span class="mono">docs/</span>. <strong>Las dieciséis suites terminaron en verde, con 1&nbsp;039 aserciones</strong> —cinco más que antes de los cambios—.</p>
+
+<div class="franja">
+  <h3>Nueve puntos, y lo que cada uno dejó abierto</h3>
+  <p>Cuatro eran de accesibilidad y robustez, dos de la cadena de publicación, uno de buscadores, uno legal y uno de documentación. <strong>Ninguno de los tres críticos de contenido está entre ellos</strong>: los tres siguen esperando una decisión que no es de código.</p>
+</div>
+
+<div class="envoltura">
+<table>
+  <thead><tr><th>Qué se cerró</th><th>Con qué quedó resuelto</th></tr></thead>
+  <tbody>
+    <tr><td><b>El atajo que cambiaba de árbol</b></td><td>El fragmento solo manda si nombra un ejemplar. Cualquier otro deja que el navegador salte al ancla.</td></tr>
+    <tr><td><b>La página en blanco y muda</b></td><td>Módulo <span class="mono">construir/arranque.js</span>, uno para los tres armadores. Pinta el cintillo que ya existía para quien llega sin guiones, armado por DOM y no por <span class="mono">innerHTML</span>.</td></tr>
+    <tr><td><b>El foco de la galería</b></td><td>Vuelve al azulejo que intercambió lugar, y una región <span class="mono">aria-live</span> anuncia la fotografía. Solo al pulsar.</td></tr>
+    <tr><td><b>La violación de contraste</b></td><td>De 2.60:1 a <b>6.29:1</b>, con la corteza que ya estaba en la paleta. No entró un color nuevo al sistema.</td></tr>
+    <tr><td><b>El recibo falsificable</b></td><td>Identificador de corrida, marca de los tres armadores, y un sellador que termina en error si no coinciden. La suite compara ahora los diez módulos incrustados, no solo el CSS.</td></tr>
+    <tr><td><b>Las trece fichas sin dirección</b></td><td><span class="mono">arbol-&lt;slug&gt;.html</span> con metadatos propios. <b>El mapa del sitio pasó de 3 a 16 direcciones.</b></td></tr>
+    <tr><td><b>El aviso de privacidad y la licencia</b></td><td>Sección propia en Recursos, enlazada desde el pie de las tres páginas. Licencia de Gobierno Abierto de la Ciudad de México, y fecha de publicación escrita por el armado.</td></tr>
+    <tr><td><b>El manual de identidad</b></td><td>Nueve desfases y cinco tokens sin documentar, <span class="mono">--tinta-suave</span> incluido. Más la cuarta familia tipográfica, que existía y el manual negaba.</td></tr>
+    <tr><td><b>El registro de pendientes</b></td><td>Las cuatro afirmaciones falsas, corregidas, y un bloque nuevo con los cierres del día.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Cinco aserciones actualizadas, cada una con su motivo escrito</h3>
+<p>El proyecto no permite borrar una comprobación en silencio: si el criterio cambia, se declara por qué. Cinco lo hicieron.</p>
+<ul class="limpia">
+<li>Dos exigían la forma vieja del enlace a la ficha —<span class="mono">ficha.html#ficha-slug</span>—. Lo que hay que seguir garantizando es lo mismo de siempre: que el listado, la tarjeta y el globo del mapa usen <b>la misma regla</b> y no tres inventadas. Ahora se comprueba sobre la regla nueva, y además que el archivo de cada ejemplar exista de verdad en el disco.</li>
+<li>Una exigía que el armado <b>advirtiera</b> que las fichas no tenían dirección propia. Mientras fue cierto, callarlo habría sido deshonesto; ahora lo que hay que exigir es lo contrario, que el mapa del sitio las liste todas.</li>
+<li>Una comprobaba que el testigo de ruta se resolviera en la vista previa. Ya no hay testigo que resolver: el archivo se llama igual en las dos salidas.</li>
+<li>Y una <b>fijaba un número equivocado</b>. Decía que el dorado claro sobre tinta jacarandá daba 9.26:1. Medido sobre el par real son <b>9.1986</b>, que se redondea a 9.20 —que es lo que el manual decía desde el principio—. Una comprobación que fija un error lo convierte en obligación: se corrigieron el comentario del CSS y la aserción.</li>
+</ul>
+
+<h3>Tres cosas que conviene saber antes de seguir</h3>
+<ul class="limpia">
+<li><strong>Las trece fichas propias pesan 4.5&nbsp;MB en el repositorio.</strong> Cada una lleva la hoja de estilo y el guion incrustados. Comprimidas son unos 105&nbsp;KB por visita, así que el visitante no lo nota, pero esto convierte el punto 10 —quitar comentarios solo en producción— en el pendiente de peso más rentable: bajaría eso un 40&nbsp;%.</li>
+<li><strong>Falta el diccionario de datos.</strong> Es lo único que le queda al punto 21. Sin él, «datos abiertos» es una descarga y no un conjunto reutilizable: quien baje el CSV no tiene dónde consultar qué significa cada una de las 28 columnas.</li>
+<li><strong>Queda residuo en <span class="mono">_a_borrar/</span>.</strong> El entorno de trabajo no puede borrar dentro de la carpeta del proyecto, así que cada armado dejó ahí una copia de <span class="mono">assets</span> y <span class="mono">vendor</span> apartada. Son cientos de megabytes que ya no sirven para nada y hay que borrar a mano.</li>
+</ul>
+
+<h3>Lo que sigue publicado y no debería</h3>
+<p>Se dice aquí, junto a los cierres, para que la lista de logros no tape lo que importa. <strong>Hoy el sitio sigue publicando dos declaraciones sin autorizar atribuidas a la Jefa de Gobierno y a la Secretaria, cifras de servicios ambientales que se sabe imposibles, y el nombre completo de una persona física en el archivo descargable.</strong> Los tres estaban en la medición de la mañana y los tres siguen ahí. Ninguno se arregla programando, y el primero cuesta diez minutos.</p>
+
+<footer>
+  <p><strong>Secretaría del Medio Ambiente de la Ciudad de México · Oficina de la Secretaría</strong></p>
+  <p>Auditoría 360 del micrositio de Árboles Patrimoniales, 25 de agosto de 2026. Tercera corrida, con el registro de cierre del mismo día. Medida sobre el sitio armado y contra el sitio publicado: 3 páginas, 2 anchos, 13 ejemplares, 16 suites, 186 paradas de tabulación, 568 combinaciones de contraste y 26 huellas de armado. Al cerrar: 27 fuentes selladas, 16 direcciones publicadas y 1&nbsp;039 aserciones en verde.</p>
+  <p>Los puntos 17 y 18 del plan, y las dos consultas del punto 4, se entregan aparte en <i>Consulta al área jurídica</i>.</p>
+  <p>Documento de trabajo interno. Contiene datos personales y textos no autorizados citados como evidencia: no se publica.</p>
+</footer>
+
+</div>
+</body>
+</html>

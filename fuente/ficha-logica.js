@@ -149,6 +149,7 @@ function pintarGaleria(e) {
   const cont = document.getElementById("fGaleria");
   const pie = document.getElementById("fPieFoto");
   const guia = document.getElementById("fGuiaGaleria");
+  const aviso = document.getElementById("fGaleriaAviso");
   const fotos = e.fotos || [];
 
   if (!fotos.length) {
@@ -170,7 +171,10 @@ function pintarGaleria(e) {
   /* Mosaico: la elegida ocupa la celda grande y las demás la rodean en el
      orden en que están en la carpeta, saltándose la que ya está en grande.
      Al hacer clic en cualquiera, esa pasa al frente y el resto se recorre. */
-  const pinta = (i) => {
+  let enGrande = 0;
+  const pinta = (i, porGesto) => {
+    const anterior = enGrande;
+    enGrande = i;
     const orden = [i].concat(fotos.map((_, j) => j).filter((j) => j !== i));
     cont.className = `galeria galeria--${Math.min(fotos.length, 5)}`;
     cont.innerHTML = orden.map((k, pos) => {
@@ -188,9 +192,23 @@ function pintarGaleria(e) {
     const f = fotos[i];
     pie.innerHTML = `${esc(f.pie || "")}${f.credito ? `<b>Fotografía: ${esc(f.credito)}</b>` : ""}`;
     cont.querySelectorAll(".galeria__pieza").forEach((b) =>
-      b.addEventListener("click", () => pinta(Number(b.dataset.i))));
+      b.addEventListener("click", () => pinta(Number(b.dataset.i), true)));
+
+    /* EL FOCO NO SE TIRA AL SUELO.
+       Repintar el mosaico destruye el botón que se acaba de pulsar, así que el
+       foco caía en el <body>: quien navega por teclado perdía su lugar y tenía
+       que volver a tabular desde el principio de la página. Se devuelve al
+       azulejo que ocupa ahora la posición de la fotografía desplazada, que es
+       justamente la que intercambió lugar con la elegida.
+       Y se anuncia el cambio: el contador pasaba de «1 / 3» a «2 / 3» sin que
+       ningún lector de pantalla lo dijera. */
+    if (porGesto) {
+      const vuelve = cont.querySelector(`.galeria__pieza[data-i="${anterior}"]`);
+      if (vuelve) vuelve.focus();
+      if (aviso) aviso.textContent = `Fotografía ${i + 1} de ${fotos.length}.${f.pie ? " " + f.pie : ""}`;
+    }
   };
-  pinta(0);
+  pinta(0, false);
 }
 
 function pintarVistaCalle(e) {

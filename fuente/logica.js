@@ -11,7 +11,13 @@ import { montarPrimeraFoto } from "./fotos.js";
    el hash y se quedaba donde estaba, porque en la portada no existe ningún
    elemento con ese id. El ensamblador sustituye el testigo por el nombre real
    del archivo de ficha que publique cada versión. */
-const RUTA_FICHA = "__FICHA__";
+/* LA DIRECCIÓN DE CADA EJEMPLAR.
+   Antes se enlazaba «ficha.html#ficha-slug». El fragmento no lo indexa ningún
+   buscador: las trece fichas se consolidaban en una sola dirección y doce
+   ejemplares no podían encontrarse por su nombre. Desde el armado del 25 de
+   agosto de 2026 cada uno tiene su archivo propio, y se llama igual en la
+   vista previa y en producción, así que aquí no hace falta testigo. */
+const urlFicha = (slug) => `arbol-${slug}.html`;
 
 const LIENZO_BOSQUE = 268;  // altura del ejemplar más alto en la hilera
 
@@ -124,7 +130,7 @@ function pintarBosque(ejemplares) {
       `<span class="bosque__alto">${nf(e.morfologia.altura_m, 1)} m</span>`,
       e.alcaldia ? `<span class="bosque__alcaldia">${esc(e.alcaldia)}</span>` : "",
     ].filter(Boolean).join("");
-    return `<a class="bosque__arbol" href="${RUTA_FICHA}#ficha-${esc(e.slug)}" aria-label="${esc(rotulo)}">
+    return `<a class="bosque__arbol" href="${urlFicha(esc(e.slug))}" aria-label="${esc(rotulo)}">
       <span class="bosque__globo" aria-hidden="true">Ver su ficha <b>→</b></span>
       ${arbolDibujado(e, h)}
       <span class="bosque__pie">${pie}</span>
@@ -303,7 +309,7 @@ function tarjetaFicha(e) {
   // La barrita con el punto verde se retiró de las tarjetas: solo 2 de 13
   // ejemplares tienen edad dictaminada, así que aparecía en dos tarjetas y
   // faltaba en once. Una marca que casi nunca sale se lee como un defecto.
-  return `<a class="ficha" href="${RUTA_FICHA}#ficha-${esc(e.slug)}" data-cats="${esc(e.categorias.join(" "))}" data-alcaldia="${esc(e.alcaldia || "")}">
+  return `<a class="ficha" href="${urlFicha(esc(e.slug))}" data-cats="${esc(e.categorias.join(" "))}" data-alcaldia="${esc(e.alcaldia || "")}">
     <div class="ficha__retrato">
       <!-- La foto no viene en los datos: se busca en la carpeta del ejemplar.
            Si no existe, la etiqueta se queda sin src y se retira sola. -->

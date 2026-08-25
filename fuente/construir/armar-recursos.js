@@ -45,10 +45,19 @@ const incluir = (html, {pie = 'pie', esPortada = false} = {}) => {
 const RUTA_PORTADA = process.env.RUTA_PORTADA || NOMBRES.portada;
 const RUTA_FICHA   = process.env.RUTA_FICHA   || NOMBRES.ficha;
 const RUTA_RECURSOS= process.env.RUTA_RECURSOS|| NOMBRES.recursos;
+/* LA FECHA DE PUBLICACIÓN, resuelta al armar.
+   La sección legal declara de cuándo son las cifras. Ponerla a mano envejece
+   sin que nadie se dé cuenta: la escribe el armado, así que siempre es la del
+   sitio que está en línea. */
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
+               'agosto','septiembre','octubre','noviembre','diciembre'];
+const _h = new Date();
+const FECHA_PUBLICACION = `${_h.getDate()} de ${MESES[_h.getMonth()]} de ${_h.getFullYear()}`;
 const enlazar = (h) => h
   .split('__PORTADA__').join(RUTA_PORTADA)
   .split('__FICHA__').join(RUTA_FICHA)
-  .split('__RECURSOS__').join(RUTA_RECURSOS);
+  .split('__RECURSOS__').join(RUTA_RECURSOS)
+  .split('__FECHA_PUBLICACION__').join(FECHA_PUBLICACION);
 
 const css = fs.readFileSync('estilos.css', 'utf8');
 const body = incluir(fs.readFileSync('recursos-cuerpo.html', 'utf8'));
@@ -95,4 +104,5 @@ ${menu}
 </html>`;
 
 fs.writeFileSync(SALIDA+NOMBRES.recursos, enlazar(html));
+require('./sellar.js').marcarCorrida(SALIDA,'recursos');
 console.log(DESTINO+'/'+NOMBRES.recursos+' ·', Math.round(html.length / 1024), 'KB');

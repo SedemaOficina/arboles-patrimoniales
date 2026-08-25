@@ -46,7 +46,13 @@ const nf = (n, d = 1) => (n === null || n === undefined || !isFinite(n) ? "—" 
  *  dónde está cada ejemplar. Su altura se lee en la ficha y en el listado. */
 /* El botón del globo lleva a OTRO archivo, no a un ancla de esta página.
    El ensamblador sustituye el testigo por el nombre real de la ficha. */
-export const RUTA_FICHA = "__FICHA__";
+/* LA DIRECCIÓN DE CADA EJEMPLAR.
+   Antes se enlazaba «ficha.html#ficha-slug». El fragmento no lo indexa ningún
+   buscador: las trece fichas se consolidaban en una sola dirección y doce
+   ejemplares no podían encontrarse por su nombre. Desde el armado del 25 de
+   agosto de 2026 cada uno tiene su archivo propio, y se llama igual en la
+   vista previa y en producción, así que aquí no hace falta testigo. */
+const urlFicha = (slug) => `arbol-${slug}.html`;
 
 export const TAMANO_PIN = 16;
 
@@ -500,7 +506,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
         <h3>${esc(e.nombreAsignado || "Sin nombre asignado")}</h3>
         <p class="esp">${esc(e.especie || "Especie por determinar")}</p>
         <p class="met">${esc(meta)}</p>
-        <a class="globo-mapa__boton" href="${RUTA_FICHA}#ficha-${esc(e.slug)}">Ver la ficha completa</a>
+        <a class="globo-mapa__boton" href="${urlFicha(esc(e.slug))}">Ver la ficha completa</a>
       </div>`;
     return caja;
   }

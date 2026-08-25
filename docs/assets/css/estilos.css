@@ -62,7 +62,7 @@
   /* Solo para el anillo de foco: el dorado de marca no llega a 3:1 sobre las
      superficies claras y el foco es un elemento de interfaz, no un adorno. */
   --foco:#8F6E3E;            /* patrimonio y decretos, sobre fondo claro */
-  --dorado-luz:#D9BC91;        /* el acento del fondo profundo: 9.26:1 sobre #2A1630 */
+  --dorado-luz:#D9BC91;        /* el acento del fondo profundo: 9.20:1 sobre #2A1630 */
   /* Degradado de las superficies profundas: portada de ficha, cabecera de
      tarjeta, marcos de imagen. Antes eran verdes sueltos de la paleta anterior. */
   --jacaranda-noche:#1D0F23;
@@ -1202,7 +1202,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    por filetes finos y colgadas de una línea que cierra la sección.
    El verde se va con la caja, y está bien: la regla de la paleta es que el
    verde solo va sobre fondo claro y que sobre el morado profundo el acento es
-   el dorado. Aquí el dorado claro da 9.26:1. */
+   el dorado. Aquí el dorado claro da 9.20:1. */
 /* La línea de la que cuelgan las cifras va en `.retrato`, que ocupa el ancho
    completo, y no en `.resumen`, que se detiene en el borde de la caja de texto:
    ahí se quedaba a media fotografía, cortada en el aire. */
@@ -1353,15 +1353,24 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .escala__marca span{position:absolute;right:0;top:-9px;background:var(--verde-niebla);padding:0 6px;font-size:var(--t-micro);font-weight:700;color:var(--gris);letter-spacing:.06em}
 
 /* ═══ COTAS SOBRE EL DIBUJO ═══
-   El dorado es tinta de instrumento: no compite con el verde de la regla ni
-   con el jacarandá de la figura humana, y agrupa las tres cotas como un solo
-   sistema de medición. Van dentro de la regla, que ya no recibe puntero. */
-.escala__dibujo{position:relative;display:flex;align-items:flex-end}
-.cota{position:absolute;color:var(--dorado);font-variant-numeric:tabular-nums}
+   Tinta de instrumento: no compite con el verde de la regla ni con el
+   jacarandá de la figura humana, y agrupa las tres cotas como un solo sistema
+   de medición. Van dentro de la regla, que ya no recibe puntero.
 
-.cota--alto{bottom:0;border-left:1.5px solid var(--dorado)}
+   POR QUÉ CORTEZA Y NO DORADO. El dorado de marca daba 2.60:1 sobre el verde
+   niebla de la regla: reprobaba el 4.5:1 que WCAG 2.1 pide al texto de 11 px
+   en negrita (SC 1.4.3) y el 3.0:1 que pide a las líneas de cota, que son
+   elemento gráfico y no adorno (SC 1.4.11). Era la única violación de axe en
+   las seis mediciones de la auditoría del 25 de agosto de 2026.
+   No se inventó un tono nuevo: la corteza ya estaba en la paleta y da 6.29:1
+   sobre el verde niebla y 6.32:1 sobre el papel hondo. El registro sigue
+   siendo el mismo —tierra sobre vegetal— y el sistema no crece. */
+.escala__dibujo{position:relative;display:flex;align-items:flex-end}
+.cota{position:absolute;color:var(--corteza);font-variant-numeric:tabular-nums}
+
+.cota--alto{bottom:0;border-left:1.5px solid var(--corteza)}
 .cota--alto::before,.cota--alto::after{content:"";position:absolute;left:-5px;width:11px;
-  border-top:1.5px solid var(--dorado)}
+  border-top:1.5px solid var(--corteza)}
 .cota--alto::before{top:0}
 .cota--alto::after{bottom:0}
 .cota--alto b{position:absolute;right:6px;top:50%;transform:translateY(-50%);
@@ -1371,13 +1380,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   font-size:var(--t-micro);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 
 .cota--dap{display:flex;align-items:center;gap:8px;flex-direction:row-reverse}
-.cota--dap span{width:44px;border-top:1.5px dotted var(--dorado)}
+.cota--dap span{width:44px;border-top:1.5px dotted var(--corteza)}
 .cota--dap b{font-size:var(--t-micro);font-weight:700;letter-spacing:.07em;
   text-transform:uppercase;white-space:nowrap}
 
-.cota--copa{bottom:-30px;border-top:1.5px solid var(--dorado)}
+.cota--copa{bottom:-30px;border-top:1.5px solid var(--corteza)}
 .cota--copa::before,.cota--copa::after{content:"";position:absolute;top:-6px;height:13px;
-  border-left:1.5px solid var(--dorado)}
+  border-left:1.5px solid var(--corteza)}
 .cota--copa::before{left:0}
 .cota--copa::after{right:0}
 .cota--copa b{position:absolute;left:50%;transform:translateX(-50%);top:6px;white-space:nowrap;

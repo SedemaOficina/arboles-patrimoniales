@@ -10,6 +10,14 @@ export DESTINO
 # reconoce para servir un sitio desde una subcarpeta de la rama principal.
 if [ "$DESTINO" = "produccion" ]; then CARPETA=docs; else CARPETA=prueba; fi
 
+# EL IDENTIFICADOR DE ESTA CORRIDA.
+# Lo escriben los armadores en el sello del armado y lo exige sellar.js antes
+# de firmar el recibo. Sin el, correr `node sellar.js` a solas —el rodeo que
+# se usa cuando la herramienta no puede borrar— dejaba el recibo en verde con
+# la salida vieja: la alarma se apagaba sin que nadie armara nada.
+ARMADO_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
+export ARMADO_ID
+
 node armar.js
 node armar-ficha.js "${2:-viejo-del-agua}"
 node armar-recursos.js

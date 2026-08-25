@@ -94,7 +94,7 @@
   /* Solo para el anillo de foco: el dorado de marca no llega a 3:1 sobre las
      superficies claras y el foco es un elemento de interfaz, no un adorno. */
   --foco:#8F6E3E;            /* patrimonio y decretos, sobre fondo claro */
-  --dorado-luz:#D9BC91;        /* el acento del fondo profundo: 9.26:1 sobre #2A1630 */
+  --dorado-luz:#D9BC91;        /* el acento del fondo profundo: 9.20:1 sobre #2A1630 */
   /* Degradado de las superficies profundas: portada de ficha, cabecera de
      tarjeta, marcos de imagen. Antes eran verdes sueltos de la paleta anterior. */
   --jacaranda-noche:#1D0F23;
@@ -1234,7 +1234,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    por filetes finos y colgadas de una línea que cierra la sección.
    El verde se va con la caja, y está bien: la regla de la paleta es que el
    verde solo va sobre fondo claro y que sobre el morado profundo el acento es
-   el dorado. Aquí el dorado claro da 9.26:1. */
+   el dorado. Aquí el dorado claro da 9.20:1. */
 /* La línea de la que cuelgan las cifras va en `.retrato`, que ocupa el ancho
    completo, y no en `.resumen`, que se detiene en el borde de la caja de texto:
    ahí se quedaba a media fotografía, cortada en el aire. */
@@ -1385,15 +1385,24 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .escala__marca span{position:absolute;right:0;top:-9px;background:var(--verde-niebla);padding:0 6px;font-size:var(--t-micro);font-weight:700;color:var(--gris);letter-spacing:.06em}
 
 /* ═══ COTAS SOBRE EL DIBUJO ═══
-   El dorado es tinta de instrumento: no compite con el verde de la regla ni
-   con el jacarandá de la figura humana, y agrupa las tres cotas como un solo
-   sistema de medición. Van dentro de la regla, que ya no recibe puntero. */
-.escala__dibujo{position:relative;display:flex;align-items:flex-end}
-.cota{position:absolute;color:var(--dorado);font-variant-numeric:tabular-nums}
+   Tinta de instrumento: no compite con el verde de la regla ni con el
+   jacarandá de la figura humana, y agrupa las tres cotas como un solo sistema
+   de medición. Van dentro de la regla, que ya no recibe puntero.
 
-.cota--alto{bottom:0;border-left:1.5px solid var(--dorado)}
+   POR QUÉ CORTEZA Y NO DORADO. El dorado de marca daba 2.60:1 sobre el verde
+   niebla de la regla: reprobaba el 4.5:1 que WCAG 2.1 pide al texto de 11 px
+   en negrita (SC 1.4.3) y el 3.0:1 que pide a las líneas de cota, que son
+   elemento gráfico y no adorno (SC 1.4.11). Era la única violación de axe en
+   las seis mediciones de la auditoría del 25 de agosto de 2026.
+   No se inventó un tono nuevo: la corteza ya estaba en la paleta y da 6.29:1
+   sobre el verde niebla y 6.32:1 sobre el papel hondo. El registro sigue
+   siendo el mismo —tierra sobre vegetal— y el sistema no crece. */
+.escala__dibujo{position:relative;display:flex;align-items:flex-end}
+.cota{position:absolute;color:var(--corteza);font-variant-numeric:tabular-nums}
+
+.cota--alto{bottom:0;border-left:1.5px solid var(--corteza)}
 .cota--alto::before,.cota--alto::after{content:"";position:absolute;left:-5px;width:11px;
-  border-top:1.5px solid var(--dorado)}
+  border-top:1.5px solid var(--corteza)}
 .cota--alto::before{top:0}
 .cota--alto::after{bottom:0}
 .cota--alto b{position:absolute;right:6px;top:50%;transform:translateY(-50%);
@@ -1403,13 +1412,13 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   font-size:var(--t-micro);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 
 .cota--dap{display:flex;align-items:center;gap:8px;flex-direction:row-reverse}
-.cota--dap span{width:44px;border-top:1.5px dotted var(--dorado)}
+.cota--dap span{width:44px;border-top:1.5px dotted var(--corteza)}
 .cota--dap b{font-size:var(--t-micro);font-weight:700;letter-spacing:.07em;
   text-transform:uppercase;white-space:nowrap}
 
-.cota--copa{bottom:-30px;border-top:1.5px solid var(--dorado)}
+.cota--copa{bottom:-30px;border-top:1.5px solid var(--corteza)}
 .cota--copa::before,.cota--copa::after{content:"";position:absolute;top:-6px;height:13px;
-  border-left:1.5px solid var(--dorado)}
+  border-left:1.5px solid var(--corteza)}
 .cota--copa::before{left:0}
 .cota--copa::after{right:0}
 .cota--copa b{position:absolute;left:50%;transform:translateX(-50%);top:6px;white-space:nowrap;
@@ -2780,6 +2789,7 @@ body.sin-desplazamiento{overflow:hidden}
           <li><a href="#servicios">Lo que hacen por la ciudad</a></li>
           <li><a href="recursos.html">Recursos: videos, normativa y datos</a></li>
           <li><a href="recursos.html#creditos">Créditos y atribuciones</a></li>
+          <li><a href="recursos.html#legal">Privacidad, licencia y terceros</a></li>
           <li><a href="#proteccion">Cómo se protegen</a></li>
           <li><a href="#cuidado">Patrimonial no es intocable</a></li>
           <li><a href="#postula">Postula un árbol</a></li>
@@ -2791,6 +2801,7 @@ body.sin-desplazamiento{overflow:hidden}
 
     <div class="pie__cierre">
       <span>Gobierno de la Ciudad de México · Secretaría del Medio Ambiente</span>
+      <span><a href="recursos.html#legal">Aviso de privacidad y licencia de uso</a></span>
       <span>Datos abiertos · Sistema de Información Ambiental</span>
     </div>
   </div>
@@ -3960,7 +3971,13 @@ const nf = (n, d = 1) => (n === null || n === undefined || !isFinite(n) ? "—" 
  *  dónde está cada ejemplar. Su altura se lee en la ficha y en el listado. */
 /* El botón del globo lleva a OTRO archivo, no a un ancla de esta página.
    El ensamblador sustituye el testigo por el nombre real de la ficha. */
-const RUTA_FICHA = "ficha.html";
+/* LA DIRECCIÓN DE CADA EJEMPLAR.
+   Antes se enlazaba «ficha.html#ficha-slug». El fragmento no lo indexa ningún
+   buscador: las trece fichas se consolidaban en una sola dirección y doce
+   ejemplares no podían encontrarse por su nombre. Desde el armado del 25 de
+   agosto de 2026 cada uno tiene su archivo propio, y se llama igual en la
+   vista previa y en producción, así que aquí no hace falta testigo. */
+const urlFicha = (slug) => `arbol-${slug}.html`;
 
 const TAMANO_PIN = 16;
 
@@ -4414,7 +4431,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
         <h3>${esc(e.nombreAsignado || "Sin nombre asignado")}</h3>
         <p class="esp">${esc(e.especie || "Especie por determinar")}</p>
         <p class="met">${esc(meta)}</p>
-        <a class="globo-mapa__boton" href="${RUTA_FICHA}#ficha-${esc(e.slug)}">Ver la ficha completa</a>
+        <a class="globo-mapa__boton" href="${urlFicha(esc(e.slug))}">Ver la ficha completa</a>
       </div>`;
     return caja;
   }
@@ -5307,7 +5324,13 @@ window.cargarEnVivo=cargarEnVivo;window.hayCambio=hayCambio;window.CSV_URL=CSV_U
    el hash y se quedaba donde estaba, porque en la portada no existe ningún
    elemento con ese id. El ensamblador sustituye el testigo por el nombre real
    del archivo de ficha que publique cada versión. */
-const RUTA_FICHA = "ficha.html";
+/* LA DIRECCIÓN DE CADA EJEMPLAR.
+   Antes se enlazaba «ficha.html#ficha-slug». El fragmento no lo indexa ningún
+   buscador: las trece fichas se consolidaban en una sola dirección y doce
+   ejemplares no podían encontrarse por su nombre. Desde el armado del 25 de
+   agosto de 2026 cada uno tiene su archivo propio, y se llama igual en la
+   vista previa y en producción, así que aquí no hace falta testigo. */
+const urlFicha = (slug) => `arbol-${slug}.html`;
 
 const LIENZO_BOSQUE = 268;  // altura del ejemplar más alto en la hilera
 
@@ -5420,7 +5443,7 @@ function pintarBosque(ejemplares) {
       `<span class="bosque__alto">${nf(e.morfologia.altura_m, 1)} m</span>`,
       e.alcaldia ? `<span class="bosque__alcaldia">${esc(e.alcaldia)}</span>` : "",
     ].filter(Boolean).join("");
-    return `<a class="bosque__arbol" href="${RUTA_FICHA}#ficha-${esc(e.slug)}" aria-label="${esc(rotulo)}">
+    return `<a class="bosque__arbol" href="${urlFicha(esc(e.slug))}" aria-label="${esc(rotulo)}">
       <span class="bosque__globo" aria-hidden="true">Ver su ficha <b>→</b></span>
       ${arbolDibujado(e, h)}
       <span class="bosque__pie">${pie}</span>
@@ -5599,7 +5622,7 @@ function tarjetaFicha(e) {
   // La barrita con el punto verde se retiró de las tarjetas: solo 2 de 13
   // ejemplares tienen edad dictaminada, así que aparecía en dos tarjetas y
   // faltaba en once. Una marca que casi nunca sale se lee como un defecto.
-  return `<a class="ficha" href="${RUTA_FICHA}#ficha-${esc(e.slug)}" data-cats="${esc(e.categorias.join(" "))}" data-alcaldia="${esc(e.alcaldia || "")}">
+  return `<a class="ficha" href="${urlFicha(esc(e.slug))}" data-cats="${esc(e.categorias.join(" "))}" data-alcaldia="${esc(e.alcaldia || "")}">
     <div class="ficha__retrato">
       <!-- La foto no viene en los datos: se busca en la carpeta del ejemplar.
            Si no existe, la etiqueta se queda sin src y se retira sola. -->
@@ -5992,6 +6015,28 @@ function pintarPortada(datos) {
   iniciarFuenteViva();
 }
 
+
+function pintarFalloDeArranque(e){
+  try{
+    if(window.console&&console.error)console.error('Árboles patrimoniales · no se pudo pintar la página:',e);
+    if(document.querySelector('[data-fallo-arranque]'))return;
+    var d=document.createElement('div');
+    d.className='sin-guion';
+    d.setAttribute('data-fallo-arranque','1');
+    d.setAttribute('role','alert');
+    var p=document.createElement('p');
+    p.className='envoltura';
+    var b=document.createElement('b');
+    b.textContent='No pudimos mostrar el registro en esta página.';
+    var t=document.createTextNode(' Vuelve a cargarla. Si sigue igual, el registro completo se descarga aparte y no depende de esta página. ');
+    var a=document.createElement('a');
+    a.href='recursos.html#datos';
+    a.textContent='Descargar los datos del registro';
+    p.appendChild(b);p.appendChild(t);p.appendChild(a);
+    d.appendChild(p);
+    document.body.insertBefore(d,document.body.firstChild);
+  }catch(_){}
+}
 window.CONTRATO_PADRON={"campos":[{"clave":"id"},{"clave":"estado"},{"clave":"nomino"},{"clave":"nombre_asignado"},{"clave":"nombre_comun"},{"clave":"nombre_cientifico"},{"clave":"centenario"},{"clave":"historico"},{"clave":"notable"},{"clave":"singular"},{"clave":"categorias"},{"clave":"fecha_decreto"},{"clave":"gaceta"},{"clave":"drive_decreto"},{"clave":"tiene_programa"},{"clave":"url_programa"},{"clave":"alcaldia"},{"clave":"calle"},{"clave":"num_ext"},{"clave":"colonia"},{"clave":"cp"},{"clave":"entre_1"},{"clave":"entre_2"},{"clave":"referencias"},{"clave":"tipo_ubicacion"},{"clave":"nombre_sitio"},{"clave":"suelo_conservacion"},{"clave":"pueblo_barrio"},{"clave":"latitud"},{"clave":"longitud"},{"clave":"utm_x"},{"clave":"utm_y"},{"clave":"street_view"},{"clave":"reino"},{"clave":"phylum"},{"clave":"clase"},{"clave":"orden"},{"clave":"familia"},{"clave":"genero"},{"clave":"autor"},{"clave":"idnombrecat"},{"clave":"endemismo"},{"clave":"cites"},{"clave":"iucn"},{"clave":"nom059"},{"clave":"prioritaria"},{"clave":"nivel_prioridad"},{"clave":"exotica_invasora"},{"clave":"ambiente"},{"clave":"forma_crecimiento"},{"clave":"url_snib"},{"clave":"url_observacion"},{"clave":"altura_m"},{"clave":"dap_cm"},{"clave":"altura_medicion_dap"},{"clave":"circunferencia_cm"},{"clave":"ancho_copa_m"},{"clave":"largo_copa_m"},{"clave":"extension_copa_m"},{"clave":"condicion_general"},{"clave":"estructura_general"},{"clave":"edad_estimada"},{"clave":"expectativa_vida"},{"clave":"fecha_itree"},{"clave":"moneda_itree"},{"clave":"validacion_itree"},{"clave":"url_itree"},{"clave":"beneficio_economico"},{"clave":"co2_eq_kg"},{"clave":"escorrentia_l"},{"clave":"precip_interceptada_l"},{"clave":"elim_co_g"},{"clave":"elim_o3_g"},{"clave":"elim_no2_g"},{"clave":"elim_so2_g"},{"clave":"elim_pm25_g"},{"clave":"ahorro_kwh"},{"clave":"evit_co2_kg"},{"clave":"evit_co_g"},{"clave":"evit_no2_g"},{"clave":"evit_so2_g"},{"clave":"evit_pm25_g"},{"clave":"obs_publicas"}],"rangos":{"latitud":{"min":19.02,"max":19.6,"de":"contrato, campo latitud"},"longitud":{"min":-99.36,"max":-98.94,"de":"contrato, campo longitud"},"altura_m":{"min":1,"max":60,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 4"},"dap_cm":{"min":5,"max":500,"de":"NADF-001-RNAT-2015, numeral 4"},"ancho_copa_m":{"min":1,"max":45,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 6"},"largo_copa_m":{"min":1,"max":45,"de":"contrato, campo largo_copa_m"},"extension_copa_m":{"min":1,"max":45,"de":"derivado de los dos ejes"},"edad_estimada":{"min":1,"max":2000,"de":"contrato, campo edad_estimada"},"circunferencia_cm":{"min":15,"max":1600,"de":"derivado del rango del DAP (π × 5 a π × 500), redondeado"}}};
 const DATOS={
   "ejemplares": [
@@ -7649,7 +7694,7 @@ const DATOS={
   }
 }
 ;
-pintarPortada(DATOS);
+try{pintarPortada(DATOS);}catch(e){pintarFalloDeArranque(e);}
 </script>
 </body>
 </html>

@@ -42,10 +42,16 @@ t('portada · y el globo solo llama a la ficha',
   /class="bosque__globo" aria-hidden="true">Ver su ficha/.test(p));
 // El destino se compone en tiempo de ejecución: la constante trae el archivo
 // y la plantilla el ancla. Se comprueban las dos piezas.
+/* CAMBIÓ EL CRITERIO. El globo enlazaba al testigo __FICHA__ resuelto, con el
+   fragmento del ejemplar. Desde el 25 de agosto de 2026 cada ejemplar tiene su
+   archivo, que se llama igual en la vista previa y en producción: ya no hay
+   testigo que resolver. Lo que se comprueba sigue siendo lo mismo —que el
+   globo lleve a la ficha del ejemplar y no a una dirección inventada— sobre la
+   forma nueva, y además que el enlace armado apunte a un archivo que existe. */
 t('portada · el globo enlaza al archivo de ficha',
   /Ver la ficha completa/.test(p)
-  && /RUTA_FICHA = "ficha-vista-previa\.html"/.test(p)
-  && /RUTA_FICHA\}#ficha-\$\{esc\(e\.slug\)\}">Ver la ficha completa/.test(p));
+  && /href="\$\{urlFicha\(esc\(e\.slug\)\)\}">Ver la ficha completa/.test(p)
+  && /const urlFicha = \(slug\) => `arbol-\$\{slug\}\.html`;/.test(p));
 // El color pasó a token en la auditoría: --tinta-suave es #413647.
 t('portada · la silueta humana es visible sobre crema', /\.persona__cuerpo\{fill:var\(--tinta-suave\)\}/.test(p));
 t('portada · barra de desplazamiento propia y ancha', /\.deslizador__tirador\{position:relative;height:14px/.test(p)&&/deslizador__paso/.test(p));
