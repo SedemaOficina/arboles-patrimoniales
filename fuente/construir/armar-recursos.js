@@ -7,6 +7,7 @@ process.chdir(__dirname + '/..');
 const DESTINO = process.env.DESTINO === 'produccion' ? 'produccion' : 'prueba';
 // La dirección pública vive en un solo archivo: ver sitio.js.
 const SITIO = require('./sitio.js');
+const ALIGERAR = require('./aligerar.js');
 // La carpeta publicada se llama docs/ porque es el nombre que GitHub Pages
 // reconoce para servir un sitio desde una subcarpeta de la rama principal.
 const CARPETA = DESTINO === 'produccion' ? 'docs' : 'prueba';
@@ -59,9 +60,9 @@ const enlazar = (h) => h
   .split('__RECURSOS__').join(RUTA_RECURSOS)
   .split('__FECHA_PUBLICACION__').join(FECHA_PUBLICACION);
 
-const css = fs.readFileSync('estilos.css', 'utf8');
+const css = ALIGERAR.aligerarCSS(fs.readFileSync('estilos.css', 'utf8'));
 const body = incluir(fs.readFileSync('recursos-cuerpo.html', 'utf8'));
-const menu = ';(function(){\n' + fs.readFileSync('menu.js', 'utf8')
+const menu = ';(function(){\n' + ALIGERAR.aligerarJS(fs.readFileSync('menu.js', 'utf8'))
   .replace(/^export function /gm, 'function ').replace(/^export /gm, '') + '\n})();';
 
 const html = `<!DOCTYPE html>

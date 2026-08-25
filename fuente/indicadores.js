@@ -53,6 +53,16 @@ export function indicadoresPadron(lista, totalPadron) {
   // que es la misma cantidad en la unidad de la convención internacional.
   const co2 = sumar(lista, (e) => S(e).co2Absorbido_kg);
 
+  /* NO TODOS ESTÁN DECLARADOS TODAVÍA.
+     El cintillo decía «Protegidos y registrados» de los trece, y uno —el
+     Ahuehuete de San Juan— tiene la declaratoria en trámite: no hay decreto
+     publicado. Contarlo con los demás afirma una protección que todavía no
+     existe como acto. El sitio ya distingue los dos casos en la tarjeta y en
+     la ficha; faltaba que la cifra grande no los borrara.
+     La frase fuerte se reserva para cuando de verdad lo estén todos. */
+  const conDecreto = lista.filter((e) => e.fechaDecreto && e.fechaDecreto.iso).length;
+  const enTramite = n - conDecreto;
+
   const porAlcaldia = {};
   lista.forEach((e) => { if (e.alcaldia) porAlcaldia[e.alcaldia] = (porAlcaldia[e.alcaldia] || 0) + 1; });
   const top = Object.entries(porAlcaldia).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
@@ -60,9 +70,13 @@ export function indicadoresPadron(lista, totalPadron) {
 
   return [
     { clave: "arboles", titulo: "Árboles patrimoniales", cifra: String(n), unidad: n === 1 ? "ejemplar" : "ejemplares",
-      texto: n === totalPadron
-        ? "Protegidos y registrados en la Ciudad de México."
-        : `De los ${totalPadron} que integran el registro, según los filtros elegidos.`, nota: "" },
+      texto: n !== totalPadron
+        ? `De los ${totalPadron} que integran el registro, según los filtros elegidos.`
+        : enTramite === 0
+          ? "Protegidos y registrados en la Ciudad de México."
+          : "En el registro de árboles patrimoniales de la Ciudad de México.",
+      nota: enTramite === 0 ? "" :
+        `${conDecreto} con decreto publicado · ${enTramite} con declaratoria en trámite` },
 
     { clave: "especies", titulo: "Especies distintas", cifra: String(especies.size),
       unidad: especies.size === 1 ? "especie" : "especies",

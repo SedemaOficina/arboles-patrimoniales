@@ -36,7 +36,7 @@ process.chdir(path.resolve(__dirname, '..'));   // se planta en fuente/
 const SELLADOS = [
   'construir/armar-capa.js', 'construir/armar-datos.js', 'construir/armar-ficha.js',
   'construir/armar-recursos.js', 'construir/armar.js', 'construir/shapefile.js',
-  'construir/arranque.js', 'construir/sitio.js',
+  'construir/aligerar.js', 'construir/arranque.js', 'construir/sitio.js',
   'cuerpo.html', 'ficha-cuerpo.html', 'recursos-cuerpo.html',
   'parciales/encabezado.html', 'parciales/pie.html',
   'datos/contrato-v2.json', 'datos/registro.json',

@@ -8,6 +8,7 @@ const DESTINO = process.env.DESTINO === 'produccion' ? 'produccion' : 'prueba';
 // La dirección pública vive en un solo archivo: ver sitio.js.
 const SITIO = require('./sitio.js');
 const ARRANQUE = require('./arranque.js');
+const ALIGERAR = require('./aligerar.js');
 // La carpeta publicada se llama docs/ porque es el nombre que GitHub Pages
 // reconoce para servir un sitio desde una subcarpeta de la rama principal.
 const CARPETA = DESTINO === 'produccion' ? 'docs' : 'prueba';
@@ -47,24 +48,24 @@ const RUTA_FICHA   = process.env.RUTA_FICHA   || NOMBRES.ficha;
 const RUTA_RECURSOS = process.env.RUTA_RECURSOS || NOMBRES.recursos;
 const enlazar = (h) => h.split('__PORTADA__').join(RUTA_PORTADA).split('__FICHA__').join(RUTA_FICHA).split('__RECURSOS__').join(RUTA_RECURSOS);
 
-const css=fs.readFileSync('estilos.css','utf8');
+const css=ALIGERAR.aligerarCSS(fs.readFileSync('estilos.css','utf8'));
 const body=incluir(fs.readFileSync('ficha-cuerpo.html','utf8'));
 // Si el marcador de exportación cambia de forma, el reemplazo falla en
 // silencio y el archivo armado conserva un «export» que el navegador rechaza
 // con «Unexpected token 'export'»: la página queda en blanco sin más aviso.
 const exigir=(src,marca,archivo)=>{ if(!src.includes(marca)) throw new Error(`armar-ficha.js: no encontré «${marca}» en ${archivo}`); return src; };
 // El perímetro de la Ciudad viaja dentro del script, igual que en la portada.
-const geo=fs.readFileSync('geo-cdmx.js','utf8').replace(/^export const /gm,'const ');
+const geo=ALIGERAR.aligerarJS(fs.readFileSync('geo-cdmx.js','utf8')).replace(/^export const /gm,'const ');
 // fotos.js va como módulo propio, con su interfaz publicada: la ficha lo usa
 // para descubrir las fotografías de la carpeta del ejemplar.
-const fot=';(function(){\n'+fs.readFileSync('fotos.js','utf8')
+const fot=';(function(){\n'+ALIGERAR.aligerarJS(fs.readFileSync('fotos.js','utf8'))
   .replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'')
   +'\nwindow.descubrirFotos=descubrirFotos;window.montarPrimeraFoto=montarPrimeraFoto;window.primeraFoto=primeraFoto;\n})();';
-const dif=';(function(){\n'+fs.readFileSync('leaflet-diferido.js','utf8')
+const dif=';(function(){\n'+ALIGERAR.aligerarJS(fs.readFileSync('leaflet-diferido.js','utf8'))
   .replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'')
   +'\nwindow.cargarLeaflet=cargarLeaflet;window.cuandoSeAcerque=cuandoSeAcerque;\n})();';
-const js=exigir(fs.readFileSync('ficha-logica.js','utf8'),'export function pintarFicha','ficha-logica.js').replace('export function pintarFicha','function pintarFicha').replace(/^import .*geo-cdmx.js";$/m,()=>geo).replace(/^import .*especies.js";$/m,'').replace(/^import .*fotos.js";$/m,'').replace(/^import .*leaflet-diferido.js";$/m,'');const esp=';(function(){\n'+fs.readFileSync('especies.js','utf8').replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\nwindow.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.siluetaPlana=siluetaPlana;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.PERSONA=PERSONA;window.srcsetIlustracion=srcsetIlustracion;\n})();';
-const menu=';(function(){\n'+fs.readFileSync('menu.js','utf8').replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\n})();';
+const js=exigir(ALIGERAR.aligerarJS(fs.readFileSync('ficha-logica.js','utf8')),'export function pintarFicha','ficha-logica.js').replace('export function pintarFicha','function pintarFicha').replace(/^import .*geo-cdmx.js";$/m,()=>geo).replace(/^import .*especies.js";$/m,'').replace(/^import .*fotos.js";$/m,'').replace(/^import .*leaflet-diferido.js";$/m,'');const esp=';(function(){\n'+ALIGERAR.aligerarJS(fs.readFileSync('especies.js','utf8')).replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\nwindow.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.siluetaPlana=siluetaPlana;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.PERSONA=PERSONA;window.srcsetIlustracion=srcsetIlustracion;\n})();';
+const menu=';(function(){\n'+ALIGERAR.aligerarJS(fs.readFileSync('menu.js','utf8')).replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\n})();';
 const datos=fs.readFileSync('datos/registro.json','utf8');
 /* UNA DIRECCIÓN POR EJEMPLAR.
    Hasta hoy las trece fichas vivían en una sola página y se distinguían por el

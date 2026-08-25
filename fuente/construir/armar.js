@@ -8,6 +8,7 @@ const DESTINO = process.env.DESTINO === 'produccion' ? 'produccion' : 'prueba';
 // La dirección pública vive en un solo archivo: ver sitio.js.
 const SITIO = require('./sitio.js');
 const ARRANQUE = require('./arranque.js');
+const ALIGERAR = require('./aligerar.js');
 // La carpeta publicada se llama docs/ porque es el nombre que GitHub Pages
 // reconoce para servir un sitio desde una subcarpeta de la rama principal.
 const CARPETA = DESTINO === 'produccion' ? 'docs' : 'prueba';
@@ -47,12 +48,55 @@ const RUTA_FICHA   = process.env.RUTA_FICHA   || NOMBRES.ficha;
 const RUTA_RECURSOS = process.env.RUTA_RECURSOS || NOMBRES.recursos;
 const enlazar = (h) => h.split('__PORTADA__').join(RUTA_PORTADA).split('__FICHA__').join(RUTA_FICHA).split('__RECURSOS__').join(RUTA_RECURSOS);
 
-const css=fs.readFileSync('estilos.css','utf8');
-const body=incluir(fs.readFileSync('cuerpo.html','utf8'), {esPortada:true});
+/* EL REGISTRO, LEGIBLE SIN JAVASCRIPT.
+   El listado, el mapa y las cifras los pinta el guion al cargar: quien mira
+   esta página sin ejecutar guiones —un rastreador que no los corre, un
+   archivador web, alguien a quien le falló la descarga— veía toda la prosa y
+   ni un árbol, y no se enteraba de que faltaba algo.
+   Esto escribe los trece en el HTML, dentro de <noscript>: así no hay dos
+   listados compitiendo en pantalla ni un parpadeo al cargar, y el registro
+   queda dentro del documento, que es lo que se archiva y lo que se lee cuando
+   el guion no llega. Cuesta menos de medio kilobyte comprimido; el registro
+   entero ya viaja incrustado en esta misma página.
+   El enlace apunta a la ficha propia de cada ejemplar, que también se lee sin
+   guiones para todo lo que no sea la galería y el mapa. */
+const listadoSinGuion = (ejemplares) => {
+  const esc = (t) => String(t == null ? '' : t)
+    .replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const filas = ejemplares.map((e) => {
+    const datos = [
+      e.especie,
+      e.alcaldia,
+      e.morfologia && e.morfologia.altura_m != null ? `${e.morfologia.altura_m} m de altura` : null,
+      e.fechaDecreto && e.fechaDecreto.legible
+        ? `decreto del ${e.fechaDecreto.legible}`
+        : (e.situacionCategoria === 'declaratoria-en-tramite' ? 'declaratoria en trámite' : null),
+    ].filter(Boolean).map(esc).join(' · ');
+    return `      <li><a href="arbol-${esc(e.slug)}.html">${esc(e.nombreAsignado || e.slug)}</a>`
+      + (datos ? ` — ${datos}` : '') + `</li>`;
+  }).join('\n');
+  return `<noscript>
+  <div class="sin-guion">
+    <div class="envoltura">
+      <p><b>El listado de los ${ejemplares.length} ejemplares del registro.</b>
+      Sin JavaScript no se dibujan las tarjetas, el mapa ni las cifras, pero el registro es este:</p>
+    <ul>
+${filas}
+    </ul>
+      <p><a href="__RECURSOS__#datos">Descargar el registro completo en formato abierto</a></p>
+    </div>
+  </div>
+</noscript>`;
+};
+
+const css=ALIGERAR.aligerarCSS(fs.readFileSync('estilos.css','utf8'));
+const _registroPortada = (JSON.parse(fs.readFileSync('datos/registro.json','utf8')).ejemplares) || [];
+const body=incluir(fs.readFileSync('cuerpo.html','utf8'), {esPortada:true})
+  .replace('<!--#listado-sin-guion-->', () => listadoSinGuion(_registroPortada));
 // Cada módulo se aísla en su propio ámbito y publica su interfaz: al concatenar
 // archivos que son módulos reales, sus ayudantes internos (esc, nf) colisionan.
 const envolver=(archivo,expuestos)=>{
-  const src=fs.readFileSync(archivo,'utf8').replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'');
+  const src=ALIGERAR.aligerarJS(fs.readFileSync(archivo,'utf8')).replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'');
   for (const n of expuestos) {
     if (!new RegExp(`(const|let|function|class)\\s+${n}\\b`).test(src)) {
       throw new Error(`armar.js: ${archivo} ya no define «${n}»; actualiza la lista de exposición.`);
@@ -65,7 +109,7 @@ const dif=envolver('leaflet-diferido.js',['cargarLeaflet','cuandoSeAcerque']);
 // El perímetro de la Ciudad viaja dentro del script: la versión anterior lo
 // pedía con fetch a assets/geo y se quedaba sin recorte al abrir el archivo
 // con doble clic o al publicar sin esa carpeta.
-const geo=fs.readFileSync('geo-cdmx.js','utf8').replace(/^export const /gm,'const ');
+const geo=ALIGERAR.aligerarJS(fs.readFileSync('geo-cdmx.js','utf8')).replace(/^export const /gm,'const ');
 // fotos.js se expone como módulo propio: lo usan tanto el mapa como el listado,
 // así que inlinearlo dentro de uno de los dos lo dejaría invisible para el otro.
 const fot=envolver('fotos.js',['montarPrimeraFoto','descubrirFotos','primeraFoto','rutaFoto','CARPETA_FOTOS','EXTENSIONES','TOPE_FOTOS']);
@@ -103,7 +147,7 @@ const contratoMin = JSON.stringify({
 // Mismo motivo que en armar-ficha.js: un «export» que sobrevive al ensamblado
 // deja la página en blanco con un solo error de sintaxis.
 const exigir=(src,marca,archivo)=>{ if(!src.includes(marca)) throw new Error(`armar.js: no encontré «${marca}» en ${archivo}`); return src; };
-const js=exigir(fs.readFileSync('logica.js','utf8'),'export function pintarPortada','logica.js').replace(/^import .*mapa.js";$/m,'').replace('export function pintarPortada','function pintarPortada').replace(/^import .*especies.js";$/m,'').replace(/^import .*fotos.js";$/m,'').replace(/^import .*leaflet-diferido.js";$/m,'');const menu=envolver('menu.js',['activarMenu']);
+const js=exigir(ALIGERAR.aligerarJS(fs.readFileSync('logica.js','utf8')),'export function pintarPortada','logica.js').replace(/^import .*mapa.js";$/m,'').replace('export function pintarPortada','function pintarPortada').replace(/^import .*especies.js";$/m,'').replace(/^import .*fotos.js";$/m,'').replace(/^import .*leaflet-diferido.js";$/m,'');const menu=envolver('menu.js',['activarMenu']);
 const esp=envolver('especies.js',['svgSilueta','svgPersona','perfilDe','ilustracionDe','PROPORCION_ILUSTRACION','srcsetIlustracion']);
 const datos=fs.readFileSync('datos/registro.json','utf8');
 const html=`<!DOCTYPE html>

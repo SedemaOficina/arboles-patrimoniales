@@ -826,9 +826,16 @@ function pintarProcedencia(e) {
      que existe como acto es la del decreto. Publicar una fecha de nominación
      obligaba a inventarla o a repetir la del decreto disfrazada de otra cosa,
      y las dos salidas mienten sobre el expediente. */
+  /* «Sin determinar» y «en trámite» no son lo mismo.
+     Un ejemplar sin decreto publicado leía «Fecha del decreto · Sin determinar»,
+     que se entiende como un hueco de captura. No lo es: la declaratoria está en
+     trámite, y el sitio ya lo dice en la etiqueta de categoría. Aquí decía otra
+     cosa. */
+  const enTramite = !e.fechaDecreto && e.situacionCategoria === "declaratoria-en-tramite";
   const filas = [
     ["Nominado por", e.nominadoPor],
-    ["Fecha del decreto", e.fechaDecreto && e.fechaDecreto.legible],
+    ["Fecha del decreto", (e.fechaDecreto && e.fechaDecreto.legible)
+      || (enTramite ? "Declaratoria en trámite" : null)],
     // El identificador se partia por cualquiera de sus guiones y quedaba a
     // media palabra. Va en una sola linea, mas chico, con su propia clase.
     ["Identificador en el registro", e.id, "identificador"],

@@ -29,6 +29,12 @@ process.chdir(fileURLToPath(new URL('..', import.meta.url)));   // fuente/
 /* La lista de fuentes selladas vive en sellar.js y se lee de ahí. Dos listas
    que hay que actualizar a la vez acaban separándose. */
 const { SELLADOS, huella } = createRequire(import.meta.url)('../construir/sellar.js');
+/* La salida de producción va sin comentarios: se aplica aquí la MISMA función
+   que aplica el armado, importada de un solo sitio. Comparar contra la fuente
+   cruda daría un rojo permanente, y volver a escribir la transformación aquí
+   sería tener dos que hay que recordar cambiar a la vez. */
+const { sinComentariosJS, sinComentariosCSS } =
+  createRequire(import.meta.url)('../construir/aligerar.js');
 
 const DOCS = '../docs/';
 let ok = 0, mal = 0;
@@ -126,11 +132,11 @@ console.log('\n══ EL CSS QUE DE VERDAD SE SIRVE ══');
 /* Las páginas no enlazan la hoja: la llevan incrustada. Copiar estilos.css a
    docs/assets/css/ y no rearmar las páginas deja el sitio con el CSS viejo
    aunque el archivo suelto ya esté al día. */
-const css = hay('estilos.css') ? fs.readFileSync('estilos.css', 'utf8') : '';
+const css = hay('estilos.css') ? sinComentariosCSS(fs.readFileSync('estilos.css', 'utf8')) : '';
 for (const pag of ['index.html', 'ficha.html', 'recursos.html']) {
   const h = hay(DOCS + pag) ? fs.readFileSync(DOCS + pag, 'utf8') : '';
   t(pag + ' lleva incrustada la hoja de hoy', css !== '' && h.includes(css),
-    'la página se armó con una versión anterior de estilos.css');
+    'la página se armó con una versión anterior de estilos.css, o el aligerado de producción cambió');
 }
 
 console.log('\n══ EL JAVASCRIPT QUE DE VERDAD SE SIRVE ══');
@@ -157,7 +163,7 @@ const normalizar = (src) => src
 /* Las líneas de `import` se sustituyen por vacío —o, en la ficha, por el
    perímetro de la Ciudad—, así que parten el texto: se comprueba trozo a
    trozo en vez de exigir el módulo entero de una pieza. */
-const trozos = (src) => normalizar(src).split(/^import .*$/gm)
+const trozos = (src) => normalizar(sinComentariosJS(src)).split(/^import .*$/gm)
   .map((x) => x.trim()).filter((x) => x.length > 400);
 
 const INCRUSTADOS = {
