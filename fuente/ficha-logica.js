@@ -437,9 +437,20 @@ function dibujarMapaEjemplar(e, lienzo, centro) {
   // partía los nombres de calle; 16 deja una o dos calles más de contexto.
   // Quien quiere trazar la ruta usa el botón de Google Maps, que ahora es la
   // acción principal del bloque.
+  /* SE PUEDE ACERCAR, desde el 28 de agosto de 2026. Nació congelado —sin
+     controles, sin arrastre, sin rueda— porque su único trabajo era enseñar
+     dónde está el punto. Pero quien reconoce su calle quiere acercarse a
+     verla, y un mapa que no responde se lee como un mapa roto.
+     Se abren los controles, el arrastre, el doble clic y el gesto de pellizco.
+     La rueda del ratón NO: en una página que se recorre hacia abajo, el mapa
+     secuestraría el desplazamiento al pasar por encima.
+     El recorte sigue puesto —los mismos límites de la Ciudad y la misma
+     máscara del mapa general—, así que por más que se arrastre no se sale de
+     la Ciudad de México. Y el tope de acercamiento lo pone la capa de teselas,
+     que solo tiene dibujo hasta el nivel 16. */
   mapaFicha = L.map(lienzo, {
-    center: centro, zoom: 16, scrollWheelZoom: false, zoomControl: false, attributionControl: false,
-    dragging: false, doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false,
+    center: centro, zoom: 16, scrollWheelZoom: false, zoomControl: true, attributionControl: false,
+    dragging: true, doubleClickZoom: true, boxZoom: false, keyboard: true, touchZoom: true,
     maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 10,
   });
   // Misma base limpia que el mapa general: calles y nombres, sin la
@@ -721,6 +732,15 @@ function esDireccion(valor) {
   return /^https?:\/\/\S+$/i.test(String(valor || "").trim());
 }
 
+/** Nombre del sistema al que lleva una dirección, para decirlo antes del clic.
+ *  Si no se reconoce, se devuelve algo cierto y general en vez de inventar. */
+function sistemaDe(url) {
+  const u = String(url || "").toLowerCase();
+  if (u.includes("inaturalist.org")) return "iNaturalist";
+  if (u.includes("gbif.org")) return "GBIF";
+  return "un sistema externo";
+}
+
 /**
  * Las fuentes del ejemplar, al final de la ficha.
  *
@@ -760,13 +780,17 @@ function pintarFuentes(e) {
     {
       titulo: "Ficha de la especie en el SNIB",
       url: esDireccion(e.urlSNIB) ? String(e.urlSNIB).trim() : null,
-      pie: "CONABIO · sistema externo",
+      pie: "CONABIO",
       falta: "El registro no guarda la dirección de este ejemplar",
     },
     {
+      /* El pie nombra el sistema al que lleva, como el del SNIB. No se escribe
+         «iNaturalist» a mano: el registro guarda observaciones de iNaturalist
+         y también de GBIF, y prometer una y llevar a la otra es peor que no
+         decir nada. Se lee de la propia dirección. */
       titulo: "Observación de referencia de la especie",
       url: esDireccion(e.urlOrigen) ? String(e.urlOrigen).trim() : null,
-      pie: "El avistamiento con el que se respalda la identificación",
+      pie: "Especie en " + sistemaDe(e.urlOrigen),
       falta: "El registro no guarda la observación de referencia",
     },
     {
@@ -785,13 +809,21 @@ function pintarFuentes(e) {
       titulo: "Programa de manejo",
       url: esDireccion(e.urlPrograma) ? String(e.urlPrograma).trim() : null,
       pie: "Las medidas de conservación acordadas para el ejemplar",
-      falta: e.tienePrograma === true
-        ? "Tiene programa de manejo; falta capturar el vínculo al documento"
-        : e.tienePrograma === false
-          ? "Este ejemplar no tiene programa de manejo"
-          : "El registro todavía no captura este campo",
+      /* LA ÚNICA EXCEPCIÓN A LA REGLA DE ARRIBA, y por decisión del área.
+         Un documento que falta se dibuja apagado y dice por qué, porque
+         desaparecer hace creer que no se consultó. Con el programa de manejo
+         eso se vuelve en contra: un renglón que anuncia «este ejemplar no
+         tiene programa de manejo» en la ficha de un árbol YA DECLARADO deja
+         asentado en el sitio público el incumplimiento de la propia
+         Secretaría, y con eso se reclama. El programa se enseña cuando lo
+         hay y el renglón no aparece cuando no.
+         Que falte sigue sabiéndose donde tiene que saberse: el padrón lo
+         registra en `tiene_programa` y el dato viaja en la descarga de datos
+         abiertos. Se calla en la ficha, no en el registro. */
+      soloConDocumento: true,
+      falta: null,
     },
-  ];
+  ].filter((d) => d.url || !d.soloConDocumento);
 
   /* TODOS ABREN EN OTRA PESTAÑA Y TODOS LO ANUNCIAN. Hasta el 28 de agosto de
      2026 el decreto —el único documento servido desde este mismo sitio— abría

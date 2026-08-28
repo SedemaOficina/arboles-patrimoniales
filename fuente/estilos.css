@@ -726,6 +726,28 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .servicio span{display:block;margin-top:8px;font-size:var(--t-nota);color:var(--jacaranda-luz)}
 .cobertura{margin:18px 0 0;font-size:var(--t-apoyo);color:rgba(255,255,255,.55)}
 
+/* --- lo que no cabe en una cifra ---
+   Va en la misma sección oscura que las cifras de i-Tree, pero no se disfraza
+   de cifra: sin número grande, sin dorado y en tarjetas de lista. La forma
+   dice sola que es de otra naturaleza —evidencia general, no medición de este
+   padrón— antes de que nadie lea la advertencia. */
+.beneficios{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px;margin-top:20px}
+.beneficio{border:1px solid rgba(var(--jacaranda-luz-rgb),.26);padding:22px 22px 24px;background:rgba(var(--jacaranda-luz-rgb),.06)}
+.beneficio h3{font-size:clamp(17px,1.4vw,20px);color:var(--dorado-luz)}
+.beneficio ul{margin:14px 0 0;padding-left:16px;display:grid;gap:8px}
+.beneficio li{font-size:var(--t-apoyo);line-height:1.55;color:rgba(255,255,255,.82)}
+.beneficio li::marker{color:var(--jacaranda-luz)}
+.beneficio li b{color:#fff;font-weight:700}
+.beneficios__entrada{margin:0 0 0;max-width:var(--medida);font-size:var(--t-cuerpo);line-height:1.6;color:rgba(255,255,255,.82)}
+/* La referencia completa se lee poco y se copia mucho: cuerpo pequeño, medida
+   corta y el enlace marcado, sin robarle peso a las tarjetas. */
+.beneficios__fuente{margin:20px 0 0;max-width:var(--medida-nota);font-size:var(--t-nota);line-height:1.6;color:rgba(255,255,255,.55)}
+.beneficios__fuente a{color:var(--dorado-luz);border-bottom:1px solid rgba(var(--dorado-luz-rgb),.5)}
+.beneficios__fuente a:hover{border-bottom-color:var(--dorado-luz)}
+/* El rótulo de grupo nació para fondo claro: sobre el morado hondo su gris y
+   su filete desaparecían. */
+.seccion--oscura .rotulo--grupo{color:var(--jacaranda-luz);border-bottom-color:rgba(var(--jacaranda-luz-rgb),.28)}
+
 /* --- normativa --- */
 .normas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:16px}
 .norma{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:22px 24px}
@@ -1265,6 +1287,10 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    cintillo de cifras—, y nunca carga solo el significado: la nota lo dice
    igual con palabras. */
 .nota-pie{display:block;font-size:var(--t-nota);line-height:1.55;font-style:italic;color:var(--gris)}
+/* Las notas del panorama y de la cartografía son crédito y advertencia, no
+   contenido: bajan un escalón de la escala —a microcopia— para que no compitan
+   con el pie de la propia imagen. La cursiva ya la trae .nota-pie. */
+.vista-calle__pie .nota-pie{font-size:var(--t-micro);line-height:1.5}
 .nota-pie:empty{display:none}
 .nota-pie::before{content:"*";font-style:normal;font-weight:700;color:var(--dorado);margin-right:6px}
 .nota-pie--alcance::before{content:"**"}
@@ -1525,7 +1551,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    para que se lea como un aviso y no como texto. */
 .mapa-caja__vacio{margin:0;padding:26px;max-width:34ch;text-align:center;
   font-size:var(--t-apoyo);line-height:1.55;color:var(--gris)}
-.mapa-caja__pie{margin:0;font-size:var(--t-nota);line-height:1.5;color:var(--gris)}
+.mapa-caja__pie{margin:0;font-size:var(--t-micro);line-height:1.5;color:var(--gris)}
 .mapa-caja__pie:empty{display:none}
 /* El punto plano se perdía entre los marcadores comerciales del mapa base
    —bancos, farmacias— justo en el bloque cuyo trabajo es señalar dónde está

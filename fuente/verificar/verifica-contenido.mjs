@@ -57,6 +57,24 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
      liga— y la secuencia de postulación se retiró. Lo que importa no cambió:
      que ningún instrumento citado se quede sin liga a su texto vigente. */
   t(f+' · al menos siete enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=7, String((s.match(/class="norma__fuente"/g)||[]).length));
+  /* LOS BENEFICIOS GENERALES NO PUEDEN PASAR POR MEDICIÓN. La sección de
+     servicios publica dos cifras de ESTOS ejemplares, estimadas con i-Tree, y
+     desde el 28 de agosto de 2026 también los beneficios que la investigación
+     documenta del arbolado urbano en general. Son dos cosas distintas y el
+     texto tiene que decirlo: sin esa frase, alguien cita «suben el valor del
+     suelo» como si fuera un dato medido de un árbol del padrón. */
+  t(f+' · los beneficios generales se distinguen de las cifras medidas',
+    /Las dos cifras de arriba son de estos ejemplares/.test(s)
+    && /del arbolado urbano en general/.test(s));
+  t(f+' · las tres familias de beneficios están',
+    />Ambiente</.test(s) && />Salud y vida en común</.test(s) && />Economía y ciudad</.test(s));
+  /* Una afirmación tomada de la literatura sin su referencia es una afirmación
+     sin dueño. La referencia va completa —autores, revista, volumen, número de
+     artículo— y con liga al DOI, que es la dirección que no se rompe. */
+  t(f+' · la fuente de los beneficios está citada y enlazada',
+    /Trees, Forests and People/.test(s) && /101198/.test(s)
+    && /Willams Oliveira/.test(s) && /Ariadna V. Lopes/.test(s)
+    && /href="https:\/\/doi\.org\/10\.1016\/j\.tfp\.2026\.101198" target="_blank" rel="noopener"/.test(s));
   /* La tarjeta integrada tiene que seguir citando los cinco artículos, cada
      uno junto a lo que dispone. Integrar no puede ser diluir. */
   t(f+' · la tarjeta de la Ley de Patrimonio conserva sus cinco artículos',
