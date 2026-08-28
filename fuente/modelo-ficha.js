@@ -69,8 +69,11 @@ class Component extends DCLogic {
       maxBounds: L.latLngBounds(this.LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 10 });
     // Misma base limpia que el mapa general: calles y nombres, sin la
   // simbología de puntos de interés que compite con el pin del ejemplar.
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    { maxZoom: 19, subdomains: "abcd" }).addTo(this._mapa);
+  // La misma base del mapa general, y por el mismo motivo; el porqué del
+  // proveedor y del tope de nivel está escrito en mapa.js, donde vive la
+  // dirección de referencia.
+  L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 17, maxNativeZoom: 16 }).addTo(this._mapa);
     // Mismo recorte que el mapa general de la portada.
     if (this._GEO) {
       L.geoJSON(this._GEO, { interactive: false,

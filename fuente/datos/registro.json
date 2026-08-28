@@ -25,6 +25,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/457bffaf649c8b51dbfbc7131482d624.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Miguel Hidalgo",
       "ubicacion": {
         "calle": "Avenida Marina Nacional",
@@ -135,6 +137,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1bb36c95f11d05d5a3065f523946912c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Eje 1 Poniente Guerrero",
@@ -246,6 +250,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/90a06c2e8dfc47f3a1a0aa998813a156.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Calle 20 de agosto",
@@ -356,6 +362,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/cb9e153b7cd0b722dfc3bc41e3d9e703.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Eje 1 Poniente Avenida Cuauhtémoc",
@@ -468,6 +476,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/457bffaf649c8b51dbfbc7131482d624.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Avenida Sonora",
@@ -580,6 +590,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/268f422dad19d8fcaea245ed0db75c7c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Calle Central",
@@ -690,6 +702,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/e369ce73da8174d0533ee6abc15e2936.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Avenida Francisco Sosa",
@@ -800,6 +814,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/90a06c2e8dfc47f3a1a0aa998813a156.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Callejón del Río",
@@ -910,6 +926,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1bb36c95f11d05d5a3065f523946912c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Glorieta de los Ahuehuetes",
@@ -1020,6 +1038,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/cb9e153b7cd0b722dfc3bc41e3d9e703.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Avenida Paseo de la Reforma",
@@ -1130,6 +1150,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/268f422dad19d8fcaea245ed0db75c7c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/17ozhpGl30MRg8JEaXIFjd12kCgdlrSoj/view?usp=drive_link",
       "alcaldia": "Benito Juárez",
       "ubicacion": {
         "calle": "Miguel Laurent",
@@ -1240,6 +1262,8 @@
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/e19503612c79869c1b1cfec16f4b3994.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/1C-TBO_yTJHoyAnmAemJvNe6veGOUSVlc/view?usp=drive_link",
       "alcaldia": "Benito Juárez",
       "ubicacion": {
         "calle": "Cerrada de Eugenia",

@@ -175,9 +175,36 @@ t('documentos · cada renglón declara de quién es el sistema',
 t('documentos · el que falta se dibuja apagado y dice por qué',
   /docs--sin/.test(fl) && /falta:/.test(fl)
   && !/\.filter\(\(\[, url\]\) => url\)/.test(fl));
-t('documentos · el programa de manejo no afirma que no exista',
-  /El registro todavía no captura este campo/.test(fl)
-  && !/no tiene uno registrado/.test(fl));
+/* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, y a mejor. Antes el lector no
+   recogía ninguno de los dos campos del programa de manejo, así que la ficha
+   solo podía callar: «el registro todavía no captura este campo», incluso en
+   los ejemplares que sí lo tienen capturado. Ahora el lector lee `tiene_programa`
+   y `url_programa`, y lo que hay que garantizar es que el sitio distinga los
+   tres casos y que el «no tiene» siga sin afirmarse por cuenta propia: solo
+   cuando la hoja lo dice. */
+t('documentos · el programa de manejo distingue los tres casos',
+  /esDireccion\(e\.urlPrograma\)/.test(fl)
+  && /e\.tienePrograma === true/.test(fl)
+  && /Tiene programa de manejo; falta capturar el vínculo/.test(fl)
+  && /e\.tienePrograma === false/.test(fl)
+  && /Este ejemplar no tiene programa de manejo/.test(fl)
+  && /El registro todavía no captura este campo/.test(fl));
+t('documentos · el lector recoge los dos campos del programa',
+  (() => { const lec = fs.readFileSync('padron/lector-v2.js', 'utf8');
+    return /tienePrograma: aSiNo\(f\.tiene_programa\)/.test(lec)
+      && /urlPrograma: limpiar\(f\.url_programa\)/.test(lec); })());
+/* TODOS LOS DOCUMENTOS ABREN APARTE Y TODOS LLEVAN MARCA. El decreto era el
+   único servido desde este sitio y abría encima de la ficha, sin flecha: la
+   lista mezclaba dos comportamientos sin decir cuál era cuál. */
+t('documentos · todos abren en pestaña nueva',
+  /target="_blank" rel="noopener"/.test(fl)
+  && !/\$\{d\.propio\s*\?\s*' class="docs--propio"'/.test(fl));
+t('documentos · todos llevan la flecha, y una sola',
+  /docs__fuera" aria-hidden="true">\\u2197<\/span>/.test(fl)
+  && /sin-marca-externa/.test(fl));
+t('documentos · el decreto conserva su clase para la comprobación de 404',
+  /docs--propio sin-marca-externa/.test(fl)
+  && /caja\.querySelector\("\.docs--propio"\)/.test(fl));
 t('La sección explicativa «De dónde sale cada dato» se retiró',
   !/De dónde sale cada dato/.test(fs.readFileSync('ficha-cuerpo.html','utf8')));
 // LA REGLA QUE IMPIDE QUE VUELVA EL ENLACE MUERTO.
@@ -229,13 +256,18 @@ t('créditos · el índice de Recursos la lista', /href="#creditos">Créditos y 
 t('créditos · el mapa del sitio del pie la enlaza', /__RECURSOS__#creditos/.test(pie));
 // El bloque de obras de terceros se retiró por decisión editorial. La
 // atribución de la cartografía —que sí es obligación de licencia— la sigue
-// llevando el propio mapa en su esquina, que es donde OpenStreetMap y CARTO
-// la piden. Lo que queda en Recursos es la autoría y el cómo citar.
+// llevando el propio mapa en su esquina, que es donde el proveedor y
+// OpenStreetMap la piden. Lo que queda en Recursos es la autoría y el cómo
+// citar. CAMBIÓ EL PROVEEDOR el 28 de agosto de 2026 —CARTO empezó a exigir
+// llave— y con él los nombres que hay que acreditar: el dibujo es de Esri y
+// sus socios, los datos siguen siendo de OpenStreetMap. La obligación es la
+// misma; se comprueba con los nombres de hoy.
 t('créditos · sin el bloque de obras de terceros',
   !/Obras de terceros que utiliza el sitio/.test(rec) && !/Licencia BSD de dos cláusulas/.test(rec));
 t('créditos · la cartografía se sigue atribuyendo desde el mapa',
   /colaboradores de <a href="https:\/\/www\.openstreetmap\.org\/copyright">OpenStreetMap<\/a>/.test(src)
-  && /teselas de <a href="https:\/\/carto\.com\/attributions">CARTO<\/a>/.test(src));
+  && /Cartografía base de <a href="https:\/\/www\.esri\.com\/">Esri<\/a>, HERE, Garmin/.test(src)
+  && !/carto\.com\/attributions/.test(src));
 t('créditos · los campos de autoría quedan marcados como pendientes',
   (rec.match(/data-pendiente/g)||[]).length>=5);
 t('créditos · lo pendiente se distingue a la vista', /\.creditos__lista dd\[data-pendiente\]/.test(css));

@@ -731,6 +731,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .norma{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:22px 24px}
 .norma .rotulo{color:#8A6B3D;display:block;margin-bottom:10px}
 .norma p{margin:0;font-size:var(--t-cuerpo);color:var(--tinta-suave)}
+/* Una tarjeta de norma puede llevar varios párrafos desde que las tres de la
+   Ley de Patrimonio se integraron en una sola: sin esto se pegaban. */
+.norma p+p{margin-top:10px}
 .norma cite{display:block;margin-top:12px;font-family:var(--editorial);font-style:italic;font-size:var(--t-apoyo);color:var(--gris)}
 /* Cada instrumento enlaza a su texto vigente: la cita sin fuente consultable
    obliga a la persona a confiar en nosotros. */
@@ -1013,6 +1016,12 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    tarjeta de recursos: son el mismo tipo de contenido y no merecen una pieza
    nueva. */
 .creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
+/* LAS REFERENCIAS DE CITA VAN EN FILAS, no en rejilla. Repartidas en columnas
+   quedaban tarjetas casi cuadradas con una cita larga dentro, apretada en
+   cinco o seis renglones y de anchos distintos entre sí. A lo ancho, las tres
+   miden lo mismo, se leen de corrido y se copian de una pasada, que es lo que
+   se hace con una cita. */
+.creditos--filas{grid-template-columns:1fr;gap:16px}
 .creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
 .creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
 .creditos__lista{margin:0;display:grid;gap:10px}

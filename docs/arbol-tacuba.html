@@ -467,6 +467,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .norma{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:22px 24px}
 .norma .rotulo{color:#8A6B3D;display:block;margin-bottom:10px}
 .norma p{margin:0;font-size:var(--t-cuerpo);color:var(--tinta-suave)}
+
+.norma p+p{margin-top:10px}
 .norma cite{display:block;margin-top:12px;font-family:var(--editorial);font-style:italic;font-size:var(--t-apoyo);color:var(--gris)}
 
 .norma__fuente{display:inline-block;margin-top:14px;font-size:var(--t-nota);font-weight:700;letter-spacing:.02em;
@@ -682,6 +684,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @media(max-width:560px){.norma-tarjeta{padding:18px 18px 16px}}
 
 .creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
+
+.creditos--filas{grid-template-columns:1fr;gap:16px}
 .creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
 .creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
 .creditos__lista{margin:0;display:grid;gap:10px}
@@ -2855,7 +2859,7 @@ function pintarMapaEjemplar(e) {
     if (pie) pie.textContent = "";
     return;
   }
-  if (pie) pie.textContent = "Cartografía base © colaboradores de OpenStreetMap · teselas de CARTO.";
+  if (pie) pie.textContent = "Cartografía base de Esri, HERE, Garmin y © colaboradores de OpenStreetMap.";
 
   const centro = [e.coords.lat, e.coords.lng];
 
@@ -2879,8 +2883,8 @@ function dibujarMapaEjemplar(e, lienzo, centro) {
     maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 10,
   });
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    { maxZoom: 19, subdomains: "abcd" }).addTo(mapaFicha);
+  L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 17, maxNativeZoom: 16 }).addTo(mapaFicha);
 
   L.geoJSON(GEO_CDMX, {
     interactive: false,
@@ -3098,20 +3102,23 @@ function pintarFuentes(e) {
       falta: "El registro guarda el nombre de la herramienta, no la corrida",
     },
     {
-      titulo: "Programa de manejo",
 
+      titulo: "Programa de manejo",
       url: esDireccion(e.urlPrograma) ? String(e.urlPrograma).trim() : null,
       pie: "Las medidas de conservación acordadas para el ejemplar",
-      falta: "El registro todavía no captura este campo",
+      falta: e.tienePrograma === true
+        ? "Tiene programa de manejo; falta capturar el vínculo al documento"
+        : e.tienePrograma === false
+          ? "Este ejemplar no tiene programa de manejo"
+          : "El registro todavía no captura este campo",
     },
   ];
 
   caja.innerHTML = documentos.map((d) => d.url
-    ? `<li><a href="${esc(d.url)}"${d.propio
-         ? ' class="docs--propio"'
-         : ' target="_blank" rel="noopener" class="sin-marca-externa"'}>
-         <b>${esc(d.titulo)}${d.propio ? "" : '<span class="docs__fuera" aria-hidden="true">\u2197</span>'
-           + '<span class="vo">, abre un sitio externo</span>'}</b>
+    ? `<li><a href="${esc(d.url)}" target="_blank" rel="noopener" class="${
+         d.propio ? "docs--propio sin-marca-externa" : "sin-marca-externa"}">
+         <b>${esc(d.titulo)}<span class="docs__fuera" aria-hidden="true">\u2197</span>${
+           d.propio ? "" : '<span class="vo">, abre un sitio externo</span>'}</b>
          <span>${esc(d.pie)}</span></a></li>`
     : `<li class="docs--sin"><span><b>${esc(d.titulo)}</b><span>${esc(d.falta)}</span></span></li>`
   ).join("");
@@ -3254,6 +3261,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/457bffaf649c8b51dbfbc7131482d624.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Miguel Hidalgo",
       "ubicacion": {
         "calle": "Avenida Marina Nacional",
@@ -3364,6 +3373,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1bb36c95f11d05d5a3065f523946912c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Eje 1 Poniente Guerrero",
@@ -3475,6 +3486,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/90a06c2e8dfc47f3a1a0aa998813a156.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Calle 20 de agosto",
@@ -3585,6 +3598,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/cb9e153b7cd0b722dfc3bc41e3d9e703.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Eje 1 Poniente Avenida Cuauhtémoc",
@@ -3697,6 +3712,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/457bffaf649c8b51dbfbc7131482d624.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Avenida Sonora",
@@ -3809,6 +3826,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/268f422dad19d8fcaea245ed0db75c7c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Calle Central",
@@ -3919,6 +3938,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/e369ce73da8174d0533ee6abc15e2936.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Avenida Francisco Sosa",
@@ -4029,6 +4050,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/90a06c2e8dfc47f3a1a0aa998813a156.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Callejón del Río",
@@ -4139,6 +4162,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1bb36c95f11d05d5a3065f523946912c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Glorieta de los Ahuehuetes",
@@ -4249,6 +4274,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/cb9e153b7cd0b722dfc3bc41e3d9e703.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Avenida Paseo de la Reforma",
@@ -4359,6 +4386,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/268f422dad19d8fcaea245ed0db75c7c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/17ozhpGl30MRg8JEaXIFjd12kCgdlrSoj/view?usp=drive_link",
       "alcaldia": "Benito Juárez",
       "ubicacion": {
         "calle": "Miguel Laurent",
@@ -4469,6 +4498,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/e19503612c79869c1b1cfec16f4b3994.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/1C-TBO_yTJHoyAnmAemJvNe6veGOUSVlc/view?usp=drive_link",
       "alcaldia": "Benito Juárez",
       "ubicacion": {
         "calle": "Cerrada de Eugenia",

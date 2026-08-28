@@ -183,18 +183,39 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
-            <h3>El ahuehuete de San Juan no sale en la hoja</h3>
-            <p>El <b>28 de agosto de 2026 se volvió a encender la fuente viva</b>: el sitio consulta otra vez la hoja publicada. Antes de tocar el interruptor se censó el CSV de <code>Salida_Publica</code>, que responde con sus 83 columnas y doce ejemplares con identificador, coordenadas, altura y fecha de decreto. El registro congelado se regeneró de esa misma hoja, así que el primer pintado y lo que llega por la red dicen lo mismo.</p>
-            <p style="margin-top:9px"><b>Falta uno.</b> El renglón 8 —<code>25-XOC-TAX-19405GIMNO-0007</code>, «Árbol Ahuehuete (Sabino) de San Juan y su Arboleda», Xochimilco— sale <b>completamente en blanco</b> en la salida pública. No es un fallo del sitio ni del armado: es la hoja. Por eso el padrón publica <b>doce y no trece</b>.</p>
-            <p style="margin-top:9px">Sus <b>doce fotografías siguen montadas</b> y su expediente sigue en el repositorio. Para que nadie los lea como sobras ni los borre, el ejemplar está declarado en <code>fuente/datos/en-espera.json</code>, con fecha y motivo, y las suites de integridad y galería leen esa lista. Su ficha publicada sí se retiró: una página de un ejemplar que el registro no reconoce queda huérfana y sin enlaces.</p>
+            <h3>El mapa base: se salió de CARTO por la puerta de atrás</h3>
+            <p>El <b>28 de agosto de 2026</b> el mapa amaneció con la leyenda <b>«API KEY REQUIRED»</b> estampada sobre la Ciudad. No fue el sitio: CARTO empezó a exigir llave para sus teselas ráster —las que usábamos, el estilo Positron— y además las declaró <b>en retirada</b>. Un sitio de gobierno con una marca de agua comercial encima del mapa no se puede publicar así.</p>
+            <p style="margin-top:9px"><b>Lo que se hizo hoy:</b> se cambió al <b>lienzo gris de Esri</b>, que no pide llave, no trae puntos de interés —farmacias, gasolineras— y convive con la paleta del sitio igual que Positron. La marca de agua desapareció.</p>
+            <p style="margin-top:9px"><b>Lo que cuesta, dicho sin adorno:</b> Esri solo tiene dibujo hasta el <b>nivel 16</b>; de ahí en adelante devuelve un gris liso. Por eso el mapa ahora llega al nivel 17 —el último se arma ampliando el 16 al doble— en vez de al 19. No se pierde uso real: la ficha abre en 16 y el encuadre del listado se detiene en 15, así que el sitio nunca se acercaba solo más allá. Quien quiera acercarse a mano llega dos escalones menos.</p>
             <div class="arreglo">
-              <b>Qué hace falta de tu lado</b>
+              <b>Dos cosas de tu lado</b>
               <ol>
-                <li><b>Revisa el renglón 8 en el padrón.</b> Lo más probable es que su «Estado del Decreto» no diga «Publicado» —solo ese estado pasa a la salida pública— o que se haya roto la fórmula de ese renglón.</li>
-                <li>Cuando vuelva a salir, <b>no hay que tocar código</b>: el sitio lo recoge solo en la siguiente visita. Basta regenerar el congelado —<code>node construir/armar-registro.js --escribir</code>—, construir las dos salidas y quitarlo de <code>en-espera.json</code>.</li>
+                <li><b>Si quieres recuperar Positron y el acercamiento completo</b>, pide la llave gratuita en <code>carto.com/basemaps/apikey</code>: no hace falta cuenta, son 5 millones de teselas al mes y para uso no comercial suelen ampliarlo sin costo. Pásamela y la coloco: es una línea en tres archivos. Ojo con que CARTO ya anunció la retirada de estas teselas.</li>
+                <li><b>Confirma los términos de Esri con quien corresponda.</b> Sus teselas se sirven sin llave y se usan así en todas partes, con la atribución puesta —«Esri, HERE, Garmin y colaboradores de OpenStreetMap», que el mapa ya muestra—, pero para un sitio institucional conviene que alguien lo revise en vez de suponerlo.</li>
               </ol>
+              <p style="margin-top:9px">La tercera salida, si esto se vuelve recurrente, es dejar de depender de un proveedor comercial y usar cartografía del propio Gobierno de la Ciudad o de INEGI. Es medio día de investigación para saber si existe un servicio público, estable y con CORS abierto.</p>
             </div>
-            <cite>El sitio publica lo que la hoja publica. Un ejemplar declarado que la hoja no trae no se inventa: se declara, se le guarda su lugar y se dice quién tiene que arreglarlo.</cite>
+            <cite>Un mapa de gobierno que anuncia la llave que le falta a un proveedor comercial no está informando: está haciendo publicidad de su propia dependencia.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>¿El micrositio muestra ejemplares sin decreto?</h3>
+            <p>El <b>28 de agosto de 2026 se encendió la fuente viva</b>: el sitio consulta otra vez la hoja publicada. Publica <b>doce ejemplares</b>, los doce con decreto, categoría, coordenadas y medidas.</p>
+            <p style="margin-top:9px"><b>El trece no está, y es la regla funcionando.</b> El «Árbol Ahuehuete (Sabino) de San Juan y su Arboleda», en Xochimilco, todavía no tiene decreto, y sin decreto el padrón no lo saca a la hoja pública. No es un fallo del sitio ni de la hoja. Está declarado en <code>fuente/datos/en-espera.json</code> con fecha y motivo, sus doce fotografías siguen montadas y las suites de integridad y galería leen esa lista para no confundirlas con sobras. Su ficha publicada sí se retiró: una página de un ejemplar que el registro no reconoce queda servida y sin enlaces.</p>
+            <p style="margin-top:9px"><b>Lo que hay que decidir.</b> Hasta el 24 de agosto el sitio sí lo mostraba, con la etiqueta «Declaratoria en trámite» y una explicación propia: «su categoría se asignará cuando se publique el decreto». Esa maquinaria sigue en el código —etiqueta, explicación, color, la nota del cintillo que separa «con decreto publicado» de «con declaratoria en trámite»— pero <b>con la regla actual no se puede alcanzar nunca</b>, porque un ejemplar sin decreto ni siquiera llega al sitio.</p>
+            <div class="arreglo">
+              <b>Dos caminos, y hay que elegir uno</b>
+              <ol>
+                <li><b>Sin decreto no se publica</b> —la regla de hoy—. Entonces esa maquinaria es código muerto y conviene retirarla, para que nadie la mantenga ni la crea viva. Media jornada, y el registro pierde visibilidad de lo que está en proceso.</li>
+                <li><b>Se muestran también los que están en trámite</b>, claramente distinguidos, como estaba antes. Entonces la hoja tiene que sacarlos a <code>Salida_Publica</code> con su estado, y el sitio los recoge solo: el código ya sabe pintarlos.</li>
+              </ol>
+              <p style="margin-top:9px">No es una decisión técnica: es qué dice el registro de sí mismo. Un padrón que solo enseña lo decretado es un registro de actos; uno que enseña también lo que está en curso es un registro del proceso. Los dos son defendibles; hoy el sitio afirma el primero sin que nadie lo haya escrito.</p>
+            </div>
+            <cite>El sitio publica lo que la hoja publica. Lo que falta decidir no es el ejemplar: es si el micrositio es el espejo de los decretos o el del expediente.</cite>
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
@@ -353,6 +374,27 @@ a{color:var(--jacaranda-hondo)}
       <h2>2 · Decisiones institucionales</h2>
       <p>No son técnicas. Alguien tiene que decidirlas antes de publicar.</p>
       <div class="pend-lista">
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>La ruta para promover una declaratoria se quedó sin casa</h3>
+            <p>El 28 de agosto de 2026 se retiró de la portada, por decisión del área, la secuencia de cinco hitos que explicaba <b>cómo se promueve una declaratoria</b>. La sección de postulación ahora solo anuncia el estado de la convocatoria, que es lo que se pidió.</p>
+            <p style="margin-top:9px"><b>Lo que se fue con ella</b> no era relleno: <b>quién puede promover</b> —Alcaldías, cualquier persona física o moral, pueblos y barrios originarios, la propia autoridad, el Congreso— del <b>artículo 54</b>; <b>qué lleva la solicitud</b> y que se presenta ante la <b>Secretaría de Cultura</b>, no ante esta Secretaría, del <b>artículo 55</b>; el <b>dictamen en 60 días naturales</b> del <b>artículo 56</b>; y la emisión y publicación en Gaceta del <b>artículo 57</b>.</p>
+            <p style="margin-top:9px">Hoy <b>eso no está en ninguna página del sitio</b>. Recursos enlaza el texto de la ley, pero no explica la ruta. Quien lea «cualquier persona puede postular un árbol» y quiera hacerlo no encuentra cómo, y la convocatoria cerrada no le dice a dónde ir mientras tanto.</p>
+            <div class="arreglo">
+              <b>Tres salidas</b>
+              <ol>
+                <li><b>Moverla a Recursos</b>, en su propio bloque. Es donde vive el resto del articulado y no compite con la portada. Es lo que yo haría: una hora de trabajo y no se pierde nada.</li>
+                <li><b>Dejarla fuera del sitio</b> y que la ruta se explique en la convocatoria cuando se abra. Legítimo, pero entonces conviene que el recuadro de convocatoria cerrada diga a dónde escribir mientras tanto.</li>
+                <li><b>Regresarla a la portada</b> cuando abra la convocatoria, y retirarla cuando cierre.</li>
+              </ol>
+              <p style="margin-top:9px">Mientras se decide, los estilos <code>.linea*</code> y <code>.paso__*</code> se conservan sin uso, para que devolverla sea pegar el bloque y no rehacerlo. Si la salida es la segunda, esos estilos se retiran.</p>
+            </div>
+            <cite>Retirar el trámite de la portada es una decisión de foco. Que el trámite no viva en ninguna parte es un hueco, y no es lo mismo.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
 
         <article class="pend">
           <span class="pend__marca"></span>

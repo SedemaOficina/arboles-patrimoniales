@@ -1212,6 +1212,14 @@
       "clave": "validacion_itree",
       "nota": "Compuerta del bloque ambiental. Viaja siempre, precisamente para que el sitio sepa por qué no hay cifras."
     },
+    "tienePrograma": {
+      "clave": "tiene_programa",
+      "nota": "SÍ/NO. Permite que la ficha diga «no tiene programa» solo cuando la hoja lo afirma, en vez de callarlo como un hueco de captura."
+    },
+    "urlPrograma": {
+      "clave": "url_programa",
+      "nota": "Se publica como enlace externo en las fuentes del ejemplar. Recogido desde el 28 de agosto de 2026."
+    },
     "ubicacion.sueloConservacion": {
       "clave": "suelo_conservacion",
       "nota": "SÍ/NO. Cambia el régimen jurídico del predio: se publica en la ficha."
@@ -1225,8 +1233,6 @@
     "nota": "Campos que el padrón publica y que el sitio todavía no dibuja. No es un error: publicarlos es una decisión editorial. Se listan para que la decisión sea explícita y no un olvido.",
     "claves": [
       "gaceta",
-      "tiene_programa",
-      "url_programa",
       "nombre_sitio",
       "idnombrecat",
       "altura_medicion_dap",

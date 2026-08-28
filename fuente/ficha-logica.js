@@ -413,7 +413,7 @@ function pintarMapaEjemplar(e) {
     if (pie) pie.textContent = "";
     return;
   }
-  if (pie) pie.textContent = "Cartografía base © colaboradores de OpenStreetMap · teselas de CARTO.";
+  if (pie) pie.textContent = "Cartografía base de Esri, HERE, Garmin y © colaboradores de OpenStreetMap.";
 
   const centro = [e.coords.lat, e.coords.lng];
   /* Leaflet se descarga cuando el recuadro se acerca a la pantalla: en la
@@ -444,8 +444,11 @@ function dibujarMapaEjemplar(e, lienzo, centro) {
   });
   // Misma base limpia que el mapa general: calles y nombres, sin la
   // simbología de puntos de interés que compite con el pin del ejemplar.
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    { maxZoom: 19, subdomains: "abcd" }).addTo(mapaFicha);
+  // La misma base del mapa general, y por el mismo motivo; el porqué del
+  // proveedor y del tope de nivel está escrito en mapa.js, donde vive la
+  // dirección de referencia.
+  L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 17, maxNativeZoom: 16 }).addTo(mapaFicha);
   // Mismo recorte que el mapa general: al alejarse, la Ciudad se distingue del
   // resto de la zona metropolitana en vez de perderse entre municipios.
   L.geoJSON(GEO_CDMX, {
@@ -773,22 +776,42 @@ function pintarFuentes(e) {
       falta: "El registro guarda el nombre de la herramienta, no la corrida",
     },
     {
+      /* TRES CASOS, TRES FRASES. El padrón trae dos campos —`tiene_programa` y
+         `url_programa`— y hasta el 28 de agosto de 2026 el lector no recogía
+         ninguno: la ficha decía «el registro todavía no captura este campo»
+         incluso de los ejemplares que sí tienen programa capturado. Ahora
+         distingue: hay programa y vínculo, hay programa y falta el vínculo, y
+         no hay programa. Un «no tiene» solo se afirma cuando la hoja lo dice. */
       titulo: "Programa de manejo",
-      // El campo existe en el padrón v2 (`url_programa`) pero el lector todavía
-      // no lo recoge, así que aquí siempre llega vacío. Decir «no tiene uno
-      // registrado» sería afirmar algo que nadie comprobó.
       url: esDireccion(e.urlPrograma) ? String(e.urlPrograma).trim() : null,
       pie: "Las medidas de conservación acordadas para el ejemplar",
-      falta: "El registro todavía no captura este campo",
+      falta: e.tienePrograma === true
+        ? "Tiene programa de manejo; falta capturar el vínculo al documento"
+        : e.tienePrograma === false
+          ? "Este ejemplar no tiene programa de manejo"
+          : "El registro todavía no captura este campo",
     },
   ];
 
+  /* TODOS ABREN EN OTRA PESTAÑA Y TODOS LO ANUNCIAN. Hasta el 28 de agosto de
+     2026 el decreto —el único documento servido desde este mismo sitio— abría
+     encima de la ficha y sin flecha, así que la lista mezclaba dos
+     comportamientos sin decir cuál era cuál: unos renglones llevaban marca y
+     otros no. Un documento es un documento: se abre aparte para no perder la
+     ficha que se estaba leyendo, y la flecha lo advierte antes del clic.
+     La clase `docs--propio` se conserva porque es lo que distingue al decreto
+     para la comprobación de 404 de más abajo, no un estilo.
+     El aviso «(se abre en otra pestaña)» para lector de pantalla lo pone
+     menu.js sobre cualquier enlace con target; aquí solo se añade lo que
+     menu.js no puede saber: que el destino es un sistema ajeno.
+     `sin-marca-externa` apaga la flecha del pseudoelemento global, que
+     quedaría después de la descripción; esta va junto al título, que es donde
+     se lee. */
   caja.innerHTML = documentos.map((d) => d.url
-    ? `<li><a href="${esc(d.url)}"${d.propio
-         ? ' class="docs--propio"'
-         : ' target="_blank" rel="noopener" class="sin-marca-externa"'}>
-         <b>${esc(d.titulo)}${d.propio ? "" : '<span class="docs__fuera" aria-hidden="true">\u2197</span>'
-           + '<span class="vo">, abre un sitio externo</span>'}</b>
+    ? `<li><a href="${esc(d.url)}" target="_blank" rel="noopener" class="${
+         d.propio ? "docs--propio sin-marca-externa" : "sin-marca-externa"}">
+         <b>${esc(d.titulo)}<span class="docs__fuera" aria-hidden="true">\u2197</span>${
+           d.propio ? "" : '<span class="vo">, abre un sitio externo</span>'}</b>
          <span>${esc(d.pie)}</span></a></li>`
     : `<li class="docs--sin"><span><b>${esc(d.titulo)}</b><span>${esc(d.falta)}</span></span></li>`
   ).join("");

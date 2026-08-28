@@ -20,10 +20,16 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
   t(f+' · estado de la convocatoria: cerrada', /data-estado="cerrada"/.test(s)&&/La convocatoria está cerrada por ahora/.test(s));
   t(f+' · el botón está deshabilitado', /<button[^>]*disabled[^>]*aria-disabled="true"[^>]*>Convocatoria cerrada/.test(s));
   t(f+' · dice que la convocatoria es anual', /convocatoria cada año/.test(s));
-  t(f+' · las cinco vías del artículo 54', /artículo 54/.test(s)&&/barrio originario o comunidad indígena/.test(s)&&/mediante exhorto/.test(s));
-  t(f+' · el hito 1 confirma si el árbol califica, con el numeral 7.5', /Confirma que el árbol califica/.test(s)&&/numeral 7\.5 y\s*definiciones del numeral 4/.test(s.replace(/\s+/g,' ')));
-  t(f+' · los cuatro valores de la norma', /histórico/.test(s)&&/sociocultural/.test(s)&&/científico/.test(s)&&/estético/.test(s));
-  t(f+' · la Comisión Interinstitucional en el trámite', /Comisión Interinstitucional del Patrimonio Cultural/.test(s)&&/Consejo Consultivo/.test(s));
+  /* SE RETIRÓ LA SECUENCIA DE POSTULACIÓN el 28 de agosto de 2026, por
+     decisión del área: la sección solo anuncia el estado de la convocatoria.
+     Con ella se fueron de la portada el artículo 54 —quién puede promover—,
+     el 55 —qué lleva la solicitud—, el 56 —el dictamen en 60 días— y el 57.
+     Se voltean las comprobaciones en vez de borrarlas: lo que hay que impedir
+     ahora es que la secuencia vuelva a medias. */
+  t(f+' · la secuencia de postulación se retiró entera',
+    !/class="linea__hito"/.test(s) && !/artículo 54/.test(s)
+    && !/Confirma que el árbol califica/.test(s)
+    && !/Comisión Interinstitucional del Patrimonio Cultural/.test(s));
   t(f+' · el plan de manejo viaja con el dictamen', /plan de manejo/.test(s));
   // El bloque de predio privado se retiró por decisión editorial.
   t(f+' · el bloque de predio privado ya no está', !/titularidad del predio/.test(s));
@@ -35,16 +41,27 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
   t(f+' · sin el párrafo de recurso y revocación', !/quince días hábiles/.test(s));
   t(f+' · sin el párrafo del artículo 62 en el bloque de cuidado',
     !/cualquier modificación del estado del bien/.test(s.replace(/<[^>]+>/g,'')));
-  t(f+' · los cinco requisitos del artículo 55', /Artículo 55/.test(s)&&/Identificación oficial vigente/.test(s));
-  t(f+' · aclara que va a la Secretaría de Cultura', /no ante la Secretaría del Medio Ambiente/.test(s));
-  // El plazo y el emblema se retiraron de esa tarjeta; el plazo sigue en la
-  // secuencia de postulación, que es donde le sirve a quien va a promover.
-  t(f+' · el plazo de 60 días vive en la secuencia de postulación',
-    /60 días naturales/.test(s) && !/ostentar un emblema/.test(s));
+  /* El plazo de 60 días y los requisitos del artículo 55 vivían en la
+     secuencia retirada. Hoy la portada no promete ningún plazo ni ninguna
+     ruta de trámite, y eso es lo que se comprueba: prometer media ruta sería
+     peor que no prometer ninguna. Dónde debe vivir esa información —Recursos,
+     probablemente— está anotado en pendientes.html. */
+  t(f+' · la portada ya no describe el trámite',
+    !/Artículo 55/.test(s) && !/Identificación oficial vigente/.test(s)
+    && !/no ante la Secretaría del Medio Ambiente/.test(s)
+    && !/60 días naturales/.test(s) && !/ostentar un emblema/.test(s));
 
-  // La cuenta creció al destacar el artículo 107 y al enlazar la metodología.
-  // Lo que importa es que ningún instrumento se quede sin liga, no la cifra.
-  t(f+' · al menos nueve enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=9, String((s.match(/class="norma__fuente"/g)||[]).length));
+  /* La cuenta bajó de nueve a siete el 28 de agosto de 2026 y por dos motivos
+     buenos: las tres tarjetas de la Ley de Patrimonio se integraron en una
+     sola —el mismo articulado, citado igual, sin repetir tres veces la misma
+     liga— y la secuencia de postulación se retiró. Lo que importa no cambió:
+     que ningún instrumento citado se quede sin liga a su texto vigente. */
+  t(f+' · al menos siete enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=7, String((s.match(/class="norma__fuente"/g)||[]).length));
+  /* La tarjeta integrada tiene que seguir citando los cinco artículos, cada
+     uno junto a lo que dispone. Integrar no puede ser diluir. */
+  t(f+' · la tarjeta de la Ley de Patrimonio conserva sus cinco artículos',
+    ['artículos 51 y 52','artículo 8, fracción I','artículo 56','artículo 13, fracción V']
+      .every((c) => s.includes(c)));
   // El pie de la sección de propuestas se retiró. La ley se sigue enlazando
   // desde el bloque de normativa, que es donde vive el marco jurídico.
   t(f+' · sin el pie de la sección de propuestas', !/class="postula__pie"/.test(s));

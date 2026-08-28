@@ -178,29 +178,35 @@ console.log('\n══ ENSAMBLADO ══');
     !/^\s*import .*from ".\//m.test(pv) && !/^\s*import .*from ".\//m.test(fv));
 }
 
-console.log('\n══ POSTULACIÓN · secuencia, no rejilla ══');
+console.log('\n══ POSTULACIÓN · solo el estado de la convocatoria ══');
 {
-  const pv=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'),
-  
-        cs2=fs.readFileSync('estilos.css','utf8');
+  const pv=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
+  /* SE RETIRÓ LA SECUENCIA el 28 de agosto de 2026, por decisión del área.
+     La sección explicaba en cinco hitos cómo promover una declaratoria —quién
+     puede pedirla (artículo 54), qué lleva la solicitud (artículo 55), el
+     dictamen en 60 días naturales (artículo 56) y la emisión (artículo 57)— y
+     ahora solo anuncia si la convocatoria está abierta.
+     Estas comprobaciones no se borran: se voltean. Antes vigilaban que la
+     secuencia estuviera completa y en orden; ahora vigilan que no vuelva a
+     medias, que es el riesgo nuevo. Media secuencia —dos hitos sueltos, o los
+     cinco sin sus citas— sería peor que ninguna.
+     Los estilos .linea* y .paso__* se conservan por si la sección regresa;
+     está anotado en pendientes.html como decisión por confirmar. */
   for (const [nom,s] of [['una pieza', pv]]) {
     t(nom+' · la rejilla de siete tarjetas desapareció',
       !/class="pasos"/.test(s) && !/class="paso__numero"/.test(s));
-    t(nom+' · cinco hitos numerados en una sola línea',
-      (s.match(/class="linea__hito"/g)||[]).length===5
-      && (s.match(/class="linea__numero"/g)||[]).length===5);
-    t(nom+' · la numeración va 1,2,3,4,5 en orden',
-      (s.match(/class="linea__numero" aria-hidden="true">(\d)</g)||[]).join('')
-        .replace(/\D/g,'')==='12345');
-    t(nom+' · cada hito dice quién lo hace',
-      (s.match(/class="linea__actor"/g)||[]).length===5
-      && (s.match(/Lo haces tú/g)||[]).length===3
-      && (s.match(/Lo hace la autoridad/g)||[]).length===2);
-    // El bloque de decisión de ruta —Patrimonio Natural frente a Patrimonio
-    // Biocultural— y el de «¿Qué gana el árbol con la Declaratoria?» se
-    // retiraron por decisión editorial: la sección explica cómo se postula, y
-    // el encuadre entre las dos categorías se resuelve al recibir la
-    // solicitud, no en la página.
+    t(nom+' · la secuencia de cinco hitos se retiró entera',
+      !/class="linea__hito"/.test(s) && !/class="linea__numero"/.test(s)
+      && !/class="linea__actor"/.test(s));
+    t(nom+' · y no quedó ningún resto del trámite',
+      !/Confirma que el árbol califica/.test(s)
+      && !/Comisión Interinstitucional del Patrimonio Cultural/.test(s)
+      && !/60 días naturales/.test(s)
+      && !/no ante la Secretaría del Medio Ambiente/.test(s));
+    t(nom+' · lo que queda es el estado de la convocatoria, completo',
+      /id="postula"/.test(s) && /data-estado="cerrada"/.test(s)
+      && /La convocatoria está cerrada por ahora/.test(s)
+      && /Ver los avisos de la Secretaría/.test(s));
     t(nom+' · sin el bloque de decisión de ruta',
       !/class="ruta"/.test(s) && !/Patrimonio Biocultural/.test(s)
       && !/consentimiento libre y previo/.test(s));
@@ -208,14 +214,7 @@ console.log('\n══ POSTULACIÓN · secuencia, no rejilla ══');
       !/class="postula-dudas"/.test(s) && !/¿Qué gana el árbol con la Declaratoria\?/.test(s));
     t(nom+' · el bloque de predio privado se retiró por completo',
       !/titularidad del predio/.test(s) && !/Artículo 52 y artículo 56, fracción II/.test(s));
-    // Las citas que sostienen los cinco hitos de la secuencia siguen ahí. Las
-    // de los bloques retirados se fueron con ellos.
-    t(nom+' · los hitos conservan su cita normativa',
-      ['artículo 54','Artículo 55','Artículo 56, fracciones IV y V','Artículo 57',
-       '60 días naturales'].every(c=>s.includes(c)));
   }
-  t('El hilo conductor se dibuja y se detiene en el último hito',
-    /\.linea::before\{content:""/.test(cs2) && /bottom:22px/.test(cs2));
 }
 
 
@@ -1101,18 +1100,35 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
   const mpj = fs.readFileSync('mapa.js','utf8');
   const flj = fs.readFileSync('ficha-logica.js','utf8');
   const fdj = fs.readFileSync('modelo-ficha.js','utf8');
-  // La base de OSM trae farmacias, cimas y gasolineras: compiten con los
-  // marcadores propios en un mapa cuyo único trabajo es ubicar un árbol.
+  /* CAMBIÓ EL PROVEEDOR el 28 de agosto de 2026, no el criterio. CARTO empezó
+     a exigir llave para sus teselas ráster y a estamparles «API KEY REQUIRED»
+     encima. Lo que hay que seguir garantizando es lo de siempre: una base sin
+     puntos de interés —la de OSM trae farmacias, cimas y gasolineras, que
+     compiten con los marcadores en un mapa cuyo único trabajo es ubicar un
+     árbol— y la MISMA en las tres pantallas. Y dos cosas nuevas que el cambio
+     trajo consigo: que no vuelva a entrar una dirección que pida llave, y que
+     el tope de nivel esté declarado, porque Esri solo dibuja hasta el 16. */
+  const BASE = /services\.arcgisonline\.com\/ArcGIS\/rest\/services\/Canvas\/World_Light_Gray_Base/;
   t('El mapa general usa una base sin puntos de interés',
-    /basemaps\.cartocdn\.com\/light_all/.test(mpj) && !/tile\.openstreetmap\.org/.test(mpj));
-  t('El mapa de la ficha usa la misma base',
-    /basemaps\.cartocdn\.com\/light_all/.test(flj) && /basemaps\.cartocdn\.com\/light_all/.test(fdj));
-  t('Pide teselas de doble densidad', /\{r\}\.png/.test(mpj));
-  t('Declara los subdominios que CARTO necesita', /subdomains: "abcd"/.test(mpj));
-  // La atribución no es opcional: los datos son de OSM y el dibujo de CARTO.
-  t('Atribuye a OpenStreetMap y a CARTO',
-    /openstreetmap\.org\/copyright/.test(mpj) && /carto\.com\/attributions/.test(mpj));
-  t('Y también en el pie del mapa de la ficha', /teselas de CARTO/.test(flj));
+    BASE.test(mpj) && !/tile\.openstreetmap\.org/.test(mpj));
+  t('El mapa de la ficha usa la misma base', BASE.test(flj) && BASE.test(fdj));
+  t('Ninguna de las tres pide llave a un proveedor',
+    /* Se miran las direcciones de tesela, no el archivo entero: en mapa.js la
+       palabra «apikey» aparece a propósito, en el comentario que explica cómo
+       volver a CARTO si algún día se pide la llave. */
+    [mpj, flj, fdj].every((x) => (x.match(/https:\/\/[^"'`\s]*\{z\}[^"'`\s]*/g) || [])
+      .every((u) => !/cartocdn\.com/.test(u) && !/[?&]key=/.test(u) && !/api_?key/i.test(u))));
+  t('El tope de nivel está declarado en las tres, y es el que Esri dibuja',
+    [mpj, flj, fdj].every((x) => /maxNativeZoom: 16/.test(x) && /maxZoom: 17/.test(x)));
+  /* La atribución no es opcional y cambió con el proveedor: el dibujo es de
+     Esri y sus socios, y los datos siguen siendo de OpenStreetMap. Se sigue
+     comprobando lo mismo —que estén las dos, y que el pie de la ficha no se
+     quede atrás— con los nombres de hoy. */
+  t('Atribuye a Esri y a OpenStreetMap',
+    /openstreetmap\.org\/copyright/.test(mpj) && /Esri/.test(mpj)
+    && !/carto\.com\/attributions/.test(mpj));
+  t('Y también en el pie del mapa de la ficha',
+    /Cartografía base de Esri/.test(flj) && !/teselas de CARTO/.test(flj));
 
   const pv = fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
   const sitio = fs.readFileSync('construir/sitio.js','utf8');

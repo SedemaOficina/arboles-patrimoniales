@@ -17,14 +17,27 @@ import { montarPrimeraFoto } from "./fotos.js";
  * UN ÁRBOL, esa simbología compite con los marcadores propios y no aporta:
  * nadie llega a un ahuehuete guiándose por una cruz de farmacia.
  *
- * Positron conserva lo que sí sirve para ubicarse —trazado de calles y sus
- * nombres, colonias, cuerpos de agua— y retira el resto. Además su gris claro
- * convive con el crema y el morado del sitio, donde el verde y el rosa de OSM
- * peleaban con los marcadores.
+ * CAMBIO DE PROVEEDOR, 28 de agosto de 2026. La base era Positron de CARTO.
+ * CARTO empezó a exigir llave para sus teselas ráster y a estamparles encima
+ * «API KEY REQUIRED» —además las declaró en retirada—, así que el mapa de un
+ * sitio de gobierno amaneció con una marca de agua comercial. Se cambió al
+ * lienzo gris de Esri, que no pide llave, conserva la virtud que se buscaba
+ * —calles y nombres, sin la simbología de puntos de interés— y convive con el
+ * crema y el morado del sitio igual que Positron.
  *
- * El sufijo {r} pide la versión de doble densidad en pantallas que la admiten.
+ * EL PRECIO, dicho para que nadie lo descubra tarde: Esri solo tiene dibujo
+ * hasta el nivel 16. De ahí en adelante devuelve un gris liso. Por eso
+ * `maxNativeZoom: 16` y `maxZoom: 17`: el nivel 17 se arma ampliando el 16 al
+ * doble, que se lee bien, y no se ofrece más acercamiento del que hay. No es
+ * una pérdida real de uso: el sitio nunca se acerca solo más allá del 16 —la
+ * ficha abre en 16 y el encuadre del listado se detiene en 15—.
+ *
+ * SI SE QUIERE VOLVER A POSITRON basta pedir la llave gratuita de CARTO
+ * (carto.com/basemaps/apikey, 5 millones de teselas al mes, sin cuenta) y
+ * reponer la dirección anterior con `?key=`. Es un cambio de una línea aquí,
+ * otra en ficha-logica.js y otra en modelo-ficha.js.
  */
-const TESELAS = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+const TESELAS = "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}";
 
 /** Máscara que apaga todo lo que queda fuera de la Ciudad de México y dibuja
  *  su perímetro oficial. Cartografía: INEGI, CVEGEO 09.
@@ -36,7 +49,7 @@ export const LIMITES_CDMX = [[18.98, -99.43], [19.66, -98.87]];
 
 // La atribución es obligatoria: los datos siguen siendo de OpenStreetMap y el
 // dibujo de las teselas es de CARTO.
-const ATRIBUCION = 'Cartografía base © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · teselas de <a href="https://carto.com/attributions">CARTO</a>';
+const ATRIBUCION = 'Cartografía base de <a href="https://www.esri.com/">Esri</a>, HERE, Garmin y © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const nf = (n, d = 1) => (n === null || n === undefined || !isFinite(n) ? "—" : Number(n).toLocaleString("es-MX", { maximumFractionDigits: d }));
@@ -101,7 +114,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
   if (typeof L !== "undefined" && conCoords.length) {
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
-    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 19, subdomains: "abcd", bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
+    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 17, maxNativeZoom: 16, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
     ponerMascara(mascara);
     // El aviso vive sobre el lienzo: bajo los filtros pasaba desapercibido.

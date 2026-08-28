@@ -55,11 +55,19 @@ export function indicadoresPadron(lista, totalPadron) {
 
   /* NO TODOS ESTÁN DECLARADOS TODAVÍA.
      El cintillo decía «Protegidos y registrados» de los trece, y uno —el
-     Ahuehuete de San Juan— tiene la declaratoria en trámite: no hay decreto
+     Ahuehuete de San Juan— tenía la declaratoria en trámite: no hay decreto
      publicado. Contarlo con los demás afirma una protección que todavía no
      existe como acto. El sitio ya distingue los dos casos en la tarjeta y en
      la ficha; faltaba que la cifra grande no los borrara.
-     La frase fuerte se reserva para cuando de verdad lo estén todos. */
+     La frase fuerte se reserva para cuando de verdad lo estén todos.
+
+     DORMIDO DESDE EL 28 DE AGOSTO DE 2026, no muerto. El padrón solo saca a la
+     hoja pública los ejemplares CON decreto, así que hoy `enTramite` siempre
+     vale cero y la nota nunca se pinta. La cuenta se conserva porque la regla
+     es de la hoja, no del sitio: el día que el padrón publique los que están
+     en curso, esto los distingue solo. Si la regla se confirma como
+     definitiva, esto y la etiqueta «Declaratoria en trámite» se retiran
+     juntos; está anotado en pendientes.html como decisión abierta. */
   const conDecreto = lista.filter((e) => e.fechaDecreto && e.fechaDecreto.iso).length;
   const enTramite = n - conDecreto;
 

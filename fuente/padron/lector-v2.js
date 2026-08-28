@@ -211,6 +211,13 @@ export function construirEjemplar(f, contrato, avisos) {
     fechaDecreto: aFecha(f.fecha_decreto),
     linkDecreto: limpiar(f.drive_decreto),
     idDecretoDrive: idDeDrive(f.drive_decreto),
+    /* EL PROGRAMA DE MANEJO. Son dos campos y hay que leer los dos: uno dice si
+       el ejemplar tiene programa y el otro dónde está. Separarlos permite que
+       la ficha distinga tres cosas que no son la misma —tiene programa y aquí
+       está, tiene programa pero falta capturar el vínculo, y no tiene—, en vez
+       de callar las tres bajo un hueco. */
+    tienePrograma: aSiNo(f.tiene_programa),
+    urlPrograma: limpiar(f.url_programa),
     alcaldia: limpiar(f.alcaldia),
     ubicacion: {
       calle: limpiar(f.calle),

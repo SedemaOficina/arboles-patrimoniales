@@ -464,6 +464,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .norma{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:22px 24px}
 .norma .rotulo{color:#8A6B3D;display:block;margin-bottom:10px}
 .norma p{margin:0;font-size:var(--t-cuerpo);color:var(--tinta-suave)}
+
+.norma p+p{margin-top:10px}
 .norma cite{display:block;margin-top:12px;font-family:var(--editorial);font-style:italic;font-size:var(--t-apoyo);color:var(--gris)}
 
 .norma__fuente{display:inline-block;margin-top:14px;font-size:var(--t-nota);font-weight:700;letter-spacing:.02em;
@@ -679,6 +681,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @media(max-width:560px){.norma-tarjeta{padding:18px 18px 16px}}
 
 .creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
+
+.creditos--filas{grid-template-columns:1fr;gap:16px}
 .creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
 .creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
 .creditos__lista{margin:0;display:grid;gap:10px}
@@ -1799,7 +1803,7 @@ body.sin-desplazamiento{overflow:hidden}
     </div>
 
     <h3 class="creditos__titulo">Cómo citar este sitio</h3>
-    <div class="creditos">
+    <div class="creditos creditos--filas">
       <div class="creditos__bloque">
         <h3 class="rotulo">El sitio completo</h3>
         <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Árboles patrimoniales de la Ciudad de México</i> [sitio web]. Ciudad de México: Gobierno de la Ciudad de México. Disponible en: https://sedemaoficina.github.io/arboles-patrimoniales/ [consultado el día de la consulta].</p>
@@ -1812,13 +1816,8 @@ body.sin-desplazamiento{overflow:hidden}
         <h3 class="rotulo">El listado en datos abiertos</h3>
         <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Registro de árboles patrimoniales de la Ciudad de México</i> [conjunto de datos]. Disponible en: https://sedemaoficina.github.io/arboles-patrimoniales/datos/arboles-patrimoniales-cdmx.csv [consultado el día de la consulta].</p>
       </div>
-      <div class="creditos__bloque">
-        <h3 class="rotulo">Qué incluir siempre</h3>
-        <p>La <b>fecha de consulta</b> es indispensable: el registro se actualiza de forma continua y las cifras de un ejemplar pueden cambiar entre una consulta y otra. Si citas una cifra de servicios ambientales, señala que es una <b>estimación calculada con i-Tree</b> y no una medición directa.</p>
-        <p class="recurso__nota">El contenido propio de este sitio puede reutilizarse citando la fuente. Las obras de terceros conservan la licencia de su autor.</p>
-      </div>
     </div>
-    <p class="creditos__cierre">El contenido propio de este sitio —textos, datos del registro y diseño— puede reutilizarse citando como fuente a la Secretaría del Medio Ambiente de la Ciudad de México. Las obras de terceros conservan la licencia de su autor.</p>
+    <p class="creditos__cierre">El contenido propio de este sitio puede reutilizarse citando la fuente. Las obras de terceros conservan la licencia de su autor.</p>
   </div>
 </section>
 

@@ -468,6 +468,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .norma{background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);padding:22px 24px}
 .norma .rotulo{color:#8A6B3D;display:block;margin-bottom:10px}
 .norma p{margin:0;font-size:var(--t-cuerpo);color:var(--tinta-suave)}
+
+.norma p+p{margin-top:10px}
 .norma cite{display:block;margin-top:12px;font-family:var(--editorial);font-style:italic;font-size:var(--t-apoyo);color:var(--gris)}
 
 .norma__fuente{display:inline-block;margin-top:14px;font-size:var(--t-nota);font-weight:700;letter-spacing:.02em;
@@ -683,6 +685,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @media(max-width:560px){.norma-tarjeta{padding:18px 18px 16px}}
 
 .creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
+
+.creditos--filas{grid-template-columns:1fr;gap:16px}
 .creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
 .creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
 .creditos__lista{margin:0;display:grid;gap:10px}
@@ -1723,19 +1727,12 @@ body.sin-desplazamiento{overflow:hidden}
         <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/constitucion" target="_blank" rel="noopener">Consultar la Constitución<span aria-hidden="true"> →</span></a>
       </div>
       <div class="norma norma--eje">
-        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículos 51 y 52</span>
-        <p>Las <strong>declaratorias</strong> son los instrumentos jurídicos que garantizan la salvaguardia de los bienes, expresiones y valores considerados patrimonio de la Ciudad.</p>
+        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículos 51 y 52, 8 fracción I, 56 y 13 fracción V</span>
+        <p>Esta ley es la que convierte el reconocimiento en protección. Tres artículos suyos explican qué es la declaratoria, quién la emite y quién la registra.</p>
+        <p><strong>Qué es.</strong> Las declaratorias son los instrumentos jurídicos que garantizan la salvaguardia de los bienes, expresiones y valores considerados patrimonio de la Ciudad <em>(artículos 51 y 52)</em>.</p>
+        <p><strong>Quién la emite.</strong> La Jefatura de Gobierno, y se publica en la Gaceta Oficial <em>(artículo 8, fracción I, y artículo 56)</em>.</p>
+        <p><strong>Quién la registra y la difunde.</strong> La Secretaría del Medio Ambiente: le corresponde registrar, catalogar y difundir el Patrimonio Natural de la Ciudad de México <em>(artículo 13, fracción V)</em>. <strong>Este sitio es el cumplimiento público de esa obligación.</strong></p>
         <cite>Ley de Patrimonio Cultural, Natural y Biocultural de la Ciudad de México, publicada en la Gaceta Oficial el 29 de octubre de 2020, con última reforma del 27 de octubre de 2022.</cite>
-        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
-      </div>
-      <div class="norma norma--eje">
-        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículo 13, fracción V</span>
-        <p>Corresponde a la Secretaría del Medio Ambiente <strong>registrar, catalogar y difundir el Patrimonio Natural de la Ciudad de México</strong>. <strong>Este sitio web es el cumplimiento público de esa obligación.</strong></p>
-        <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
-      </div>
-      <div class="norma norma--eje">
-        <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículos 8, fracción I, y 56</span>
-        <p>La declaratoria la emite la <strong>Jefatura de Gobierno</strong> y se publica en la Gaceta Oficial.</p>
         <a class="norma__fuente" href="https://data.consejeria.cdmx.gob.mx/index.php/leyes/leyes/1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico" target="_blank" rel="noopener">Consultar la ley<span aria-hidden="true"> →</span></a>
       </div>
     </div>
@@ -1861,77 +1858,6 @@ body.sin-desplazamiento{overflow:hidden}
         <a class="convocatoria__aviso" href="https://sedema.cdmx.gob.mx/" target="_blank" rel="noopener">Ver los avisos de la Secretaría<span aria-hidden="true"> →</span></a>
       </div>
     </div>
-
-
-    <ol class="linea">
-      <li class="linea__hito">
-        <span class="linea__numero" aria-hidden="true">1</span>
-        <div class="linea__cuerpo">
-          <span class="linea__actor">Lo haces tú</span>
-          <h3>Confirma que el árbol califica</h3>
-          <p>No hay un mínimo de edad ni de tamaño. La norma define la categoría por sus atributos: ejemplares en espacios abiertos que destacan por características <strong>biológicas, paisajísticas, históricas, culturales o sociales</strong>, o que por su especie, tamaño, edad o belleza puedan considerarse notables, singulares o monumentales.</p>
-          <p class="paso__extra">La misma norma reconoce cuatro valores: <b>histórico</b>, cuando su presencia se relaciona con un evento relevante; <b>sociocultural</b>, cuando refleja la forma de vida de una comunidad; <b>científico</b>, por su valor botánico, taxonómico o medicinal; y <b>estético</b>, por su aporte al paisaje.</p>
-          <cite>NADF-001-RNAT-2015, numeral 7.5 y definiciones del numeral 4.</cite>
-        </div>
-      </li>
-
-      <li class="linea__hito">
-        <span class="linea__numero" aria-hidden="true">2</span>
-        <div class="linea__cuerpo">
-          <span class="linea__actor">Lo haces tú</span>
-          <h3>Verifica que puedes promoverlo</h3>
-          <p>La ley abre la promoción a cinco figuras. No hace falta ser especialista ni ser dueño del predio:</p>
-          <ul class="paso__lista">
-            <li>Una o varias <strong>Alcaldías</strong>.</li>
-            <li>Cualquier <strong>persona física o moral</strong>.</li>
-            <li>Cualquier <strong>pueblo, barrio originario o comunidad indígena residente</strong>.</li>
-            <li>La propia autoridad, <strong>de manera oficiosa</strong>.</li>
-            <li>El <strong>Congreso de la Ciudad de México</strong>, mediante exhorto.</li>
-          </ul>
-          <cite>Ley de Patrimonio Cultural, Natural y Biocultural de la Ciudad de México, artículo 54.</cite>
-        </div>
-      </li>
-
-      <li class="linea__hito">
-        <span class="linea__numero" aria-hidden="true">3</span>
-        <div class="linea__cuerpo">
-          <span class="linea__actor">Lo haces tú</span>
-          <h3>Presenta la solicitud ante la Secretaría de Cultura</h3>
-          <p>Por escrito, y ante la <strong>Secretaría de Cultura</strong>, no ante la Secretaría del Medio Ambiente. Debe traer:</p>
-          <ul class="paso__lista">
-            <li>Nombre y dirección de quien promueve.</li>
-            <li>Identificación oficial vigente.</li>
-            <li>Descripción del árbol o la zona, precisando si es público, colectivo o privado.</li>
-            <li>Los motivos que fundamentan la petición.</li>
-            <li>Cualquier otro elemento que la sustente.</li>
-          </ul>
-          <cite>Artículo 55.</cite>
-        </div>
-      </li>
-
-      <li class="linea__hito">
-        <span class="linea__numero" aria-hidden="true">4</span>
-        <div class="linea__cuerpo">
-          <span class="linea__actor">Lo hace la autoridad</span>
-          <h3>La Comisión integra el expediente y se dictamina en 60 días</h3>
-          <p>La solicitud se integra en expediente y pasa a la <strong>Comisión Interinstitucional del Patrimonio Cultural, Natural y Biocultural</strong>, que la remite a sus integrantes, al Consejo Consultivo y a las Alcaldías con interés territorial. Tratándose de patrimonio natural, la opinión técnica corresponde a la <strong>Secretaría del Medio Ambiente</strong>, que debe dictaminar en un plazo no mayor a <strong>60 días naturales</strong>.</p>
-          <p class="paso__extra">El dictamen debe allegarse de la opinión de organismos autónomos, instituciones académicas y las personas que habitan el territorio.</p>
-          <cite>Artículo 56, fracciones IV y V; artículo 21, fracción III.</cite>
-        </div>
-      </li>
-
-      <li class="linea__hito">
-        <span class="linea__numero" aria-hidden="true">5</span>
-        <div class="linea__cuerpo">
-          <span class="linea__actor">Lo hace la autoridad</span>
-          <h3>La Jefatura de Gobierno emite la Declaratoria</h3>
-          <p>Si procede, el dictamen viaja junto con el expediente y un <strong>plan de manejo</strong> a la Jefatura de Gobierno, que emite la Declaratoria y la publica en la <strong>Gaceta Oficial de la Ciudad de México</strong>. Desde ese momento el árbol es patrimonio y entra al listado.</p>
-          <cite>Artículo 57.</cite>
-        </div>
-      </li>
-    </ol>
-
-
   </div>
 </section>
 
@@ -2831,13 +2757,13 @@ const GEO_CDMX = {"type":"FeatureCollection","name":"Perimetro oficial de la Ciu
 
 
 
-const TESELAS = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+const TESELAS = "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}";
 
 const MASCARA_CDMX = GEO_CDMX;
 
 const LIMITES_CDMX = [[18.98, -99.43], [19.66, -98.87]];
 
-const ATRIBUCION = 'Cartografía base © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · teselas de <a href="https://carto.com/attributions">CARTO</a>';
+const ATRIBUCION = 'Cartografía base de <a href="https://www.esri.com/">Esri</a>, HERE, Garmin y © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const nf = (n, d = 1) => (n === null || n === undefined || !isFinite(n) ? "—" : Number(n).toLocaleString("es-MX", { maximumFractionDigits: d }));
@@ -2882,7 +2808,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
   if (typeof L !== "undefined" && conCoords.length) {
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
-    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 19, subdomains: "abcd", bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
+    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 17, maxNativeZoom: 16, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
     ponerMascara(mascara);
 
@@ -3509,6 +3435,9 @@ function construirEjemplar(f, contrato, avisos) {
     fechaDecreto: aFecha(f.fecha_decreto),
     linkDecreto: limpiar(f.drive_decreto),
     idDecretoDrive: idDeDrive(f.drive_decreto),
+
+    tienePrograma: aSiNo(f.tiene_programa),
+    urlPrograma: limpiar(f.url_programa),
     alcaldia: limpiar(f.alcaldia),
     ubicacion: {
       calle: limpiar(f.calle),
@@ -4429,6 +4358,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/457bffaf649c8b51dbfbc7131482d624.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Miguel Hidalgo",
       "ubicacion": {
         "calle": "Avenida Marina Nacional",
@@ -4539,6 +4470,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1bb36c95f11d05d5a3065f523946912c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Eje 1 Poniente Guerrero",
@@ -4650,6 +4583,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/90a06c2e8dfc47f3a1a0aa998813a156.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Calle 20 de agosto",
@@ -4760,6 +4695,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/cb9e153b7cd0b722dfc3bc41e3d9e703.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Eje 1 Poniente Avenida Cuauhtémoc",
@@ -4872,6 +4809,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/457bffaf649c8b51dbfbc7131482d624.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Avenida Sonora",
@@ -4984,6 +4923,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/268f422dad19d8fcaea245ed0db75c7c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Calle Central",
@@ -5094,6 +5035,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/e369ce73da8174d0533ee6abc15e2936.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Avenida Francisco Sosa",
@@ -5204,6 +5147,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/90a06c2e8dfc47f3a1a0aa998813a156.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Coyoacán",
       "ubicacion": {
         "calle": "Callejón del Río",
@@ -5314,6 +5259,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1bb36c95f11d05d5a3065f523946912c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Glorieta de los Ahuehuetes",
@@ -5424,6 +5371,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/cb9e153b7cd0b722dfc3bc41e3d9e703.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
       "alcaldia": "Cuauhtémoc",
       "ubicacion": {
         "calle": "Avenida Paseo de la Reforma",
@@ -5534,6 +5483,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/268f422dad19d8fcaea245ed0db75c7c.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/17ozhpGl30MRg8JEaXIFjd12kCgdlrSoj/view?usp=drive_link",
       "alcaldia": "Benito Juárez",
       "ubicacion": {
         "calle": "Miguel Laurent",
@@ -5644,6 +5595,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/e19503612c79869c1b1cfec16f4b3994.pdf",
       "idDecretoDrive": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/1C-TBO_yTJHoyAnmAemJvNe6veGOUSVlc/view?usp=drive_link",
       "alcaldia": "Benito Juárez",
       "ubicacion": {
         "calle": "Cerrada de Eugenia",
