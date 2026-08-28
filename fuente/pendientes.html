@@ -119,6 +119,26 @@ a{color:var(--jacaranda-hondo)}
   <div class="envoltura">
 
     <div class="pend-grupo">
+      <h2>0 · Lo que se cerró el 28 de agosto de 2026</h2>
+      <div class="pend-lista">
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>El día que el sitio se conectó al padrón</h3>
+            <ol>
+              <li><b>La fuente viva quedó encendida.</b> El sitio consulta la hoja publicada y ya no depende de que alguien vuelva a construir para reflejar una corrección. Se censó el CSV columna por columna antes de tocar el interruptor: 83 columnas, doce ejemplares con identificador, coordenadas, altura y decreto en los doce.</li>
+              <li><b>Los decretos ya se pueden abrir.</b> Este pendiente era «el hueco más visible del micrositio»: ninguna ficha podía mostrar el documento que la declara. Se cerró sin subir un solo PDF, porque la hoja pasó a guardar la <b>dirección completa de la Gaceta Oficial</b> en lugar del nombre de un archivo. Los doce ejemplares enlazan a siete gacetas distintas, verificadas.</li>
+              <li><b>El programa de manejo se lee y se publica.</b> El lector recogía cuatro de los cinco enlaces del expediente; ahora recoge los cinco. Y por decisión del área, el renglón <b>solo aparece cuando hay documento</b>: anunciar que un árbol ya declarado no tiene programa de manejo deja asentado un incumplimiento en el sitio público.</li>
+              <li><b>Las suites corren solas.</b> Hay integración continua: <code>.github/workflows/verificar.yml</code> arma la vista previa y corre las dieciséis suites en cada empujón. Ya no dependen de que alguien se acuerde.</li>
+              <li><b>El mapa salió de CARTO.</b> El proveedor empezó a exigir llave y a estampar «API KEY REQUIRED» sobre la Ciudad. Ver el pendiente del mapa base, más abajo: se resolvió, pero con un costo declarado.</li>
+              <li><b>Los beneficios del arbolado, con su fuente.</b> La sección de servicios ambientales ya no habla solo de i-Tree: incorpora los beneficios que documenta la investigación, separados de las cifras medidas y con su referencia citada y enlazada al DOI.</li>
+            </ol>
+            <cite>Mil cuarenta y cinco comprobaciones en verde al cierre del día, y el huérfano de 48 KB que arrastraba la salida se fue solo al construir completo.</cite>
+          </div>
+          <span class="pend__quien" data-q="decidido">Cerrado</span>
+        </article>
+      </div>
+
       <h2>0 · Lo que se cerró el 25 de agosto de 2026</h2>
       <div class="pend-lista">
         <article class="pend">
@@ -236,6 +256,7 @@ a{color:var(--jacaranda-hondo)}
             <h3>El registro vivo puede sustituir al congelado aunque llegue roto</h3>
             <p><code>fuente-viva.js</code> declara la regla correcta —«el congelado manda hasta que la hoja demuestre que tiene algo»— pero la aplica solo contra el vacío: comprueba que el registro vivo <b>tenga ejemplares</b>, no que traiga <b>datos</b>.</p>
             <p style="margin-top:9px">El 24 de agosto de 2026 eso dejó pasar una hoja que había perdido 60 de sus 83 columnas: como los doce ejemplares seguían teniendo nombre, el guardián los dio por buenos y sustituyó a los trece congelados que sí tenían coordenadas y medidas. Una hoja en blanco no puede vaciar el micrositio, pero una hoja a medias sí lo vació.</p>
+            <p style="margin-top:9px"><b>Desde el 28 de agosto el interruptor está encendido, así que esto dejó de ser una hipótesis.</b> Si mañana se rompe otra fórmula de la hoja, el sitio publicado se degrada solo: sin que nadie toque el código y sin que ninguna suite lo detecte, porque las suites revisan el repositorio, no lo que Google sirve. Es el riesgo más alto que tiene el micrositio hoy.</p>
             <div class="arreglo">
               <b>Cómo se corrige</b>
               <ol>
@@ -298,18 +319,7 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
 
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Los PDF de los decretos</h3>
-            <p>La hoja no guarda una dirección en el campo del decreto: guarda el <b>nombre del archivo</b>, del estilo <code>DECRETO JUARISTA.pdf</code>. Publicado tal cual, el navegador lo buscaba en la raíz del sitio, donde no hay ningún PDF, y devolvía 404. Ya se corrigió la resolución del enlace, pero <b>los archivos no existen</b>: mientras no estén, cada tarjeta se apaga sola y dice que el documento aún no está publicado.</p>
-            <p>Deja los PDF en <code>fuente/decretos/</code> con el nombre <b>exacto</b> que trae la hoja —acentos, mayúsculas y espacios incluidos—. La lista de los once nombres que el registro espera hoy está en <code>fuente/decretos/LEEME.txt</code>.</p>
-            <cite>Si algún decreto ya está publicado en línea, basta con capturar su dirección completa en la hoja: la ficha la respeta y no busca archivo local.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
-
-        <article class="pend pend--bloquea">
+                <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
             <h3>Los nombres de los créditos</h3>
@@ -450,8 +460,9 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__marca"></span>
           <div>
             <h3>La portada ya lee la hoja; falta la ficha</h3>
-            <p>La portada nace con el registro congelado incrustado —se ve completa sin esperar a nadie— y encima pide la hoja publicada. Si la hoja trae ejemplares, la portada se repinta con ellos y el mapa se rehace. Si llega vacía, si Google no responde o si alguien despublica la hoja, la página se queda exactamente como estaba: <b>una hoja en blanco no puede vaciar el micrositio</b>. Hoy la hoja está vacía, así que ese es el camino que se recorre en cada visita.</p>
-            <p style="margin-top:9px"><b>La ficha todavía no se actualiza en vivo.</b> Sigue leyendo solo el congelado. Mientras la hoja esté vacía las dos páginas muestran lo mismo, pero en cuanto el equipo capture algo, la portada y la ficha podrían decir cosas distintas. Es lo siguiente que hay que cablear.</p>
+            <p>La portada nace con el registro congelado incrustado —se ve completa sin esperar a nadie— y encima pide la hoja publicada. Si la hoja trae ejemplares, la portada se repinta con ellos y el mapa se rehace. Si llega vacía, si Google no responde o si alguien despublica la hoja, la página se queda exactamente como estaba: <b>una hoja en blanco no puede vaciar el micrositio</b>. </p>
+            <p style="margin-top:9px"><b>Desde el 28 de agosto de 2026 la hoja trae datos y el interruptor está encendido</b>, así que ese camino se recorre de verdad en cada visita: lo que ves en la portada sale de la hoja, no del archivo.</p>
+            <p style="margin-top:9px"><b>La ficha todavía no se actualiza en vivo, y eso ya importa hoy.</b> Sigue leyendo solo el congelado que viaja incrustado. Mientras la hoja estaba vacía las dos páginas mostraban lo mismo; ahora no: una corrección capturada en el padrón se ve en la portada <b>en diez minutos</b> y en la ficha <b>solo después de construir y publicar</b>. Dos páginas del mismo sitio pueden decir cosas distintas del mismo árbol. Es lo siguiente que hay que cablear.</p>
             <cite>Las piezas: <code>fuente/padron/lector-v2.js</code> convierte el CSV en datos y <code>fuente/padron/fuente-viva.js</code> va por él, con caché de diez minutos, respaldo de siete días y la guardia del registro vacío. Se prueban en <code>verificar/verifica-fuente-viva.mjs</code>. El congelado se regenera desde la hoja con <code>node construir/armar-registro.js --escribir</code>, que se corre a mano: armar el sitio no puede depender de la red.</cite>
           </div>
           <span class="pend__quien" data-q="tu">Por implementar</span>
@@ -491,7 +502,7 @@ a{color:var(--jacaranda-hondo)}
           <div>
             <h3>Comprobar en navegador la actualización en vivo</h3>
             <p>La capa que lee la hoja está escrita y verificada: cuarenta y una aserciones cubren la caché, los reintentos, el respaldo, la guardia del registro vacío y la huella que evita repintar de balde. <b>Lo que no se puede comprobar sin navegador es el repintado</b>: que la portada se rehaga entera con datos nuevos, que el mapa se desmonte y se vuelva a montar sin dejar el lienzo marcado, y que los filtros y la búsqueda sigan respondiendo después.</p>
-            <p style="margin-top:9px">Hace falta abrir <code>prueba/portada-vista-previa.html</code> con la hoja ya cargada de datos y mirarlo. Con la hoja vacía no se ejercita ese camino: la capa decide no sustituir nada, que es justo lo correcto.</p>
+            <p style="margin-top:9px">Hace falta abrir <code>prueba/portada-vista-previa.html</code> con la hoja ya cargada de datos y mirarlo. <b>Desde el 28 de agosto de 2026 ya se puede</b>: la hoja trae doce ejemplares y el interruptor está encendido, así que ese camino se ejercita de verdad. Antes no: con la hoja vacía la capa decidía no sustituir nada, que era justo lo correcto.</p>
           </div>
           <span class="pend__quien" data-q="tu">Falta probar</span>
         </article>
@@ -516,16 +527,7 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="tu">Por limpiar</span>
         </article>
 
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El lector v2 no recoge el programa de manejo</h3>
-            <p>De los cinco enlaces que la ficha debe publicar, el padrón v2 tiene los cinco campos: <code>drive_decreto</code>, <code>url_snib</code>, <code>url_observacion</code>, <code>url_itree</code> y <code>url_programa</code>. El lector ya recoge cuatro. <b><code>url_programa</code> está en el contrato pero el lector lo ignora</b>, así que ese enlace nunca podría aparecer.</p>
-          </div>
-          <span class="pend__quien" data-q="registro">Por corregir</span>
-        </article>
-
-        <article class="pend">
+                <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>Auditoría de accesibilidad con lector de pantalla</h3>
@@ -576,18 +578,7 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="tu">Por limpiar</span>
         </article>
 
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Las dieciséis suites solo corren si alguien se acuerda</h3>
-            <p>No hay integración continua. Las 1,032 aserciones dependen de que alguien escriba <code>verificar.sh</code> antes de subir, y <b>la que avisa de la deriva es justo la que importa en ese momento</b>. Un flujo de trabajo de GitHub Actions que corra <code>verificar.sh</code> en cada push cuesta un archivo de quince líneas y convierte el aviso en un bloqueo.</p>
-            <cite>Sin red no se puede comprobar aquí: el flujo hay que probarlo en el propio GitHub.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Por hacer</span>
-        </article>
-
-
-        <article class="pend">
+                <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>Nombres de CSS retirados · 24 de agosto de 2026</h3>
@@ -610,18 +601,7 @@ a{color:var(--jacaranda-hondo)}
         </article>
 
 
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Hoy ninguna ficha puede mostrar su decreto</h3>
-            <p>La carpeta <code>fuente/decretos/</code> no tiene <b>ningún PDF</b>. Once ejemplares citan un nombre de archivo que no existe y uno —el Sabino de San Juan— no tiene nombre capturado en la hoja. Las trece tarjetas salen apagadas con «El documento aún no está publicado en este sitio».</p>
-            <p style="margin-top:9px">No se rompe nada, y esa es justamente la trampa: el sitio se ve bien. Pero <b>un registro que declara árboles patrimoniales sin publicar el decreto que los declara deja fuera lo único que da respaldo jurídico a la declaratoria.</b> Es el hueco más visible que tiene el micrositio hoy.</p>
-            <cite>Los nombres exactos que el registro espera están en <code>fuente/decretos/LEEME.txt</code>. Deben coincidir carácter por carácter, acentos y espacios incluidos. <code>verifica-integridad.mjs</code> los cuenta en cada corrida.</cite>
-          </div>
-          <span class="pend__quien" data-q="registro">Por publicar</span>
-        </article>
-
-        <article class="pend">
+                <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>Un mismo decreto para dos árboles: ¿es uno o son dos?</h3>

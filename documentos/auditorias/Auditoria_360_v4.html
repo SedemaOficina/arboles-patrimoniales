@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auditoría 360 · Árboles Patrimoniales · 28 de agosto de 2026</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --jacaranda:#8D4992; --tinta:#2A1630; --bosque:#1E4D2B; --vivo:#2D7A3E;
+  --papel:#FEF7E4; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta-suave:#4A3552; --linea:#E4D9C4; --nube:#FBF3DC;
+  --texto:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --editorial:"Fraunces",Georgia,"Times New Roman",serif;
+  --display:"Anton","Arial Narrow",Impact,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.hoja{max-width:52rem;margin:0 auto;padding:0 1.5rem 5rem}
+header.portada{border-bottom:4px solid var(--jacaranda);padding:3rem 0 2rem;margin-bottom:2.5rem}
+.sello{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dorado);font-weight:700;margin:0 0 1.2rem}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.6rem,7vw,4.2rem);line-height:.98;letter-spacing:.01em;margin:0 0 .6rem;color:var(--jacaranda);text-transform:uppercase}
+.subtitulo{font-family:var(--editorial);font-size:1.22rem;line-height:1.45;color:var(--tinta-suave);margin:0 0 1.6rem;max-width:42rem}
+.meta{font-size:.86rem;color:var(--tinta-suave);margin:0;border-top:1px solid var(--linea);padding-top:1rem}
+.meta b{color:var(--tinta)}
+h2{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;font-size:1.9rem;line-height:1.1;color:var(--bosque);margin:3.4rem 0 1rem;padding-top:1.2rem;border-top:2px solid var(--linea)}
+h2 .num{color:var(--dorado);margin-right:.5rem}
+h3{font-family:var(--editorial);font-size:1.25rem;line-height:1.3;margin:2.2rem 0 .5rem;color:var(--tinta)}
+p{margin:0 0 1rem}
+a{color:var(--jacaranda)}
+code{font-family:ui-monospace,"Cascadia Mono","SFMono-Regular",Consolas,monospace;font-size:.86em;background:var(--nube);padding:.1em .35em;border-radius:3px;border:1px solid var(--linea)}
+.veredicto{background:var(--nube);border:1px solid var(--linea);border-left:6px solid var(--jacaranda);padding:1.4rem 1.6rem;margin:2rem 0}
+.veredicto p:last-child{margin-bottom:0}
+.marca{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.2em .6em;border-radius:2px;vertical-align:.15em;white-space:nowrap}
+.m-critico{background:var(--alerta);color:#fff}
+.m-alto{background:#E07A2F;color:#fff}
+.m-medio{background:var(--dorado);color:#2A1630}
+.m-bajo{background:var(--linea);color:var(--tinta-suave)}
+.m-sano{background:var(--vivo);color:#fff}
+.franja{background:var(--bosque);color:#F3F8F0;padding:1.5rem 1.7rem;margin:2.2rem 0;border-radius:2px}
+.franja h3{color:#fff;margin:0 0 .6rem;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;font-size:1.4rem}
+.franja p{margin:0 0 .7rem}
+.franja p:last-child{margin-bottom:0}
+.franja code{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#F3F8F0}
+.hallazgo{border:1px solid var(--linea);background:#fff;padding:1.1rem 1.3rem;margin:1.1rem 0;border-radius:2px}
+.hallazgo>h3{margin-top:0;font-family:var(--texto);font-weight:700;font-size:1.05rem;line-height:1.35}
+.hallazgo p:last-child{margin-bottom:0}
+.hallazgo.critico{border-left:4px solid var(--alerta)}
+.hallazgo.alto{border-left:4px solid #E07A2F}
+.hallazgo.medio{border-left:4px solid var(--dorado)}
+.hallazgo.sano{border-left:4px solid var(--vivo)}
+.ev{font-size:.9rem;color:var(--tinta-suave);border-left:3px solid var(--linea);padding-left:.9rem;margin:.7rem 0}
+.arreglo{font-size:.94rem;background:var(--nube);padding:.7rem .9rem;border-radius:2px;margin-top:.8rem}
+.arreglo::before{content:"Qué hacer · ";font-weight:700;color:var(--bosque);text-transform:uppercase;font-size:.75rem;letter-spacing:.08em}
+table{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:.93rem}
+.envoltura{overflow-x:auto}
+th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--linea);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--tinta-suave);border-bottom:2px solid var(--dorado)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+ul,ol{margin:0 0 1rem;padding-left:1.3rem}
+li{margin-bottom:.45rem}
+.pie{margin-top:4rem;padding-top:1.2rem;border-top:2px solid var(--linea);font-size:.85rem;color:var(--tinta-suave)}
+@media print{body{background:#fff;font-size:11pt}.hoja{max-width:none}h2{page-break-after:avoid}.hallazgo,.franja{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<header class="portada">
+  <p class="sello">Auditoría 360 · versión 4 · documento interno</p>
+  <h1>El día que el sitio se conectó al padrón</h1>
+  <p class="subtitulo">Revisión completa del micrositio de Árboles Patrimoniales antes de pasar a producción: comprobaciones, datos, activos, enlaces, peso, repositorio y riesgos vivos.</p>
+  <p class="meta"><b>Fecha:</b> 28 de agosto de 2026 · <b>Alcance:</b> repositorio local completo, salida <code>docs/</code>, vista previa <code>prueba/</code>, hoja publicada <code>Salida_Publica</code> y sitio publicado en GitHub Pages · <b>Versión anterior:</b> Auditoría 360 v3, 25 de agosto de 2026.</p>
+</header>
+
+<div class="veredicto">
+  <p><b>Veredicto: el proyecto está listo para producción.</b> Las 1,045 comprobaciones automáticas pasan sin una sola falla, la integridad de datos y activos es completa, no hay un solo enlace interno roto y el repositorio está limpio.</p>
+  <p>Quedan <b>cinco riesgos vivos</b>. Ninguno es un defecto de código y ninguno impide publicar. Uno es crítico y conviene atenderlo pronto, porque nació justamente hoy: al encender la fuente viva, el sitio publicado pasó a depender de una hoja de cálculo que ninguna comprobación vigila.</p>
+</div>
+
+<h2><span class="num">1</span> Cómo se revisó</h2>
+<p>Todo lo que sigue está comprobado contra el sistema, no supuesto. Las cifras salen de correr las suites, de leer los archivos del repositorio, de censar el CSV publicado columna por columna desde el navegador y de abrir uno de los decretos citados para confirmar que la dirección lleva a la Gaceta que dice llevar.</p>
+<p>Lo que <b>no</b> se pudo comprobar desde aquí está declarado en la sección 8. No se rellena ningún hueco con una suposición.</p>
+
+<h2><span class="num">2</span> Las comprobaciones automáticas</h2>
+<p>Dieciséis suites, <b>1,045 aserciones, cero fallidas</b>. No hay marco de pruebas: cada suite es un guion de Node que lee los archivos reales y afirma sobre ellos.</p>
+<div class="envoltura">
+<table>
+<tr><th>Suite</th><th class="n">Aserciones</th><th>Qué vigila</th></tr>
+<tr><td><code>verifica-auditoria</code></td><td class="n">291</td><td>Los cierres de las auditorías anteriores, para que nada regrese</td></tr>
+<tr><td><code>verifica-mapa</code></td><td class="n">142</td><td>Mapa, marcadores, documentos de la ficha y cartografía base</td></tr>
+<tr><td><code>verifica-lector</code></td><td class="n">106</td><td>La conversión del CSV del padrón en datos del sitio</td></tr>
+<tr><td><code>verifica-galeria</code></td><td class="n">72</td><td>Fotografías, miniaturas y su descubrimiento en disco</td></tr>
+<tr><td><code>verifica-contrato</code></td><td class="n">70</td><td>Que el contrato de 83 campos y la hoja digan lo mismo</td></tr>
+<tr><td><code>verifica-menu</code></td><td class="n">56</td><td>Navegación, anclas y avisos de pestaña nueva</td></tr>
+<tr><td><code>verifica-identidad</code></td><td class="n">54</td><td>Paleta, escala tipográfica y medidas de lectura</td></tr>
+<tr><td><code>verifica-contenido</code></td><td class="n">52</td><td>Que el contenido publicado diga lo que debe decir</td></tr>
+<tr><td><code>verifica-fuente-viva</code></td><td class="n">41</td><td>Caché, reintentos, respaldo y la guardia del registro vacío</td></tr>
+<tr><td><code>verifica-sistema</code></td><td class="n">41</td><td>Guardas del sistema de diseño en el CSS</td></tr>
+<tr><td><code>suite-real</code></td><td class="n">34</td><td>La hilera a escala, contra datos reales</td></tr>
+<tr><td><code>verifica-copia</code></td><td class="n">28</td><td>Redacción y lenguaje ciudadano</td></tr>
+<tr><td><code>verifica-panel</code></td><td class="n">21</td><td>Filtros y buscador</td></tr>
+<tr><td><code>verifica-deriva</code></td><td class="n">20</td><td>Que lo publicado corresponda a la fuente sellada</td></tr>
+<tr><td><code>verifica-integridad</code></td><td class="n">12</td><td>Fotos, ilustraciones y decretos contra el registro</td></tr>
+<tr><td><code>verifica-peso</code></td><td class="n">5</td><td>Que ninguna página se dispare de tamaño</td></tr>
+</table>
+</div>
+<p><span class="marca m-sano">Sano</span> Desde hoy corren solas: <code>.github/workflows/verificar.yml</code> arma la vista previa y ejecuta las dieciséis suites en cada empujón. Deliberadamente <b>no</b> rearma <code>docs/</code>, para que <code>verifica-deriva</code> juzgue lo publicado tal como viene en el commit.</p>
+
+<h2><span class="num">3</span> El registro</h2>
+<p>Censo del CSV publicado de <code>Salida_Publica</code>, leído desde el navegador el 28 de agosto de 2026. Nunca se abrió la hoja <code>Listado</code>.</p>
+<div class="envoltura">
+<table>
+<tr><th>Comprobación</th><th class="n">Resultado</th><th>Lectura</th></tr>
+<tr><td>Respuesta del CSV</td><td class="n">200 · 26,650 B</td><td>La hoja está publicada y responde</td></tr>
+<tr><td>Columnas</td><td class="n">83 de 83</td><td>El vínculo con el padrón está completo</td></tr>
+<tr><td>Ejemplares con identificador</td><td class="n">12 de 12</td><td>Ninguna fila sin <code>id</code></td></tr>
+<tr><td>Con coordenadas</td><td class="n">12 de 12</td><td>Todos entran al mapa</td></tr>
+<tr><td>Con fecha de decreto</td><td class="n">12 de 12</td><td>Todos están declarados</td></tr>
+<tr><td>Con altura de campo</td><td class="n">12 de 12</td><td>La hilera a escala está completa</td></tr>
+<tr><td>Con programa de manejo</td><td class="n">2 de 12</td><td>Se publica el enlace en esos dos</td></tr>
+<tr><td>Columnas vacías en todos</td><td class="n">5 de 83</td><td><code>pueblo_barrio</code>, <code>endemismo</code>, <code>cites</code>, <code>nom059</code>, <code>obs_publicas</code></td></tr>
+</table>
+</div>
+<p>El registro congelado que viaja incrustado en cada página se regeneró desde esa misma hoja, así que el primer pintado y lo que llega por la red dicen lo mismo. <b>No hay deriva entre la hoja y el archivo.</b></p>
+<p><span class="marca m-sano">Esperado</span> El padrón tiene trece ejemplares y el sitio publica doce. El decimotercero —<code>25-XOC-TAX-19405GIMNO-0007</code>, el ahuehuete de San Juan, en Xochimilco— <b>todavía no tiene decreto</b>, y sin decreto no pasa a la hoja pública. Está declarado en <code>fuente/datos/en-espera.json</code> con fecha y motivo, y tres suites leen esa lista para no confundir sus archivos con sobras.</p>
+
+<h2><span class="num">4</span> Activos y documentos</h2>
+<ul>
+  <li><b>Fotografías:</b> 176 archivos en 13 carpetas —88 a tamaño completo y sus 88 miniaturas—, numeración correlativa sin huecos, cada una con su miniatura de 480 px. Incluye las doce del ejemplar en espera, que se conservan.</li>
+  <li><b>Ilustraciones:</b> cada especie del registro tiene sus dos tamaños. Ninguna sobra.</li>
+  <li><b>Decretos:</b> los doce ejemplares enlazan al PDF de la Gaceta Oficial, <b>siete gacetas distintas</b>. Se abrió una para verificar: la del 4 de agosto de 2025 corresponde en efecto a la Gaceta núm. 1664. Ya no hay ningún PDF alojado en este sitio ni ningún enlace que dependa de subirlo.</li>
+  <li><b>Descargas de datos abiertos:</b> CSV, JSON, GeoJSON, KML, shapefile comprimido y diccionario de datos, los seis publicados en <code>docs/datos/</code>.</li>
+</ul>
+
+<h2><span class="num">5</span> Enlaces, mapa del sitio y peso</h2>
+<p><b>105 referencias locales</b> revisadas en las quince páginas publicadas —hojas de estilo, guiones, imágenes, PDF, descargas y enlaces entre páginas—: <b>ninguna rota</b>.</p>
+<p>El mapa del sitio declara 15 direcciones: portada, Recursos, la ficha genérica que se conserva para enlaces viejos y las doce fichas propias. Coincide exactamente con lo que existe en disco.</p>
+<div class="envoltura">
+<table>
+<tr><th>Página</th><th class="n">Crudo</th><th class="n">Comprimido</th></tr>
+<tr><td>Portada</td><td class="n">309 KB</td><td class="n">82 KB</td></tr>
+<tr><td>Ficha de un ejemplar</td><td class="n">258 KB</td><td class="n">68 KB</td></tr>
+<tr><td>Recursos</td><td class="n">141 KB</td><td class="n">31 KB</td></tr>
+</table>
+</div>
+<p>Cada página lleva su hoja de estilo y su guion incrustados, así que pesa más como archivo y menos como visita: no hay peticiones extra. El crecimiento del padrón no es el riesgo —los datos son texto y comprimen bien—; el peso está en las fotografías, que se piden solo cuando se ven.</p>
+
+<h2><span class="num">6</span> El repositorio</h2>
+<p><span class="marca m-sano">Limpio</span> Sin archivos temporales, sin respaldos sueltos, sin ruido del sistema operativo.</p>
+<ul>
+  <li><code>prueba/</code> —52 MB de vista previa que duplica las fotografías— está en <code>.gitignore</code>: no viaja al repositorio.</li>
+  <li><code>_a_borrar/</code> también está ignorado, y hoy quedó vacío: se borraron las sobras de armados anteriores.</li>
+  <li><b>El huérfano de 48 KB desapareció.</b> <code>docs/assets/js/ficha-logica.js</code> se publicaba sin que ninguna página lo cargara. Se fue solo al poder correr <code>construir.sh</code> completo, que limpia el destino antes de armar.</li>
+  <li><code>docs/</code> pesa 36 MB, de los que 32 MB son fotografías. Es lo que GitHub Pages sirve.</li>
+  <li><code>.gitattributes</code> conserva los finales de línea LF en los guiones de shell, que es lo que evita el <code>bad interpreter</code> en Git Bash.</li>
+</ul>
+<p>Queda una carpeta vacía, <code>docs/decretos/</code>, de cuando los decretos se alojaban aquí. Git no versiona carpetas vacías, así que no llegará al repositorio; se puede borrar en local cuando quieras.</p>
+
+<h2><span class="num">7</span> Los cinco riesgos vivos</h2>
+<p>Ordenados por lo que cuesta que salgan mal. Ninguno es un defecto de código.</p>
+
+<div class="hallazgo critico">
+  <h3><span class="marca m-critico">Crítico</span> &nbsp;C1 · El guardián de la fuente viva solo rechaza el vacío</h3>
+  <p><code>fuente-viva.js</code> declara la regla correcta —«el congelado manda hasta que la hoja demuestre que tiene algo»— pero la aplica solo contra el vacío: comprueba que el registro vivo <b>tenga ejemplares</b>, no que <b>traiga datos</b>.</p>
+  <p class="ev">El 24 de agosto eso dejó pasar una hoja que había perdido 60 de sus 83 columnas: como los ejemplares conservaban su nombre, el guardián los dio por buenos y sustituyó a los congelados que sí tenían coordenadas y medidas. El sitio quedó sin mapa, sin alturas y sin cifras de servicios ambientales.</p>
+  <p><b>Hoy dejó de ser hipótesis.</b> Con el interruptor encendido, si mañana se rompe una fórmula de la hoja el sitio publicado se degrada solo: sin que nadie toque el código y sin que ninguna suite lo note, porque las suites revisan el repositorio, no lo que Google sirve.</p>
+  <div class="arreglo">Medir <b>cobertura de campos</b> del registro vivo y compararla contra el congelado, en vez de contar ejemplares: si el vivo trae menos coordenadas o menos medidas que el congelado, se descarta y se escribe el motivo en la consola. Es media jornada y cierra el único camino por el que el sitio puede empeorar solo.</div>
+</div>
+
+<div class="hallazgo alto">
+  <h3><span class="marca m-alto">Alto</span> &nbsp;C2 · La ficha no lee la hoja; la portada sí</h3>
+  <p>La portada pide la hoja publicada y se repinta con ella. La ficha de cada ejemplar sigue leyendo únicamente el registro congelado que viaja incrustado.</p>
+  <p>Mientras la hoja estuvo vacía las dos decían lo mismo. Desde hoy no: una corrección capturada en el padrón <b>se ve en la portada en diez minutos</b> y en la ficha <b>solo después de construir y publicar</b>. Dos páginas del mismo sitio pueden decir cosas distintas del mismo árbol.</p>
+  <div class="arreglo">Cablear la ficha a la misma capa que ya usa la portada. Las piezas existen y están probadas con 41 aserciones; es conectar, no escribir.</div>
+</div>
+
+<div class="hallazgo alto">
+  <h3><span class="marca m-alto">Alto</span> &nbsp;C3 · La cartografía base depende de un tercero comercial</h3>
+  <p>CARTO empezó a exigir llave para sus teselas ráster —las que usaba el sitio— y a estampar <b>«API KEY REQUIRED»</b> sobre la Ciudad; además las declaró en retirada. Se cambió el mismo día al lienzo gris de Esri, que no pide llave y no trae puntos de interés que compitan con los marcadores.</p>
+  <p class="ev">Comprobado bajando teselas reales: Esri solo dibuja hasta el nivel 16. Del 17 en adelante devuelve un gris liso. Por eso el mapa llega al 17 —el último ampliando el 16— en vez de al 19. La ficha abre en 16 y el encuadre del listado se detiene en 15, así que el sitio nunca se acerca solo más allá; quien quiera acercarse a mano llega dos escalones menos, y el zoom nuevo de la ficha se queda corto.</p>
+  <div class="arreglo">Dos decisiones pendientes de tu lado: pedir la llave gratuita de CARTO —<code>carto.com/basemaps/apikey</code>, sin cuenta, 5 millones de teselas al mes— para recuperar el estilo y el acercamiento completo; y confirmar con quien corresponda los términos de uso de Esri para un sitio institucional. La tercera salida, si esto se repite, es cartografía del propio Gobierno de la Ciudad o de INEGI.</div>
+</div>
+
+<div class="hallazgo medio">
+  <h3><span class="marca m-medio">Medio</span> &nbsp;C4 · La ruta para promover una declaratoria no vive en ninguna página</h3>
+  <p>Al retirarse de la portada la secuencia de cinco hitos, salieron del sitio los artículos 54 a 57: quién puede promover, qué lleva la solicitud, que se presenta ante la Secretaría de Cultura y no ante esta Secretaría, y el dictamen en 60 días naturales.</p>
+  <p>La portada sigue diciendo que cualquier persona puede postular un árbol, pero ya no dice cómo, y el recuadro de convocatoria cerrada no ofrece a dónde acudir mientras tanto.</p>
+  <div class="arreglo">Moverla a Recursos, en su propio bloque: es donde vive el resto del articulado y no compite con la portada. Una hora, y no se pierde nada. Los estilos se conservaron sin uso justamente para que devolverla sea pegar el bloque.</div>
+</div>
+
+<div class="hallazgo medio">
+  <h3><span class="marca m-medio">Medio</span> &nbsp;C5 · Un ejemplar declarado que el sitio no publica</h3>
+  <p>El ahuehuete de San Juan está nominado, medido y fotografiado —doce fotografías montadas— pero no tiene decreto, y la regla del padrón es que sin decreto no se publica. El sitio muestra doce de trece.</p>
+  <p>Es el comportamiento correcto y está declarado, no escondido. Se anota aquí porque el día que se publique su decreto <b>no hay que tocar código</b>: regenerar el congelado, construir y sacarlo de <code>en-espera.json</code>.</p>
+</div>
+
+<div class="franja">
+  <h3>Lo que se cerró hoy</h3>
+  <p><b>Los decretos ya se pueden abrir.</b> La auditoría anterior lo llamaba «el hueco más visible del micrositio»: ninguna ficha podía mostrar el documento que la declara. Se cerró sin subir un solo PDF, porque la hoja pasó a guardar la dirección de la Gaceta en lugar del nombre de un archivo.</p>
+  <p><b>El programa de manejo se lee y se publica</b>, y por decisión del área el renglón solo aparece cuando hay documento: anunciar que un árbol ya declarado no tiene programa deja asentado un incumplimiento en el sitio público.</p>
+  <p><b>Las suites corren solas</b> en cada empujón, y <b>el huérfano de 48 KB</b> desapareció de la salida.</p>
+</div>
+
+<h2><span class="num">8</span> Lo que no se pudo comprobar desde aquí</h2>
+<p>Se declara en vez de darlo por bueno.</p>
+<ul>
+  <li><b>El repintado en vivo, en un navegador de verdad.</b> La capa que lee la hoja está cubierta por 41 aserciones, pero que la portada se rehaga entera con datos nuevos, que el mapa se desmonte y se vuelva a montar sin dejar el lienzo marcado y que los filtros sigan respondiendo después, eso hay que mirarlo. <b>Ahora ya se puede</b>: hasta ayer la hoja estaba vacía y ese camino no se ejercitaba.</li>
+  <li><b>Seis de los siete decretos.</b> Se abrió uno y correspondía. Los otros seis se dan por buenos por analogía, no por comprobación.</li>
+  <li><b>Accesibilidad con lector de pantalla.</b> Las suites cubren estructura, contraste y foco; el recorrido real con un lector no se ha hecho.</li>
+  <li><b>Los términos de uso de Esri</b> para un sitio institucional.</li>
+</ul>
+
+<h2><span class="num">9</span> Antes del empujón</h2>
+<ol>
+  <li>Confirmar que <code>docs/</code> quedó armado con la última fuente: el recibo <code>docs/.construido.json</code> declara destino <code>produccion</code> y 28 fuentes selladas. <code>verifica-deriva</code> lo comprueba.</li>
+  <li>Subir el commit. Las dieciséis suites correrán solas en GitHub y bloquearán si algo se rompió.</li>
+  <li>Abrir el sitio publicado y confirmar que <b>los doce ejemplares aparecen con mapa</b>. Si se vieran menos datos de los esperados, el motivo se escribe en la consola del navegador: la capa distingue «la hoja está vacía» de «la hoja no responde».</li>
+  <li>Revisar que el mapa <b>ya no tenga la marca de agua</b> de CARTO.</li>
+</ol>
+
+<p class="pie">Auditoría 360 · versión 4 · 28 de agosto de 2026 · Documento interno de trabajo, no publicado. El registro vivo de pendientes está en <code>fuente/pendientes.html</code>: 39 asuntos abiertos, 23 esperando una decisión tuya. Las versiones anteriores de esta auditoría están en la misma carpeta.</p>
+
+</div>
+</body>
+</html>
