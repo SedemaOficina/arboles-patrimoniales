@@ -11,7 +11,15 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
   t(f+' · sección «patrimonial no es intocable»', /id="cuidado"/.test(s)&&/Patrimonial no quiere decir intocable/.test(s));
   t(f+' · cita el numeral 6 sobre mantenimiento', /NADF-001-RNAT-2015, numeral 6\./.test(s)&&/potencian los servicios ambientales/.test(s));
   t(f+' · cita el límite de 25 % del follaje', /no puede superar el 25 % del follaje/.test(s)&&/numeral 6\.1\.8/.test(s));
-  t(f+' · cita las cinco causas para podar', /numeral 6\.3/.test(s)&&/estado fitosanitario/.test(s));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, por decisión del área: la
+     tarjeta de por qué un árbol grande necesita atención perdió su cita —las
+     cinco causas del numeral 6.3—. Lo que se sigue exigiendo es que la sección
+     de cuidado NO quede sin fundamento: los dos numerales que sostienen lo que
+     sí afirma —el mantenimiento del 6 y el límite del 25 % del 6.1.8— tienen
+     que seguir citados. Una sección de cuidado sin ninguna cita sería una
+     opinión de la Secretaría sobre cómo podar. */
+  t(f+' · la sección de cuidado conserva sus citas normativas',
+    /numeral 6\./.test(s) && /numeral 6\.1\.8/.test(s) && /NADF-001-RNAT-2015/.test(s));
   t(f+' · advierte sobre el desmoche con su numeral', /desmoche/.test(s)&&/numeral 6\.4\.2\.1\.6/.test(s));
   t(f+' · dice qué sí está prohibido', /sin autorización y sin dictamen técnico/.test(s));
   t(f+' · canaliza la denuncia a la PAOT', /Procuraduría Ambiental y del Ordenamiento Territorial/.test(s)&&/55 5265 0780/.test(s));
@@ -51,12 +59,14 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
     && !/no ante la Secretaría del Medio Ambiente/.test(s)
     && !/60 días naturales/.test(s) && !/ostentar un emblema/.test(s));
 
-  /* La cuenta bajó de nueve a siete el 28 de agosto de 2026 y por dos motivos
-     buenos: las tres tarjetas de la Ley de Patrimonio se integraron en una
-     sola —el mismo articulado, citado igual, sin repetir tres veces la misma
-     liga— y la secuencia de postulación se retiró. Lo que importa no cambió:
-     que ningún instrumento citado se quede sin liga a su texto vigente. */
-  t(f+' · al menos siete enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=7, String((s.match(/class="norma__fuente"/g)||[]).length));
+  /* La cuenta bajó de nueve a seis el 28 de agosto de 2026, en tres pasos y
+     todos por decisión del área: las tres tarjetas de la Ley de Patrimonio se
+     integraron en una sola —el mismo articulado, citado igual, sin repetir
+     tres veces la misma liga—, la secuencia de postulación se retiró, y se
+     retiró la tarjeta de los artículos 106 y 107 de la Ley Ambiental. Lo que
+     importa no cambió: que ningún instrumento citado se quede sin liga a su
+     texto vigente. */
+  t(f+' · al menos seis enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=6, String((s.match(/class="norma__fuente"/g)||[]).length));
   /* LOS BENEFICIOS GENERALES NO PUEDEN PASAR POR MEDICIÓN. La sección de
      servicios publica dos cifras de ESTOS ejemplares, estimadas con i-Tree, y
      desde el 28 de agosto de 2026 también los beneficios que la investigación

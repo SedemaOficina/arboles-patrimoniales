@@ -1171,8 +1171,16 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
 {
   const pv5=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
   const rec5=fs.readFileSync(PRUEBA+'recursos-vista-previa.html','utf8');
-  t('La portada manda al catálogo completo en Recursos',
-    /href="recursos\.html#normatividad"/.test(pv5));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, por decisión del área: la
+     portada retiró el renglón que mandaba al catálogo. El enlace de regreso
+     sigue puesto, así que la pareja quedó en una sola dirección: Recursos se
+     presenta como el catálogo de la sección de la portada, y la portada ya no
+     avisa de que el catálogo existe. Quien lo busque llega por el menú.
+     Se conserva lo que sostiene la otra mitad —el enlace de vuelta y su
+     ancla—, que es lo que se rompería sin avisar si alguien renombra la
+     sección de Recursos. */
+  t('El ancla del catálogo sigue existiendo para quien enlace a ella',
+    /id="normatividad"/.test(rec5));
   t('Recursos manda de regreso al argumento de la portada',
     /href="index\.html#proteccion"/.test(rec5));
   t('El ancla existe de verdad en Recursos', /id="normatividad"/.test(rec5));

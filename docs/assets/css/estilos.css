@@ -739,9 +739,12 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .beneficio li::marker{color:var(--jacaranda-luz)}
 .beneficio li b{color:#fff;font-weight:700}
 .beneficios__entrada{margin:0 0 0;max-width:var(--medida);font-size:var(--t-cuerpo);line-height:1.6;color:rgba(255,255,255,.82)}
-/* La referencia completa se lee poco y se copia mucho: cuerpo pequeño, medida
-   corta y el enlace marcado, sin robarle peso a las tarjetas. */
-.beneficios__fuente{margin:20px 0 0;max-width:var(--medida-nota);font-size:var(--t-nota);line-height:1.6;color:rgba(255,255,255,.55)}
+/* La referencia completa se lee poco y se copia mucho, así que va en el
+   escalón más pequeño de la escala y en cursiva, como toda nota al pie del
+   sitio. Ocupa la fila entera —sin la medida corta de lectura— porque es una
+   cita bibliográfica: se copia de una pasada, y partida en cuatro renglones
+   estrechos bajo tres tarjetas anchas se leía como un párrafo huérfano. */
+.beneficios__fuente{margin:20px 0 0;font-size:var(--t-micro);font-style:italic;line-height:1.6;color:rgba(255,255,255,.55)}
 .beneficios__fuente a{color:var(--dorado-luz);border-bottom:1px solid rgba(var(--dorado-luz-rgb),.5)}
 .beneficios__fuente a:hover{border-bottom-color:var(--dorado-luz)}
 /* El rótulo de grupo nació para fondo claro: sobre el morado hondo su gris y
