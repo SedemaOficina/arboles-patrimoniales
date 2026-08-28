@@ -1287,6 +1287,10 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    cintillo de cifras—, y nunca carga solo el significado: la nota lo dice
    igual con palabras. */
 .nota-pie{display:block;font-size:var(--t-nota);line-height:1.55;font-style:italic;color:var(--gris)}
+/* Las notas del panorama y de la cartografía son crédito y advertencia, no
+   contenido: bajan un escalón de la escala —a microcopia— para que no compitan
+   con el pie de la propia imagen. La cursiva ya la trae .nota-pie. */
+.vista-calle__pie .nota-pie{font-size:var(--t-micro);line-height:1.5}
 .nota-pie:empty{display:none}
 .nota-pie::before{content:"*";font-style:normal;font-weight:700;color:var(--dorado);margin-right:6px}
 .nota-pie--alcance::before{content:"**"}
@@ -1547,7 +1551,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    para que se lea como un aviso y no como texto. */
 .mapa-caja__vacio{margin:0;padding:26px;max-width:34ch;text-align:center;
   font-size:var(--t-apoyo);line-height:1.55;color:var(--gris)}
-.mapa-caja__pie{margin:0;font-size:var(--t-nota);line-height:1.5;color:var(--gris)}
+.mapa-caja__pie{margin:0;font-size:var(--t-micro);line-height:1.5;color:var(--gris)}
 .mapa-caja__pie:empty{display:none}
 /* El punto plano se perdía entre los marcadores comerciales del mapa base
    —bancos, farmacias— justo en el bloque cuyo trabajo es señalar dónde está

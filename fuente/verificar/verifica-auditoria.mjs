@@ -345,10 +345,21 @@ console.log('\n══ FICHA · el recuadro morado es ahora el mapa del ejemplar 
     }
     t(nom+' · Leaflet está cargado', /leaflet/i.test(s));
   }
-  // Es vista de contexto, no herramienta de navegación: sin controles ni
-  // arrastre, y a zoom 16 para no recortar los nombres de calle.
-  t('El mapa de la ficha es una vista de contexto, no un navegador',
-    /zoom: 16, scrollWheelZoom: false, zoomControl: false/.test(fl) && /dragging: false/.test(fl));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, a petición del usuario. Nació
+     congelado —sin controles, sin arrastre— porque su trabajo era enseñar el
+     punto; pero quien reconoce su calle quiere acercarse a verla, y un mapa
+     que no responde se lee como un mapa roto. Ahora se acerca y se arrastra.
+     Lo que sigue vigilándose es lo que esta comprobación de verdad protegía:
+     que abra encuadrado en el ejemplar, que NO secuestre la rueda del ratón
+     —la página se recorre hacia abajo— y que el recorte de la Ciudad siga
+     puesto, para que por más que se arrastre no se acabe en otro estado. */
+  t('El mapa de la ficha abre encuadrado y no secuestra la rueda',
+    /zoom: 16, scrollWheelZoom: false, zoomControl: true/.test(fl));
+  t('El mapa de la ficha se puede acercar y arrastrar',
+    /dragging: true/.test(fl) && /doubleClickZoom: true/.test(fl) && /touchZoom: true/.test(fl));
+  t('Y sigue recortado a la Ciudad de México',
+    /maxBounds: L\.latLngBounds\(LIMITES_CDMX\), maxBoundsViscosity: 0\.85/.test(fl)
+    && /L\.geoJSON\(GEO_CDMX/.test(fl));
   t('Se destruye antes de reconstruir: Leaflet no admite dos mapas en un nodo',
     /if \(mapaFicha\) \{ mapaFicha\.remove\(\)/.test(fl)
     && /if \(this\._mapa\) \{ this\._mapa\.remove\(\)/.test(fdl));
@@ -390,8 +401,13 @@ console.log('\n══ DATO FALTANTE · el sitio lo dice, no lo disimula ══')
     /El registro no guarda/.test(fl2) && /todavía no captura este campo/.test(fl2));
   // La cobertura de una suma se declara: 1,200 años salen de 2 de 13 ejemplares.
   const pv7=fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
-  t('El cintillo declara cuántos ejemplares tienen edad dictaminada',
-    /ejemplares tienen edad dictaminada/.test(pv7));
+  /* Ver el motivo en verifica-mapa: la salvedad de la edad salió del pie del
+     cintillo el 28 de agosto de 2026, por decisión del área. Aquí se vigila lo
+     que queda: que el pie siga saliendo con sus otras salvedades y no se haya
+     vaciado de paso. */
+  t('El cintillo conserva su pie de salvedades',
+    /Las especies del registro/.test(pv7)
+    && !/Solo \$\{\(edad\.nota\.match/.test(pv7));
 }
 
 console.log('\n══ TARJETAS · fuera la barrita del punto verde ══');

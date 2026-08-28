@@ -853,6 +853,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   text-transform:uppercase;color:var(--dorado-luz);margin-right:10px;vertical-align:1px}
 
 .nota-pie{display:block;font-size:var(--t-nota);line-height:1.55;font-style:italic;color:var(--gris)}
+
+.vista-calle__pie .nota-pie{font-size:var(--t-micro);line-height:1.5}
 .nota-pie:empty{display:none}
 .nota-pie::before{content:"*";font-style:normal;font-weight:700;color:var(--dorado);margin-right:6px}
 .nota-pie--alcance::before{content:"**"}
@@ -1023,7 +1025,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 .mapa-caja__vacio{margin:0;padding:26px;max-width:34ch;text-align:center;
   font-size:var(--t-apoyo);line-height:1.55;color:var(--gris)}
-.mapa-caja__pie{margin:0;font-size:var(--t-nota);line-height:1.5;color:var(--gris)}
+.mapa-caja__pie{margin:0;font-size:var(--t-micro);line-height:1.5;color:var(--gris)}
 .mapa-caja__pie:empty{display:none}
 
 .pin-arbol{display:block;filter:drop-shadow(0 3px 5px rgba(var(--tinta-jacaranda-rgb),.45))}
@@ -1602,8 +1604,6 @@ body.sin-desplazamiento{overflow:hidden}
   <div class="retrato">
     <div class="envoltura">
       <div class="retrato__texto">
-        <p class="migas" style="padding:0;margin:0 0 6px"><a href="index.html#inicio">Inicio</a> · <a href="index.html#listado">El listado</a></p>
-
         <h1 id="fNombre"></h1>
         <p class="binomio especie" id="fBinomio"></p>
         <p class="comun" id="fComun"></p>
@@ -1634,7 +1634,7 @@ body.sin-desplazamiento{overflow:hidden}
   <div class="envoltura">
     <span class="rotulo">Dimensiones</span>
     <h2>De este tamaño</h2>
-    <p class="guia">Las medidas provienen del dictamen técnico levantado en campo. La ilustración de la especie está dibujada a la altura registrada, junto a una figura humana de 1.70 metros.</p>
+    <p class="guia">Las medidas provienen del dictamen técnico levantado en campo.</p>
     <div class="escala">
       <div>
         <div class="escala__lienzo" id="fEscala" data-desliza></div>
@@ -1733,7 +1733,7 @@ body.sin-desplazamiento{overflow:hidden}
       <div>
         <span class="rotulo">Ficha técnica</span>
         <h2>Qué especie es</h2>
-        <p class="guia">Clasificación validada contra el Sistema Nacional de Información sobre Biodiversidad.</p>
+        <p class="guia">Clasificación validada contra el Sistema Nacional de Información sobre Biodiversidad (SNIB), de la CONABIO.</p>
         <!-- La escalera taxonómica baja en cascada hasta el ejemplar. En dos
              columnas de etiqueta y valor se leía como quince datos sueltos;
              encadenada se lee como lo que es: un descenso de lo general a lo
@@ -2893,8 +2893,8 @@ function dibujarMapaEjemplar(e, lienzo, centro) {
   lienzo.innerHTML = "";
 
   mapaFicha = L.map(lienzo, {
-    center: centro, zoom: 16, scrollWheelZoom: false, zoomControl: false, attributionControl: false,
-    dragging: false, doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false,
+    center: centro, zoom: 16, scrollWheelZoom: false, zoomControl: true, attributionControl: false,
+    dragging: true, doubleClickZoom: true, boxZoom: false, keyboard: true, touchZoom: true,
     maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 10,
   });
 
@@ -3086,6 +3086,13 @@ function esDireccion(valor) {
   return /^https?:\/\/\S+$/i.test(String(valor || "").trim());
 }
 
+function sistemaDe(url) {
+  const u = String(url || "").toLowerCase();
+  if (u.includes("inaturalist.org")) return "iNaturalist";
+  if (u.includes("gbif.org")) return "GBIF";
+  return "un sistema externo";
+}
+
 function pintarFuentes(e) {
   const caja = document.getElementById("fFuentes");
   if (!caja) return;
@@ -3101,13 +3108,14 @@ function pintarFuentes(e) {
     {
       titulo: "Ficha de la especie en el SNIB",
       url: esDireccion(e.urlSNIB) ? String(e.urlSNIB).trim() : null,
-      pie: "CONABIO · sistema externo",
+      pie: "CONABIO",
       falta: "El registro no guarda la dirección de este ejemplar",
     },
     {
+
       titulo: "Observación de referencia de la especie",
       url: esDireccion(e.urlOrigen) ? String(e.urlOrigen).trim() : null,
-      pie: "El avistamiento con el que se respalda la identificación",
+      pie: "Especie en " + sistemaDe(e.urlOrigen),
       falta: "El registro no guarda la observación de referencia",
     },
     {
@@ -3121,13 +3129,11 @@ function pintarFuentes(e) {
       titulo: "Programa de manejo",
       url: esDireccion(e.urlPrograma) ? String(e.urlPrograma).trim() : null,
       pie: "Las medidas de conservación acordadas para el ejemplar",
-      falta: e.tienePrograma === true
-        ? "Tiene programa de manejo; falta capturar el vínculo al documento"
-        : e.tienePrograma === false
-          ? "Este ejemplar no tiene programa de manejo"
-          : "El registro todavía no captura este campo",
+
+      soloConDocumento: true,
+      falta: null,
     },
-  ];
+  ].filter((d) => d.url || !d.soloConDocumento);
 
   caja.innerHTML = documentos.map((d) => d.url
     ? `<li><a href="${esc(d.url)}" target="_blank" rel="noopener" class="${

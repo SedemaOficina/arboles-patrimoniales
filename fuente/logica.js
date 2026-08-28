@@ -157,7 +157,7 @@ function pintarBosque(ejemplares) {
     `${nf(Math.min(...conAltura.map((e) => e.morfologia.altura_m)), 1)} — ${nf(tope, 1)} m`;
 
   document.getElementById("bosqueNota").textContent =
-    `Cada silueta está dibujada con la altura real medida en campo y la regla marca los metros${sinAltura ? `; ${sinAltura} sin medir` : ""}.`;
+    `Cada silueta está dibujada con la altura real medida en campo${sinAltura ? `; ${sinAltura} sin medir` : ""}.`;
 }
 
 
@@ -262,7 +262,14 @@ function pintarCifras(stats, ejemplares) {
       especies.nota ? `Las especies del registro: ${especies.nota}` : "",
       alcaldia.cifra && alcaldia.cifra !== "—"
         ? `${alcaldia.cifra} es la alcaldía que más reúne` : "",
-      edad.nota ? `Solo ${(edad.nota.match(/(\d+ de \d+)/) || [, "pocos"])[1]} ejemplares tienen edad dictaminada` : "",
+      /* SALIÓ LA SALVEDAD DE LA EDAD el 28 de agosto de 2026, por decisión del
+         área. Estaba para que «Años del más antiguo» no se leyera como un dato
+         de todo el registro. El riesgo baja solo: esa cifra viene rotulada
+         como del más antiguo —un ejemplar, no un agregado— y «Años sumados»,
+         que sí era el dato engañoso, se retiró del cintillo antes. La
+         cobertura del campo sigue publicada donde se consulta el dato: en la
+         tarjeta de edad de la sección de indicadores y en la descarga de datos
+         abiertos. */
     ].filter(Boolean);
     pie.innerHTML = partes.length
       ? `<b class="cifras__pie__ast" aria-hidden="true">*</b>`

@@ -272,7 +272,7 @@ class Component extends DCLogic {
       bosque, reglaBosque,
       bosqueRango: conAltura.length
         ? `${this.nf(conAltura[conAltura.length - 1].morfologia.altura_m, 1)} — ${this.nf(topeAlt, 1)} m` : "",
-      bosqueNota: `Cada silueta está dibujada con la altura real medida en campo y la regla marca los metros${sinAltura ? `; ${sinAltura} sin medir` : ""}.`,
+      bosqueNota: `Cada silueta está dibujada con la altura real medida en campo${sinAltura ? `; ${sinAltura} sin medir` : ""}.`,
       cifras, categorias, filtros, fichas, servicios,
       busqueda: busqueda || "",
       hayBusqueda: Boolean(busqueda),

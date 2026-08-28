@@ -339,8 +339,20 @@ t('cintillo · la cifra no se parte en dos renglones',
 /* La salvedad se queda aunque «Años sumados» se haya ido: «Años del más
    antiguo» sale del mismo dato escaso y sin la nota los 700 años parecerían
    representativos de los trece. */
-t('cintillo · el pie declara cuántos ejemplares tienen edad dictaminada',
-  /Solo \$\{\(edad\.nota\.match/.test(lg) && /ejemplares tienen edad dictaminada/.test(lg));
+/* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, por decisión del área: la
+   salvedad de la edad salió del pie del cintillo. Lo que sigue importando es
+   que el pie EXISTA y siga declarando lo que sí declara —las especies y la
+   alcaldía—, y que el dato de edad no se presente nunca como un agregado del
+   registro. La cobertura del campo se declara en la tarjeta de edad de la
+   sección de indicadores, que es donde se consulta la cifra. */
+t('cintillo · el pie sigue declarando sus salvedades',
+  /Las especies del registro/.test(lg) && /es la alcaldía que más reúne/.test(lg)
+  /* Se busca el renglón que se pintaba, no la frase suelta: el porqué de la
+     barrita retirada de las tarjetas la menciona en un comentario, y un
+     comentario no es lo que ve nadie. */
+  && !/Solo \$\{\(edad\.nota\.match/.test(lg));
+t('cintillo · la edad no se presenta como agregado del registro',
+  /"Años del más antiguo"/.test(lg) && !/"Años sumados"/.test(lg));
 // Un renglón, no tres: son notas al margen y no deben pesar como las cifras.
 t('cintillo · el pie va en un solo renglón, con asterisco',
   /cifras__pie__ast/.test(lg) && /\.cifras__pie span \+ span::before\{content:" — "/.test(css));
