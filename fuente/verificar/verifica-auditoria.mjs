@@ -431,8 +431,12 @@ console.log('\n══ «QUÉ SIGNIFICA» · protección sin cerrarle la puerta a
   
         ind=fs.readFileSync('indicadores.js','utf8');
   for (const [nom,s] of [['una pieza', pv]]) {
+    /* CAMBIÓ EL TITULAR el 28 de agosto de 2026, por decisión del área: de
+       «Un árbol declarado patrimonio se cuida distinto» a «Por qué un árbol
+       llega a ser patrimonio». Lo que esta comprobación siempre protegió no
+       cambia: que el titular de esta sección NO sea la prohibición. */
     t(nom+' · el titular ya no es la prohibición',
-      /Un árbol declarado patrimonio se cuida distinto/.test(s)
+      /Por qué un árbol llega a ser patrimonio/.test(s)
       && !/Un árbol patrimonial no se derriba a cambio de plantar otro/.test(s));
     t(nom+' · la entrada no afirma que solo se pueda intervenir por riesgo',
       !/solo puede intervenirse si representa un riesgo real y presente/.test(s));
@@ -445,10 +449,20 @@ console.log('\n══ «QUÉ SIGNIFICA» · protección sin cerrarle la puerta a
        comparten —que nada se interviene sin autorización y sin dictamen
        previo— y nombra la norma que el propio sitio ya cita bien.
        Lo que hay que seguir garantizando es que la entrada NO se quede muda
-       sobre el requisito, que es para lo que se escribió esta comprobación. */
-    t(nom+' · la entrada sí exige autorización y dictamen previo, con su norma',
-      /NADF-001-RNAT-2015, en su numeral 7\.5/.test(s)
-      && /sin autorización y sin dictamen técnico previo, caso por caso/.test(s)
+       sobre el requisito, que es para lo que se escribió esta comprobación.
+
+       CAMBIÓ OTRA VEZ el 28 de agosto de 2026, por decisión del área: la
+       entrada pasó a explicar POR QUÉ un árbol llega a ser patrimonio y ya no
+       menciona el requisito. **El requisito dejó de estar en esta sección**,
+       pero no del sitio: lo afirma la sección de cuidado —«intervenir un árbol
+       patrimonial sin autorización y sin dictamen técnico… está prohibido»— y
+       lo sostiene con su norma la tarjeta del numeral 7.5 en la sección
+       jurídica. Eso es lo que se comprueba ahora: que siga dicho en alguna
+       parte de la portada, no en cuál. Si desaparece de las dos, la portada
+       queda prometiendo protección sin decir de qué está hecha. */
+    t(nom+' · la portada sigue exigiendo autorización y dictamen, con su norma',
+      /sin autorización y sin dictamen técnico/.test(s)
+      && /NADF-001-RNAT-2015/.test(s)
       && !/dictamen técnico de la Secretaría del Medio Ambiente, que lo resuelve/.test(s));
     t(nom+' · la restricción vive en la sección jurídica, con su numeral',
       s.indexOf('NADF-001-RNAT-2015 · numeral 7.5')>0
@@ -459,7 +473,7 @@ console.log('\n══ «QUÉ SIGNIFICA» · protección sin cerrarle la puerta a
       /Norma Ambiental NADF-001-RNAT-2015 · numeral 7.5/.test(s)
       && !/turna el expediente a la Secretaría del Medio Ambiente/.test(s));
     t(nom+' · el titular de protección va después de las cifras, no en la portada',
-      s.indexOf('Un árbol declarado patrimonio se cuida distinto')>s.indexOf('class="cifras"'));
+      s.indexOf('Por qué un árbol llega a ser patrimonio')>s.indexOf('class="cifras"'));
   }
   t('La cifra del listado ya no promete que nunca se derriban',
     !/No pueden derribarse a cambio de plantar otro/.test(ind)

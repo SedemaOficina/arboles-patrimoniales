@@ -601,12 +601,16 @@ function pintarServicios(stats) {
 // La redacción no depende del tamaño del listado: el registro crece con cada
 // declaratoria y el sitio no debe reescribirse —ni desmentirse— por eso.
 function pintarRedaccion() {
-  // La entrada no se apoya en la edad: solo dos de los trece ejemplares tienen
-  // edad dictaminada, así que «llevan aquí más tiempo que las calles» era una
-  // afirmación que el propio registro no sostiene. Lo que sí sostiene, para
-  // todos, es qué significa la declaratoria.
+  /* La entrada no se apoya en la edad: solo dos de doce ejemplares tienen edad
+     dictaminada, así que «llevan aquí más tiempo que las calles» era una
+     afirmación que el propio registro no sostiene.
+     REDACCIÓN NUEVA del 28 de agosto de 2026, del área. La anterior definía la
+     declaratoria; esta dice qué es este sitio y qué se encuentra en él, que es
+     lo que busca quien acaba de llegar. Lo que promete —ubicación, medidas,
+     servicios ambientales y documento— es exactamente lo que trae cada ficha,
+     y es lo que hay que revisar si alguna de esas cuatro cosas se retira. */
   document.getElementById("entradaPortada").textContent =
-    "Algunos árboles de la Ciudad de México están declarados patrimonio por decreto. No es un título honorífico: obliga a que cualquier intervención sobre ellos pase por dictamen técnico.";
+    "Aquí están los árboles que la ciudad declaró patrimonio. Cada uno tiene su ficha: dónde está, cuánto mide, qué servicios ambientales presta y qué documento lo protege.";
   document.getElementById("ctaPadron").textContent = "Conoce el listado";
   document.getElementById("tituloPadron").textContent = "Los árboles patrimoniales";
   // El enlace lleva a la explicación completa de i-Tree, que vive en Recursos:
