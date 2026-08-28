@@ -170,8 +170,18 @@ t('documentos · los cinco del expediente',
   && /Corrida de i-Tree de este ejemplar/.test(fl) && /Programa de manejo/.test(fl));
 t('documentos · el SNIB y la observación vuelven a leerse',
   /e\.urlSNIB/.test(fl) && /e\.urlOrigen/.test(fl));
+/* CAMBIÓ LA REDACCIÓN el 28 de agosto de 2026: el pie decía «CONABIO ·
+   sistema externo», y lo de «sistema externo» ya lo dice la flecha que llevan
+   todos los renglones desde que abren en pestaña nueva. El pie nombra al
+   sistema, que es el dato. El de la observación se arma leyendo la dirección
+   —iNaturalist o GBIF, que son los dos que trae el registro— en vez de
+   escribir uno a mano y llevar al otro. */
 t('documentos · cada renglón declara de quién es el sistema',
-  /CONABIO · sistema externo/.test(fl));
+  /pie: "CONABIO"/.test(fl) && /"Especie en " \+ sistemaDe\(e\.urlOrigen\)/.test(fl));
+t('documentos · el sistema se lee de la dirección, no se supone',
+  /function sistemaDe\(url\)/.test(fl)
+  && /inaturalist\.org/.test(fl) && /gbif\.org/.test(fl)
+  && /return "un sistema externo"/.test(fl));
 t('documentos · el que falta se dibuja apagado y dice por qué',
   /docs--sin/.test(fl) && /falta:/.test(fl)
   && !/\.filter\(\(\[, url\]\) => url\)/.test(fl));
@@ -182,13 +192,20 @@ t('documentos · el que falta se dibuja apagado y dice por qué',
    y `url_programa`, y lo que hay que garantizar es que el sitio distinga los
    tres casos y que el «no tiene» siga sin afirmarse por cuenta propia: solo
    cuando la hoja lo dice. */
-t('documentos · el programa de manejo distingue los tres casos',
-  /esDireccion\(e\.urlPrograma\)/.test(fl)
-  && /e\.tienePrograma === true/.test(fl)
-  && /Tiene programa de manejo; falta capturar el vínculo/.test(fl)
-  && /e\.tienePrograma === false/.test(fl)
-  && /Este ejemplar no tiene programa de manejo/.test(fl)
-  && /El registro todavía no captura este campo/.test(fl));
+/* CAMBIÓ EL CRITERIO otra vez, el mismo 28 de agosto y por decisión del área.
+   Por la mañana la ficha distinguía tres casos y decía «este ejemplar no tiene
+   programa de manejo» cuando la hoja lo afirmaba. Eso deja asentado en el
+   sitio público que un árbol YA DECLARADO no tiene su programa, que es
+   materia de reclamo contra la propia Secretaría. Ahora el renglón aparece
+   solo cuando hay documento. Lo que se comprueba es que la excepción sea
+   EXACTA: que la callada sea solo esta y que ningún otro documento se
+   desvanezca cuando falta. */
+t('documentos · el programa de manejo solo aparece si hay documento',
+  /soloConDocumento: true/.test(fl)
+  && /\.filter\(\(d\) => d\.url \|\| !d\.soloConDocumento\)/.test(fl)
+  && !/Este ejemplar no tiene programa de manejo/.test(fl));
+t('documentos · es la única excepción: los demás siguen apagándose',
+  (fl.match(/soloConDocumento: true/g) || []).length === 1);
 t('documentos · el lector recoge los dos campos del programa',
   (() => { const lec = fs.readFileSync('padron/lector-v2.js', 'utf8');
     return /tienePrograma: aSiNo\(f\.tiene_programa\)/.test(lec)
