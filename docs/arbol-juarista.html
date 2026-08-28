@@ -1568,7 +1568,7 @@ body.sin-desplazamiento{overflow:hidden}
              sizes="(max-width:560px) 210px, (max-width:1000px) 280px, 372px"
              alt="Gobierno de la Ciudad de México · Secretaría del Medio Ambiente · Sistema de Información Ambiental de la Ciudad de México"
              width="1147" height="84"
-             onerror="this.closest('.marca').classList.add('marca--sin-logo');this.remove()">
+             onerror="var m=this.closest('.marca');if(m)m.classList.add('marca--sin-logo');this.onerror=null;this.remove()">
       </picture>
       <!-- Si el archivo no carga, la institución sigue nombrada en texto. -->
       <span class="marca__institucion" aria-hidden="true">
@@ -2082,16 +2082,25 @@ async function descubrirFotos(id, opciones = {}) {
 
   const sonda = (n, e) => existeImagen(rutaMiniatura(id, n, e)).then((hay) => hay || existeImagen(rutaFoto(id, n, e)));
 
-  const halladas = await Promise.all(EXTENSIONES.map((e) => sonda(1, e).then((hay) => (hay ? e : null))));
-  const ext = halladas.find(Boolean) || null;
+  let ext = (await sonda(1, EXTENSIONES[0])) ? EXTENSIONES[0] : null;
+  if (!ext) {
+    const halladas = await Promise.all(
+      EXTENSIONES.slice(1).map((e) => sonda(1, e).then((hay) => (hay ? e : null))));
+    ext = halladas.find(Boolean) || null;
+  }
   if (!ext) return [];
 
-  const presentes = await Promise.all(
-    Array.from({ length: tope - 1 }, (_, i) => sonda(i + 2, ext)));
   const urls = [rutaFoto(id, 1, ext)];
-  for (const hay of presentes) {
-    if (!hay) break;
-    urls.push(rutaFoto(id, urls.length + 1, ext));
+  const TANDA = 3;
+  for (let n = 2; n <= tope; ) {
+    const numeros = [];
+    for (let k = 0; k < TANDA && n + k <= tope; k++) numeros.push(n + k);
+    const hay = await Promise.all(numeros.map((i) => sonda(i, ext)));
+    const hueco = hay.indexOf(false);
+    const hasta = hueco === -1 ? numeros.length : hueco;
+    for (let k = 0; k < hasta; k++) urls.push(rutaFoto(id, numeros[k], ext));
+    if (hueco !== -1) break;
+    n += numeros.length;
   }
 
   return urls.map((url, i) => ({
@@ -2553,6 +2562,556 @@ function cuandoSeAcerque(elemento, alEstarListo, alFallar) {
 }
 
 window.cargarLeaflet=cargarLeaflet;window.cuandoSeAcerque=cuandoSeAcerque;
+})();
+;(function(){
+
+
+function analizarCSV(texto) {
+  const s = String(texto || "").replace(/^\uFEFF/, "");
+  const filas = [];
+  let fila = [], campo = "", entreComillas = false, i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (entreComillas) {
+      if (c === '"') {
+        if (s[i + 1] === '"') { campo += '"'; i += 2; continue; }
+        entreComillas = false; i++; continue;
+      }
+      campo += c; i++; continue;
+    }
+    if (c === '"') { entreComillas = true; i++; continue; }
+    if (c === ",") { fila.push(campo); campo = ""; i++; continue; }
+    if (c === "\r") { i++; continue; }
+    if (c === "\n") { fila.push(campo); filas.push(fila); fila = []; campo = ""; i++; continue; }
+    campo += c; i++;
+  }
+  if (campo !== "" || fila.length) { fila.push(campo); filas.push(fila); }
+
+  return filas.filter((f) => !(f.length === 1 && f[0].trim() === ""));
+}
+
+function limpiar(v) {
+  const t = String(v == null ? "" : v).trim();
+  if (!t) return null;
+  if (/^(n\/?a|s\/?d|sin dato|sin determinar|-{1,2}|\.)$/i.test(t)) return null;
+  return t;
+}
+
+function aNumero(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const n = Number(t.replace(/\s/g, "").replace(/,(?=\d{3}\b)/g, "").replace(/[^\d.eE+-]/g, ""));
+  return Number.isFinite(n) ? n : null;
+}
+
+const MESES = ["enero","febrero","marzo","abril","mayo","junio",
+               "julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+function aFecha(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  let a, m, d;
+  let mm;
+  if ((mm = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(t))) {
+    [, a, m, d] = mm;
+  } else if ((mm = /^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/.exec(t))) {
+    [, d, m, a] = mm;
+  } else if (/^\d{5}(\.0+)?$/.test(t)) {
+
+    const ms = (Number(t) - 25569) * 86400000;
+    const f = new Date(ms);
+    a = f.getUTCFullYear(); m = f.getUTCMonth() + 1; d = f.getUTCDate();
+  } else {
+    return { texto: t, iso: null, legible: t, anio: null, sospechosa: true };
+  }
+  a = Number(a); m = Number(m); d = Number(d);
+  if (!(m >= 1 && m <= 12) || !(d >= 1 && d <= 31)) {
+    return { texto: t, iso: null, legible: t, anio: null, sospechosa: true };
+  }
+  const p = (n) => String(n).padStart(2, "0");
+  return {
+    texto: t,
+    iso: `${a}-${p(m)}-${p(d)}`,
+    legible: `${d} de ${MESES[m - 1]} de ${a}`,
+    anio: a,
+  };
+}
+
+function aSiNo(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  if (/^s[ií]$/i.test(t)) return true;
+  if (/^no$/i.test(t)) return false;
+  return null;
+}
+
+function aSlug(v) {
+  return String(v || "").normalize("NFD").replace(/[\u0300-\u036F]/g, "")
+    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function aCP(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const d = t.replace(/\D/g, "");
+  return d ? d.padStart(5, "0").slice(0, 5) : null;
+}
+
+function aVistaCalle(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const url = /<iframe/i.test(t) ? (/\bsrc\s*=\s*"([^"]+)"/i.exec(t) || [])[1] : t;
+  if (!url || !/^https:\/\/www\.google\.com\/maps\/embed\?/.test(url)) return null;
+  return { tipo: "panorama", url };
+}
+
+function idDeDrive(v) {
+  const t = limpiar(v);
+  if (t === null) return null;
+  const m = /\/d\/([A-Za-z0-9_-]+)/.exec(t);
+  return m ? m[1] : null;
+}
+
+function enRango(clave, n, rangos, avisos, id) {
+  if (n === null) return null;
+  const r = rangos && rangos[clave];
+  if (!r) return n;
+  if (n < r.min || n > r.max) {
+    avisos.push(`${id || "sin id"} · ${clave} = ${n} queda fuera del rango ${r.min}–${r.max} (${r.de}). No se publica ese dato.`);
+    return null;
+  }
+  return n;
+}
+
+const CATEGORIAS = [
+  ["centenario", "CENTENARIO"], ["historico", "HISTORICO"],
+  ["notable", "NOTABLE"], ["singular", "SINGULAR"],
+];
+
+function construirEjemplar(f, contrato, avisos) {
+  const rangos = (contrato && contrato.rangos) || {};
+  const id = limpiar(f.id);
+  const num = (k) => enRango(k, aNumero(f[k]), rangos, avisos, id);
+
+  const categorias = CATEGORIAS.filter(([k]) => aSiNo(f[k]) === true).map(([, v]) => v);
+  const resumen = (limpiar(f.categorias) || "").split(/\s*,\s*/).filter(Boolean)
+    .map((s) => aSlug(s).toUpperCase());
+  if (resumen.length && resumen.join("|") !== categorias.join("|")) {
+    avisos.push(`${id} · la columna «categorias» dice «${resumen.join(", ")}» y las banderas dicen «${categorias.join(", ") || "ninguna"}». Se publican las banderas.`);
+  }
+
+  const lat = enRango("latitud", aNumero(f.latitud), rangos, avisos, id);
+  const lng = enRango("longitud", aNumero(f.longitud), rangos, avisos, id);
+
+  const pb = limpiar(f.pueblo_barrio);
+  const puebloBarrio = pb && !/^(no aplica|por confirmar)$/i.test(pb) ? pb : null;
+
+  const e = {
+    id,
+    consecutivo: id ? id.slice(-4) : null,
+    codAlcaldia: id ? (id.split("-")[1] || null) : null,
+    nombreAsignado: limpiar(f.nombre_asignado),
+    slug: aSlug(f.nombre_asignado),
+    nombreComun: limpiar(f.nombre_comun),
+    especie: limpiar(f.nombre_cientifico),
+    nominadoPor: limpiar(f.nomino),
+    fechaNominacion: null,
+    categorias,
+    categoriaDominante: categorias[0] || null,
+    situacionCategoria: categorias.length ? "asignada" : "pendiente",
+    fechaDecreto: aFecha(f.fecha_decreto),
+    linkDecreto: limpiar(f.drive_decreto),
+    idDecretoDrive: idDeDrive(f.drive_decreto),
+
+    tienePrograma: aSiNo(f.tiene_programa),
+    urlPrograma: limpiar(f.url_programa),
+    alcaldia: limpiar(f.alcaldia),
+    ubicacion: {
+      calle: limpiar(f.calle),
+      numero: limpiar(f.num_ext),
+      colonia: limpiar(f.colonia),
+      cp: aCP(f.cp),
+      entreCalles: [limpiar(f.entre_1), limpiar(f.entre_2)].filter(Boolean),
+      referencias: limpiar(f.referencias),
+      tipo: limpiar(f.tipo_ubicacion),
+      sueloConservacion: aSiNo(f.suelo_conservacion),
+      puebloBarrio,
+      puebloBarrioEstado: pb,
+    },
+    coords: lat !== null && lng !== null ? { lat, lng } : null,
+    coordsValidas: lat !== null && lng !== null,
+    utm: aNumero(f.utm_x) !== null && aNumero(f.utm_y) !== null
+      ? `${limpiar(f.utm_x)}; ${limpiar(f.utm_y)}` : null,
+    taxonomia: {
+      reino: limpiar(f.reino), phylum: limpiar(f.phylum), clase: limpiar(f.clase),
+      orden: limpiar(f.orden), familia: limpiar(f.familia), genero: limpiar(f.genero),
+      autor: limpiar(f.autor), infraespecie: null,
+      formaCrecimiento: limpiar(f.forma_crecimiento), ambiente: limpiar(f.ambiente),
+    },
+    conservacion: {
+      iucn: limpiar(f.iucn), nom059: limpiar(f.nom059), cites: limpiar(f.cites),
+      prioritaria: limpiar(f.prioritaria), prioridad: limpiar(f.nivel_prioridad),
+      endemismo: limpiar(f.endemismo),
+      exoticaInvasora: limpiar(f.exotica_invasora),
+      esExotica: /exótica|exotica/i.test(limpiar(f.exotica_invasora) || ""),
+    },
+    urlSNIB: limpiar(f.url_snib),
+    urlOrigen: limpiar(f.url_observacion),
+    morfologia: {
+      altura_m: num("altura_m"),
+      diametro_cm: num("dap_cm"),
+      circunferencia_cm: num("circunferencia_cm"),
+      anchoCopa_m: num("ancho_copa_m"),
+      largoCopa_m: num("largo_copa_m"),
+      extensionCopa_m: num("extension_copa_m"),
+    },
+    condicion: limpiar(f.condicion_general),
+    estructura: limpiar(f.estructura_general),
+    edadEstimada: num("edad_estimada"),
+    expectativaVida: limpiar(f.expectativa_vida),
+    observaciones: limpiar(f.obs_publicas),
+    vistaCalle: aVistaCalle(f.street_view),
+    fotos: [],
+    _compuertaITree: limpiar(f.validacion_itree),
+  };
+
+  const validado = e._compuertaITree === "Validado";
+  const moneda = limpiar(f.moneda_itree);
+  const cifra = (k) => (validado ? aNumero(f[k]) : null);
+  e.serviciosAmbientales = {
+
+    beneficioEconomico_moneda: validado && moneda ? aNumero(f.beneficio_economico) : null,
+    moneda: validado ? moneda : null,
+    carbonoSecuestrado_kg: null,
+    co2Absorbido_kg: cifra("co2_eq_kg"),
+    escorrentiaReducida_L: cifra("escorrentia_l"),
+    precipitacionInterceptada_L: cifra("precip_interceptada_l"),
+    coEliminado_g: cifra("elim_co_g"),
+    ozonoEliminado_g: cifra("elim_o3_g"),
+    no2Eliminado_g: cifra("elim_no2_g"),
+    so2Eliminado_g: cifra("elim_so2_g"),
+    pm25Eliminado_g: cifra("elim_pm25_g"),
+    ahorroElectricidad_kWh: cifra("ahorro_kwh"),
+    emisionesEvitadasCO2_kg: cifra("evit_co2_kg"),
+    emisionesEvitadasCO_g: cifra("evit_co_g"),
+    emisionesEvitadasNO2_g: cifra("evit_no2_g"),
+    emisionesEvitadasSO2_g: cifra("evit_so2_g"),
+    emisionesEvitadasPM25_g: cifra("evit_pm25_g"),
+  };
+  e.linkITree = validado && /^https?:\/\/\S+$/i.test(limpiar(f.url_itree) || "")
+    ? limpiar(f.url_itree) : null;
+  e.tieneCifrasAmbientales = Object.entries(e.serviciosAmbientales)
+    .some(([k, v]) => k !== "moneda" && typeof v === "number");
+
+  if (validado && e.tieneCifrasAmbientales && !e.linkITree) {
+    avisos.push(`${id} · el bloque de i-Tree está validado y trae cifras, pero sin la liga de la corrida. La cifra no se puede rastrear.`);
+  }
+  if (validado && aNumero(f.beneficio_economico) !== null && !moneda) {
+    avisos.push(`${id} · hay beneficio económico sin moneda. No se publica el importe.`);
+  }
+  return e;
+}
+
+function construirRegistro(texto, contrato) {
+  const filas = analizarCSV(texto);
+  const avisos = [];
+  const descartadas = [];
+  if (!filas.length) {
+    return { ejemplares: [], meta: metaVacia("El CSV llegó vacío."), stats: calcularStats([]) };
+  }
+
+  const encabezado = filas[0].map((h) => String(h).trim());
+  const esperado = (contrato && contrato.campos || []).map((c) => c.clave);
+  const faltantes = esperado.filter((k) => !encabezado.includes(k));
+  const sobrantes = encabezado.filter((k) => k && !esperado.includes(k));
+
+  const ejemplares = [];
+  for (let i = 1; i < filas.length; i++) {
+    const f = {};
+    encabezado.forEach((h, j) => { f[h] = filas[i][j]; });
+    if (!limpiar(f.id)) {
+      descartadas.push({ fila: i + 1, motivo: "sin id", nombre: limpiar(f.nombre_asignado) });
+      continue;
+    }
+    ejemplares.push(construirEjemplar(f, contrato, avisos));
+  }
+
+  const vistos = new Map();
+  ejemplares.forEach((e) => {
+    if (vistos.has(e.id)) avisos.push(`El id ${e.id} viene repetido. El id es la llave: dos ejemplares no pueden compartirlo.`);
+    vistos.set(e.id, true);
+  });
+  const slugs = new Map();
+  ejemplares.forEach((e) => {
+    if (e.slug && slugs.has(e.slug)) avisos.push(`Dos ejemplares comparten la dirección «${e.slug}»: ${slugs.get(e.slug)} y ${e.id}. La ficha de uno taparía la del otro.`);
+    else if (e.slug) slugs.set(e.slug, e.id);
+  });
+  if (faltantes.length) avisos.push(`La hoja no trae ${faltantes.length} columna(s) del contrato: ${faltantes.join(", ")}.`);
+  if (sobrantes.length) avisos.push(`La hoja trae ${sobrantes.length} columna(s) que el contrato no conoce: ${sobrantes.join(", ")}. No se leen.`);
+
+  const meta = {
+    schemaVersion: 7,
+    origen: "csv-padron-v2",
+    filasLeidas: filas.length - 1,
+    totalEjemplares: ejemplares.length,
+    filasDescartadas: descartadas,
+    columnasFaltantes: faltantes,
+    columnasNoReconocidas: sobrantes,
+    advertencias: avisos,
+    sinCifrasAmbientales: ejemplares.filter((e) => !e.tieneCifrasAmbientales)
+      .map((e) => ({ id: e.id, compuerta: e._compuertaITree })),
+    sinCoordenadas: ejemplares.filter((e) => !e.coordsValidas).map((e) => e.id),
+    sinFoto: ejemplares.filter((e) => !e.fotos.length).map((e) => e.id),
+  };
+  return { ejemplares, meta, stats: calcularStats(ejemplares) };
+}
+
+function metaVacia(motivo) {
+  return { schemaVersion: 7, origen: "csv-padron-v2", filasLeidas: 0, totalEjemplares: 0,
+    filasDescartadas: [], columnasFaltantes: [], columnasNoReconocidas: [],
+    advertencias: [motivo], sinCifrasAmbientales: [], sinCoordenadas: [], sinFoto: [] };
+}
+
+function sumar(lista, f) {
+  let valor = 0, conDato = 0, sinDato = 0;
+  lista.forEach((e) => {
+    const n = f(e);
+    if (typeof n === "number" && Number.isFinite(n)) { valor += n; conDato++; }
+    else sinDato++;
+  });
+  return { valor: Math.round(valor * 100) / 100, conDato, sinDato, completo: sinDato === 0 };
+}
+
+function calcularStats(ejemplares) {
+  const S = (e) => e.serviciosAmbientales || {};
+  const alcaldias = [...new Set(ejemplares.map((e) => e.alcaldia).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  const especies = [...new Set(ejemplares.map((e) => e.especie).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  const conteoPorAlcaldia = {};
+  ejemplares.forEach((e) => { if (e.alcaldia) conteoPorAlcaldia[e.alcaldia] = (conteoPorAlcaldia[e.alcaldia] || 0) + 1; });
+  const top = Object.entries(conteoPorAlcaldia).sort((a, b) => b[1] - a[1])[0];
+  const edades = ejemplares.map((e) => e.edadEstimada).filter((n) => typeof n === "number");
+  const alturas = ejemplares.map((e) => e.morfologia.altura_m).filter((n) => typeof n === "number");
+  const cuenta = (cat) => ejemplares.filter((e) => e.categorias.includes(cat)).length;
+
+  return {
+    totalEjemplares: ejemplares.length,
+    totalAlcaldias: alcaldias.length,
+    totalEspecies: especies.length,
+    listaAlcaldias: alcaldias,
+    listaEspecies: especies,
+    totalPorCategoria: {
+      centenarios: cuenta("CENTENARIO"), historicos: cuenta("HISTORICO"),
+      notables: cuenta("NOTABLE"), singulares: cuenta("SINGULAR"),
+      otras: ejemplares.filter((e) => !e.categorias.length).length,
+    },
+    conteoPorAlcaldia,
+    alcaldiaTop: top ? { nombre: top[0], cuenta: top[1] } : null,
+    edadMaxima: edades.length ? Math.max(...edades) : null,
+    edadPromedio: edades.length ? Math.round(edades.reduce((a, b) => a + b, 0) / edades.length) : null,
+    alturaMaxima: alturas.length ? Math.max(...alturas) : null,
+    sumatoriaAltura: sumar(ejemplares, (e) => e.morfologia.altura_m),
+
+    sumatoriaCO2: sumar(ejemplares, (e) => S(e).co2Absorbido_kg),
+    sumatoriaPrecipitacion: sumar(ejemplares, (e) => S(e).precipitacionInterceptada_L),
+    sumatoriaEscorrentia: sumar(ejemplares, (e) => S(e).escorrentiaReducida_L),
+    sumatoriaBeneficio: sumar(ejemplares, (e) => S(e).beneficioEconomico_moneda),
+  };
+}
+
+const lista = (d) => (Array.isArray(d) ? d : (d && d.ejemplares) || []);
+const buscarPorSlug = (d, s) => lista(d).find((e) => e.slug === s) || null;
+const buscarPorId = (d, id) => lista(d).find((e) => e.id === id) || null;
+const porCategoria = (d, c) => lista(d).filter((e) => e.categorias.includes(String(c).toUpperCase()));
+const porAlcaldia = (d, a) => lista(d).filter((e) => e.alcaldia === a);
+const porEspecie = (d, esp) => lista(d).filter((e) => e.especie === esp);
+
+window.construirRegistro=construirRegistro;
+})();
+;(function(){
+
+
+
+
+const FUENTE_VIVA_ACTIVA = true;
+
+const CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb8DIn-UxYrBo-k91vleNcsfQoMVlQjtWp4YurZHgeh-_p0pSWLt-yeWS86wKybtQfj1D4wveAEtyw/pub?gid=283285465&single=true&output=csv";
+
+const ESQUEMA = 7;
+const CLAVE_CACHE = "arboles_patrimoniales_registro_v7";
+
+const VIGENCIA_MS = 10 * 60 * 1000;
+
+const RESPALDO_MAX_MS = 7 * 24 * 60 * 60 * 1000;
+
+const ESPERA_MS = 12000;
+const REINTENTOS = 2;
+
+function almacen(global) {
+  const g = global || (typeof globalThis !== "undefined" ? globalThis : {});
+  try {
+    const st = g.localStorage;
+    if (!st) return null;
+    const p = "__prueba_arboles__";
+    st.setItem(p, "1");
+    st.removeItem(p);
+    return st;
+  } catch (e) {
+    return null;
+  }
+}
+
+function leerCache({ permitirRespaldo = false, st = almacen(), ahora = Date.now() } = {}) {
+  if (!st) return null;
+  try {
+    const crudo = st.getItem(CLAVE_CACHE);
+    if (!crudo) return null;
+    const p = JSON.parse(crudo);
+    if (!p || p.esquema !== ESQUEMA) return null;
+    if (!p.registro || !Array.isArray(p.registro.ejemplares) || !p.registro.ejemplares.length) return null;
+    if (typeof p.guardadoEn !== "number") return null;
+    const edad = ahora - p.guardadoEn;
+    if (edad < 0) return null;
+    const vigente = edad <= VIGENCIA_MS;
+    if (!vigente && !(permitirRespaldo && edad <= RESPALDO_MAX_MS)) return null;
+    return { registro: p.registro, edadMs: edad, vigente };
+  } catch (e) {
+    return null;
+  }
+}
+
+function escribirCache(registro, { st = almacen(), ahora = Date.now() } = {}) {
+  if (!st) return false;
+  if (!registro || !Array.isArray(registro.ejemplares) || !registro.ejemplares.length) return false;
+  try {
+    st.setItem(CLAVE_CACHE, JSON.stringify({ esquema: ESQUEMA, guardadoEn: ahora, registro }));
+    return true;
+  } catch (e) {
+
+    try { st.removeItem(CLAVE_CACHE); } catch (_) {}
+    return false;
+  }
+}
+
+function limpiarCache({ st = almacen() } = {}) {
+  if (!st) return;
+  try { st.removeItem(CLAVE_CACHE); } catch (e) {}
+}
+
+async function bajarTexto(url, opciones = {}) {
+  const {
+    espera = ESPERA_MS,
+    reintentos = REINTENTOS,
+    traer = (typeof fetch !== "undefined" ? fetch : null),
+    dormir = (ms) => new Promise((r) => setTimeout(r, ms)),
+  } = opciones;
+
+  if (!traer) throw new Error("Este entorno no puede hacer peticiones de red.");
+
+  let ultimo = null;
+  for (let intento = 0; intento <= reintentos; intento++) {
+    const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const reloj = ctrl ? setTimeout(() => ctrl.abort(), espera) : null;
+    try {
+      const res = await traer(url, {
+        cache: "no-store",
+        redirect: "follow",
+        signal: ctrl ? ctrl.signal : undefined,
+      });
+      if (reloj) clearTimeout(reloj);
+      if (!res.ok) {
+        throw new Error(res.status === 404
+          ? "La hoja publicada no responde (404). Puede haberse despublicado o cambiado de dirección."
+          : `La hoja publicada respondió HTTP ${res.status}.`);
+      }
+      const texto = await res.text();
+      if (/^\s*<(!doctype|html)/i.test(texto)) {
+        throw new Error("Google devolvió una página HTML en lugar del CSV. Revisa que la hoja siga publicada en la web.");
+      }
+      return texto;
+    } catch (err) {
+      if (reloj) clearTimeout(reloj);
+      ultimo = err && err.name === "AbortError"
+        ? new Error("La descarga del registro excedió el tiempo de espera.")
+        : err;
+      if (intento < reintentos) await dormir(400 * Math.pow(2, intento));
+    }
+  }
+  throw ultimo || new Error("No fue posible descargar el registro.");
+}
+
+function huella(registro) {
+  const lista = (registro && registro.ejemplares) || [];
+  return JSON.stringify(lista.map((e) => [
+    e.id, e.nombreAsignado, e.especie, e.alcaldia,
+    (e.categorias || []).join("|"),
+    e.fechaDecreto && e.fechaDecreto.iso,
+    e.coords && e.coords.lat, e.coords && e.coords.lng,
+    e.morfologia && e.morfologia.altura_m,
+    e.edadEstimada, e.condicion, e.tieneCifrasAmbientales,
+  ]).sort());
+}
+
+function hayCambio(anterior, nuevo) {
+  return huella(anterior) !== huella(nuevo);
+}
+
+async function cargarEnVivo(opciones = {}) {
+  const {
+    contrato,
+    url = CSV_URL,
+    forzar = false,
+    st = almacen(),
+    ahora = Date.now(),
+    construir = construirRegistro,
+    bajar = bajarTexto,
+    espera = ESPERA_MS,
+    reintentos = REINTENTOS,
+    traer,
+  } = opciones;
+
+  if (!contrato || !Array.isArray(contrato.campos)) {
+    return { registro: null, origen: null, motivo: "No se recibió el contrato del registro: sin él no se puede leer la hoja." };
+  }
+
+  if (!forzar) {
+    const c = leerCache({ st, ahora });
+    if (c) return { registro: c.registro, origen: "cache", motivo: null, edadMs: c.edadMs };
+  }
+
+  try {
+    const texto = await bajar(url, { espera, reintentos, traer });
+    const registro = construir(texto, contrato);
+
+    if (!registro || !registro.ejemplares.length) {
+      const leidas = (registro && registro.meta && registro.meta.filasLeidas) || 0;
+      return {
+        registro: null,
+        origen: "red",
+        motivo: leidas
+          ? `La hoja respondió con ${leidas} fila(s), ninguna con id: no hay ejemplares publicados. Se conserva el registro anterior.`
+          : "La hoja respondió sin ninguna fila. Se conserva el registro anterior.",
+      };
+    }
+
+    escribirCache(registro, { st, ahora });
+    return { registro, origen: "red", motivo: null, edadMs: 0 };
+  } catch (err) {
+
+    const r = leerCache({ permitirRespaldo: true, st, ahora });
+    if (r) {
+      return {
+        registro: r.registro,
+        origen: "respaldo",
+        edadMs: r.edadMs,
+        motivo: `No se pudo actualizar el registro (${err.message}). Se muestra lo guardado.`,
+      };
+    }
+    return { registro: null, origen: null, motivo: `No se pudo actualizar el registro (${err.message}). Se conserva el registro publicado con el sitio.` };
+  }
+}
+
+window.cargarEnVivo=cargarEnVivo;window.hayCambio=hayCambio;window.CSV_URL=CSV_URL;window.CLAVE_CACHE=CLAVE_CACHE;window.FUENTE_VIVA_ACTIVA=FUENTE_VIVA_ACTIVA;
 })();
 
 
@@ -3186,10 +3745,13 @@ function pintarProcedencia(e) {
   bloque.style.display = e.observaciones ? "" : "none";
 }
 
+let VIGENTE = null;
+
 function pintarFicha(datos, slug) {
   const todos = datos.ejemplares;
   const e = todos.find((x) => x.slug === slug) || todos[0];
   if (!e) return;
+  VIGENTE = e;
   document.title = `${e.nombreAsignado} · Árboles patrimoniales de la Ciudad de México`;
 
   const resumen = [e.nombreComun || e.especie, e.alcaldia,
@@ -3231,6 +3793,44 @@ function pintarFicha(datos, slug) {
   pintarTaxonomia(e);
   pintarProcedencia(e);
   pintarFuentes(e);
+
+  iniciarFuenteVivaFicha(slug);
+}
+
+let vivaFichaIniciada = false;
+function iniciarFuenteVivaFicha(slug) {
+  if (vivaFichaIniciada) return;
+  vivaFichaIniciada = true;
+  const g = typeof globalThis !== "undefined" ? globalThis : {};
+  const activa = typeof g.FUENTE_VIVA_ACTIVA === "boolean" ? g.FUENTE_VIVA_ACTIVA : true;
+
+  if (!activa) {
+
+    try { if (g.localStorage && g.CLAVE_CACHE) g.localStorage.removeItem(g.CLAVE_CACHE); } catch (_) {}
+    console.info("[ficha] Fuente viva apagada a propósito: se muestra el registro congelado que viaja con el sitio.");
+    return;
+  }
+  if (typeof g.cargarEnVivo !== "function" || !g.CONTRATO_PADRON) return;
+
+  setTimeout(() => {
+    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON }).then((r) => {
+      if (r && r.motivo) console.info("[ficha] " + r.motivo);
+      if (!r || !r.registro) return;
+      const lista = r.registro.ejemplares || [];
+      const nuevo = lista.find((x) => x.slug === slug);
+      if (!nuevo) {
+        console.info("[ficha] La hoja no trae este ejemplar; se conserva lo que ya se mostraba.");
+        return;
+      }
+
+      if (VIGENTE && JSON.stringify(VIGENTE) === JSON.stringify(nuevo)) return;
+
+      vivaFichaIniciada = false;
+      pintarFicha(r.registro, slug);
+    }).catch((err) => {
+      console.info("[ficha] No se pudo actualizar desde la hoja: " + (err && err.message));
+    });
+  }, 0);
 }
 
 
@@ -3255,6 +3855,7 @@ function pintarFalloDeArranque(e){
     document.body.insertBefore(d,document.body.firstChild);
   }catch(_){}
 }
+window.CONTRATO_PADRON={"campos":[{"clave":"id"},{"clave":"estado"},{"clave":"nomino"},{"clave":"nombre_asignado"},{"clave":"nombre_comun"},{"clave":"nombre_cientifico"},{"clave":"centenario"},{"clave":"historico"},{"clave":"notable"},{"clave":"singular"},{"clave":"categorias"},{"clave":"fecha_decreto"},{"clave":"gaceta"},{"clave":"drive_decreto"},{"clave":"tiene_programa"},{"clave":"url_programa"},{"clave":"alcaldia"},{"clave":"calle"},{"clave":"num_ext"},{"clave":"colonia"},{"clave":"cp"},{"clave":"entre_1"},{"clave":"entre_2"},{"clave":"referencias"},{"clave":"tipo_ubicacion"},{"clave":"nombre_sitio"},{"clave":"suelo_conservacion"},{"clave":"pueblo_barrio"},{"clave":"latitud"},{"clave":"longitud"},{"clave":"utm_x"},{"clave":"utm_y"},{"clave":"street_view"},{"clave":"reino"},{"clave":"phylum"},{"clave":"clase"},{"clave":"orden"},{"clave":"familia"},{"clave":"genero"},{"clave":"autor"},{"clave":"idnombrecat"},{"clave":"endemismo"},{"clave":"cites"},{"clave":"iucn"},{"clave":"nom059"},{"clave":"prioritaria"},{"clave":"nivel_prioridad"},{"clave":"exotica_invasora"},{"clave":"ambiente"},{"clave":"forma_crecimiento"},{"clave":"url_snib"},{"clave":"url_observacion"},{"clave":"altura_m"},{"clave":"dap_cm"},{"clave":"altura_medicion_dap"},{"clave":"circunferencia_cm"},{"clave":"ancho_copa_m"},{"clave":"largo_copa_m"},{"clave":"extension_copa_m"},{"clave":"condicion_general"},{"clave":"estructura_general"},{"clave":"edad_estimada"},{"clave":"expectativa_vida"},{"clave":"fecha_itree"},{"clave":"moneda_itree"},{"clave":"validacion_itree"},{"clave":"url_itree"},{"clave":"beneficio_economico"},{"clave":"co2_eq_kg"},{"clave":"escorrentia_l"},{"clave":"precip_interceptada_l"},{"clave":"elim_co_g"},{"clave":"elim_o3_g"},{"clave":"elim_no2_g"},{"clave":"elim_so2_g"},{"clave":"elim_pm25_g"},{"clave":"ahorro_kwh"},{"clave":"evit_co2_kg"},{"clave":"evit_co_g"},{"clave":"evit_no2_g"},{"clave":"evit_so2_g"},{"clave":"evit_pm25_g"},{"clave":"obs_publicas"}],"rangos":{"latitud":{"min":19.02,"max":19.6,"de":"contrato, campo latitud"},"longitud":{"min":-99.36,"max":-98.94,"de":"contrato, campo longitud"},"altura_m":{"min":1,"max":60,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 4"},"dap_cm":{"min":5,"max":500,"de":"NADF-001-RNAT-2015, numeral 4"},"ancho_copa_m":{"min":1,"max":45,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 6"},"largo_copa_m":{"min":1,"max":45,"de":"contrato, campo largo_copa_m"},"extension_copa_m":{"min":1,"max":45,"de":"derivado de los dos ejes"},"edad_estimada":{"min":1,"max":2000,"de":"contrato, campo edad_estimada"},"circunferencia_cm":{"min":15,"max":1600,"de":"derivado del rango del DAP (π × 5 a π × 500), redondeado"}}};
 const DATOS={
   "ejemplares": [
     {

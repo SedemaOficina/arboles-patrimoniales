@@ -444,37 +444,20 @@ function pintarPadron(ejemplares, stats) {
 let DATOS_VIGENTES = null;
 let vivaIniciada = false;
 
-/* ═══ INTERRUPTOR DE LA FUENTE VIVA ═══ ENCENDIDO el 28 de agosto de 2026.
-
-   HISTORIA. Se apagó el 24 de agosto porque la hoja publicada había perdido
-   sesenta de sus ochenta y tres columnas: llegaban la identidad y la
-   taxonomía, y venían en blanco las categorías, el decreto, la ubicación, las
-   coordenadas y todas las medidas. El guardián de fuente-viva.js solo rechaza
-   un registro VACÍO, y ese no lo estaba, así que pasó el filtro y dejó el
-   sitio sin mapa y sin cifras.
-
-   POR QUÉ SE ENCIENDE. La hoja quedó reparada y se censó el CSV publicado
-   antes de tocar esta línea: responde 200, trae las 83 columnas y doce
-   ejemplares con id, coordenadas, altura y fecha de decreto. El registro
-   congelado se regeneró de esa misma hoja, así que el primer pintado y lo que
-   llega por la red dicen lo mismo.
-
-   LO QUE FALTA. El renglón 8 —25-XOC-TAX-19405GIMNO-0007, el ahuehuete de San
-   Juan, en Xochimilco— sale completamente en blanco en Salida_Publica y por
-   eso el padrón publica doce y no trece. No es un fallo del sitio: es la hoja.
-   Anotado en pendientes.html.
-
-   CÓMO SE APAGA. Se pone en `false`. Al apagar se olvida la caché, así que al
-   volver a encender se pide la hoja de nuevo. No lo dejes apagado sin que
-   alguien lo sepa: un sitio congelado para siempre deja de ser un registro. */
-const FUENTE_VIVA_ACTIVA = true;
+/* EL INTERRUPTOR NO VIVE AQUÍ. Está en `padron/fuente-viva.js`, que es el
+   módulo que incluyen tanto la portada como la ficha: con uno en cada archivo
+   se apagaba solo la mitad del sitio y nadie se enteraba. Aquí se lee del
+   global, que es donde el armado publica lo que exporta ese módulo. Si no
+   está —la lógica corriendo suelta, una maqueta—, se asume encendido: el
+   comportamiento normal del sitio es leer la hoja. */
+const vivaActiva = (g) => (typeof g.FUENTE_VIVA_ACTIVA === "boolean" ? g.FUENTE_VIVA_ACTIVA : true);
 
 function iniciarFuenteViva() {
   if (vivaIniciada) return;
   vivaIniciada = true;
   const g = typeof globalThis !== "undefined" ? globalThis : {};
 
-  if (!FUENTE_VIVA_ACTIVA) {
+  if (!vivaActiva(g)) {
     /* Se olvida lo guardado. La caché no se lee si no se llama a cargarEnVivo,
        pero un registro degradado guardado ayer volvería a entrar el día que
        alguien encienda el interruptor, antes de pedir la hoja: la caché manda

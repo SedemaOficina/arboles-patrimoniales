@@ -117,32 +117,17 @@ const mapa=envolver('mapa.js',['crearMapa','filtrar','TAMANO_PIN','TOQUE_PIN'])
   .replace(/^import .*indicadores.js";$/m,'')
   .replace(/^import .*geo-cdmx.js";$/m,()=>geo)
   .replace(/^import .*fotos.js";$/m,'');
-/* EL LECTOR DEL PADRÓN Y LA CAPA QUE LO ALIMENTA.
+/* EL LECTOR DEL PADRÓN, LA CAPA QUE LO ALIMENTA Y EL CONTRATO RECORTADO.
    Viajan con la página para que el sitio pueda actualizarse desde la hoja
    publicada sin volver a construirse. Si algo de esto falla o no está, la
-   portada se queda con el registro congelado que lleva incrustado, que es lo
-   que se ve hoy mientras la hoja está vacía. */
-const lector = envolver('padron/lector-v2.js', ['construirRegistro']);
-const viva = envolver('padron/fuente-viva.js', ['cargarEnVivo', 'hayCambio', 'CSV_URL', 'CLAVE_CACHE'])
-  .replace(/^import .*lector-v2.js";$/m, '');
-
-/* EL CONTRATO, RECORTADO.
-   El lector solo necesita dos cosas del contrato: las claves de las columnas
-   —para saber qué trae la hoja y qué le falta— y los rangos plausibles de
-   cada medida. El documento completo pesa 47 KB y lleva catálogos, notas y
-   procedencia que le sirven a quien lo revisa, no al navegador. */
-const _contrato = JSON.parse(fs.readFileSync('datos/contrato-v2.json', 'utf8'));
-const _rangos = {};
-for (const [k, v] of Object.entries(_contrato.rangos)) {
-  // Las notas en prosa son para quien revisa el documento, no para el
-  // navegador: viajan los números y de dónde salen.
-  if (k.startsWith('_')) continue;
-  _rangos[k] = { min: v.min, max: v.max, de: v.de };
-}
-const contratoMin = JSON.stringify({
-  campos: _contrato.campos.map((c) => ({ clave: c.clave })),
-  rangos: _rangos,
-});
+   portada se queda con el registro congelado que lleva incrustado.
+   Los tres los arma `construir/padron-embebido.js`, compartido con la ficha:
+   son los mismos y el recorte del contrato es una decisión con criterio que no
+   puede tener dos copias. */
+const PADRON = require('./padron-embebido.js');
+const lector = PADRON.lector;
+const viva = PADRON.viva;
+const contratoMin = PADRON.contratoMin;
 
 // Mismo motivo que en armar-ficha.js: un «export» que sobrevive al ensamblado
 // deja la página en blanco con un solo error de sintaxis.

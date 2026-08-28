@@ -104,12 +104,12 @@ a{color:var(--jacaranda-hondo)}
   <div class="envoltura">
     <span class="rotulo">Árboles patrimoniales · control interno</span>
     <h1>Lo que falta</h1>
-    <p>Página de trabajo. No está enlazada desde el sitio y lleva <code>noindex</code>, así que no aparece en buscadores. Bórrala cuando ya no la necesites: es el archivo <code>pendientes.html</code>.</p>
+    <p>Página de trabajo. No está enlazada desde el sitio y lleva <code>noindex</code>, así que no aparece en buscadores. <b>Solo lista lo que falta:</b> lo que se cierra se borra de aquí, y queda escrito en las auditorías 360 de <code>documentos/auditorias/</code>. Última limpieza: 28 de agosto de 2026.</p>
     <div class="pend-avance">
-      <div><b>13</b><span>Ejemplares en el registro</span></div>
-      <div><b>13</b><span>Con fotografía</span></div>
-      <div><b>2</b><span>Con edad estimada</span></div>
-      <div><b>0</b><span>Con PDF de decreto publicado</span></div>
+      <div><b>12</b><span>Ejemplares publicados</span></div>
+      <div><b>12</b><span>Con decreto enlazado</span></div>
+      <div><b>12</b><span>Con fotografía y coordenada</span></div>
+      <div><b>22</b><span>Asuntos abiertos</span></div>
     </div>
   </div>
 </header>
@@ -119,83 +119,6 @@ a{color:var(--jacaranda-hondo)}
   <div class="envoltura">
 
     <div class="pend-grupo">
-      <h2>0 · Lo que se cerró el 28 de agosto de 2026</h2>
-      <div class="pend-lista">
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El día que el sitio se conectó al padrón</h3>
-            <ol>
-              <li><b>La fuente viva quedó encendida.</b> El sitio consulta la hoja publicada y ya no depende de que alguien vuelva a construir para reflejar una corrección. Se censó el CSV columna por columna antes de tocar el interruptor: 83 columnas, doce ejemplares con identificador, coordenadas, altura y decreto en los doce.</li>
-              <li><b>Los decretos ya se pueden abrir.</b> Este pendiente era «el hueco más visible del micrositio»: ninguna ficha podía mostrar el documento que la declara. Se cerró sin subir un solo PDF, porque la hoja pasó a guardar la <b>dirección completa de la Gaceta Oficial</b> en lugar del nombre de un archivo. Los doce ejemplares enlazan a siete gacetas distintas, verificadas.</li>
-              <li><b>El programa de manejo se lee y se publica.</b> El lector recogía cuatro de los cinco enlaces del expediente; ahora recoge los cinco. Y por decisión del área, el renglón <b>solo aparece cuando hay documento</b>: anunciar que un árbol ya declarado no tiene programa de manejo deja asentado un incumplimiento en el sitio público.</li>
-              <li><b>Las suites corren solas.</b> Hay integración continua: <code>.github/workflows/verificar.yml</code> arma la vista previa y corre las dieciséis suites en cada empujón. Ya no dependen de que alguien se acuerde.</li>
-              <li><b>El mapa salió de CARTO.</b> El proveedor empezó a exigir llave y a estampar «API KEY REQUIRED» sobre la Ciudad. Ver el pendiente del mapa base, más abajo: se resolvió, pero con un costo declarado.</li>
-              <li><b>Los beneficios del arbolado, con su fuente.</b> La sección de servicios ambientales ya no habla solo de i-Tree: incorpora los beneficios que documenta la investigación, separados de las cifras medidas y con su referencia citada y enlazada al DOI.</li>
-            </ol>
-            <cite>Mil cuarenta y cinco comprobaciones en verde al cierre del día, y el huérfano de 48 KB que arrastraba la salida se fue solo al construir completo.</cite>
-          </div>
-          <span class="pend__quien" data-q="decidido">Cerrado</span>
-        </article>
-      </div>
-
-      <h2>0 · Lo que se cerró el 25 de agosto de 2026</h2>
-      <div class="pend-lista">
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Segunda tanda: cinco cierres más</h3>
-            <ol>
-              <li><b>La salida de producción va sin comentarios.</b> Módulo <code>construir/aligerar.js</code>. La fuente no se toca y la vista previa los conserva. Medido: la portada pasó de 129 a <b>80 KB comprimidos</b>, la ficha de 106 a 66 y Recursos de 60 a 31. Son <b>118 KB menos por visita</b> entre las tres.</li>
-              <li><b>El cintillo ya no llama «protegidos» a los trece.</b> Uno tiene la declaratoria en trámite y ahora se dice, contado, no escrito a mano. En la ficha, «Fecha del decreto · Sin determinar» pasó a «Declaratoria en trámite»: no es lo mismo un hueco de captura que un expediente en curso.</li>
-              <li><b>El registro se lee sin JavaScript.</b> Los trece van escritos en el HTML de la portada, dentro de <code>noscript</code>, con su enlace a la ficha propia.</li>
-              <li><b>Hay diccionario de datos.</b> <code>datos/diccionario-de-datos.csv</code>, 28 columnas con descripción, tipo, unidad y origen, y ahí se dice cuáles son medición de campo y cuáles estimación de i-Tree. Se genera junto al CSV que describe y <b>el armado falla si alguien agrega una columna sin describirla</b>.</li>
-              <li><b>Las citas jurídicas, hasta donde se podía llegar solo.</b> Ver abajo.</li>
-            </ol>
-            <div class="arreglo">
-              <b>Lo jurídico: qué se hizo y qué NO</b>
-              <p>De las cinco afirmaciones sin fundamento, una se resolvió sola: «la norma ambiental pide tomar las medidas necesarias…» es, palabra por palabra, lo que este mismo sitio cita bien 130 líneas más abajo como <b>NADF-001-RNAT-2015, numeral 7.5</b>. Nombrarla ahí no es inventar un dato: es dejar de contradecirse.</p>
-              <p style="margin-top:9px"><b>Las otras cuatro no se fundaron, se desactivaron.</b> No se puede citar un artículo del que no hay certeza, así que se reescribieron para que no afirmen lo que nadie ha fundado: «comete una infracción» pasó a enunciar la prohibición —que el sitio sí cita—, y «la ley lo pone como deber de quien se entera» pasó a «la Procuraduría solo puede investigar lo que conoce». La guía práctica no se perdió; la afirmación jurídica sin respaldo, sí.</p>
-              <p style="margin-top:9px">También salió la frase que atribuía el dictamen a la Secretaría «caso por caso»: no citaba norma y <b>contradecía a la página de Recursos</b>, que lo atribuye a la Alcaldía. Mientras jurídico no diga cuál describe el trámite real, el sitio enuncia lo que las dos versiones comparten y no elige por su cuenta. <b>El pendiente sigue abierto</b> y está en <code>documentos/auditorias/Consulta_juridica_arbolado_patrimonial.html</code>.</p>
-            </div>
-            <cite>Un dato normativo del que no hay certeza se declara, no se rellena. Cuatro de cinco siguen esperando a quien sí puede fundarlas.</cite>
-          </div>
-          <span class="pend__quien" data-q="decidido">Cerrado</span>
-        </article>
-      </div>
-
-      <p>De la Auditoría 360 v3. Todo lo de esta lista está armado, publicado en <code>docs/</code> y con las dieciséis suites en verde. Se deja escrito para que la próxima sesión no lo vuelva a buscar.</p>
-      <div class="pend-lista">
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Nueve cierres, y lo que quedó abierto de cada uno</h3>
-            <ol>
-              <li><b>«Saltar al contenido» ya no cambia de árbol.</b> El fragmento solo manda si empieza por <code>#ficha-</code>. <code>construir/armar-ficha.js</code>.</li>
-              <li><b>Un error de arranque ya no deja la página en blanco.</b> <code>construir/arranque.js</code> pinta el mismo cintillo del caso sin JavaScript y manda a los datos abiertos.</li>
-              <li><b>La galería devuelve el foco y anuncia el cambio de fotografía.</b> Región <code>aria-live</code> nueva en <code>ficha-cuerpo.html</code>.</li>
-              <li><b>Las cotas de la regla pasaron de dorado a corteza</b>: 2.60:1 → 6.29:1. Era la única violación de axe en seis mediciones. No se inventó un tono: la corteza ya estaba en la paleta.</li>
-              <li><b>El recibo del armado ya no se puede firmar sin armar.</b> Los tres armadores dejan su marca con el identificador de la corrida y <code>sellar.js</code> se niega si no coinciden. <code>verifica-deriva</code> comprueba además el <b>JavaScript</b> incrustado, no solo el CSS.</li>
-              <li><b>Cada ejemplar tiene su dirección:</b> <code>arbol-&lt;slug&gt;.html</code>, con su canónica, su título y su tarjeta. El mapa del sitio pasó de 3 a 16 direcciones. <code>ficha.html</code> se conserva para los enlaces viejos y ahora se apunta a sí misma.</li>
-              <li><b>Aviso de privacidad, licencia y terceros</b>, en Recursos y enlazado desde el pie de las tres páginas. La fecha de publicación la escribe el armado.</li>
-              <li><b>El manual de identidad quedó al día</b>: nueve desfases corregidos y cinco tokens documentados, entre ellos <code>--tinta-suave</code>, el color del 80 % del texto del sitio.</li>
-              <li><b>Este registro</b>, que tenía cuatro afirmaciones que ya no eran ciertas.</li>
-            </ol>
-            <div class="arreglo">
-              <b>Lo que quedó abierto y hay que recordar</b>
-              <ul>
-                <li><b>El diccionario de datos no se publicó.</b> El contrato de campos vive en <code>fuente/datos/contrato-v2.json</code> y no sale al sitio. Sin él, «datos abiertos» es una descarga, no un conjunto reutilizable. Media jornada.</li>
-                <li><b>El aviso de privacidad integral</b> de la Secretaría no está enlazado: hace falta la dirección, que la aporta el área competente. El texto publicado describe lo que este sitio hace de verdad, que es lo que sí se podía escribir sin inventar.</li>
-                <li><b>Las trece fichas propias pesan 4.5 MB en el repositorio</b> —cada una lleva la hoja de estilo y el guion incrustados—. Comprimidas son unos 105 KB por visita, así que el visitante no lo nota. Quitar los comentarios solo en la salida de producción bajaría eso un 40 %: sigue siendo el pendiente de peso más rentable.</li>
-                <li><b>Sin tocar, por decisión de esta sesión:</b> las sumas de servicios ambientales siguen publicadas, <code>nominadoPor</code> sigue en el JSON descargable, la validación de rangos sigue sin correr en el armado, el sondeo de fotografías sigue lanzando 22 peticiones fallidas y el Sabino sigue contado como declarado. Los cinco están en la Auditoría 360 v3 con su número.</li>
-              </ul>
-            </div>
-            <cite>Un registro vivo solo sirve mientras se le pueda creer. Cuatro de sus afirmaciones habían dejado de ser ciertas en tres días.</cite>
-          </div>
-          <span class="pend__quien" data-q="decidido">Cerrado</span>
-        </article>
-      </div>
-
       <h2>1 · Bloqueado en ti</h2>
       <p>Nada de esto lo puedo resolver yo. Sin estos insumos el sitio funciona, pero se publica incompleto.</p>
       <div class="pend-lista">
@@ -220,37 +143,7 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
 
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>¿El micrositio muestra ejemplares sin decreto?</h3>
-            <p>El <b>28 de agosto de 2026 se encendió la fuente viva</b>: el sitio consulta otra vez la hoja publicada. Publica <b>doce ejemplares</b>, los doce con decreto, categoría, coordenadas y medidas.</p>
-            <p style="margin-top:9px"><b>El trece no está, y es la regla funcionando.</b> El «Árbol Ahuehuete (Sabino) de San Juan y su Arboleda», en Xochimilco, todavía no tiene decreto, y sin decreto el padrón no lo saca a la hoja pública. No es un fallo del sitio ni de la hoja. Está declarado en <code>fuente/datos/en-espera.json</code> con fecha y motivo, sus doce fotografías siguen montadas y las suites de integridad y galería leen esa lista para no confundirlas con sobras. Su ficha publicada sí se retiró: una página de un ejemplar que el registro no reconoce queda servida y sin enlaces.</p>
-            <p style="margin-top:9px"><b>Lo que hay que decidir.</b> Hasta el 24 de agosto el sitio sí lo mostraba, con la etiqueta «Declaratoria en trámite» y una explicación propia: «su categoría se asignará cuando se publique el decreto». Esa maquinaria sigue en el código —etiqueta, explicación, color, la nota del cintillo que separa «con decreto publicado» de «con declaratoria en trámite»— pero <b>con la regla actual no se puede alcanzar nunca</b>, porque un ejemplar sin decreto ni siquiera llega al sitio.</p>
-            <div class="arreglo">
-              <b>Dos caminos, y hay que elegir uno</b>
-              <ol>
-                <li><b>Sin decreto no se publica</b> —la regla de hoy—. Entonces esa maquinaria es código muerto y conviene retirarla, para que nadie la mantenga ni la crea viva. Media jornada, y el registro pierde visibilidad de lo que está en proceso.</li>
-                <li><b>Se muestran también los que están en trámite</b>, claramente distinguidos, como estaba antes. Entonces la hoja tiene que sacarlos a <code>Salida_Publica</code> con su estado, y el sitio los recoge solo: el código ya sabe pintarlos.</li>
-              </ol>
-              <p style="margin-top:9px">No es una decisión técnica: es qué dice el registro de sí mismo. Un padrón que solo enseña lo decretado es un registro de actos; uno que enseña también lo que está en curso es un registro del proceso. Los dos son defendibles; hoy el sitio afirma el primero sin que nadie lo haya escrito.</p>
-            </div>
-            <cite>El sitio publica lo que la hoja publica. Lo que falta decidir no es el ejemplar: es si el micrositio es el espejo de los decretos o el del expediente.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>La hoja publicada perdió 60 de sus 83 columnas · resuelto</h3>
-            <p>Del 24 de agosto de 2026. El vínculo de <code>Salida_Publica</code> hacia la hoja del padrón se había roto y venían en blanco las categorías, el decreto, la ubicación entera, las coordenadas y todas las medidas: llegaba lo que se resuelve desde el nombre científico y faltaba lo que se resuelve desde el renglón del ejemplar.</p>
-            <p style="margin-top:9px"><b>Comprobado el 28 de agosto de 2026</b> sobre el mismo CSV publicado: responde 200, trae las 83 columnas y <b>doce ejemplares con identificador, coordenadas, altura y fecha de decreto</b>. Solo cinco columnas vienen vacías en todos —<code>pueblo_barrio</code>, <code>endemismo</code>, <code>cites</code>, <code>nom059</code> y <code>obs_publicas</code>—, y ninguna de ellas impide publicar.</p>
-            <p style="margin-top:9px">Queda una cosa del diagnóstico original, y tiene su propio pendiente arriba: <b>el renglón 8 sigue saliendo en blanco</b>, así que el padrón publica doce.</p>
-            <cite>Se censó el CSV por columna antes de tocar el interruptor. El corte entre lo que llegaba y lo que faltaba fue el diagnóstico, y el mismo censo fue la comprobación de que quedó arreglado.</cite>
-          </div>
-          <span class="pend__quien" data-q="decidido">Cerrado</span>
-        </article>
-        <article class="pend pend--bloquea">
+                        <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
             <h3>El registro vivo puede sustituir al congelado aunque llegue roto</h3>
@@ -371,7 +264,9 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__marca"></span>
           <div>
             <h3>Decreto del Sabino de San Juan</h3>
-            <p>Es el único ejemplar sin decreto enlazado. Dijiste que hasta su publicación en la Gaceta.</p>
+            <p>Es el único ejemplar sin decreto. Dijiste que hasta su publicación en la Gaceta, y esa es la regla del padrón: <b>sin decreto no se publica</b>, así que el sitio muestra doce de trece.</p>
+            <p style="margin-top:9px">Sus doce fotografías siguen montadas y el ejemplar está declarado en <code>fuente/datos/en-espera.json</code>, que leen tres suites para no confundir sus archivos con sobras.</p>
+            <p style="margin-top:9px">El día que salga su decreto <b>no hay que tocar código</b>: regenerar el congelado con <code>node construir/armar-registro.js --escribir</code>, construir las dos salidas y sacarlo de <code>en-espera.json</code>.</p>
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
@@ -385,58 +280,7 @@ a{color:var(--jacaranda-hondo)}
       <p>No son técnicas. Alguien tiene que decidirlas antes de publicar.</p>
       <div class="pend-lista">
 
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>La ruta para promover una declaratoria se quedó sin casa</h3>
-            <p>El 28 de agosto de 2026 se retiró de la portada, por decisión del área, la secuencia de cinco hitos que explicaba <b>cómo se promueve una declaratoria</b>. La sección de postulación ahora solo anuncia el estado de la convocatoria, que es lo que se pidió.</p>
-            <p style="margin-top:9px"><b>Lo que se fue con ella</b> no era relleno: <b>quién puede promover</b> —Alcaldías, cualquier persona física o moral, pueblos y barrios originarios, la propia autoridad, el Congreso— del <b>artículo 54</b>; <b>qué lleva la solicitud</b> y que se presenta ante la <b>Secretaría de Cultura</b>, no ante esta Secretaría, del <b>artículo 55</b>; el <b>dictamen en 60 días naturales</b> del <b>artículo 56</b>; y la emisión y publicación en Gaceta del <b>artículo 57</b>.</p>
-            <p style="margin-top:9px">Hoy <b>eso no está en ninguna página del sitio</b>. Recursos enlaza el texto de la ley, pero no explica la ruta. Quien lea «cualquier persona puede postular un árbol» y quiera hacerlo no encuentra cómo, y la convocatoria cerrada no le dice a dónde ir mientras tanto.</p>
-            <div class="arreglo">
-              <b>Tres salidas</b>
-              <ol>
-                <li><b>Moverla a Recursos</b>, en su propio bloque. Es donde vive el resto del articulado y no compite con la portada. Es lo que yo haría: una hora de trabajo y no se pierde nada.</li>
-                <li><b>Dejarla fuera del sitio</b> y que la ruta se explique en la convocatoria cuando se abra. Legítimo, pero entonces conviene que el recuadro de convocatoria cerrada diga a dónde escribir mientras tanto.</li>
-                <li><b>Regresarla a la portada</b> cuando abra la convocatoria, y retirarla cuando cierre.</li>
-              </ol>
-              <p style="margin-top:9px">Mientras se decide, los estilos <code>.linea*</code> y <code>.paso__*</code> se conservan sin uso, para que devolverla sea pegar el bloque y no rehacerlo. Si la salida es la segunda, esos estilos se retiran.</p>
-            </div>
-            <cite>Retirar el trámite de la portada es una decisión de foco. Que el trámite no viva en ninguna parte es un hueco, y no es lo mismo.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El aire de «Cómo llegar», resuelto</h3>
-            <p>Apilar la vista de calle sobre el mapa alargó la columna derecha y dejó dos huecos: uno arriba —el llamado «Puedes visitarlo» iba en franja a todo lo ancho y empujaba esa columna casi 300 px hacia abajo— y otro a media columna izquierda, encima de «Llévatelo en papel».</p>
-            <p style="margin-top:9px">Se cerraron bajando el llamado a la columna de datos y llevando el aviso de la fecha del panorama al pie de la imagen, donde <code>modelo-ficha.js</code> ya lo tenía. El bloque quedó en <b>979 px</b> de alto en escritorio: era de 1,824. Sigue habiendo unos 180 px de aire sobre «Llévatelo en papel», que es la holgura normal entre dos columnas de altura distinta.</p>
-          </div>
-          <span class="pend__quien" data-q="decidido">Decidido</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El rótulo «Origen en la Ciudad» y lo que de verdad trae</h3>
-            <p>La fila se llama ahora <b>«Exótica / invasora»</b>, igual que la columna del padrón, porque eso es lo que trae: una fórmula heredada de la especie desde la hoja <code>Taxonomia_SNIB</code>, no un dato capturado por ejemplar. Doce de los trece la traen vacía y la ficha dice «Sin determinar», que con este rótulo se lee bien: el SNIB no clasificó a esa especie como exótica.</p>
-            <p style="margin-top:9px">Queda la decisión de fondo: <b>si el sitio debe decir el origen de verdad</b> —nativa de la Cuenca de México, introducida, naturalizada—, eso es una columna nueva en <code>Taxonomia_SNIB</code>, no un cambio de rótulo. Hoy no existe y no se inventa.</p>
-          </div>
-          <span class="pend__quien" data-q="registro">Por decidir</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Si el logotipo no carga, el encabezado se desborda</h3>
-            <p>El <code>onerror</code> del logotipo institucional pone la clase <code>marca--sin-logo</code> y retira la imagen. Se dispara <b>dos veces</b> —el navegador reintenta con el <code>srcset</code>—, y en la segunda el nodo ya está fuera del documento: <code>this.closest('.marca')</code> devuelve <code>null</code> y revienta con un error en consola. Con el logotipo ausente y la clase a medio aplicar, el nombre del sitio se sale 66 px del ancho de un teléfono de 390.</p>
-            <cite>Se ve solo si el archivo del logotipo no llega —un despliegue a medias, un servidor con la carpeta incompleta—. La corrección es de una línea: guardar el <code>closest</code> antes de retirar el nodo, o marcar el elemento para no repetir el manejador. Detectado el 24 de agosto de 2026 sirviendo la ficha sin la carpeta de marca.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Por implementar</span>
-        </article>
-
-        <article class="pend">
+                                                <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>El crédito de las ilustraciones de árboles</h3>
@@ -446,39 +290,7 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="registro">Por decidir</span>
         </article>
 
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Drive compartido como origen de los archivos</h3>
-            <p>Decisión tomada: los PDF de los decretos viven en la carpeta de Drive compartida con el equipo técnico, y ahí mismo se depositan las fotografías y, en el futuro, las ilustraciones de las especies. De ahí se bajan, se renombran según la guía de alta y se colocan en <code>fuente/</code>, que sigue siendo lo único que llega al sitio publicado.</p>
-            <cite>Las especificaciones completas quedaron en <b>guia-alta.html</b>, autocontenida a propósito para que se pueda dejar en la misma carpeta de Drive y la abra cualquiera del equipo.</cite>
-          </div>
-          <span class="pend__quien" data-q="decidido">Decidido</span>
-        </article>
-
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>La portada ya lee la hoja; falta la ficha</h3>
-            <p>La portada nace con el registro congelado incrustado —se ve completa sin esperar a nadie— y encima pide la hoja publicada. Si la hoja trae ejemplares, la portada se repinta con ellos y el mapa se rehace. Si llega vacía, si Google no responde o si alguien despublica la hoja, la página se queda exactamente como estaba: <b>una hoja en blanco no puede vaciar el micrositio</b>. </p>
-            <p style="margin-top:9px"><b>Desde el 28 de agosto de 2026 la hoja trae datos y el interruptor está encendido</b>, así que ese camino se recorre de verdad en cada visita: lo que ves en la portada sale de la hoja, no del archivo.</p>
-            <p style="margin-top:9px"><b>La ficha todavía no se actualiza en vivo, y eso ya importa hoy.</b> Sigue leyendo solo el congelado que viaja incrustado. Mientras la hoja estaba vacía las dos páginas mostraban lo mismo; ahora no: una corrección capturada en el padrón se ve en la portada <b>en diez minutos</b> y en la ficha <b>solo después de construir y publicar</b>. Dos páginas del mismo sitio pueden decir cosas distintas del mismo árbol. Es lo siguiente que hay que cablear.</p>
-            <cite>Las piezas: <code>fuente/padron/lector-v2.js</code> convierte el CSV en datos y <code>fuente/padron/fuente-viva.js</code> va por él, con caché de diez minutos, respaldo de siete días y la guardia del registro vacío. Se prueban en <code>verificar/verifica-fuente-viva.mjs</code>. El congelado se regenera desde la hoja con <code>node construir/armar-registro.js --escribir</code>, que se corre a mano: armar el sitio no puede depender de la red.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Por implementar</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>¿Se publica de dónde salió cada coordenada?</h3>
-            <p>El padrón lleva un catálogo que el sitio no usa: <code>CAT_ORIGEN_COORD</code> —levantamiento en campo, derivada de UTM, fotointerpretación, verificada en gabinete—. Hoy es dato interno: no tiene columna en la salida pública.</p>
-            <p style="margin-top:9px">Vale la pena decidirlo. La procedencia de la coordenada es de las cosas que dan credibilidad a un registro oficial, y distingue un punto medido en campo de uno deducido en escritorio. Cuesta una columna en la hoja y una línea en la ficha.</p>
-          </div>
-          <span class="pend__quien" data-q="tu">Por decidir</span>
-        </article>
-
-        <article class="pend">
+                                <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>Dominio y ruta definitiva</h3>
@@ -502,6 +314,7 @@ a{color:var(--jacaranda-hondo)}
           <div>
             <h3>Comprobar en navegador la actualización en vivo</h3>
             <p>La capa que lee la hoja está escrita y verificada: cuarenta y una aserciones cubren la caché, los reintentos, el respaldo, la guardia del registro vacío y la huella que evita repintar de balde. <b>Lo que no se puede comprobar sin navegador es el repintado</b>: que la portada se rehaga entera con datos nuevos, que el mapa se desmonte y se vuelva a montar sin dejar el lienzo marcado, y que los filtros y la búsqueda sigan respondiendo después.</p>
+            <p style="margin-top:9px"><b>Desde el 28 de agosto de 2026 la ficha también lee la hoja</b>, así que hay que mirar las dos: que la ficha se repinte con datos nuevos sin duplicar el mapa ni perder la galería, y que un ejemplar que la hoja no trae conserve lo que ya mostraba en vez de vaciarse.</p>
             <p style="margin-top:9px">Hace falta abrir <code>prueba/portada-vista-previa.html</code> con la hoja ya cargada de datos y mirarlo. <b>Desde el 28 de agosto de 2026 ya se puede</b>: la hoja trae doce ejemplares y el interruptor está encendido, así que ese camino se ejercita de verdad. Antes no: con la hoja vacía la capa decidía no sustituir nada, que era justo lo correcto.</p>
           </div>
           <span class="pend__quien" data-q="tu">Falta probar</span>
@@ -546,50 +359,7 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="registro">No realizada</span>
         </article>
 
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Ficha imprimible: decidir cuántas hojas</h3>
-            <p>Validada en carta y en A4 contra fichas impresas de verdad. Se corrigieron siete cosas que solo se ven en papel: <b>la ficha no llevaba ninguna imagen</b>; las cifras destacadas salían en blanco sobre blanco; los títulos se partían entre hojas; los documentos se imprimían sin su dirección; <b>las secciones se partían</b> y la ilustración terminaba impresa encima de su propio pie de foto; el rótulo de la cota de altura salía cortado —«IETROS»—; y la ficha terminaba con una hoja enteramente en blanco.</p>
-            <p style="margin-top:9px">Queda una sola decisión: <b>son cinco hojas y el criterio decía tres</b>. Con las secciones enteras, cada una empieza en hoja nueva cuando no cabe, y eso cuesta blanco al pie. Bajar de cinco es recortar contenido, no CSS: lo más prescindible en papel es la tabla de calidad del aire desglosada por contaminante, que en campo nadie consulta, y la aclaración de la sigla UICN.</p>
-            <cite>Falta la prueba en una impresora real: los PDF se generaron con Chromium y el papel puede correr los saltos.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Decidir</span>
-        </article>
-
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Un huérfano de 48 KB en la salida</h3>
-            <p><code>docs/assets/js/ficha-logica.js</code> no lo produce el armado: la ficha lleva ese código incrustado. Llegó ahí de una copia a mano. <b>Ninguna página lo carga y aun así se publica.</b> <code>construir.sh</code> lo habría borrado —empieza limpiando <code>docs/assets</code>—, pero el rodeo de correr los <code>armar-*.js</code> sueltos, que es el que se usa cuando la herramienta no puede borrar, nunca limpia.</p>
-            <cite>Se va solo con un <code>construir.sh produccion</code> completo. <code>verificar/verifica-deriva.mjs</code> ya lo detecta y lo seguirá detectando.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Por limpiar</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3><code>modelo-recursos.js</code> no lo usa nadie</h3>
-            <p>456 bytes que <b>no lee el armado, no carga ninguna página y no toca ninguna de las dieciséis suites</b>. Sus dos hermanos sí tienen oficio: <code>modelo-ficha.js</code> y <code>modelo-portada.js</code> son el oráculo contra el que comparan cinco y cuatro suites. Este quedó suelto.</p>
-            <cite>Antes de retirarlo, confirmar que no era el arranque de un modelo de la página de recursos que se dejó a medias.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Por limpiar</span>
-        </article>
-
-                <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Nombres de CSS retirados · 24 de agosto de 2026</h3>
-            <p><b>Hecho.</b> Salieron de la hoja siete selectores que ninguna página podía alcanzar: <code>.visita__mapa</code> y <code>.visita__acciones</code> —la columna de acciones de la llamada a visitar—, <code>.girador</code> con su <code>@keyframes girar</code>, los tres del árbol dibujado con CSS (<code>.escala__arbol</code>, <code>.escala__copa</code>, <code>.escala__tronco</code>) que sustituyó la silueta por especie, y <code>.enlace__fuera</code>. Con ellos, <code>.resumen__nota</code> en pantalla y en sus tres reglas de impresión. Cada grupo dejó una nota de por qué se fue.</p>
-            <p style="margin-top:9px"><b>Una aserción cambió de criterio y lo declara:</b> <code>verifica-auditoria.mjs</code> comprobaba que la lista de fondos que se apagan al imprimir incluyera <code>.resumen__nota</code>. Ahora comprueba <code>.medida, .medidas</code>. Lo que cuida es lo mismo —que los hijos del resumen se apaguen uno por uno— y el porqué quedó escrito junto a la aserción.</p>
-            <cite>Dos tokens se quedan a propósito: <code>--mariposa</code> y <code>--jacaranda-bruma</code> no los usa ninguna regla, pero documentan los colores de la ilustración para quien la retoque. Quedaron marcados como tales. Y siete nombres más —<code>.muestras</code>, <code>.muestra__color</code>, <code>.tipo__cabeza</code> y las cuatro variantes de <code>.tipo__muestra</code>— se conservan: los usa la guía de identidad, que lleva la hoja incrustada.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Hecho</span>
-        </article>
-
-        <article class="pend">
+                                                <article class="pend">
           <span class="pend__marca"></span>
           <div>
             <h3>Las tres páginas cargan la hoja de estilos entera</h3>
@@ -614,8 +384,8 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend">
           <span class="pend__marca"></span>
           <div>
-            <h3>Cuatro campos de conservación vacíos en los trece</h3>
-            <p><code>nom059</code>, <code>cites</code>, <code>origen</code> y <code>endemismo</code> están en nulo para <b>todos</b> los ejemplares. La ficha lo maneja bien: declara que no hay dato en vez de suponerlo. Pero son cuatro de los campos que un registro patrimonial debería llevar, y hoy ninguno se publica.</p>
+            <h3>Cinco columnas vacías en los doce ejemplares</h3>
+            <p>Censado el 28 de agosto de 2026 sobre el CSV publicado: <code>nom059</code>, <code>cites</code>, <code>endemismo</code>, <code>pueblo_barrio</code> y <code>obs_publicas</code> vienen vacías en <b>los doce</b> ejemplares. La ficha lo maneja bien: declara que no hay dato en vez de suponerlo. Pero son cuatro de los campos que un registro patrimonial debería llevar, y hoy ninguno se publica.</p>
             <cite>Es captura en la hoja, no código. La categoría de riesgo bajo la NOM-059 y el origen —nativa o introducida— son los dos que más se echan de menos en una ficha de este tipo.</cite>
           </div>
           <span class="pend__quien" data-q="registro">Por capturar</span>
@@ -649,18 +419,7 @@ a{color:var(--jacaranda-hondo)}
           </div>
           <span class="pend__quien" data-q="decidido">Por hacer</span>
         </article>
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Borra la carpeta <code>_a_borrar/</code></h3>
-            <p>Al eliminar la ficha para impresión el 24 de agosto de 2026 quedaron sin uso <code>logo-institucional-grande.png</code> y <code>.webp</code> —solo los pedía el membrete impreso—. Ya se movieron a <code>_a_borrar/</code>, junto con las carpetas <code>assets/</code> y <code>vendor/</code> viejas de <code>docs/</code> y <code>prueba/</code>, que hubo que apartar para poder construir.</p>
-            <p style="margin-top:9px">Son unos <b>66 MB</b>. El sitio ya se construyó y las dieciséis suites pasan sin ellos, así que la carpeta entera se puede borrar. <b>Bórrala tú desde el explorador:</b> desde esta sesión no se puede borrar nada dentro de la carpeta sincronizada, solo mover.</p>
-            <p style="margin-top:9px"><b>Ojo:</b> las variantes <code>chico</code> y <code>media</code> del logotipo institucional <b>sí se usan</b> —las pide el encabezado de todas las páginas— y siguen en su sitio.</p>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
-
-      </div>
+              </div>
     </div>
 
     <p class="pend-nota"><b>Para borrar esta página:</b> elimina el archivo <code>pendientes.html</code> de la raíz del sitio. No está enlazada desde ninguna parte, así que no queda ningún enlace roto.</p>

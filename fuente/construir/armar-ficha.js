@@ -66,6 +66,12 @@ const dif=';(function(){\n'+ALIGERAR.aligerarJS(fs.readFileSync('leaflet-diferid
   +'\nwindow.cargarLeaflet=cargarLeaflet;window.cuandoSeAcerque=cuandoSeAcerque;\n})();';
 const js=exigir(ALIGERAR.aligerarJS(fs.readFileSync('ficha-logica.js','utf8')),'export function pintarFicha','ficha-logica.js').replace('export function pintarFicha','function pintarFicha').replace(/^import .*geo-cdmx.js";$/m,()=>geo).replace(/^import .*especies.js";$/m,'').replace(/^import .*fotos.js";$/m,'').replace(/^import .*leaflet-diferido.js";$/m,'');const esp=';(function(){\n'+ALIGERAR.aligerarJS(fs.readFileSync('especies.js','utf8')).replace(/^export const /gm,'const ').replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\nwindow.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.siluetaPlana=siluetaPlana;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.PERSONA=PERSONA;window.srcsetIlustracion=srcsetIlustracion;\n})();';
 const menu=';(function(){\n'+ALIGERAR.aligerarJS(fs.readFileSync('menu.js','utf8')).replace(/^export function /gm,'function ').replace(/^export /gm,'')+'\n})();';
+/* EL PADRÓN QUE VIAJA CON LA FICHA, desde el 28 de agosto de 2026.
+   Los mismos tres bloques que lleva la portada —el lector del CSV, la capa que
+   va por él y el contrato recortado—, armados por el ayudante compartido para
+   que no haya dos recortes distintos del contrato. Sin esto la ficha se queda
+   con el registro congelado y puede contradecir a la portada. */
+const PADRON=require('./padron-embebido.js');
 const datos=fs.readFileSync('datos/registro.json','utf8');
 /* UNA DIRECCIÓN POR EJEMPLAR.
    Hasta hoy las trece fichas vivían en una sola página y se distinguían por el
@@ -158,8 +164,11 @@ ${esp}
 ${fot}
 ${menu}
 ${dif}
+${PADRON.lector}
+${PADRON.viva}
 ${js}
 ${ARRANQUE.GUARDIA}
+window.CONTRATO_PADRON=${PADRON.contratoMin};
 const DATOS=${datos};
 /* EL FRAGMENTO SOLO MANDA SI NOMBRA UN EJEMPLAR.
    «#contenido» —el destino del enlace «Saltar al contenido»— no es un slug.

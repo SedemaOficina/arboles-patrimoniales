@@ -92,22 +92,42 @@ export async function descubrirFotos(id, opciones = {}) {
      una galería pesada que una galería vacía. */
   const sonda = (n, e) => existeImagen(rutaMiniatura(id, n, e)).then((hay) => hay || existeImagen(rutaFoto(id, n, e)));
 
-  // 1. La extensión de la carpeta la fija la primera foto. Las cinco
-  //    extensiones se prueban EN PARALELO: son excluyentes entre sí, así que
-  //    encadenarlas con await solo sumaba viajes de ida y vuelta.
-  const halladas = await Promise.all(EXTENSIONES.map((e) => sonda(1, e).then((hay) => (hay ? e : null))));
-  const ext = halladas.find(Boolean) || null;
+  /* 1. La extensión de la carpeta la fija la primera foto.
+     Se probaban las cinco EN PARALELO, y como son excluyentes eso significaba
+     CUATRO peticiones fallidas garantizadas por ejemplar, siempre. Las 176
+     fotografías montadas son .jpg, así que el caso raro pagaba el caso común.
+     Ahora se prueba la primera de la lista sola; solo si no está se abren las
+     otras cuatro en paralelo. En el caso común, cero peticiones fallidas; en
+     el raro, un viaje de ida y vuelta más, que nadie nota. */
+  let ext = (await sonda(1, EXTENSIONES[0])) ? EXTENSIONES[0] : null;
+  if (!ext) {
+    const halladas = await Promise.all(
+      EXTENSIONES.slice(1).map((e) => sonda(1, e).then((hay) => (hay ? e : null))));
+    ext = halladas.find(Boolean) || null;
+  }
   if (!ext) return [];
 
-  // 2. El resto se pide con esa extensión hasta el primer hueco. También en
-  //    paralelo, en tandas del tamaño del tope: el corte lo decide después el
-  //    primer hueco, no el orden de llegada.
-  const presentes = await Promise.all(
-    Array.from({ length: tope - 1 }, (_, i) => sonda(i + 2, ext)));
+  /* 2. El resto se pide con esa extensión hasta el primer hueco, en tandas.
+     Antes se pedían de una vez los once números posibles: para una carpeta de
+     cinco fotografías eso son SIETE peticiones fallidas, y para una de una,
+     once. El tope existe para que un error de nombres no dispare peticiones
+     sin fin, no para pedirlas todas siempre.
+     Ahora se avanza de tres en tres y se corta en el primer hueco. Una carpeta
+     de cinco cuesta dos peticiones fallidas en vez de siete, y la más grande
+     que hay —once— sigue resolviéndose en cuatro viajes. El paralelismo dentro
+     de la tanda se conserva: el corte lo decide el primer hueco, no el orden
+     de llegada. */
   const urls = [rutaFoto(id, 1, ext)];
-  for (const hay of presentes) {
-    if (!hay) break;
-    urls.push(rutaFoto(id, urls.length + 1, ext));
+  const TANDA = 3;
+  for (let n = 2; n <= tope; ) {
+    const numeros = [];
+    for (let k = 0; k < TANDA && n + k <= tope; k++) numeros.push(n + k);
+    const hay = await Promise.all(numeros.map((i) => sonda(i, ext)));
+    const hueco = hay.indexOf(false);
+    const hasta = hueco === -1 ? numeros.length : hueco;
+    for (let k = 0; k < hasta; k++) urls.push(rutaFoto(id, numeros[k], ext));
+    if (hueco !== -1) break;
+    n += numeros.length;
   }
 
   return urls.map((url, i) => ({

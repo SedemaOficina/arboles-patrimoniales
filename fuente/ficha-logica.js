@@ -909,10 +909,15 @@ function pintarProcedencia(e) {
 
 /* ---------- entrada ---------- */
 
+/** El ejemplar que se está mostrando. Lo lee la capa en vivo para no repintar
+ *  la ficha entera cuando la hoja trae exactamente lo mismo. */
+let VIGENTE = null;
+
 export function pintarFicha(datos, slug) {
   const todos = datos.ejemplares;
   const e = todos.find((x) => x.slug === slug) || todos[0];
   if (!e) return;
+  VIGENTE = e;
   document.title = `${e.nombreAsignado} · Árboles patrimoniales de la Ciudad de México`;
   // La tarjeta de compartir sigue al ejemplar abierto. Ojo: los rastreadores
   // que no ejecutan JavaScript solo verán la tarjeta general del sitio; para
@@ -957,4 +962,64 @@ export function pintarFicha(datos, slug) {
   pintarTaxonomia(e);
   pintarProcedencia(e);
   pintarFuentes(e);
+
+  iniciarFuenteVivaFicha(slug);
+}
+
+/* ═══ LA FICHA TAMBIÉN LEE LA HOJA ═══ desde el 28 de agosto de 2026.
+ *
+ * POR QUÉ. La portada pedía la hoja publicada y la ficha no: se quedaba con el
+ * registro congelado que viaja incrustado. Mientras la hoja estuvo vacía las
+ * dos decían lo mismo; en cuanto trajo datos, una corrección capturada en el
+ * padrón se veía en la portada en diez minutos y en la ficha solo después de
+ * construir y publicar. Dos páginas del mismo sitio, dos verdades del mismo
+ * árbol.
+ *
+ * CÓMO. Igual que la portada, y a propósito: la misma capa, la misma caché de
+ * diez minutos, el mismo guardián que descarta un registro vivo vacío y el
+ * mismo interruptor —que vive en `padron/fuente-viva.js` para que no se pueda
+ * apagar media web—. Se pide DESPUÉS del primer pintado: la ficha no espera a
+ * la red para existir.
+ *
+ * SI EL EJEMPLAR NO VIENE EN LA HOJA no se repinta nada y se dice por qué. Es
+ * el caso del ejemplar sin decreto: su página ya no se arma, pero alguien
+ * puede tener el enlace viejo, y vaciarle la ficha por no encontrarlo en la
+ * hoja sería peor que enseñar lo último que sí se supo de él. */
+let vivaFichaIniciada = false;
+function iniciarFuenteVivaFicha(slug) {
+  if (vivaFichaIniciada) return;
+  vivaFichaIniciada = true;
+  const g = typeof globalThis !== "undefined" ? globalThis : {};
+  const activa = typeof g.FUENTE_VIVA_ACTIVA === "boolean" ? g.FUENTE_VIVA_ACTIVA : true;
+
+  if (!activa) {
+    /* Se olvida lo guardado, por el mismo motivo que en la portada: la caché
+       manda sobre la red mientras esté vigente, así que un registro degradado
+       guardado ayer volvería a entrar el día que alguien encienda esto. */
+    try { if (g.localStorage && g.CLAVE_CACHE) g.localStorage.removeItem(g.CLAVE_CACHE); } catch (_) {}
+    console.info("[ficha] Fuente viva apagada a propósito: se muestra el registro congelado que viaja con el sitio.");
+    return;
+  }
+  if (typeof g.cargarEnVivo !== "function" || !g.CONTRATO_PADRON) return;
+
+  setTimeout(() => {
+    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON }).then((r) => {
+      if (r && r.motivo) console.info("[ficha] " + r.motivo);
+      if (!r || !r.registro) return;
+      const lista = r.registro.ejemplares || [];
+      const nuevo = lista.find((x) => x.slug === slug);
+      if (!nuevo) {
+        console.info("[ficha] La hoja no trae este ejemplar; se conserva lo que ya se mostraba.");
+        return;
+      }
+      // Repintar cuesta: se compara antes y solo se rehace si de verdad cambió.
+      if (VIGENTE && JSON.stringify(VIGENTE) === JSON.stringify(nuevo)) return;
+      /* Se vuelve a permitir el arranque de esta capa: repintar llama otra vez
+         a pintarFicha, y sin esto la bandera lo bloquearía para siempre. */
+      vivaFichaIniciada = false;
+      pintarFicha(r.registro, slug);
+    }).catch((err) => {
+      console.info("[ficha] No se pudo actualizar desde la hoja: " + (err && err.message));
+    });
+  }, 0);
 }

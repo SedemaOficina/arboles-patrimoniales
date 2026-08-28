@@ -25,7 +25,7 @@
              sizes="(max-width:560px) 210px, (max-width:1000px) 280px, 372px"
              alt="Gobierno de la Ciudad de México · Secretaría del Medio Ambiente · Sistema de Información Ambiental de la Ciudad de México"
              width="1147" height="84"
-             onerror="this.closest('.marca').classList.add('marca--sin-logo');this.remove()">
+             onerror="var m=this.closest('.marca');if(m)m.classList.add('marca--sin-logo');this.onerror=null;this.remove()">
       </picture>
       <!-- Si el archivo no carga, la institución sigue nombrada en texto. -->
       <span class="marca__institucion" aria-hidden="true">

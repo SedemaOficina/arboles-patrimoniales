@@ -54,11 +54,11 @@ const NO_VIAJA = {
   'guia-cuerpo.html':            'cuerpo de la guía de identidad, solo va a prueba/',
   'modelo-ficha.js':             'oráculo de las suites; el armado no lo lee',
   'modelo-portada.js':           'oráculo de las suites; el armado no lo lee',
-  'modelo-recursos.js':          'sin uso: no lo lee el armado ni ninguna suite',
   'construir/armar-guia.js':     'arma la guía de identidad, que solo va a prueba/',
   'construir/armar-registro.js': 'regenera el congelado desde la hoja; se corre a mano y necesita red (o --desde con el CSV ya bajado)',
   'datos/en-espera.json':        'declara los ejemplares montados que la hoja todavía no publica; solo lo leen las suites',
   'construir/construir.sh':      'el guión del armado, no es contenido',
+  'construir/padron-embebido.js':'arma el lector, la capa viva y el contrato recortado para las dos páginas; es parte del armado',
   'construir/sellar.js':         'escribe el recibo, no es contenido',
 };
 

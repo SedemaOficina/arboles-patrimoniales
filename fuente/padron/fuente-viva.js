@@ -23,6 +23,25 @@ import { construirRegistro } from "./lector-v2.js";
 /* La dirección de la hoja publicada. Vive también en datos/contrato-v2.json,
    que es el documento que revisa el área de datos; la suite comprueba que las
    dos digan lo mismo, para que nadie mueva una sin la otra. */
+/* ═══ INTERRUPTOR DE LA FUENTE VIVA ═══ ENCENDIDO el 28 de agosto de 2026.
+   Vive aquí, y no en logica.js, desde que la ficha también lee la hoja: dos
+   interruptores se olvidan a medias y el sitio acaba con la portada en vivo y
+   la ficha congelada, diciendo cosas distintas del mismo árbol. Uno solo, en
+   el módulo que las dos páginas incluyen.
+
+   HISTORIA. Se apagó el 24 de agosto porque la hoja publicada había perdido
+   sesenta de sus ochenta y tres columnas. El guardián de abajo solo rechaza un
+   registro VACÍO, y ese no lo estaba, así que pasó el filtro y dejó el sitio
+   sin mapa y sin cifras. Se volvió a encender el 28 tras censar el CSV
+   columna por columna: 83 columnas y doce ejemplares completos.
+
+   CÓMO SE APAGA. Se pone en `false`. Quien lo apaga debe además olvidar la
+   caché —`CLAVE_CACHE`—, porque un registro degradado guardado ayer volvería
+   a entrar el día que alguien lo encienda, antes de pedir la hoja. Eso lo hace
+   ya el arranque de cada página. No lo dejes apagado sin que alguien lo sepa:
+   un sitio congelado para siempre deja de ser un registro. */
+export const FUENTE_VIVA_ACTIVA = true;
+
 export const CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb8DIn-UxYrBo-k91vleNcsfQoMVlQjtWp4YurZHgeh-_p0pSWLt-yeWS86wKybtQfj1D4wveAEtyw/pub?gid=283285465&single=true&output=csv";
 

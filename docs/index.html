@@ -1569,7 +1569,7 @@ body.sin-desplazamiento{overflow:hidden}
              sizes="(max-width:560px) 210px, (max-width:1000px) 280px, 372px"
              alt="Gobierno de la Ciudad de México · Secretaría del Medio Ambiente · Sistema de Información Ambiental de la Ciudad de México"
              width="1147" height="84"
-             onerror="this.closest('.marca').classList.add('marca--sin-logo');this.remove()">
+             onerror="var m=this.closest('.marca');if(m)m.classList.add('marca--sin-logo');this.onerror=null;this.remove()">
       </picture>
       <!-- Si el archivo no carga, la institución sigue nombrada en texto. -->
       <span class="marca__institucion" aria-hidden="true">
@@ -2226,16 +2226,25 @@ async function descubrirFotos(id, opciones = {}) {
 
   const sonda = (n, e) => existeImagen(rutaMiniatura(id, n, e)).then((hay) => hay || existeImagen(rutaFoto(id, n, e)));
 
-  const halladas = await Promise.all(EXTENSIONES.map((e) => sonda(1, e).then((hay) => (hay ? e : null))));
-  const ext = halladas.find(Boolean) || null;
+  let ext = (await sonda(1, EXTENSIONES[0])) ? EXTENSIONES[0] : null;
+  if (!ext) {
+    const halladas = await Promise.all(
+      EXTENSIONES.slice(1).map((e) => sonda(1, e).then((hay) => (hay ? e : null))));
+    ext = halladas.find(Boolean) || null;
+  }
   if (!ext) return [];
 
-  const presentes = await Promise.all(
-    Array.from({ length: tope - 1 }, (_, i) => sonda(i + 2, ext)));
   const urls = [rutaFoto(id, 1, ext)];
-  for (const hay of presentes) {
-    if (!hay) break;
-    urls.push(rutaFoto(id, urls.length + 1, ext));
+  const TANDA = 3;
+  for (let n = 2; n <= tope; ) {
+    const numeros = [];
+    for (let k = 0; k < TANDA && n + k <= tope; k++) numeros.push(n + k);
+    const hay = await Promise.all(numeros.map((i) => sonda(i, ext)));
+    const hueco = hay.indexOf(false);
+    const hasta = hueco === -1 ? numeros.length : hueco;
+    for (let k = 0; k < hasta; k++) urls.push(rutaFoto(id, numeros[k], ext));
+    if (hueco !== -1) break;
+    n += numeros.length;
   }
 
   return urls.map((url, i) => ({
@@ -3691,6 +3700,8 @@ window.construirRegistro=construirRegistro;
 
 
 
+const FUENTE_VIVA_ACTIVA = true;
+
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb8DIn-UxYrBo-k91vleNcsfQoMVlQjtWp4YurZHgeh-_p0pSWLt-yeWS86wKybtQfj1D4wveAEtyw/pub?gid=283285465&single=true&output=csv";
 
@@ -3868,7 +3879,7 @@ async function cargarEnVivo(opciones = {}) {
   }
 }
 
-window.cargarEnVivo=cargarEnVivo;window.hayCambio=hayCambio;window.CSV_URL=CSV_URL;window.CLAVE_CACHE=CLAVE_CACHE;
+window.cargarEnVivo=cargarEnVivo;window.hayCambio=hayCambio;window.CSV_URL=CSV_URL;window.CLAVE_CACHE=CLAVE_CACHE;window.FUENTE_VIVA_ACTIVA=FUENTE_VIVA_ACTIVA;
 })();
 
 
@@ -4179,14 +4190,14 @@ function pintarPadron(ejemplares, stats) {
 let DATOS_VIGENTES = null;
 let vivaIniciada = false;
 
-const FUENTE_VIVA_ACTIVA = true;
+const vivaActiva = (g) => (typeof g.FUENTE_VIVA_ACTIVA === "boolean" ? g.FUENTE_VIVA_ACTIVA : true);
 
 function iniciarFuenteViva() {
   if (vivaIniciada) return;
   vivaIniciada = true;
   const g = typeof globalThis !== "undefined" ? globalThis : {};
 
-  if (!FUENTE_VIVA_ACTIVA) {
+  if (!vivaActiva(g)) {
 
     try { if (g.localStorage && g.CLAVE_CACHE) g.localStorage.removeItem(g.CLAVE_CACHE); } catch (_) {}
     console.info("[registro] Fuente viva apagada a propósito: se muestra el registro congelado que viaja con el sitio.");

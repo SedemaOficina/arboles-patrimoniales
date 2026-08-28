@@ -777,10 +777,27 @@ console.log('\n══ FOTOGRAFÍAS POR CARPETA ══');
     /CARPETA_FOTOS = "assets\/img\/ejemplares"/.test(ft)
     && /\$\{CARPETA_FOTOS\}\/\$\{id\}\/\$\{numeroFoto\(n\)\}\.\$\{ext\}/.test(ft));
   t('Numeración a dos dígitos', /padStart\(2, "0"\)/.test(ft));
+  /* CAMBIÓ EL CÓMO el 28 de agosto de 2026, no el qué. El sondeo pedía de una
+     vez los once números posibles y las cinco extensiones en paralelo: para
+     una carpeta de cinco fotografías eso eran once peticiones fallidas por
+     ficha, siempre, y las 176 fotografías montadas son .jpg. Ahora avanza en
+     tandas de tres y prueba la primera extensión sola antes de abrir las
+     otras. Lo que hay que seguir garantizando es lo de siempre: que se DETENGA
+     en el primer hueco —si no, una numeración con saltos dispara peticiones
+     sin fin—, que el tope siga puesto, y que la extensión la fije la primera
+     foto en vez de mezclarse dentro de una misma carpeta. */
   t('Se detiene en el primer hueco y tiene tope',
-    /for \(const hay of presentes\) \{\n\s*if \(!hay\) break;/.test(ft) && /TOPE_FOTOS = 12/.test(ft));
+    /const hueco = hay\.indexOf\(false\);/.test(ft)
+    && /if \(hueco !== -1\) break;/.test(ft)
+    && /n <= tope/.test(ft) && /TOPE_FOTOS = 12/.test(ft));
   t('La extensión la fija la primera foto de la carpeta',
-    /const ext = halladas\.find\(Boolean\) \|\| null;/.test(ft));
+    /let ext = \(await sonda\(1, EXTENSIONES\[0\]\)\) \? EXTENSIONES\[0\] : null;/.test(ft)
+    && /ext = halladas\.find\(Boolean\) \|\| null;/.test(ft));
+  /* La ganancia medida, escrita para que no se pierda: una carpeta de cinco
+     fotografías pasó de once peticiones fallidas por ficha a dos. */
+  t('No se piden las cinco extensiones de golpe',
+    !/EXTENSIONES\.map\(\(e\) => sonda\(1, e\)/.test(ft)
+    && /EXTENSIONES\.slice\(1\)\.map/.test(ft));
   /* El censo se hace contra la MINIATURA: existeImagen usa <img>, que descarga
      el archivo entero para responder si existe. Sondeando los originales, una
      ficha de diez fotografías bajaba 2.9 MB solo para contarlas. */
@@ -882,8 +899,16 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
   t('No se indexa', /<meta name="robots" content="noindex, nofollow">/.test(pe));
   // Una lista de pendientes llena de tareas tachadas deja de leerse.
   t('No quedan tareas marcadas como hechas', !/pend--listo/.test(pe));
-  t('El tablero no presume decretos publicados que no lo están',
-    /Con PDF de decreto publicado/.test(pe) && !/Con decreto enlazado/.test(pe));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, porque cambió el hecho. La
+     aserción exigía que el tablero dijera «Con PDF de decreto publicado» y
+     prohibía la palabra «enlazado»: se escribió cuando la cifra era CERO y el
+     riesgo era presumir decretos que no existían en el sitio.
+     Hoy los doce ejemplares enlazan al PDF de la Gaceta Oficial, y ninguno se
+     aloja aquí. Lo que hay que seguir impidiendo es lo mismo —que el tablero
+     prometa más de lo que hay— con la palabra exacta: «enlazado», no
+     «publicado en este sitio». */
+  t('El tablero dice enlazado, no publicado aquí',
+    /Con decreto enlazado/.test(pe) && !/decreto publicado/i.test(pe));
   t('Las fotografías siguen abiertas: falta cerrar la portada repetida',
     /<h3>Fotografías<\/h3>/.test(pe) && /No resuelto/.test(pe));
   // El 22 de agosto se comprobó que un mismo archivo está archivado como dos
@@ -904,21 +929,34 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
      corrigieron los cuatro defectos que solo se veían imprimiendo. Lo que
      queda anotado ya no es «falta validar» sino la única decisión abierta:
      cuatro hojas contra las tres del criterio. */
-  t('De la ficha imprimible queda anotada la decisión de las hojas',
-    /son cinco hojas y el criterio decía tres/.test(pe)
-    && /no llevaba ninguna imagen/.test(pe));
-  /* EL CRITERIO CAMBIO. Ya no se comprueba que quede anotado que el sitio
-     «debe» leer la hoja: la portada ya la lee. Lo que ahora tiene que estar
-     anotado es lo que falta —la ficha, que sigue con el congelado— y la regla
-     que hace segura la conexion: una hoja vacia no vacia el micrositio. */
-  t('Queda anotado que la ficha aún no lee la hoja',
-    /La portada ya lee la hoja; falta la ficha/.test(pe)
-    && /La ficha todavía no se actualiza en vivo/.test(pe));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026: la ficha imprimible ya no
+     existe y su decisión se cerró —no hay hojas que decidir—. La página de
+     pendientes pasó a listar SOLO lo que falta: lo cerrado se borra de ahí y
+     queda escrito en las auditorías 360. Lo que se comprueba ahora es esa
+     regla, no la presencia de una tarjeta concreta. */
+  t('La página de pendientes solo lista lo que falta',
+    /Solo lista lo que falta/.test(pe)
+    && !/data-q="decidido"[^<]*>Cerrado</.test(pe));
+  /* CAMBIÓ OTRA VEZ, y a mejor: el 28 de agosto de 2026 la ficha también pasó
+     a leer la hoja, así que ya no hay nada que anotar como pendiente. Lo que
+     se comprueba ahora es el hecho, no su anotación: las DOS páginas llevan la
+     capa que va por el padrón, y el interruptor es uno solo —vive en
+     fuente-viva.js— para que no se pueda apagar media web. */
+  t('La portada y la ficha leen las dos la hoja',
+    /window\.CONTRATO_PADRON=/.test(fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8'))
+    && /window\.CONTRATO_PADRON=/.test(fs.readFileSync(PRUEBA+'ficha-vista-previa.html','utf8')));
+  t('El interruptor de la fuente viva es uno solo',
+    /export const FUENTE_VIVA_ACTIVA/.test(fs.readFileSync('padron/fuente-viva.js','utf8'))
+    && !/const FUENTE_VIVA_ACTIVA = /.test(fs.readFileSync('logica.js','utf8'))
+    && !/const FUENTE_VIVA_ACTIVA = /.test(fs.readFileSync('ficha-logica.js','utf8')));
   t('Y queda escrita la regla que protege al sitio',
     /una hoja en blanco no puede vaciar el micrositio/i.test(pe)
     && /fuente-viva\.js/.test(pe));
-  t('Y la decisión de que los archivos vienen de Drive',
-    /Drive compartido como origen de los archivos/.test(pe));
+  /* La decisión de que los archivos vienen de la carpeta de Drive se cerró y
+     salió de pendientes; vive donde se usa, en guia-alta.html, que es la que
+     se deja en esa misma carpeta para el equipo. */
+  t('La guía de alta sigue diciendo de dónde vienen los archivos',
+    /Drive/.test(fs.readFileSync('guia-alta.html','utf8')));
 }
 
 console.log('\n══ AUDITORÍA APLICADA · pasos 1 a 4 ══');
