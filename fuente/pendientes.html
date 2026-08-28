@@ -183,43 +183,31 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
-            <h3>La fuente viva está apagada a propósito</h3>
-            <p>Desde el 24 de agosto de 2026 el sitio <b>no consulta la hoja publicada</b>. Se muestra el registro congelado que viaja incrustado en la página —los trece ejemplares con sus coordenadas, medidas y servicios—, que es lo que se pidió para poder ver cómo se verá el sitio con los datos ya capturados.</p>
-            <p style="margin-top:9px">El interruptor es una sola línea en <code>fuente/logica.js</code>: <code>const FUENTE_VIVA_ACTIVA = false;</code>, con el motivo escrito encima. Al apagarse se olvida además lo que el navegador tuviera guardado, para que un registro degradado de ayer no vuelva a entrar el día que se encienda.</p>
-            <p style="margin-top:9px"><b>Esto no arregla la hoja: la desconecta.</b> Mientras siga apagado, una corrección capturada en el padrón no se ve en el sitio hasta que alguien vuelva a construir.</p>
+            <h3>El ahuehuete de San Juan no sale en la hoja</h3>
+            <p>El <b>28 de agosto de 2026 se volvió a encender la fuente viva</b>: el sitio consulta otra vez la hoja publicada. Antes de tocar el interruptor se censó el CSV de <code>Salida_Publica</code>, que responde con sus 83 columnas y doce ejemplares con identificador, coordenadas, altura y fecha de decreto. El registro congelado se regeneró de esa misma hoja, así que el primer pintado y lo que llega por la red dicen lo mismo.</p>
+            <p style="margin-top:9px"><b>Falta uno.</b> El renglón 8 —<code>25-XOC-TAX-19405GIMNO-0007</code>, «Árbol Ahuehuete (Sabino) de San Juan y su Arboleda», Xochimilco— sale <b>completamente en blanco</b> en la salida pública. No es un fallo del sitio ni del armado: es la hoja. Por eso el padrón publica <b>doce y no trece</b>.</p>
+            <p style="margin-top:9px">Sus <b>doce fotografías siguen montadas</b> y su expediente sigue en el repositorio. Para que nadie los lea como sobras ni los borre, el ejemplar está declarado en <code>fuente/datos/en-espera.json</code>, con fecha y motivo, y las suites de integridad y galería leen esa lista. Su ficha publicada sí se retiró: una página de un ejemplar que el registro no reconoce queda huérfana y sin enlaces.</p>
             <div class="arreglo">
-              <b>Cómo se vuelve a encender</b>
+              <b>Qué hace falta de tu lado</b>
               <ol>
-                <li><b>Primero arregla la hoja</b> —ver el pendiente de las sesenta columnas en blanco— y comprueba en el CSV publicado que <code>latitud</code> y <code>longitud</code> traigan valor en los trece.</li>
-                <li>Pon el interruptor en <code>true</code> en <code>fuente/logica.js</code>.</li>
-                <li><b>Construye</b> las dos salidas y <b>verifica</b>.</li>
+                <li><b>Revisa el renglón 8 en el padrón.</b> Lo más probable es que su «Estado del Decreto» no diga «Publicado» —solo ese estado pasa a la salida pública— o que se haya roto la fórmula de ese renglón.</li>
+                <li>Cuando vuelva a salir, <b>no hay que tocar código</b>: el sitio lo recoge solo en la siguiente visita. Basta regenerar el congelado —<code>node construir/armar-registro.js --escribir</code>—, construir las dos salidas y quitarlo de <code>en-espera.json</code>.</li>
               </ol>
             </div>
-            <cite>Un sitio congelado para siempre deja de ser un registro. Este pendiente existe para que el interruptor no se olvide encendido en apagado.</cite>
-          </div>
-          <span class="pend__quien" data-q="decidido">En pausa</span>
-        </article>
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>La hoja publicada perdió 60 de sus 83 columnas</h3>
-            <p><b>El sitio publicado está degradado ahora mismo.</b> Comprobado el 24 de agosto de 2026 contra la hoja <code>Salida_Publica</code>, leyendo el CSV publicado: responde correctamente, con sus 83 columnas y 13 renglones, pero <b>60 columnas vienen en blanco en todos los ejemplares</b>.</p>
-            <p style="margin-top:9px"><b>Lo que sobrevive</b> son solo dos bloques: la identidad —<code>id</code>, <code>estado</code>, <code>nomino</code>, <code>nombre_asignado</code>, <code>nombre_comun</code>, <code>nombre_cientifico</code>— y la taxonomía —<code>reino</code> a <code>autor</code>, <code>idnombrecat</code>, <code>iucn</code>, <code>ambiente</code>, <code>forma_crecimiento</code>, <code>url_snib</code>, <code>url_observacion</code>—.</p>
-            <p style="margin-top:9px"><b>Lo que viene vacío</b> es todo lo que describe al ejemplar: las cuatro categorías y <code>categorias</code>, <code>fecha_decreto</code>, <code>gaceta</code>, <code>drive_decreto</code>, toda la ubicación —<code>alcaldia</code>, <code>calle</code>, <code>colonia</code>, <code>cp</code>, <code>referencias</code>, <code>tipo_ubicacion</code>—, las coordenadas —<code>latitud</code>, <code>longitud</code>, <code>utm_x</code>, <code>utm_y</code>, <code>street_view</code>— y todas las medidas —<code>altura_m</code>, <code>dap_cm</code>, copa, edad, expectativa— con las cifras de i-Tree que se calculan de ellas.</p>
-            <p style="margin-top:9px"><b>Dónde está la falla.</b> El patrón lo dice solo: lo que sigue llegando es lo que se resuelve <i>desde el nombre científico</i>; lo que se perdió es lo que se resuelve <i>desde el renglón del ejemplar</i>. Se rompió el vínculo de <code>Salida_Publica</code> hacia la hoja del padrón —una columna insertada, movida o renombrada del otro lado deja las búsquedas devolviendo blanco sin marcar error—.</p>
-            <p style="margin-top:9px"><b>Y hay un renglón de más:</b> el 8 de la hoja no tiene <code>id</code>. Por eso el sitio enseña 12 ejemplares y no 13.</p>
-            <p style="margin-top:9px">Qué se ve por esto: «Ubicación por determinar · sin coordenadas» en los doce, el mapa con su mensaje de respaldo, la hilera «a escala real» sin alturas y las cifras de servicios ambientales sin dato.</p>
-            <div class="arreglo">
-              <b>Cómo se corrige</b>
-              <ol>
-                <li><b>Repara la hoja</b>, que es donde está el problema: revisa las fórmulas de <code>Salida_Publica</code> que traen los datos del ejemplar y borra el renglón 8, que está vacío.</li>
-                <li><b>Comprueba</b> abriendo el CSV publicado: las columnas <code>latitud</code> y <code>longitud</code> deben traer valor en los trece.</li>
-                <li><b>Espera diez minutos</b> o abre el sitio en una ventana privada: el registro vivo se guarda en el navegador y se refresca cada diez minutos.</li>
-              </ol>
-            </div>
-            <cite>No hay que tocar el código para esto. El sitio congelado que viaja dentro de la página sí tiene los trece ejemplares con sus coordenadas; lo que se ve es el registro vivo sustituyéndolo.</cite>
+            <cite>El sitio publica lo que la hoja publica. Un ejemplar declarado que la hoja no trae no se inventa: se declara, se le guarda su lugar y se dice quién tiene que arreglarlo.</cite>
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>La hoja publicada perdió 60 de sus 83 columnas · resuelto</h3>
+            <p>Del 24 de agosto de 2026. El vínculo de <code>Salida_Publica</code> hacia la hoja del padrón se había roto y venían en blanco las categorías, el decreto, la ubicación entera, las coordenadas y todas las medidas: llegaba lo que se resuelve desde el nombre científico y faltaba lo que se resuelve desde el renglón del ejemplar.</p>
+            <p style="margin-top:9px"><b>Comprobado el 28 de agosto de 2026</b> sobre el mismo CSV publicado: responde 200, trae las 83 columnas y <b>doce ejemplares con identificador, coordenadas, altura y fecha de decreto</b>. Solo cinco columnas vienen vacías en todos —<code>pueblo_barrio</code>, <code>endemismo</code>, <code>cites</code>, <code>nom059</code> y <code>obs_publicas</code>—, y ninguna de ellas impide publicar.</p>
+            <p style="margin-top:9px">Queda una cosa del diagnóstico original, y tiene su propio pendiente arriba: <b>el renglón 8 sigue saliendo en blanco</b>, así que el padrón publica doce.</p>
+            <cite>Se censó el CSV por columna antes de tocar el interruptor. El corte entre lo que llegaba y lo que faltaba fue el diagnóstico, y el mismo censo fue la comprobación de que quedó arreglado.</cite>
+          </div>
+          <span class="pend__quien" data-q="decidido">Cerrado</span>
         </article>
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>

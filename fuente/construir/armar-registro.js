@@ -14,6 +14,12 @@
  *     node construir/armar-registro.js            → informa, no escribe
  *     node construir/armar-registro.js --escribir → reescribe registro.json
  *
+ * Y si la máquina que corre esto no alcanza la red de Google —una terminal
+ * detrás de un proxy, un entorno sin salida—, se le puede dar el CSV ya
+ * bajado, que es exactamente el mismo texto que serviría la hoja:
+ *
+ *     node construir/armar-registro.js --desde ruta/al.csv --escribir
+ *
  * Después hay que construir, como siempre. Un registro nuevo sin construir no
  * cambia el sitio publicado.
  */
@@ -23,29 +29,47 @@ const fs = require('fs');
 const ESCRIBIR = process.argv.includes('--escribir');
 const RUTA = 'datos/registro.json';
 
+/* Ruta de un CSV ya bajado. Se usa tal cual, sin tocar la red. */
+const _i = process.argv.indexOf('--desde');
+const DESDE = _i !== -1 ? process.argv[_i + 1] : null;
+if (_i !== -1 && !DESDE) {
+  console.error('--desde necesita la ruta de un archivo CSV.');
+  process.exit(1);
+}
+
 (async () => {
   const contrato = JSON.parse(fs.readFileSync('datos/contrato-v2.json', 'utf8'));
   /* La dirección vive en el contrato, no aquí. Es el documento que revisa el
      área de datos: si la hoja cambia de sitio, se cambia ahí y este paso lo
      sigue solo. */
   const url = contrato.fuente && contrato.fuente.csv;
-  if (!url) {
+  if (!url && !DESDE) {
     console.error('El contrato no declara la dirección del CSV (fuente.csv). No hay de dónde bajar el registro.');
     process.exit(1);
   }
 
   const L = await import('../padron/lector-v2.js');
 
-  console.log('Bajando la hoja publicada…');
   let texto;
-  try {
-    const res = await fetch(url, { redirect: 'follow' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    texto = await res.text();
-  } catch (err) {
-    console.error('No se pudo bajar el CSV: ' + err.message);
-    console.error('El congelado se queda como está. Vuelve a intentarlo o revisa la publicación de la hoja.');
-    process.exit(1);
+  if (DESDE) {
+    console.log('Leyendo el CSV de ' + DESDE + '. No se toca la red.');
+    try {
+      texto = fs.readFileSync(DESDE, 'utf8');
+    } catch (err) {
+      console.error('No se pudo leer ' + DESDE + ': ' + err.message);
+      process.exit(1);
+    }
+  } else {
+    console.log('Bajando la hoja publicada…');
+    try {
+      const res = await fetch(url, { redirect: 'follow' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      texto = await res.text();
+    } catch (err) {
+      console.error('No se pudo bajar el CSV: ' + err.message);
+      console.error('El congelado se queda como está. Vuelve a intentarlo o revisa la publicación de la hoja.');
+      process.exit(1);
+    }
   }
   if (/^\s*<(!doctype|html)/i.test(texto)) {
     console.error('Google devolvió HTML en lugar del CSV. Revisa que la hoja siga publicada en la web.');

@@ -1,0 +1,13 @@
+{
+  "proposito": "Ejemplares que ya están declarados y montados en el sitio —carpeta de fotografías, ficha, decreto— pero que la hoja publicada NO trae hoy. El sitio no puede inventarlos: publica lo que la hoja publica. Esta lista existe para que sus archivos no se lean como sobras y para que nadie los borre por creerlos basura. Se vacía sola: en cuanto la hoja los vuelva a publicar, salen de aquí.",
+  "comoSeUsa": "Lo leen verifica-integridad, verifica-galeria y verifica-auditoria. Un identificador aquí NO exime de nada: solo declara que su ausencia del registro es conocida y tiene fecha.",
+  "ejemplares": [
+    {
+      "id": "25-XOC-TAX-19405GIMNO-0007",
+      "nombre": "Árbol Ahuehuete (Sabino) de San Juan y su Arboleda",
+      "alcaldia": "Xochimilco",
+      "desde": "2026-08-28",
+      "motivo": "Su renglón sale completamente en blanco en Salida_Publica: la hoja no lo publica. No es un fallo del sitio ni del armado. Sus doce fotografías siguen montadas."
+    }
+  ]
+}

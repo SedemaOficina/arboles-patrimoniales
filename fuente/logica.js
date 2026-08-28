@@ -437,26 +437,30 @@ function pintarPadron(ejemplares, stats) {
 let DATOS_VIGENTES = null;
 let vivaIniciada = false;
 
-/* ═══ INTERRUPTOR DE LA FUENTE VIVA ═══ APAGADO el 24 de agosto de 2026.
+/* ═══ INTERRUPTOR DE LA FUENTE VIVA ═══ ENCENDIDO el 28 de agosto de 2026.
 
-   POR QUÉ. La hoja publicada perdió sesenta de sus ochenta y tres columnas:
-   llegan la identidad y la taxonomía, y vienen en blanco las categorías, el
-   decreto, la ubicación entera, las coordenadas y todas las medidas. El
-   guardián de fuente-viva.js solo rechaza un registro VACÍO, y ese no lo
-   estaba —los doce ejemplares conservaban su nombre—, así que pasó el filtro y
-   sustituyó a los trece congelados que sí traen coordenadas. El sitio quedó
-   sin mapa, sin alturas y sin servicios ambientales.
+   HISTORIA. Se apagó el 24 de agosto porque la hoja publicada había perdido
+   sesenta de sus ochenta y tres columnas: llegaban la identidad y la
+   taxonomía, y venían en blanco las categorías, el decreto, la ubicación, las
+   coordenadas y todas las medidas. El guardián de fuente-viva.js solo rechaza
+   un registro VACÍO, y ese no lo estaba, así que pasó el filtro y dejó el
+   sitio sin mapa y sin cifras.
 
-   MIENTRAS TANTO. El usuario pidió trabajar contra el registro congelado
-   —`datos/registro.json`, el que el armado incrusta en la página— para poder
-   ver cómo se verá el sitio con los datos ya capturados. Esto NO arregla la
-   hoja: la desconecta.
+   POR QUÉ SE ENCIENDE. La hoja quedó reparada y se censó el CSV publicado
+   antes de tocar esta línea: responde 200, trae las 83 columnas y doce
+   ejemplares con id, coordenadas, altura y fecha de decreto. El registro
+   congelado se regeneró de esa misma hoja, así que el primer pintado y lo que
+   llega por la red dicen lo mismo.
 
-   CÓMO SE VUELVE A ENCENDER. Se pone en `true`. No hace falta nada más: se
-   olvida la caché al apagar, así que al encender se pide la hoja de nuevo.
-   Está anotado en pendientes.html; no lo dejes apagado sin que alguien lo
-   sepa, porque un sitio congelado para siempre deja de ser un registro. */
-const FUENTE_VIVA_ACTIVA = false;
+   LO QUE FALTA. El renglón 8 —25-XOC-TAX-19405GIMNO-0007, el ahuehuete de San
+   Juan, en Xochimilco— sale completamente en blanco en Salida_Publica y por
+   eso el padrón publica doce y no trece. No es un fallo del sitio: es la hoja.
+   Anotado en pendientes.html.
+
+   CÓMO SE APAGA. Se pone en `false`. Al apagar se olvida la caché, así que al
+   volver a encender se pide la hoja de nuevo. No lo dejes apagado sin que
+   alguien lo sepa: un sitio congelado para siempre deja de ser un registro. */
+const FUENTE_VIVA_ACTIVA = true;
 
 function iniciarFuenteViva() {
   if (vivaIniciada) return;

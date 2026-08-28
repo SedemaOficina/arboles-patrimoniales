@@ -575,7 +575,13 @@ console.log('\n══ NAVEGACIÓN ENTRE PÁGINAS ══');
         && /href="\$\{urlFicha\(esc\(e\.slug\)\)\}"/.test(pv3);
       const reg = JSON.parse(fs.readFileSync('datos/registro.json', 'utf8')).ejemplares || [];
       const faltan = reg.filter((e) => !fs.existsSync(PRUEBA + 'arbol-' + e.slug + '.html'));
-      return reglaViva && reg.length >= 13 && faltan.length === 0;
+      /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026. El «>= 13» estaba aquí para
+         que un registro truncado no diera por buena una portada sin fichas.
+         Desde que el sitio publica lo que trae la hoja, el padrón puede tener
+         doce publicados y uno en espera declarado, y trece deja de ser un piso
+         escrito a mano: se compone del registro más datos/en-espera.json. */
+      const enEspera = (JSON.parse(fs.readFileSync('datos/en-espera.json', 'utf8')).ejemplares || []).length;
+      return reglaViva && reg.length + enEspera >= 13 && faltan.length === 0;
     })());
   t('El menú de la ficha regresa a la portada, no a anclas inexistentes',
     /href="portada-vista-previa\.html#listado"/.test(fv3)

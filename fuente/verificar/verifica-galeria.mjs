@@ -151,11 +151,21 @@ console.log('\n══ FOTOGRAFÍAS MONTADAS ══');
   const regF = JSON.parse(fs.readFileSync('datos/registro.json','utf8'));
   const ejsF = regF.ejemplares || regF;
   const carpetas = fs.existsSync(dirF) ? fs.readdirSync(dirF) : [];
-  t('Hay carpeta de fotografías para los 13 ejemplares',
-    ejsF.length === 13 && ejsF.every(e => carpetas.includes(e.id)));
-  t('No sobra ninguna carpeta', carpetas.every(c => ejsF.some(e => e.id === c)));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026. El trece dejó de ser una
+     constante: el sitio publica los ejemplares que trae la hoja, hoy doce, y
+     mañana catorce sin que nadie edite esta línea. Lo que se comprueba es lo
+     mismo que antes —que ningún ejemplar publicado se quede sin fotografías y
+     que ninguna carpeta ande suelta—, contra el registro y contra la lista
+     declarada de ejemplares en espera (datos/en-espera.json), no contra un
+     número escrito a mano. */
+  const EN_ESPERA = (JSON.parse(fs.readFileSync('datos/en-espera.json','utf8')).ejemplares||[]).map(e=>e.id);
+  const montados = [...ejsF.map(e=>e.id), ...EN_ESPERA];
+  t('Hay carpeta de fotografías para cada ejemplar publicado',
+    ejsF.length > 0 && ejsF.every(e => carpetas.includes(e.id)));
+  t('No sobra ninguna carpeta', carpetas.every(c => montados.includes(c)),
+    carpetas.filter(c => !montados.includes(c)).join(' '));
   let grandes = 0; const sinMini = [], huecos = [];
-  for (const e of ejsF) {
+  for (const e of montados.map(id => ({ id }))) {
     if (!carpetas.includes(e.id)) continue;
     const todos = fs.readdirSync(`${dirF}/${e.id}`);
     const gr = todos.filter(f => /^\d{2}\.jpg$/.test(f)).sort();
@@ -167,6 +177,10 @@ console.log('\n══ FOTOGRAFÍAS MONTADAS ══');
   }
   t('La numeración es correlativa sin huecos', huecos.length === 0, huecos.join(' '));
   t('Cada fotografía tiene su miniatura de 480 px', sinMini.length === 0, sinMini.join(' '));
+  /* Sigue siendo 88: cuenta las fotografías montadas en el disco —las de los
+     ejemplares publicados MÁS las de los que están en espera—, que es lo que
+     protege contra un borrado accidental. Si sube o baja, es porque alguien
+     subió o quitó archivos, y eso tiene que verse. */
   t('Hay 88 fotografías montadas', grandes === 88, String(grandes));
 
   const ft = fs.readFileSync('fotos.js','utf8');

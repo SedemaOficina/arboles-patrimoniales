@@ -43,10 +43,20 @@ t('Hay ejemplares que revisar', E.length > 0, 'el registro vino vacío');
 const carpetas = hay(DIR) ? fs.readdirSync(DIR).filter((n) => fs.statSync(path.join(DIR, n)).isDirectory()) : [];
 const ids = new Set(E.map((e) => e.id));
 const sinCarpeta = E.filter((e) => !carpetas.includes(e.id)).map((e) => e.slug);
-const huerfanas = carpetas.filter((c) => !ids.has(c));
+/* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, no se borró la comprobación.
+   Antes, una carpeta sin ejemplar en el registro era siempre una sobra. Desde
+   que el sitio publica lo que publica la hoja, un ejemplar puede desaparecer
+   del registro sin que su carpeta sea basura: sigue declarado, sigue montado y
+   volverá en cuanto la hoja lo traiga. Esos casos se declaran uno por uno, con
+   fecha y motivo, en datos/en-espera.json. Lo que se sigue prohibiendo es
+   exactamente lo de antes: una carpeta que nadie reclama y nadie explica. */
+const EN_ESPERA = new Set((JSON.parse(fs.readFileSync('datos/en-espera.json', 'utf8')).ejemplares || []).map((e) => e.id));
+const huerfanas = carpetas.filter((c) => !ids.has(c) && !EN_ESPERA.has(c));
+const enEsperaMontadas = carpetas.filter((c) => !ids.has(c) && EN_ESPERA.has(c));
 t('Cada ejemplar tiene su carpeta de fotografías', sinCarpeta.length === 0, sinCarpeta.join(', '));
 t('Ninguna carpeta sobra', huerfanas.length === 0,
   huerfanas.join(', ') + ' · no corresponden a ningún ejemplar del registro');
+if (enEsperaMontadas.length) console.log('   · en espera de que la hoja los publique: ' + enEsperaMontadas.join(', '));
 
 console.log('\n══ LAS FOTOGRAFÍAS ══');
 const vacias = [], sinMiniatura = [], sinGrande = [], raros = [], conHueco = [], enElTope = [];
