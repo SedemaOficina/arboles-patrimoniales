@@ -2293,9 +2293,18 @@ body.sin-desplazamiento{overflow:hidden}
   font-size:var(--t-nota);line-height:1;vertical-align:-4px;background:#fff}
 
 /* El resultado es la respuesta a la pregunta: pesa más que la pista. */
+/* LA TARJETA DEL RESULTADO VA EN VERDE, no en morado. El marcador que responde
+   «este es tu árbol más cercano» se pinta con el verde vivo y su pulso; la
+   tarjeta que dice el nombre de ese mismo árbol iba en jacarandá, así que la
+   pareja pregunta-respuesta no se leía como una sola cosa. El morado se queda
+   en la pista —la que invita a tocar el botón—, que es otro momento.
+   El texto usa el verde bosque, no el vivo: 8.14:1 sobre papel contra 4.06:1;
+   el vivo se reserva para el filete y el borde, que no son texto. */
 .mapa-aviso--dato{padding:14px 18px 14px;border-left-width:5px;
-  border-color:rgba(var(--jacaranda-rgb),.4);border-left-color:var(--jacaranda);
-  box-shadow:0 8px 26px rgba(var(--tinta-jacaranda-rgb),.24)}
+  border-color:rgba(var(--verde-vivo-rgb),.4);border-left-color:var(--verde-vivo);
+  box-shadow:0 8px 26px rgba(var(--verde-vivo-rgb),.22)}
+.mapa-aviso--dato .mapa-aviso__rotulo{color:var(--verde-bosque)}
+.mapa-aviso--dato .mapa-aviso__nombre{color:var(--verde-bosque)}
 /* Auditoría P1.2: --jacaranda-bruma es color de ilustración, no de texto, y
    daba 3.40:1. El jacaranda hondo es el token del sistema para texto pequeño
    sobre papel: 6.96:1. */

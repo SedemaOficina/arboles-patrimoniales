@@ -203,6 +203,77 @@ console.log('\n-- la huella: no repintar de balde --');
   t('Un ejemplar nuevo sí lo es', V.hayCambio(A, D) === true);
 }
 
+/* ══ LA GUARDIA DE COBERTURA ══
+   El 24 de agosto de 2026 la hoja perdió sesenta de sus ochenta y tres
+   columnas y el sitio publicado se quedó sin mapa, sin alturas y sin cifras:
+   los ejemplares conservaban su nombre, así que la guardia de entonces —que
+   solo miraba el vacío— los dio por buenos. Estas comprobaciones son ese
+   incidente convertido en prueba. */
+console.log('\n-- la guardia de cobertura --');
+{
+  const ejemplar = (n, extra = {}) => Object.assign({
+    id: 'X' + n, slug: 'x' + n, nombreAsignado: 'Árbol ' + n,
+    coords: { lat: 19.4, lng: -99.1 },
+    morfologia: { altura_m: 20 },
+    fechaDecreto: { iso: '2026-01-01' },
+    alcaldia: 'Coyoacán',
+  }, extra);
+  const registro = (lista) => ({ ejemplares: lista, meta: { totalEjemplares: lista.length } });
+  const CONGELADO = registro(Array.from({ length: 12 }, (_, i) => ejemplar(i)));
+
+  t('Un registro completo sí sustituye',
+    V.bastanteEntero(CONGELADO, CONGELADO).ok);
+
+  /* EL INCIDENTE DEL 24 DE AGOSTO, tal cual: doce ejemplares con nombre y sin
+     una sola coordenada. Antes pasaba; ahora no. */
+  const SIN_COORDS = registro(Array.from({ length: 12 }, (_, i) => ejemplar(i, { coords: null })));
+  const r1 = V.bastanteEntero(SIN_COORDS, CONGELADO);
+  t('Doce ejemplares sin ninguna coordenada NO sustituyen', !r1.ok);
+  t('Y el motivo dice qué columna vino en blanco', /coordenada/.test(r1.motivo || ''));
+
+  /* El piso absoluto no necesita referencia: sin congelado con qué comparar,
+     una columna entera en blanco se sigue rechazando. */
+  t('El piso absoluto se aplica aunque no haya congelado',
+    !V.bastanteEntero(SIN_COORDS, null).ok);
+
+  // La mitad de la cobertura: cinco de doce con altura contra doce de doce.
+  const MEDIA_ALTURA = registro(Array.from({ length: 12 }, (_, i) =>
+    ejemplar(i, i < 5 ? {} : { morfologia: {} })));
+  const r2 = V.bastanteEntero(MEDIA_ALTURA, CONGELADO);
+  t('Perder más de la mitad de las alturas NO sustituye', !r2.ok);
+  t('Y el motivo dice de cuánto a cuánto cayó', /cobertura de altura/.test(r2.motivo || ''));
+
+  /* PERO LA CAPTURA EN CURSO SÍ PASA. Que un ejemplar nuevo llegue todavía sin
+     su medida es lo normal, y bloquear eso dejaría el sitio congelado por
+     prudencia mal entendida. */
+  const UNO_SIN_ALTURA = registro(Array.from({ length: 12 }, (_, i) =>
+    ejemplar(i, i === 0 ? { morfologia: {} } : {})));
+  t('Un solo ejemplar sin altura sí sustituye',
+    V.bastanteEntero(UNO_SIN_ALTURA, CONGELADO).ok);
+
+  /* EL CASO REAL DEL 28 DE AGOSTO: el ahuehuete de San Juan salió del padrón
+     por no tener decreto. Trece pasaron a doce y eso es correcto. */
+  const CONGELADO_13 = registro(Array.from({ length: 13 }, (_, i) => ejemplar(i)));
+  t('Que salga un ejemplar del padrón sí sustituye',
+    V.bastanteEntero(CONGELADO, CONGELADO_13).ok);
+
+  // Encogimiento: cinco de doce.
+  const r3 = V.bastanteEntero(registro(Array.from({ length: 5 }, (_, i) => ejemplar(i))), CONGELADO);
+  t('Que desaparezca más de la mitad del padrón NO sustituye', !r3.ok);
+  t('Y el motivo dice cuántos vinieron y cuántos había', /5 ejemplares/.test(r3.motivo || ''));
+
+  t('Un registro vivo vacío nunca sustituye',
+    !V.bastanteEntero(registro([]), CONGELADO).ok);
+
+  // La cobertura se puede consultar suelta: es lo que se escribe en consola.
+  const cob = V.cobertura(CONGELADO);
+  t('La cobertura se cuenta por campo crítico',
+    cob.total === 12 && cob.coords === 12 && cob.altura === 12 && cob.decreto === 12);
+  t('Son cuatro los campos críticos, y están nombrados',
+    V.CAMPOS_CRITICOS.length === 4
+    && V.CAMPOS_CRITICOS.map((c) => c.clave).join(',') === 'coords,altura,decreto,alcaldia');
+}
+
 console.log('\n-- la capa viva no toca el sitio --');
 {
   const src = fs.readFileSync('padron/fuente-viva.js', 'utf8');

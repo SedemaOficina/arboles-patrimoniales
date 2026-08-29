@@ -474,7 +474,9 @@ function iniciarFuenteViva() {
      porque quien opera el sitio necesita distinguir «la hoja está vacía» de
      «la hoja no responde», y esas dos cosas se ven igual desde fuera. */
   setTimeout(() => {
-    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON }).then((r) => {
+    /* Se le pasa el congelado para que la guardia de cobertura tenga contra
+       qué comparar: sin referencia solo puede aplicar el piso absoluto. */
+    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON, congelado: DATOS_VIGENTES }).then((r) => {
       if (r && r.motivo) console.info("[registro] " + r.motivo);
       if (!r || !r.registro) return;
       if (typeof g.hayCambio === "function" && !g.hayCambio(DATOS_VIGENTES, r.registro)) return;

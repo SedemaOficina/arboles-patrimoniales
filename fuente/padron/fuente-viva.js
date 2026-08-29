@@ -190,6 +190,98 @@ export function hayCambio(anterior, nuevo) {
   return huella(anterior) !== huella(nuevo);
 }
 
+/* ── 4 bis · LA GUARDIA DE COBERTURA ─────────────────────────────────────
+ *
+ * POR QUÉ EXISTE. Hasta el 28 de agosto de 2026 la regla «el congelado manda
+ * hasta que la hoja demuestre que tiene algo» se aplicaba solo contra el
+ * VACÍO: bastaba con que el registro vivo tuviera ejemplares. El 24 de agosto
+ * eso dejó pasar una hoja que había perdido sesenta de sus ochenta y tres
+ * columnas —los ejemplares conservaban su nombre, así que «tenían algo»— y el
+ * sitio publicado se quedó sin mapa, sin alturas y sin cifras. Una hoja en
+ * blanco no podía vaciar el micrositio; una hoja a medias sí lo vació.
+ *
+ * QUÉ SE MIDE. Los cuatro campos sin los cuales la página deja de funcionar,
+ * no los ochenta y tres: la coordenada (el mapa), la altura (la hilera a
+ * escala), la fecha del decreto (el cintillo y la categoría) y la alcaldía
+ * (el listado y los filtros). Si esos cuatro están, lo demás que falte se
+ * declara en la ficha y no rompe nada.
+ *
+ * DÓNDE SE PUSO EL CORTE, y por qué ahí:
+ *
+ *   1. PISO ABSOLUTO · ningún ejemplar con coordenada, o ninguno con altura,
+ *      o ninguno con decreto. Una columna entera en blanco es la firma exacta
+ *      de una fórmula rota del otro lado. No hay captura en curso que se vea
+ *      así: si alguien está capturando, unos traen el dato y otros no.
+ *
+ *   2. LA MITAD · un campo crítico que en el vivo cubre menos de la MITAD de
+ *      lo que cubre en el congelado. Capturar avanza de a un ejemplar —con
+ *      doce, cada uno mueve la cobertura ocho puntos—, así que la mitad queda
+ *      muy por encima del ruido normal y muy por debajo de una rotura.
+ *
+ *   3. ENCOGIMIENTO · el vivo trae menos de la mitad de los ejemplares del
+ *      congelado. Que un ejemplar salga del padrón es normal —el ahuehuete de
+ *      San Juan salió el 28 de agosto por no tener decreto—; que salga la
+ *      mitad, no.
+ *
+ * LO QUE ESTA GUARDIA NO HACE, dicho para que nadie se confíe: no compara
+ * valores. Una hoja que traiga los doce ejemplares con la coordenada
+ * equivocada pasa entera. Esto detecta que el dato FALTA, no que el dato esté
+ * mal; para eso están los rangos del contrato, que el lector ya aplica.
+ */
+
+/** Los campos sin los cuales la página deja de funcionar. */
+export const CAMPOS_CRITICOS = [
+  { clave: "coords", nombre: "coordenada", tiene: (e) => !!(e && e.coords) },
+  { clave: "altura", nombre: "altura", tiene: (e) => !!(e && e.morfologia && e.morfologia.altura_m != null) },
+  { clave: "decreto", nombre: "fecha de decreto", tiene: (e) => !!(e && e.fechaDecreto && e.fechaDecreto.iso) },
+  { clave: "alcaldia", nombre: "alcaldía", tiene: (e) => !!(e && e.alcaldia) },
+];
+
+/** Cuántos ejemplares traen cada campo crítico. */
+export function cobertura(registro) {
+  const lista = (registro && registro.ejemplares) || [];
+  const r = { total: lista.length };
+  for (const c of CAMPOS_CRITICOS) r[c.clave] = lista.filter(c.tiene).length;
+  return r;
+}
+
+/**
+ * ¿El registro vivo está lo bastante entero como para sustituir al congelado?
+ * Devuelve `{ok, motivo}` y nunca lanza. Sin congelado con qué comparar
+ * aplica solo el piso absoluto, que es el que no necesita referencia.
+ */
+export function bastanteEntero(vivo, congelado) {
+  const v = cobertura(vivo);
+  if (!v.total) return { ok: false, motivo: "El registro vivo no trae ejemplares." };
+
+  // 1 · Piso absoluto. La alcaldía queda fuera: se puede resolver a mano.
+  for (const c of CAMPOS_CRITICOS) {
+    if (c.clave === "alcaldia") continue;
+    if (v[c.clave] === 0) {
+      return { ok: false, motivo: `Ninguno de los ${v.total} ejemplares de la hoja trae ${c.nombre}: la columna viene entera en blanco. Se conserva el registro anterior.` };
+    }
+  }
+
+  const c0 = cobertura(congelado);
+  if (!c0.total) return { ok: true, motivo: null };
+
+  // 3 · Encogimiento.
+  if (v.total * 2 < c0.total) {
+    return { ok: false, motivo: `La hoja trae ${v.total} ejemplares y el registro publicado tiene ${c0.total}: falta más de la mitad. Se conserva el registro anterior.` };
+  }
+
+  // 2 · La mitad de la cobertura.
+  for (const c of CAMPOS_CRITICOS) {
+    const antes = c0[c.clave] / c0.total;
+    const ahora = v[c.clave] / v.total;
+    if (antes > 0 && ahora * 2 < antes) {
+      const pc = (x) => Math.round(x * 100);
+      return { ok: false, motivo: `La cobertura de ${c.nombre} cayó de ${pc(antes)} % a ${pc(ahora)} %: la hoja llegó incompleta. Se conserva el registro anterior.` };
+    }
+  }
+  return { ok: true, motivo: null };
+}
+
 /* ── 5 · La puerta ────────────────────────────────────────────────────────
  * Única función que llama la portada. Devuelve SIEMPRE la misma forma:
  *
@@ -205,6 +297,10 @@ export function hayCambio(anterior, nuevo) {
 export async function cargarEnVivo(opciones = {}) {
   const {
     contrato,
+    /* El registro congelado que viaja con la página, para tener contra qué
+       comparar la cobertura de lo que llega. Sin él la guardia aplica solo el
+       piso absoluto. */
+    congelado = null,
     url = CSV_URL,
     forzar = false,
     st = almacen(),
@@ -222,7 +318,18 @@ export async function cargarEnVivo(opciones = {}) {
 
   if (!forzar) {
     const c = leerCache({ st, ahora });
-    if (c) return { registro: c.registro, origen: "cache", motivo: null, edadMs: c.edadMs };
+    if (c) {
+      /* La caché pasa por la misma guardia que la red: el 24 de agosto el
+         registro degradado se guardó, y al día siguiente entraba solo, sin
+         volver a pedir la hoja. Lo guardado no es más confiable por estar
+         guardado. */
+      const g = bastanteEntero(c.registro, congelado);
+      if (!g.ok) {
+        limpiarCache({ st });
+        return { registro: null, origen: "cache", motivo: "Lo guardado llegó incompleto y se descartó. " + g.motivo };
+      }
+      return { registro: c.registro, origen: "cache", motivo: null, edadMs: c.edadMs };
+    }
   }
 
   try {
@@ -232,6 +339,10 @@ export async function cargarEnVivo(opciones = {}) {
     /* LA GUARDIA. Aquí es donde el congelado gana.
        Hoy la hoja está vacía a propósito —el equipo todavía no captura—, así
        que este camino es el normal, no la excepción. */
+    const guardia = bastanteEntero(registro, congelado);
+    if (registro && registro.ejemplares.length && !guardia.ok) {
+      return { registro: null, origen: "red", motivo: guardia.motivo };
+    }
     if (!registro || !registro.ejemplares.length) {
       const leidas = (registro && registro.meta && registro.meta.filasLeidas) || 0;
       return {

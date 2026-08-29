@@ -949,9 +949,22 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
     /export const FUENTE_VIVA_ACTIVA/.test(fs.readFileSync('padron/fuente-viva.js','utf8'))
     && !/const FUENTE_VIVA_ACTIVA = /.test(fs.readFileSync('logica.js','utf8'))
     && !/const FUENTE_VIVA_ACTIVA = /.test(fs.readFileSync('ficha-logica.js','utf8')));
-  t('Y queda escrita la regla que protege al sitio',
-    /una hoja en blanco no puede vaciar el micrositio/i.test(pe)
-    && /fuente-viva\.js/.test(pe));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026, porque la regla dejó de estar
+     solo escrita. La guardia que protege al sitio ya no vive en una nota de
+     pendientes: vive en el código y tiene trece comprobaciones que reproducen
+     el incidente del 24 de agosto. Se comprueba el mecanismo, no su promesa. */
+  {
+    const fv = fs.readFileSync('padron/fuente-viva.js', 'utf8');
+    t('La guardia de cobertura existe y mide los cuatro campos críticos',
+      /export function bastanteEntero/.test(fv)
+      && /export const CAMPOS_CRITICOS/.test(fv)
+      && /coords/.test(fv) && /altura/.test(fv) && /decreto/.test(fv) && /alcaldia/.test(fv));
+    t('Se aplica a lo que llega por la red y también a lo guardado',
+      (fv.match(/bastanteEntero\(/g) || []).length >= 3);
+    t('Las dos páginas le pasan el congelado con qué comparar',
+      /congelado: DATOS_VIGENTES/.test(fs.readFileSync('logica.js', 'utf8'))
+      && /congelado: g\.DATOS_CONGELADOS/.test(fs.readFileSync('ficha-logica.js', 'utf8')));
+  }
   /* La decisión de que los archivos vienen de la carpeta de Drive se cerró y
      salió de pendientes; vive donde se usa, en guia-alta.html, que es la que
      se deja en esa misma carpeta para el equipo. */

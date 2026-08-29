@@ -1003,7 +1003,7 @@ function iniciarFuenteVivaFicha(slug) {
   if (typeof g.cargarEnVivo !== "function" || !g.CONTRATO_PADRON) return;
 
   setTimeout(() => {
-    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON }).then((r) => {
+    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON, congelado: g.DATOS_CONGELADOS || null }).then((r) => {
       if (r && r.motivo) console.info("[ficha] " + r.motivo);
       if (!r || !r.registro) return;
       const lista = r.registro.ejemplares || [];

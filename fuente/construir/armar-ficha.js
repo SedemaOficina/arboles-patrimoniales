@@ -169,7 +169,7 @@ ${PADRON.viva}
 ${js}
 ${ARRANQUE.GUARDIA}
 window.CONTRATO_PADRON=${PADRON.contratoMin};
-const DATOS=${datos};
+const DATOS=${datos};window.DATOS_CONGELADOS=DATOS;
 /* EL FRAGMENTO SOLO MANDA SI NOMBRA UN EJEMPLAR.
    «#contenido» —el destino del enlace «Saltar al contenido»— no es un slug.
    Tomarlo como tal hacía que la ficha caiga al primer ejemplar de la lista:

@@ -1498,8 +1498,10 @@ body.sin-desplazamiento{overflow:hidden}
   font-size:var(--t-nota);line-height:1;vertical-align:-4px;background:#fff}
 
 .mapa-aviso--dato{padding:14px 18px 14px;border-left-width:5px;
-  border-color:rgba(var(--jacaranda-rgb),.4);border-left-color:var(--jacaranda);
-  box-shadow:0 8px 26px rgba(var(--tinta-jacaranda-rgb),.24)}
+  border-color:rgba(var(--verde-vivo-rgb),.4);border-left-color:var(--verde-vivo);
+  box-shadow:0 8px 26px rgba(var(--verde-vivo-rgb),.22)}
+.mapa-aviso--dato .mapa-aviso__rotulo{color:var(--verde-bosque)}
+.mapa-aviso--dato .mapa-aviso__nombre{color:var(--verde-bosque)}
 
 .mapa-aviso__rotulo{display:block;font-size:var(--t-micro);font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;color:var(--jacaranda-hondo)}
@@ -1795,6 +1797,7 @@ body.sin-desplazamiento{overflow:hidden}
         <h3 class="rotulo">Atención ciudadana</h3>
         <ul class="pie__lista">
           <li><a href="tel:+525553458187">55 5345 8187</a> · <a href="tel:+525553458188">55 5345 8188</a></li>
+          <li>Árboles patrimoniales · <a href="tel:+525558402572">55 5840 2572</a> · <a href="tel:+525558402556">55 5840 2556</a> · <a href="tel:+525558630857">55 5863 0857</a></li>
           <li>LOCATEL · <a href="tel:+525556581111">55 5658 1111</a></li>
           <li><a href="mailto:atencionciudadana@sedema.cdmx.gob.mx">atencionciudadana@sedema.cdmx.gob.mx</a></li>
           <li>Atención presencial: martes, de 10 a 13 h</li>
@@ -1807,7 +1810,7 @@ body.sin-desplazamiento{overflow:hidden}
           <li><b>Emergencias · <a href="tel:911">911</a></b></li>
           <li>PAOT · <a href="tel:+525552650780">55 5265 0780</a></li>
           <li>Fiscalía Ambiental · <a href="tel:+525553455000">55 5345 5000</a></li>
-          <li><a href="https://www.paot.cdmx.gob.mx/" target="_blank" rel="noopener">denuncia.paot.cdmx.gob.mx</a></li>
+          <li><a href="https://paot.org.mx/denunciantes/inicia-tu-denuncia.php" target="_blank" rel="noopener">Iniciar una denuncia ante la PAOT</a></li>
         </ul>
       </div>
 
@@ -3056,9 +3059,54 @@ function hayCambio(anterior, nuevo) {
   return huella(anterior) !== huella(nuevo);
 }
 
+const CAMPOS_CRITICOS = [
+  { clave: "coords", nombre: "coordenada", tiene: (e) => !!(e && e.coords) },
+  { clave: "altura", nombre: "altura", tiene: (e) => !!(e && e.morfologia && e.morfologia.altura_m != null) },
+  { clave: "decreto", nombre: "fecha de decreto", tiene: (e) => !!(e && e.fechaDecreto && e.fechaDecreto.iso) },
+  { clave: "alcaldia", nombre: "alcaldía", tiene: (e) => !!(e && e.alcaldia) },
+];
+
+function cobertura(registro) {
+  const lista = (registro && registro.ejemplares) || [];
+  const r = { total: lista.length };
+  for (const c of CAMPOS_CRITICOS) r[c.clave] = lista.filter(c.tiene).length;
+  return r;
+}
+
+function bastanteEntero(vivo, congelado) {
+  const v = cobertura(vivo);
+  if (!v.total) return { ok: false, motivo: "El registro vivo no trae ejemplares." };
+
+  for (const c of CAMPOS_CRITICOS) {
+    if (c.clave === "alcaldia") continue;
+    if (v[c.clave] === 0) {
+      return { ok: false, motivo: `Ninguno de los ${v.total} ejemplares de la hoja trae ${c.nombre}: la columna viene entera en blanco. Se conserva el registro anterior.` };
+    }
+  }
+
+  const c0 = cobertura(congelado);
+  if (!c0.total) return { ok: true, motivo: null };
+
+  if (v.total * 2 < c0.total) {
+    return { ok: false, motivo: `La hoja trae ${v.total} ejemplares y el registro publicado tiene ${c0.total}: falta más de la mitad. Se conserva el registro anterior.` };
+  }
+
+  for (const c of CAMPOS_CRITICOS) {
+    const antes = c0[c.clave] / c0.total;
+    const ahora = v[c.clave] / v.total;
+    if (antes > 0 && ahora * 2 < antes) {
+      const pc = (x) => Math.round(x * 100);
+      return { ok: false, motivo: `La cobertura de ${c.nombre} cayó de ${pc(antes)} % a ${pc(ahora)} %: la hoja llegó incompleta. Se conserva el registro anterior.` };
+    }
+  }
+  return { ok: true, motivo: null };
+}
+
 async function cargarEnVivo(opciones = {}) {
   const {
     contrato,
+
+    congelado = null,
     url = CSV_URL,
     forzar = false,
     st = almacen(),
@@ -3076,13 +3124,25 @@ async function cargarEnVivo(opciones = {}) {
 
   if (!forzar) {
     const c = leerCache({ st, ahora });
-    if (c) return { registro: c.registro, origen: "cache", motivo: null, edadMs: c.edadMs };
+    if (c) {
+
+      const g = bastanteEntero(c.registro, congelado);
+      if (!g.ok) {
+        limpiarCache({ st });
+        return { registro: null, origen: "cache", motivo: "Lo guardado llegó incompleto y se descartó. " + g.motivo };
+      }
+      return { registro: c.registro, origen: "cache", motivo: null, edadMs: c.edadMs };
+    }
   }
 
   try {
     const texto = await bajar(url, { espera, reintentos, traer });
     const registro = construir(texto, contrato);
 
+    const guardia = bastanteEntero(registro, congelado);
+    if (registro && registro.ejemplares.length && !guardia.ok) {
+      return { registro: null, origen: "red", motivo: guardia.motivo };
+    }
     if (!registro || !registro.ejemplares.length) {
       const leidas = (registro && registro.meta && registro.meta.filasLeidas) || 0;
       return {
@@ -3813,7 +3873,7 @@ function iniciarFuenteVivaFicha(slug) {
   if (typeof g.cargarEnVivo !== "function" || !g.CONTRATO_PADRON) return;
 
   setTimeout(() => {
-    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON }).then((r) => {
+    g.cargarEnVivo({ contrato: g.CONTRATO_PADRON, congelado: g.DATOS_CONGELADOS || null }).then((r) => {
       if (r && r.motivo) console.info("[ficha] " + r.motivo);
       if (!r || !r.registro) return;
       const lista = r.registro.ejemplares || [];
@@ -5311,7 +5371,7 @@ const DATOS={
     }
   }
 }
-;
+;window.DATOS_CONGELADOS=DATOS;
 /* EL FRAGMENTO SOLO MANDA SI NOMBRA UN EJEMPLAR.
    «#contenido» —el destino del enlace «Saltar al contenido»— no es un slug.
    Tomarlo como tal hacía que la ficha caiga al primer ejemplar de la lista:
