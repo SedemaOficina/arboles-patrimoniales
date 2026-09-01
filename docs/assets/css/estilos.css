@@ -1117,6 +1117,17 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 /* La fecha de los datos abiertos. Va pegada a la entrada de la sección y en
    cuerpo de apoyo: es un dato de procedencia, no parte del argumento. La
    escribe el armado, así que siempre es la del sitio que está en línea. */
+/* LO QUE VA A CAMBIAR, MARCADO. La dirección del sitio es de trabajo y cambia
+   cuando haya dominio definitivo. Quien cite hoy necesita saber qué parte de
+   la cita caduca, y quien mantenga el sitio necesita encontrarlas de un
+   vistazo el día del cambio. El subrayado punteado hace el trabajo cuando el
+   color no se ve —impresión, alto contraste, daltonismo—: el fondo solo no
+   basta. */
+.provisional{background:rgba(var(--dorado-rgb),.28);
+  border-bottom:1px dotted var(--dorado);padding:0 2px;border-radius:var(--radio)}
+.creditos__aviso{margin:0 0 18px;max-width:var(--medida);font-size:var(--t-apoyo);
+  line-height:1.55;color:var(--gris)}
+.creditos__aviso b{color:var(--tinta)}
 .dato-fecha{margin:12px 0 0;font-size:var(--t-apoyo);color:var(--gris)}
 .dato-fecha b{color:var(--tinta)}
 .recurso__nota{font-size:var(--t-apoyo)!important;color:var(--gris)!important;line-height:1.55!important;

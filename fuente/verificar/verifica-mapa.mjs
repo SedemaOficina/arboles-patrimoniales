@@ -294,8 +294,21 @@ t('créditos · la cartografía se sigue atribuyendo desde el mapa',
   /colaboradores de <a href="https:\/\/www\.openstreetmap\.org\/copyright">OpenStreetMap<\/a>/.test(src)
   && /Cartografía base de <a href="https:\/\/www\.esri\.com\/">Esri<\/a>, HERE, Garmin/.test(src)
   && !/carto\.com\/attributions/.test(src));
-t('créditos · los campos de autoría quedan marcados como pendientes',
-  (rec.match(/data-pendiente/g)||[]).length>=5);
+/* CAMBIÓ EL CRITERIO el 1 de septiembre de 2026. Eran cinco renglones de
+   autoría por definir; ahora son dos. Los otros tres —concepto, contenidos,
+   diseño y desarrollo— salieron del mismo escritorio y se juntaron en una
+   línea atribuida al área: cuatro renglones con la misma respuesta leían como
+   una firma repetida, y en una dependencia el trabajo pertenece a la oficina.
+   Lo que se sigue vigilando es lo que esta comprobación protegía: que lo que
+   FALTA por acreditar se vea marcado y no pase por acreditado. Y son
+   justamente los dos de trabajo ajeno —fotografía e ilustración—, que es
+   donde no acreditar sí tiene consecuencias. */
+t('créditos · lo que falta por acreditar se ve marcado',
+  (rec.match(/data-pendiente/g)||[]).length>=2
+  && /<dt>Fotografía de los ejemplares<\/dt><dd data-pendiente>/.test(rec)
+  && /<dt>Ilustraciones de las especies<\/dt><dd data-pendiente>/.test(rec));
+t('créditos · el dictamen del padrón se acredita a quien lo hizo',
+  /Dictaminadoras y dictaminadores de arbolado/.test(rec));
 t('créditos · lo pendiente se distingue a la vista', /\.creditos__lista dd\[data-pendiente\]/.test(css));
 
 
