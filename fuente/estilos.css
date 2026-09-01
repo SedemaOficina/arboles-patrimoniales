@@ -947,6 +947,12 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
      pequeño del sitio era justamente el número de emergencias. WCAG 2.5.8 pide
      24×24. En enlaces largos esta regla no hace nada. */
   min-width:24px;text-align:center}
+/* PERO NO EL CORREO. El centrado existe para que un enlace corto —«911» mide
+   22 px— quede centrado dentro de su objetivo de 24. Un correo largo se parte
+   en dos renglones dentro de la columna del pie, y entonces el centrado se ve:
+   las dos líneas quedan centradas en medio de una lista alineada a la
+   izquierda. El objetivo de toque no cambia; solo la alineación del texto. */
+.pie__lista a[href^="mailto:"],.cuidado__contacto a[href^="mailto:"]{text-align:left}
 @media(pointer:coarse){
   .norma__fuente,.migas a,.recurso__nota a,.nota-asterisco a,
   .cuidado__contacto a,.pie__lista a{min-height:32px;line-height:32px;min-width:32px}

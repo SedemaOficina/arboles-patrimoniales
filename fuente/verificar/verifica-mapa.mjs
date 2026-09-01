@@ -303,9 +303,13 @@ t('créditos · la cartografía se sigue atribuyendo desde el mapa',
    FALTA por acreditar se vea marcado y no pase por acreditado. Y son
    justamente los dos de trabajo ajeno —fotografía e ilustración—, que es
    donde no acreditar sí tiene consecuencias. */
+/* El renglón de fotografía salió de los créditos el 1 de septiembre de 2026,
+   por decisión del área. Queda uno de trabajo ajeno por acreditar —la
+   ilustración de las especies— y es el que se vigila: acreditar a quien ilustró
+   no es un formalismo, es su derecho, y un «por definir» que deja de verse se
+   convierte en un dato dado por bueno. */
 t('créditos · lo que falta por acreditar se ve marcado',
-  (rec.match(/data-pendiente/g)||[]).length>=2
-  && /<dt>Fotografía de los ejemplares<\/dt><dd data-pendiente>/.test(rec)
+  (rec.match(/data-pendiente/g)||[]).length>=1
   && /<dt>Ilustraciones de las especies<\/dt><dd data-pendiente>/.test(rec));
 t('créditos · el dictamen del padrón se acredita a quien lo hizo',
   /Dictaminadoras y dictaminadores de arbolado/.test(rec));

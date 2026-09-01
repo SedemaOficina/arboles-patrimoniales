@@ -267,16 +267,16 @@ footer b{color:#fff}
     <p class="intro">La ficha no adivina el nombre del archivo: lo toma tal cual de la columna <code>Link al decreto</code>. Hay dos formas válidas de resolverlo y conviene elegir una sola para todo el registro.</p>
 
     <div class="paso">
-      <h3>Opción A · El PDF viaja con el sitio <span class="etiqueta etiqueta--calc">La de hoy</span></h3>
+      <h3>Opción B · El PDF viaja con el sitio</h3>
       <p>La hoja guarda el <b>nombre del archivo</b> —<code>GOCDMX_26-06-01_TACUBA.pdf</code>— y el PDF se coloca en:</p>
       <p class="ruta">fuente/decretos/GOCDMX_26-06-01_TACUBA.pdf</p>
       <p>El nombre tiene que coincidir <b>exactamente</b>: acentos, mayúsculas y espacios incluidos. Todo lo que esté en esa carpeta se copia al sitio publicado.</p>
-      <p>Si el archivo no está, la tarjeta no queda rota: se apaga sola y dice «El documento aún no está publicado en este sitio». Ese es el mensaje que aparece hoy en doce de trece fichas.</p>
+      <p>Si el archivo no está, la tarjeta no queda rota: se apaga sola y dice «El documento aún no está publicado en este sitio».</p>
     </div>
 
     <div class="paso">
-      <h3>Opción B · El PDF vive fuera</h3>
-      <p>La hoja guarda una <b>dirección completa</b> que empieza con <code>http://</code> o <code>https://</code> —la Gaceta Oficial, por ejemplo—. El sitio la usa tal cual y no busca nada en la carpeta.</p>
+      <h3>Opción A · El PDF vive fuera <span class="etiqueta etiqueta--calc">La de hoy</span></h3>
+      <p>La hoja guarda una <b>dirección completa</b> que empieza con <code>http://</code> o <code>https://</code> —la Gaceta Oficial, por ejemplo—. El sitio la usa tal cual y no busca nada en la carpeta. <b>Es la forma que usa hoy el registro entero:</b> los doce ejemplares publicados enlazan a su gaceta —siete direcciones distintas— y la carpeta <code>fuente/decretos/</code> está vacía.</p>
       <p>Si se toma este camino, la dirección tiene que ser pública y estable. Un enlace de Drive con permisos restringidos le devuelve una pantalla de acceso denegado a la ciudadanía.</p>
     </div>
 
@@ -315,10 +315,12 @@ footer b{color:#fff}
     <p class="intro">Se edita siempre dentro de <code>fuente/</code>, nunca dentro de <code>docs/</code>: el armado borra esa carpeta y la vuelve a escribir en cada construcción.</p>
 
     <div class="paso">
-      <h3>Los dos comandos, en este orden</h3>
-      <pre><code>fuente/construir/construir.sh produccion
+      <h3>Los tres comandos, en este orden</h3>
+      <pre><code>node fuente/construir/armar-registro.js --escribir
+fuente/construir/construir.sh produccion
 fuente/verificar/verificar.sh</code></pre>
-      <p>El primero rearma <code>docs/</code>, que es lo que sirve GitHub Pages. El segundo corre todas las suites de comprobación y <b>termina con error si algo se rompió</b>.</p>
+      <p><b>El primero baja la hoja y reescribe el registro congelado</b>, el que viaja incrustado en cada página: es lo que se ve al abrir, antes de que llegue la consulta a la hoja, y lo único que se ve si Google no responde. Sin este paso el ejemplar nuevo aparece por la fuente viva pero no en el primer pintado. Corriéndolo <b>sin</b> <code>--escribir</code> informa qué cambiaría y no toca nada: buena costumbre antes de escribir.</p>
+      <p>El segundo rearma <code>docs/</code>, que es lo que sirve GitHub Pages. El tercero corre todas las suites y <b>termina con error si algo se rompió</b>.</p>
       <p><b>Si la verificación no queda en verde, no se publica.</b> Ese es el punto de tenerla: ha detenido enlaces rotos, un identificador que no coincidía con su carpeta de fotos y cifras que se contradecían entre secciones.</p>
     </div>
 
