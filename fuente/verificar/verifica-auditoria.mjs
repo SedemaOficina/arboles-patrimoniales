@@ -1246,8 +1246,16 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
      sección de Recursos. */
   t('El ancla del catálogo sigue existiendo para quien enlace a ella',
     /id="normatividad"/.test(rec5));
-  t('Recursos manda de regreso al argumento de la portada',
-    /href="index\.html#proteccion"/.test(rec5));
+  /* CAMBIÓ EL CRITERIO el 28 de agosto de 2026: el área retiró los dos
+     enlaces de la pareja, primero el de la portada al catálogo y después el de
+     Recursos al argumento. Ya no se señalan entre sí, y eso es una decisión
+     editorial, no un descuido. Lo que sigue vigilándose es que las dos
+     secciones no se conviertan en la misma cosa: Recursos es el catálogo con
+     liga al texto vigente de cada instrumento —tres de ellos no están en la
+     portada—, y ahí está su razón de existir por separado. */
+  t('Recursos sigue siendo el catálogo, no una copia de la portada',
+    /id="normatividad"/.test(rec5)
+    && (rec5.match(/norma-tarjeta__clave/g) || []).length >= 6);
   t('El ancla existe de verdad en Recursos', /id="normatividad"/.test(rec5));
   t('El ancla existe de verdad en la portada', /id="proteccion"/.test(pv5));
 }

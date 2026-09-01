@@ -1022,6 +1022,17 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recursos-lista p{margin:0 0 12px;font-size:var(--t-cuerpo);line-height:1.6;color:var(--tinta-suave);max-width:var(--medida)}
 
 .recursos-rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+/* EL DIRECTORIO, EN UNA SOLA FILA. Son cuatro puertas —emergencia, trámite,
+   denuncia y consulta— y se leen comparándolas: a quién llamo según lo que me
+   pasa. Repartidas por el ajuste automático quedaban dos y dos, y la de abajo
+   parecía de otra categoría. Con 320 px de mínimo no caben cuatro en un
+   portátil, así que aquí se fijan cuatro columnas: son tarjetas de contacto,
+   no de lectura larga. Se usan los cortes que el sistema ya tiene declarados
+   —899 y 560—, no dos nuevos: la lista de familias de corte está cerrada a
+   propósito y verifica-sistema la cuenta en cada corrida. */
+.recursos-rejilla--cuatro{grid-template-columns:repeat(4,1fr)}
+@media(max-width:899px){.recursos-rejilla--cuatro{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.recursos-rejilla--cuatro{grid-template-columns:1fr}}
 /* Normativa en tarjetas, no en lista.
    Los seis instrumentos en una columna ocupaban pantalla y media y obligaban a
    recorrerlos en fila india para comparar cuál regula qué. En tres columnas
@@ -1103,6 +1114,11 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .recurso p{margin:0 0 10px;font-size:var(--t-cuerpo);line-height:1.62;color:var(--tinta-suave);max-width:var(--medida)}
 .recurso p:last-of-type{margin-bottom:14px}
 /* Un correo institucional largo no cabe en 320 px sin partirse. */
+/* La fecha de los datos abiertos. Va pegada a la entrada de la sección y en
+   cuerpo de apoyo: es un dato de procedencia, no parte del argumento. La
+   escribe el armado, así que siempre es la del sitio que está en línea. */
+.dato-fecha{margin:12px 0 0;font-size:var(--t-apoyo);color:var(--gris)}
+.dato-fecha b{color:var(--tinta)}
 .recurso__nota{font-size:var(--t-apoyo)!important;color:var(--gris)!important;line-height:1.55!important;
   overflow-wrap:anywhere}
 .recurso__nota a{color:var(--jacaranda-hondo);font-weight:700;text-decoration:none;
