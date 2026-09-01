@@ -1966,18 +1966,19 @@ body.sin-desplazamiento{overflow:hidden}
 
       <div class="pie__col">
         <h3 class="rotulo">Mapa del sitio</h3>
+        <!-- SEIS ENTRADAS, NO DOCE. El mapa del sitio repetía el menú de arriba
+             y le añadía cada ancla de la portada: doce renglones que estiraban
+             el pie a lo alto de una pantalla y hacían trabajo de índice, no de
+             pie. Quedan los destinos que son PÁGINA o sección de fondo —lo que
+             alguien buscaría desde aquí— y se van las anclas que ya están en el
+             menú o a un desplazamiento de distancia. La liga legal no se
+             repite: vive abajo, en el cierre. -->
         <ul class="pie__lista pie__lista--mapa">
           <li><a href="#inicio">Inicio</a></li>
-          <li><a href="#que-es">Qué es un árbol patrimonial</a></li>
-          <li><a href="#listado">El listado de árboles patrimoniales</a></li>
+          <li><a href="#listado">El listado</a></li>
           <li><a href="#mapa">El mapa</a></li>
-          <li><a href="#servicios">Lo que hacen por la ciudad</a></li>
-          <li><a href="recursos.html">Recursos: videos, normativa y datos</a></li>
-          <li><a href="recursos.html#creditos">Créditos y atribuciones</a></li>
-          <li><a href="recursos.html#legal">Privacidad, licencia y terceros</a></li>
-          <li><a href="#proteccion">Cómo se protegen</a></li>
-          <li><a href="#cuidado">Patrimonial no es intocable</a></li>
           <li><a href="#postula">Postula un árbol</a></li>
+          <li><a href="recursos.html">Recursos y datos abiertos</a></li>
           <li><a href="https://sedema.cdmx.gob.mx/" target="_blank" rel="noopener">sedema.cdmx.gob.mx</a></li>
         </ul>
       </div>
@@ -2869,11 +2870,14 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
   let pistaVistaEnMemoria = false;
   let slugResultado = null;
 
+  const vistaCiudad = (animate = false) =>
+    mapa && mapa.fitBounds(L.latLngBounds(LIMITES_CDMX), { padding: [12, 12], animate });
+
   if (typeof L !== "undefined" && conCoords.length) {
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
     L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 17, maxNativeZoom: 16, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
-    mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
+    vistaCiudad();
     ponerMascara(mascara);
 
     const marcoAviso = contenedor.closest(".mapa-marco") || contenedor.parentNode;
@@ -2906,8 +2910,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
     });
     mapa.addControl(new Ubicar());
 
-    const encuadreCompleto = () =>
-      mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
+    const encuadreCompleto = () => vistaCiudad(true);
     const VerTodos = L.Control.extend({
       options: { position: "topleft" },
       onAdd() {
@@ -3256,6 +3259,9 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
     if (!mapa) return;
     const vis = filtrar(ejemplares, estado).filter((e) => e.coords);
     if (!vis.length) return;
+
+    const todos = ejemplares.filter((e) => e.coords).length;
+    if (vis.length === todos) { vistaCiudad(true); return; }
     const caja = L.latLngBounds(vis.map((e) => [e.coords.lat, e.coords.lng]));
     mapa.fitBounds(caja, { padding: [46, 46], maxZoom: 15, animate: true });
   }

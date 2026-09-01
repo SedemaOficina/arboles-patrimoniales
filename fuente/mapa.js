@@ -110,12 +110,25 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
   let pistaVistaEnMemoria = false;   // la pista de ubicación ya se cerró
   let slugResultado = null;          // ejemplar que respondió «el más cercano»
 
+  /* LA VISTA DE ENTRADA ES LA CIUDAD ENTERA, no el racimo de ejemplares.
+     El mapa abría encuadrado sobre los árboles, y como casi todos están en el
+     centro y el poniente, entraba ya acercado a esa zona: se veía un puñado de
+     puntos flotando sin referencia, y quien vive en Tláhuac o en Milpa Alta no
+     tenía cómo saber si había alguno cerca —ni siquiera veía su alcaldía en
+     cuadro—. Con la Ciudad completa, lo primero que se lee es dónde están y
+     dónde NO están todavía, que es información del registro, no un defecto.
+     Se encuadra el rectángulo declarado de la Ciudad, el mismo que ya limita
+     el arrastre, para que el recorte y la vista de entrada no puedan
+     discrepar. */
+  const vistaCiudad = (animate = false) =>
+    mapa && mapa.fitBounds(L.latLngBounds(LIMITES_CDMX), { padding: [12, 12], animate });
+
   /* ---------- mapa ---------- */
   if (typeof L !== "undefined" && conCoords.length) {
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
     L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 17, maxNativeZoom: 16, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
-    mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
+    vistaCiudad();
     ponerMascara(mascara);
     // El aviso vive sobre el lienzo: bajo los filtros pasaba desapercibido.
     const marcoAviso = contenedor.closest(".mapa-marco") || contenedor.parentNode;
@@ -152,11 +165,13 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     });
     mapa.addControl(new Ubicar());
 
-    // Volver a la vista de los trece. Con el botón de ubicación el mapa se
+    // Volver a la vista de entrada. Con el botón de ubicación el mapa se
     // acerca a una zona y el resto del listado sale de cuadro: sin una salida
     // explícita la única forma de recuperar el conjunto era alejar a mano.
-    const encuadreCompleto = () =>
-      mapa.fitBounds(conCoords.map((e) => [e.coords.lat, e.coords.lng]), { padding: [48, 48] });
+    // Devuelve la Ciudad completa, que es de donde se partió: si devolviera el
+    // racimo de ejemplares, «ver todos» dejaría el mapa en un encuadre que el
+    // visitante no ha visto nunca.
+    const encuadreCompleto = () => vistaCiudad(true);
     const VerTodos = L.Control.extend({
       options: { position: "topleft" },
       onAdd() {
@@ -612,6 +627,12 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     if (!mapa) return;
     const vis = filtrar(ejemplares, estado).filter((e) => e.coords);
     if (!vis.length) return;
+    /* Sin filtro puesto, «todos» es la Ciudad entera: la misma vista con la
+       que abrió la página. Encuadrar el racimo aquí y la Ciudad al entrar
+       daría dos vistas distintas para la misma idea de «todo». Con filtro sí
+       se encuadra lo que quedó: ahí lo útil es ver dónde están esos. */
+    const todos = ejemplares.filter((e) => e.coords).length;
+    if (vis.length === todos) { vistaCiudad(true); return; }
     const caja = L.latLngBounds(vis.map((e) => [e.coords.lat, e.coords.lng]));
     mapa.fitBounds(caja, { padding: [46, 46], maxZoom: 15, animate: true });
   }

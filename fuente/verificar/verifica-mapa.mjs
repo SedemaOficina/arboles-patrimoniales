@@ -270,7 +270,16 @@ const rec = fs.readFileSync('recursos-cuerpo.html','utf8');
 const pie = fs.readFileSync('parciales/pie.html','utf8');
 t('créditos · hay sección con ancla propia', /id="creditos"/.test(rec));
 t('créditos · el índice de Recursos la lista', /href="#creditos">Créditos y cómo citar<\/a>/.test(rec));
-t('créditos · el mapa del sitio del pie la enlaza', /__RECURSOS__#creditos/.test(pie));
+/* CAMBIÓ EL CRITERIO el 1 de septiembre de 2026: el mapa del sitio del pie se
+   comprimió de doce entradas a seis —hacía trabajo de índice y estiraba el pie
+   a lo alto de una pantalla— y con él se fue el enlace directo a créditos.
+   Lo que hay que seguir garantizando es que a los créditos se LLEGUE: el pie
+   lleva a Recursos y el índice de Recursos los lista, que es el camino de dos
+   pasos que ya usaba todo el mundo. Una sección con ancla que nadie enlaza
+   desde ninguna parte sí sería un hueco. */
+t('créditos · se llega desde el pie, por Recursos',
+  /href="__RECURSOS__"/.test(pie)
+  && /href="#creditos">Créditos y cómo citar<\/a>/.test(rec));
 // El bloque de obras de terceros se retiró por decisión editorial. La
 // atribución de la cartografía —que sí es obligación de licencia— la sigue
 // llevando el propio mapa en su esquina, que es donde el proveedor y

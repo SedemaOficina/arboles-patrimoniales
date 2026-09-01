@@ -3,7 +3,7 @@
  "destino": "produccion",
  "base": "https://sedemaoficina.github.io/arboles-patrimoniales/",
  "version_tarjeta": 2,
- "armado_id": "20260829T001757Z-74",
+ "armado_id": "20260901T005129Z-74",
  "fuentes": {
   "construir/armar-capa.js": "fd8c38a3d222e984",
   "construir/armar-datos.js": "eb2f772e6feda35a",
@@ -18,7 +18,7 @@
   "ficha-cuerpo.html": "dc2bb8d0f075eee3",
   "recursos-cuerpo.html": "5c11aa5d715c1016",
   "parciales/encabezado.html": "06c7f672b13c9df9",
-  "parciales/pie.html": "3d85983e6bc8cedd",
+  "parciales/pie.html": "15f25cda9ebc2c62",
   "datos/contrato-v2.json": "7745efd9c9c8b716",
   "datos/registro.json": "da8439476c28aa0e",
   "especies.js": "635f61fdc667b617",
@@ -29,7 +29,7 @@
   "indicadores.js": "1e3f69f9b4f18b29",
   "leaflet-diferido.js": "1ea05786314a2021",
   "logica.js": "0419332e6b4fccab",
-  "mapa.js": "aa5918fdc371999b",
+  "mapa.js": "e20a68c549b15616",
   "menu.js": "2f7d90d482b41905",
   "padron/fuente-viva.js": "ac0ef4cb41474ecd",
   "padron/lector-v2.js": "d757ab9caee94d4f"
