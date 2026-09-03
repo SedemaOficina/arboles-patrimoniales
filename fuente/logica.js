@@ -31,12 +31,12 @@ const LIENZO_BOSQUE = 268;  // altura del ejemplar más alto en la hilera
    umbral en OCHENTA. Se corrigió el texto ciudadano, no la definición. */
 const DEF_CATEGORIA = {
   CENTENARIO: {
-    titulo: "Centenario", plural: "Centenarios", dorada: false, icono: null,
+    titulo: "Centenario", plural: "Centenarios", dorada: false, icono: "assets/img/categorias/centenario.png",
     texto: "Tiene ochenta años o más. Germinó cuando la ciudad todavía cabía dentro de sus canales.",
     definicion: "Definición de la categoría en el registro de árboles patrimoniales de la Ciudad de México. La categoría CENTENARIO se refiere a ejemplares arbóreos o arboledas cuya edad estimada es igual o superior a 80 años, determinada mediante métodos directos o indirectos, que constituyen un testigo biológico e histórico del entorno. Su valor patrimonial radica en su longevidad excepcional, representando la memoria viva del paisaje, su evolución ecológica y la identidad histórica de la Ciudad de México.",
   },
   HISTORICO: {
-    titulo: "Histórico", plural: "Históricos", dorada: true, icono: null,
+    titulo: "Histórico", plural: "Históricos", dorada: true, icono: "assets/img/categorias/historico.png",
     texto: "Está ligado a un hecho, una persona o un lugar que la ciudad recuerda. Su valor no está solo en el árbol.",
     /* PENDIENTE. La definición formal que llegó para HISTÓRICO era, palabra por
        palabra, la de CENTENARIO: hablaba de edad igual o superior a 80 años,
@@ -47,12 +47,12 @@ const DEF_CATEGORIA = {
     definicion: null,
   },
   NOTABLE: {
-    titulo: "Notable", plural: "Notables", dorada: false, icono: null,
+    titulo: "Notable", plural: "Notables", dorada: false, icono: "assets/img/categorias/notable.png",
     texto: "Destaca por su tamaño, su porte o su especie frente a cualquier otro ejemplar de la ciudad.",
     definicion: "Definición de la categoría en el registro de árboles patrimoniales de la Ciudad de México. La categoría NOTABLE se refiere a ejemplares arbóreos o arboledas que presentan características extraordinarias o dimensiones excepcionalmente superiores con relación a su especie y contexto, incluyendo porte sobresaliente, rareza taxonómica o valor científico, paisajístico o estético. Su valor patrimonial se manifiesta en su singularidad, monumentalidad y en la contribución significativa que ofrece al paisaje, la biodiversidad y el patrimonio natural urbano.",
   },
   SINGULAR: {
-    titulo: "Singular", plural: "Singulares", dorada: true, icono: null,
+    titulo: "Singular", plural: "Singulares", dorada: true, icono: "assets/img/categorias/singular.png",
     texto: "No hay otro igual: una forma, una rareza o una condición que no se repite en el arbolado urbano.",
     definicion: "Definición de la categoría en el registro de árboles patrimoniales de la Ciudad de México. La categoría SINGULAR se refiere a ejemplares arbóreos o arboledas de morfología inusual, especie exótica, rara o poco común en la Ciudad de México, que destacan por su importancia paisajística o cultural local. Su valor patrimonial radica en la contribución que realiza a la calidad del paisaje y la identidad urbana mediante su biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa.",
   },
@@ -284,10 +284,11 @@ function pintarCategorias(stats) {
   document.getElementById("categorias").innerHTML = Object.entries(DEF_CATEGORIA).map(([clave, d]) => {
     const n = stats.totalPorCategoria[mapa[clave]] || 0;
     /* El hueco del distintivo se dibuja SIEMPRE, con o sin archivo. Vacío es
-       un recuadro punteado que dice qué falta ahí: así el diseño ya está
-       resuelto cuando lleguen los cuatro iconos y nadie tiene que rehacer la
-       tarjeta. Cuando `icono` traiga una ruta, se pinta la imagen y el
-       recuadro punteado desaparece solo. */
+       un recuadro punteado que dice qué falta ahí. Los cuatro distintivos
+       llegaron el 3 de septiembre de 2026 (recorte cuadrado de la marca de
+       cada categoría, 224 px, fondo transparente, en assets/img/categorias/),
+       así que hoy siempre se pinta la imagen; la rama del recuadro punteado
+       se queda por si una categoría nueva llega sin distintivo. */
     const distintivo = d.icono
       ? `<img class="categoria__icono" src="${d.icono}" width="56" height="56" alt="">`
       : `<span class="categoria__icono categoria__icono--vacio" aria-hidden="true">${d.titulo.charAt(0)}</span>`;
