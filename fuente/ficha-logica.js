@@ -29,10 +29,10 @@ function urlVistaCalle(coords, encuadre) {
 }
 
 const CATEGORIA = {
-  CENTENARIO: { titulo: "Centenario", dorada: false },
-  HISTORICO:  { titulo: "Histórico",  dorada: true },
-  NOTABLE:    { titulo: "Notable",    dorada: false },
-  SINGULAR:   { titulo: "Singular",   dorada: true },
+  CENTENARIO: { titulo: "Centenario", dorada: false, clave: "centenario" },
+  HISTORICO:  { titulo: "Histórico",  dorada: true,  clave: "historico" },
+  NOTABLE:    { titulo: "Notable",    dorada: false, clave: "notable" },
+  SINGULAR:   { titulo: "Singular",   dorada: true,  clave: "singular" },
 };
 
 /* Escalas cualitativas declaradas por la norma y el manual técnico:
@@ -77,7 +77,11 @@ function pintarEncabezado(e) {
     cajaEt.className = "etiquetas";
     cajaEt.innerHTML = e.categorias.map((c) => {
       const d = CATEGORIA[c];
-      return `<span class="etiqueta${d && d.dorada ? " etiqueta--dorada" : ""}">${d ? d.titulo : esc(c)}</span>`;
+      const simbolo = d && d.clave
+        ? `<i class="etiqueta__simbolo etiqueta__simbolo--${d.clave}" aria-hidden="true"></i>`
+        : "";
+      return `<span class="etiqueta${d && d.dorada ? " etiqueta--dorada" : ""}${
+        simbolo ? " etiqueta--con-simbolo" : ""}">${simbolo}${d ? d.titulo : esc(c)}</span>`;
     }).join("");
   } else {
     const d = SITUACION_CATEGORIA[e.situacionCategoria] || SITUACION_CATEGORIA.pendiente;

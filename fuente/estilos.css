@@ -715,6 +715,35 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .etiqueta--situacion{background:rgba(var(--tinta-jacaranda-rgb),.06);color:var(--gris);font-style:normal}
 /* Alias historicos: el marcado antiguo sigue funcionando. */
 .etiqueta--vacia,.etiqueta--historica,.etiqueta--tramite{background:rgba(var(--tinta-jacaranda-rgb),.06);color:var(--gris)}
+
+/* --- simbolo de categoria en la etiqueta ---------------------------------
+   Los logotipos de categoria son lockups: simbolo + palabra + «ARBOLES
+   PATRIMONIALES». Puesto entero en el encabezado de la ficha repetiria el
+   titulo del sitio a dos centimetros de si mismo, y con tres categorias
+   —Tacuba— desplazaria al nombre del arbol. Va solo el simbolo, recortado
+   del logotipo en su version blanca.
+   El arte es blanco puro sobre transparente: el canal alfa ES la forma. Por
+   eso se aplica como MASCARA y no como imagen —asi toma currentColor y un
+   mismo archivo sirve para el jacaranda de la ficha, el dorado que distingue
+   a «historico» y cualquier fondo claro donde se use despues.
+   28px es el piso medido: a 22 las tramas finas de «historico» y
+   «centenario» se cierran y el simbolo se vuelve una mancha.
+   Todo vive dentro del @supports: sin mascaras la etiqueta queda exactamente
+   como estaba —solo la palabra, que es la que carga el significado— y el
+   simbolo, que es decorativo (aria-hidden), no deja hueco. */
+@supports ((-webkit-mask-image:url(a.png)) or (mask-image:url(a.png))){
+  .etiqueta--con-simbolo{display:inline-flex;align-items:center;gap:8px;
+    padding:4px 12px 4px 6px}
+  .etiqueta__simbolo{flex:0 0 auto;display:block;width:28px;height:28px;
+    background-color:currentColor;
+    -webkit-mask-position:center;mask-position:center;
+    -webkit-mask-size:contain;mask-size:contain;
+    -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+  .etiqueta__simbolo--centenario{-webkit-mask-image:url(assets/img/categorias/centenario-simbolo.png);mask-image:url(assets/img/categorias/centenario-simbolo.png)}
+  .etiqueta__simbolo--historico{-webkit-mask-image:url(assets/img/categorias/historico-simbolo.png);mask-image:url(assets/img/categorias/historico-simbolo.png)}
+  .etiqueta__simbolo--notable{-webkit-mask-image:url(assets/img/categorias/notable-simbolo.png);mask-image:url(assets/img/categorias/notable-simbolo.png)}
+  .etiqueta__simbolo--singular{-webkit-mask-image:url(assets/img/categorias/singular-simbolo.png);mask-image:url(assets/img/categorias/singular-simbolo.png)}
+}
 .ficha-portada .etiqueta--situacion,
 .ficha-portada .etiqueta--vacia,
 .ficha-portada .etiqueta--historica,
