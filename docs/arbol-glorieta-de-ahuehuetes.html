@@ -453,7 +453,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 @supports ((-webkit-mask-image:url(a.png)) or (mask-image:url(a.png))){
   .etiqueta--con-simbolo{display:inline-flex;align-items:center;gap:8px;
     padding:4px 12px 4px 6px}
-  .etiqueta__simbolo{flex:0 0 auto;display:block;width:28px;height:28px;
+  .etiqueta__simbolo{flex:0 0 auto;display:block;
+    width:var(--simbolo-tam,22px);height:var(--simbolo-tam,22px);
     background-color:currentColor;
     -webkit-mask-position:center;mask-position:center;
     -webkit-mask-size:contain;mask-size:contain;
@@ -462,6 +463,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   .etiqueta__simbolo--historico{-webkit-mask-image:url(assets/img/categorias/historico-simbolo.png);mask-image:url(assets/img/categorias/historico-simbolo.png)}
   .etiqueta__simbolo--notable{-webkit-mask-image:url(assets/img/categorias/notable-simbolo.png);mask-image:url(assets/img/categorias/notable-simbolo.png)}
   .etiqueta__simbolo--singular{-webkit-mask-image:url(assets/img/categorias/singular-simbolo.png);mask-image:url(assets/img/categorias/singular-simbolo.png)}
+
+  .ficha-portada .etiqueta__simbolo{--simbolo-tam:28px}
 }
 .ficha-portada .etiqueta--situacion,
 .ficha-portada .etiqueta--vacia,
