@@ -29,7 +29,12 @@ t('Los dos sin categoría no aparecen en ningún filtro de categoría',
   ['CENTENARIO','HISTORICO','NOTABLE','SINGULAR'].every(c=>!M.filtrar(E,{categoria:c}).some(x=>x.categorias.length===0)));
 t('Sin Leaflet, no revienta',(()=>{try{
   const cont={innerHTML:''}; const lista={querySelector:()=>({innerHTML:'',textContent:''}),querySelectorAll:()=>[]};
-  M.crearMapa({contenedor:cont,lista,filtros:null,ejemplares:E}); return /listado de la derecha/.test(cont.innerHTML);
+  /* El mensaje dejó de decir «el listado de la derecha» el 4 de septiembre de
+     2026: abajo de 1100 px el listado va DEBAJO del mapa, así que la única
+     frase que aparece cuando la cartografía falla mandaba a mirar donde no hay
+     nada. Se comprueba que remita al listado sin referencia espacial. */
+  M.crearMapa({contenedor:cont,lista,filtros:null,ejemplares:E});
+  return /listado que lo acompaña/.test(cont.innerHTML) && !/derecha/.test(cont.innerHTML);
 }catch(e){return false}})());
 
 console.log('══ MAPA · globo, halo y desplazamiento ══');

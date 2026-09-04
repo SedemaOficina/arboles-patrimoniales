@@ -112,7 +112,35 @@ const dif=envolver('leaflet-diferido.js',['cargarLeaflet','cuandoSeAcerque']);
 const geo=ALIGERAR.aligerarJS(fs.readFileSync('geo-cdmx.js','utf8')).replace(/^export const /gm,'const ');
 // fotos.js se expone como módulo propio: lo usan tanto el mapa como el listado,
 // así que inlinearlo dentro de uno de los dos lo dejaría invisible para el otro.
-const fot=envolver('fotos.js',['montarPrimeraFoto','descubrirFotos','primeraFoto','rutaFoto','CARPETA_FOTOS','EXTENSIONES','TOPE_FOTOS']);
+const fot=envolver('fotos.js',['montarPrimeraFoto','descubrirFotos','primeraFoto','rutaFoto','fotoConocida','CARPETA_FOTOS','EXTENSIONES','TOPE_FOTOS']);
+
+/* EL ÍNDICE DE PRIMERAS FOTOGRAFÍAS, contra el parpadeo.
+   La portada nacía sin fotos y cada tarjeta pedía la suya cuando la página ya
+   estaba a la vista: un instante de listado en blanco, y de paso una petición
+   fallida por ejemplar. Un sitio estático no puede preguntarle al servidor qué
+   hay en una carpeta, pero EL ARMADO SÍ: corre en node y lee el disco.
+   Aquí se recorre `assets/img/ejemplares/<id>/`, se anota la miniatura de la
+   primera fotografía de cada carpeta y el mapa viaja incrustado en la página,
+   así que la etiqueta nace con su dirección.
+   Se prefiere la miniatura de 480 px, que es lo que la tarjeta enseña; si una
+   carpeta no la tiene generada, se anota la grande antes que quedarse sin
+   nada. Lo que no está en el índice no se rompe: cae al sondeo de siempre. */
+const _fotosPrimera = {};
+{
+  const dir = 'assets/img/ejemplares';
+  const EXT = ['jpg', 'webp', 'png', 'jpeg', 'JPG'];
+  if (fs.existsSync(dir)) {
+    for (const id of fs.readdirSync(dir)) {
+      if (!fs.statSync(`${dir}/${id}`).isDirectory()) continue;
+      const hay = new Set(fs.readdirSync(`${dir}/${id}`));
+      const ext = EXT.find((e) => hay.has(`01.${e}`) || hay.has(`01-chica.${e}`));
+      if (!ext) continue;
+      _fotosPrimera[id] = hay.has(`01-chica.${ext}`)
+        ? `${dir}/${id}/01-chica.${ext}`
+        : `${dir}/${id}/01.${ext}`;
+    }
+  }
+}
 const mapa=envolver('mapa.js',['crearMapa','filtrar','TAMANO_PIN','TOQUE_PIN'])
   .replace(/^import .*indicadores.js";$/m,'')
   .replace(/^import .*geo-cdmx.js";$/m,()=>geo)
@@ -184,6 +212,7 @@ ${viva}
 ${js}
 ${ARRANQUE.GUARDIA}
 window.CONTRATO_PADRON=${contratoMin};
+window.FOTOS_PRIMERA=${JSON.stringify(_fotosPrimera)};
 const DATOS=${datos};
 ${ARRANQUE.proteger('pintarPortada(DATOS);')}
 <\/script>

@@ -201,7 +201,12 @@
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+/* EL SALTO A UNA SECCIÓN DEJA SITIO A LA BARRA FIJA. Sin esto el destino se
+   detiene en el borde superior, que es donde vive la barra: funcionaba solo
+   porque cada sección lleva 88 px de aire y la barra mide 74, catorce píxeles
+   de margen por coincidencia. El día que alguien aprieta ese aire, los siete
+   destinos del menú aterrizan tapados y nadie relaciona las dos cosas. */
+html{scroll-behavior:smooth;scroll-padding-top:90px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:var(--t-cuerpo-grande);line-height:1.6;-webkit-font-smoothing:antialiased}
 .envoltura{max-width:var(--ancho);margin:0 auto;padding:0 28px}
@@ -850,8 +855,11 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .convocatoria__estado strong{display:block;font-size:var(--t-cuerpo-grande);line-height:1.25;color:var(--tinta)}
 .convocatoria__estado p{margin:6px 0 0;font-size:var(--t-apoyo);line-height:1.55;color:var(--tinta-suave);max-width:var(--medida-nota)}
 .convocatoria__accion{display:flex;flex-direction:column;align-items:flex-start;gap:10px;flex:0 0 auto}
-.convocatoria__accion .boton[disabled]{background:rgba(var(--tinta-jacaranda-rgb),.1);color:var(--gris);cursor:not-allowed;border-color:transparent}
-.convocatoria__accion .boton[disabled]:hover{background:rgba(var(--tinta-jacaranda-rgb),.1)}
+/* Se estiliza por `aria-disabled`, no por `disabled`: el botón dejó de estar
+   deshabilitado de verdad para que el teclado pueda alcanzarlo, y el aspecto
+   tiene que seguir diciendo que no está disponible. */
+.convocatoria__accion .boton[aria-disabled="true"]{background:rgba(var(--tinta-jacaranda-rgb),.1);color:var(--gris);cursor:not-allowed;border-color:transparent}
+.convocatoria__accion .boton[aria-disabled="true"]:hover{background:rgba(var(--tinta-jacaranda-rgb),.1)}
 .convocatoria__aviso{font-size:var(--t-apoyo);font-weight:700;color:var(--jacaranda-hondo);text-decoration:none;
   border-bottom:1.5px solid rgba(var(--jacaranda-hondo-rgb),.35);padding-bottom:1px}
 .convocatoria__aviso:hover{color:var(--jacaranda);border-bottom-color:var(--jacaranda)}

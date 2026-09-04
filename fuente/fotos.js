@@ -147,9 +147,39 @@ export async function descubrirFotos(id, opciones = {}) {
  * @param {HTMLImageElement} img  Debe traer data-ejemplar con el identificador.
  * @param {(ok:boolean)=>void} [alTerminar]
  */
+/**
+ * La primera fotografía de un ejemplar, si el armado la dejó anotada.
+ *
+ * EL ÍNDICE. `armar.js` recorre el disco al construir y escribe en la página
+ * un mapa de identificador → miniatura. Existe por el parpadeo: sin él la
+ * tarjeta nacía sin `src` y la imagen aparecía después, ya con la página a la
+ * vista, así que el listado se veía un instante sin fotografías. Con el índice
+ * la etiqueta nace con su dirección y no hay instante que ver.
+ *
+ * Es una ayuda, no una autoridad: un ejemplar que llegue por la hoja después
+ * del último armado no está en el índice y cae al sondeo de siempre.
+ */
+export function fotoConocida(id) {
+  const g = typeof globalThis !== "undefined" ? globalThis : {};
+  const indice = g.FOTOS_PRIMERA;
+  return (indice && id && indice[id]) || null;
+}
+
 export function montarPrimeraFoto(img, alTerminar) {
   const id = img.getAttribute("data-ejemplar");
   if (!id) { if (alTerminar) alTerminar(false); return; }
+
+  /* Si la etiqueta ya nació con su dirección —del índice del armado— no hay
+     nada que sondear: solo hay que avisar cuando termine de cargar, que es lo
+     que enciende las clases de la tarjeta. */
+  if (img.getAttribute("src")) {
+    img.hidden = false;
+    img.removeAttribute("loading");
+    if (img.complete && img.naturalWidth > 0) { if (alTerminar) alTerminar(true); return; }
+    img.addEventListener("load", () => { if (alTerminar) alTerminar(true); }, { once: true });
+    img.addEventListener("error", () => { if (alTerminar) alTerminar(false); }, { once: true });
+    return;
+  }
   // Una imagen con hidden (display:none) y loading="lazy" NO se carga nunca: el
   // navegador la considera fuera de pantalla para siempre, así que ni siquiera
   // pide el archivo y no hay forma de saber si existe. Se le quitan las dos

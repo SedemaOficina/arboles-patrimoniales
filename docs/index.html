@@ -126,7 +126,8 @@
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+
+html{scroll-behavior:smooth;scroll-padding-top:90px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:var(--t-cuerpo-grande);line-height:1.6;-webkit-font-smoothing:antialiased}
 .envoltura{max-width:var(--ancho);margin:0 auto;padding:0 28px}
@@ -559,8 +560,9 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .convocatoria__estado strong{display:block;font-size:var(--t-cuerpo-grande);line-height:1.25;color:var(--tinta)}
 .convocatoria__estado p{margin:6px 0 0;font-size:var(--t-apoyo);line-height:1.55;color:var(--tinta-suave);max-width:var(--medida-nota)}
 .convocatoria__accion{display:flex;flex-direction:column;align-items:flex-start;gap:10px;flex:0 0 auto}
-.convocatoria__accion .boton[disabled]{background:rgba(var(--tinta-jacaranda-rgb),.1);color:var(--gris);cursor:not-allowed;border-color:transparent}
-.convocatoria__accion .boton[disabled]:hover{background:rgba(var(--tinta-jacaranda-rgb),.1)}
+
+.convocatoria__accion .boton[aria-disabled="true"]{background:rgba(var(--tinta-jacaranda-rgb),.1);color:var(--gris);cursor:not-allowed;border-color:transparent}
+.convocatoria__accion .boton[aria-disabled="true"]:hover{background:rgba(var(--tinta-jacaranda-rgb),.1)}
 .convocatoria__aviso{font-size:var(--t-apoyo);font-weight:700;color:var(--jacaranda-hondo);text-decoration:none;
   border-bottom:1.5px solid rgba(var(--jacaranda-hondo-rgb),.35);padding-bottom:1px}
 .convocatoria__aviso:hover{color:var(--jacaranda);border-bottom-color:var(--jacaranda)}
@@ -1915,7 +1917,12 @@ body.sin-desplazamiento{overflow:hidden}
         </div>
       </div>
       <div class="convocatoria__accion">
-        <button type="button" class="boton boton--solido" disabled aria-disabled="true">Convocatoria cerrada</button>
+        <!-- SIN `disabled`, CON `aria-disabled`. Un botón deshabilitado sale del
+             recorrido de teclado: quien navega saltando de control en control
+             pasaba de largo y no se enteraba de que hay convocatoria ni de que
+             está cerrada. Así se enfoca, se anuncia como no disponible y no
+             hace nada al pulsarse, porque no tiene manejador. -->
+        <button type="button" class="boton boton--solido" aria-disabled="true">Convocatoria cerrada</button>
         <a class="convocatoria__aviso" href="https://sedema.cdmx.gob.mx/" target="_blank" rel="noopener">Ver los avisos de la Secretaría<span aria-hidden="true"> →</span></a>
       </div>
     </div>
@@ -2278,9 +2285,24 @@ async function descubrirFotos(id, opciones = {}) {
   }));
 }
 
+function fotoConocida(id) {
+  const g = typeof globalThis !== "undefined" ? globalThis : {};
+  const indice = g.FOTOS_PRIMERA;
+  return (indice && id && indice[id]) || null;
+}
+
 function montarPrimeraFoto(img, alTerminar) {
   const id = img.getAttribute("data-ejemplar");
   if (!id) { if (alTerminar) alTerminar(false); return; }
+
+  if (img.getAttribute("src")) {
+    img.hidden = false;
+    img.removeAttribute("loading");
+    if (img.complete && img.naturalWidth > 0) { if (alTerminar) alTerminar(true); return; }
+    img.addEventListener("load", () => { if (alTerminar) alTerminar(true); }, { once: true });
+    img.addEventListener("error", () => { if (alTerminar) alTerminar(false); }, { once: true });
+    return;
+  }
 
   img.hidden = false;
   img.removeAttribute("loading");
@@ -2313,7 +2335,7 @@ async function primeraFoto(id, credito) {
   return null;
 }
 
-window.montarPrimeraFoto=montarPrimeraFoto;window.descubrirFotos=descubrirFotos;window.primeraFoto=primeraFoto;window.rutaFoto=rutaFoto;window.CARPETA_FOTOS=CARPETA_FOTOS;window.EXTENSIONES=EXTENSIONES;window.TOPE_FOTOS=TOPE_FOTOS;
+window.montarPrimeraFoto=montarPrimeraFoto;window.descubrirFotos=descubrirFotos;window.primeraFoto=primeraFoto;window.rutaFoto=rutaFoto;window.fotoConocida=fotoConocida;window.CARPETA_FOTOS=CARPETA_FOTOS;window.EXTENSIONES=EXTENSIONES;window.TOPE_FOTOS=TOPE_FOTOS;
 })();
 ;(function(){
 
@@ -2885,8 +2907,10 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
   const vistaCiudad = (animate = false) =>
     mapa && mapa.fitBounds(L.latLngBounds(LIMITES_CDMX), { padding: [12, 12], animate });
 
-  if (typeof L !== "undefined" && conCoords.length) {
-    mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true,
+  const hayCartografia = typeof L !== "undefined";
+  if (hayCartografia && conCoords.length) {
+
+    mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true, keyboard: false,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
     L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 17, maxNativeZoom: 16, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     vistaCiudad();
@@ -3055,7 +3079,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
       marcadores.set(e.slug, m);
     });
   } else if (contenedor) {
-    contenedor.innerHTML = `<div class="mapa-vacio">El mapa no pudo cargarse. El listado de la derecha contiene los mismos ejemplares con su ubicación.</div>`;
+    contenedor.innerHTML = `<div class="mapa-vacio">El mapa no pudo cargarse. El listado que lo acompaña contiene los mismos ejemplares con su ubicación.</div>`;
   }
 
   const CLAVE_PISTA = "arboles-patrimoniales:pista-ubicacion";
@@ -3231,7 +3255,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
                        e.coords ? null : "sin coordenadas"].filter(Boolean).join(" · ");
           const esResultado = e.slug === slugResultado;
           return `<button class="mapa-item${esResultado ? " mapa-item--resultado" : ""}" data-slug="${esc(e.slug)}" aria-current="${e.slug === estado.activo}">
-          <img class="mapa-item__foto" data-ejemplar="${esc(e.id || "")}" alt="">
+          <img class="mapa-item__foto" ${fotoConocida(e.id) ? `src="${esc(fotoConocida(e.id))}" ` : ""}data-ejemplar="${esc(e.id || "")}" alt="">
           <span class="mapa-item__texto">
             ${esResultado ? '<span class="mapa-item__marca">Tu más cercano</span>' : ""}
             <strong>${esc(e.nombreAsignado || "Sin nombre asignado")}</strong>
@@ -4167,10 +4191,13 @@ function tarjetaFicha(e) {
       })();
 
   return `<a class="ficha" href="${urlFicha(esc(e.slug))}" data-cats="${esc(e.categorias.join(" "))}" data-alcaldia="${esc(e.alcaldia || "")}">
-    <div class="ficha__retrato">
+    <div class="ficha__retrato${fotoConocida(e.id) ? " ficha__retrato--foto" : ""}">
       <!-- La foto no viene en los datos: se busca en la carpeta del ejemplar.
-           Si no existe, la etiqueta se queda sin src y se retira sola. -->
-      <img class="ficha__foto" data-ejemplar="${esc(e.id || "")}" alt="">
+           Si el armado la dejó anotada en el índice, la etiqueta NACE con su
+           dirección y no hay parpadeo; si no, se queda sin src, se sondea y,
+           si tampoco está, se retira sola. -->
+      <img class="ficha__foto${fotoConocida(e.id) ? " ficha__foto--cargada" : ""}" ${
+        fotoConocida(e.id) ? `src="${esc(fotoConocida(e.id))}" ` : ""}data-ejemplar="${esc(e.id || "")}" alt="">
       <div class="ficha__edad">${e.morfologia.altura_m == null ? "—" : nf(e.morfologia.altura_m, 1) + " m"}<small>${e.edadEstimada != null ? `${nf(e.edadEstimada)} años estimados` : (e.nombreComun || "Altura total")}</small></div>
     </div>
     <div class="ficha__cuerpo">
@@ -4473,6 +4500,7 @@ function pintarFalloDeArranque(e){
   }catch(_){}
 }
 window.CONTRATO_PADRON={"campos":[{"clave":"id"},{"clave":"estado"},{"clave":"nomino"},{"clave":"nombre_asignado"},{"clave":"nombre_comun"},{"clave":"nombre_cientifico"},{"clave":"centenario"},{"clave":"historico"},{"clave":"notable"},{"clave":"singular"},{"clave":"categorias"},{"clave":"fecha_decreto"},{"clave":"gaceta"},{"clave":"drive_decreto"},{"clave":"tiene_programa"},{"clave":"url_programa"},{"clave":"alcaldia"},{"clave":"calle"},{"clave":"num_ext"},{"clave":"colonia"},{"clave":"cp"},{"clave":"entre_1"},{"clave":"entre_2"},{"clave":"referencias"},{"clave":"tipo_ubicacion"},{"clave":"nombre_sitio"},{"clave":"suelo_conservacion"},{"clave":"pueblo_barrio"},{"clave":"latitud"},{"clave":"longitud"},{"clave":"utm_x"},{"clave":"utm_y"},{"clave":"street_view"},{"clave":"reino"},{"clave":"phylum"},{"clave":"clase"},{"clave":"orden"},{"clave":"familia"},{"clave":"genero"},{"clave":"autor"},{"clave":"idnombrecat"},{"clave":"endemismo"},{"clave":"cites"},{"clave":"iucn"},{"clave":"nom059"},{"clave":"prioritaria"},{"clave":"nivel_prioridad"},{"clave":"exotica_invasora"},{"clave":"ambiente"},{"clave":"forma_crecimiento"},{"clave":"url_snib"},{"clave":"url_observacion"},{"clave":"altura_m"},{"clave":"dap_cm"},{"clave":"altura_medicion_dap"},{"clave":"circunferencia_cm"},{"clave":"ancho_copa_m"},{"clave":"largo_copa_m"},{"clave":"extension_copa_m"},{"clave":"condicion_general"},{"clave":"estructura_general"},{"clave":"edad_estimada"},{"clave":"expectativa_vida"},{"clave":"fecha_itree"},{"clave":"moneda_itree"},{"clave":"validacion_itree"},{"clave":"url_itree"},{"clave":"beneficio_economico"},{"clave":"co2_eq_kg"},{"clave":"escorrentia_l"},{"clave":"precip_interceptada_l"},{"clave":"elim_co_g"},{"clave":"elim_o3_g"},{"clave":"elim_no2_g"},{"clave":"elim_so2_g"},{"clave":"elim_pm25_g"},{"clave":"ahorro_kwh"},{"clave":"evit_co2_kg"},{"clave":"evit_co_g"},{"clave":"evit_no2_g"},{"clave":"evit_so2_g"},{"clave":"evit_pm25_g"},{"clave":"obs_publicas"}],"rangos":{"latitud":{"min":19.02,"max":19.6,"de":"contrato, campo latitud"},"longitud":{"min":-99.36,"max":-98.94,"de":"contrato, campo longitud"},"altura_m":{"min":1,"max":60,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 4"},"dap_cm":{"min":5,"max":500,"de":"NADF-001-RNAT-2015, numeral 4"},"ancho_copa_m":{"min":1,"max":45,"de":"NADF-001-RNAT-2015, Anexo 2, lineamiento 6"},"largo_copa_m":{"min":1,"max":45,"de":"contrato, campo largo_copa_m"},"extension_copa_m":{"min":1,"max":45,"de":"derivado de los dos ejes"},"edad_estimada":{"min":1,"max":2000,"de":"contrato, campo edad_estimada"},"circunferencia_cm":{"min":15,"max":1600,"de":"derivado del rango del DAP (π × 5 a π × 500), redondeado"}}};
+window.FOTOS_PRIMERA={"24-BJU-FRA-30222ANGIO-0013":"assets/img/ejemplares/24-BJU-FRA-30222ANGIO-0013/01-chica.jpg","25-AZC-TAX-19405GIMNO-0006":"assets/img/ejemplares/25-AZC-TAX-19405GIMNO-0006/01-chica.jpg","25-AZC-TAX-19405GIMNO-0010":"assets/img/ejemplares/25-AZC-TAX-19405GIMNO-0010/01-chica.jpg","25-BJU-FIC-75040ANGIO-0012":"assets/img/ejemplares/25-BJU-FIC-75040ANGIO-0012/01-chica.jpg","25-COY-FRA-30222ANGIO-0008":"assets/img/ejemplares/25-COY-FRA-30222ANGIO-0008/01-chica.jpg","25-COY-TAX-19405GIMNO-0003":"assets/img/ejemplares/25-COY-TAX-19405GIMNO-0003/01-chica.jpg","25-COY-TAX-19405GIMNO-0009":"assets/img/ejemplares/25-COY-TAX-19405GIMNO-0009/01-chica.jpg","25-CUH-TAX-19405GIMNO-0002":"assets/img/ejemplares/25-CUH-TAX-19405GIMNO-0002/01-chica.jpg","25-CUH-TAX-19405GIMNO-0004":"assets/img/ejemplares/25-CUH-TAX-19405GIMNO-0004/01-chica.jpg","25-CUH-TAX-19405GIMNO-0005":"assets/img/ejemplares/25-CUH-TAX-19405GIMNO-0005/01-chica.jpg","25-CUH-TAX-19405GIMNO-0011":"assets/img/ejemplares/25-CUH-TAX-19405GIMNO-0011/01-chica.jpg","25-MIH-TAX-19405GIMNO-0001":"assets/img/ejemplares/25-MIH-TAX-19405GIMNO-0001/01-chica.jpg","25-XOC-TAX-19405GIMNO-0007":"assets/img/ejemplares/25-XOC-TAX-19405GIMNO-0007/01-chica.jpg"};
 const DATOS={
   "ejemplares": [
     {

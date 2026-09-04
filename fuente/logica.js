@@ -4,7 +4,7 @@
 import { svgSilueta, ilustracionDe, perfilDe, PROPORCION_ILUSTRACION, srcsetIlustracion } from "./especies.js";
 import { crearMapa } from "./mapa.js";
 import { cuandoSeAcerque } from "./leaflet-diferido.js";
-import { montarPrimeraFoto } from "./fotos.js";
+import { montarPrimeraFoto, fotoConocida } from "./fotos.js";
 
 /* Los enlaces entre la portada y la ficha son a ARCHIVOS distintos, no anclas
    de la misma página. Antes decían solo «#ficha-tacuba»: el navegador cambiaba
@@ -318,10 +318,13 @@ function tarjetaFicha(e) {
   // ejemplares tienen edad dictaminada, así que aparecía en dos tarjetas y
   // faltaba en once. Una marca que casi nunca sale se lee como un defecto.
   return `<a class="ficha" href="${urlFicha(esc(e.slug))}" data-cats="${esc(e.categorias.join(" "))}" data-alcaldia="${esc(e.alcaldia || "")}">
-    <div class="ficha__retrato">
+    <div class="ficha__retrato${fotoConocida(e.id) ? " ficha__retrato--foto" : ""}">
       <!-- La foto no viene en los datos: se busca en la carpeta del ejemplar.
-           Si no existe, la etiqueta se queda sin src y se retira sola. -->
-      <img class="ficha__foto" data-ejemplar="${esc(e.id || "")}" alt="">
+           Si el armado la dejó anotada en el índice, la etiqueta NACE con su
+           dirección y no hay parpadeo; si no, se queda sin src, se sondea y,
+           si tampoco está, se retira sola. -->
+      <img class="ficha__foto${fotoConocida(e.id) ? " ficha__foto--cargada" : ""}" ${
+        fotoConocida(e.id) ? `src="${esc(fotoConocida(e.id))}" ` : ""}data-ejemplar="${esc(e.id || "")}" alt="">
       <div class="ficha__edad">${e.morfologia.altura_m == null ? "—" : nf(e.morfologia.altura_m, 1) + " m"}<small>${e.edadEstimada != null ? `${nf(e.edadEstimada)} años estimados` : (e.nombreComun || "Altura total")}</small></div>
     </div>
     <div class="ficha__cuerpo">

@@ -7,7 +7,7 @@
  */
 
 import { GEO_CDMX } from "./geo-cdmx.js";
-import { montarPrimeraFoto } from "./fotos.js";
+import { montarPrimeraFoto, fotoConocida } from "./fotos.js";
 
 /**
  * Cartografía base.
@@ -124,8 +124,21 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     mapa && mapa.fitBounds(L.latLngBounds(LIMITES_CDMX), { padding: [12, 12], animate });
 
   /* ---------- mapa ---------- */
-  if (typeof L !== "undefined" && conCoords.length) {
-    mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true,
+  /* DOS CAUSAS, DOS MENSAJES. Esta rama atendía por igual «la cartografía no
+     cargó» y «ningún ejemplar tiene coordenada», y decía siempre lo primero.
+     El 24 de agosto de 2026, con la hoja rota y los doce ejemplares sin
+     coordenada, el sitio culpó a la carga del mapa y se buscó el fallo donde
+     no estaba. Quien opera el sitio necesita distinguirlas. */
+  const hayCartografia = typeof L !== "undefined";
+  if (hayCartografia && conCoords.length) {
+    /* EL TECLADO RECORRE EL LISTADO, NO LOS MARCADORES. Leaflet hace tabulable
+       cada marcador, así que quien navega con teclado atravesaba veinticuatro
+       paradas —doce marcadores y doce renglones— para los mismos doce árboles,
+       en mitad de la página. El listado paralelo ya es la vía accesible al
+       mapa: sus renglones son botones, dicen el nombre y la altura y declaran
+       cuál está activo. Los controles de acercamiento SÍ se quedan en el
+       recorrido; lo que sale son los marcadores, que duplicaban. */
+    mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true, keyboard: false,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
     L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 17, maxNativeZoom: 16, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     vistaCiudad();
@@ -321,7 +334,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
       marcadores.set(e.slug, m);
     });
   } else if (contenedor) {
-    contenedor.innerHTML = `<div class="mapa-vacio">El mapa no pudo cargarse. El listado de la derecha contiene los mismos ejemplares con su ubicación.</div>`;
+    contenedor.innerHTML = `<div class="mapa-vacio">El mapa no pudo cargarse. El listado que lo acompaña contiene los mismos ejemplares con su ubicación.</div>`;
   }
 
   /* ---------- memoria de la pista ---------- */
@@ -576,7 +589,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
                        e.coords ? null : "sin coordenadas"].filter(Boolean).join(" · ");
           const esResultado = e.slug === slugResultado;
           return `<button class="mapa-item${esResultado ? " mapa-item--resultado" : ""}" data-slug="${esc(e.slug)}" aria-current="${e.slug === estado.activo}">
-          <img class="mapa-item__foto" data-ejemplar="${esc(e.id || "")}" alt="">
+          <img class="mapa-item__foto" ${fotoConocida(e.id) ? `src="${esc(fotoConocida(e.id))}" ` : ""}data-ejemplar="${esc(e.id || "")}" alt="">
           <span class="mapa-item__texto">
             ${esResultado ? '<span class="mapa-item__marca">Tu más cercano</span>' : ""}
             <strong>${esc(e.nombreAsignado || "Sin nombre asignado")}</strong>

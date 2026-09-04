@@ -286,7 +286,12 @@
         </div>
       </div>
       <div class="convocatoria__accion">
-        <button type="button" class="boton boton--solido" disabled aria-disabled="true">Convocatoria cerrada</button>
+        <!-- SIN `disabled`, CON `aria-disabled`. Un botón deshabilitado sale del
+             recorrido de teclado: quien navega saltando de control en control
+             pasaba de largo y no se enteraba de que hay convocatoria ni de que
+             está cerrada. Así se enfoca, se anuncia como no disponible y no
+             hace nada al pulsarse, porque no tiene manejador. -->
+        <button type="button" class="boton boton--solido" aria-disabled="true">Convocatoria cerrada</button>
         <a class="convocatoria__aviso" href="https://sedema.cdmx.gob.mx/" target="_blank" rel="noopener">Ver los avisos de la Secretaría<span aria-hidden="true"> →</span></a>
       </div>
     </div>

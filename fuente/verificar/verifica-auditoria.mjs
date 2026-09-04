@@ -91,9 +91,17 @@ t('La altura pasó a la línea de datos', /m de alto/.test(mp) && /mapa-item__me
 // La miniatura se descubre en la carpeta del ejemplar; si no hay archivo, el
 // <img> se retira y el renglón se queda sin columna de foto. La hoja de
 // cálculo ya no interviene: sus rutas heredadas producían imágenes rotas.
+/* CAMBIÓ LA FORMA el 4 de septiembre de 2026, no la regla. La etiqueta ya no
+   nace siempre vacía: si el armado dejó anotada la primera fotografía en el
+   índice, nace con su dirección, y eso es lo que quita el parpadeo. Lo que se
+   sigue exigiendo es lo mismo —que el `data-ejemplar` esté para el sondeo, que
+   sin fotografía la etiqueta se retire y que la hoja de cálculo no vuelva a
+   decidir la imagen— más lo nuevo: que la dirección salga del índice y no de
+   los datos del ejemplar. */
 t('La miniatura solo aparece si hay fotografía',
   /mapa-item--con-foto/.test(mp)
-  && /<img class="mapa-item__foto" data-ejemplar=/.test(mp)
+  && /<img class="mapa-item__foto" \$\{fotoConocida\(e\.id\)/.test(mp)
+  && /data-ejemplar="\$\{esc\(e\.id \|\| ""\)\}"/.test(mp)
   && /else \{ img\.remove\(\); \}/.test(mp)
   && !/e\.fotos && e\.fotos\.length/.test(mp));
 t('No se recurre a la silueta de la especie en el listado', !/svgSilueta|ilustracionDe/.test(mp));

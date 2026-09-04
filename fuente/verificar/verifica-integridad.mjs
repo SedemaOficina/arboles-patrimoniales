@@ -58,6 +58,42 @@ t('Ninguna carpeta sobra', huerfanas.length === 0,
   huerfanas.join(', ') + ' · no corresponden a ningún ejemplar del registro');
 if (enEsperaMontadas.length) console.log('   · en espera de que la hoja los publique: ' + enEsperaMontadas.join(', '));
 
+/* EL ÍNDICE DE PRIMERAS FOTOGRAFÍAS CONTRA EL DISCO.
+   El armado recorre las carpetas y escribe en la página un mapa de
+   identificador → miniatura, para que la tarjeta nazca con su imagen y no
+   parpadee. Ese mapa es una FOTO FIJA del disco en el momento de construir: un
+   armado viejo publicaría direcciones de archivos que ya no están, y la
+   tarjeta enseñaría un roto en vez de retirarse sola. Aquí se comprueba que el
+   índice publicado y el disco digan lo mismo. */
+console.log('\n══ EL ÍNDICE DE PRIMERAS FOTOGRAFÍAS ══');
+{
+  const salida = hay('../docs/index.html') ? '../docs/index.html' : null;
+  if (!salida) {
+    t('Se puede leer el índice publicado', false, 'no existe ../docs/index.html');
+  } else {
+    const html = fs.readFileSync(salida, 'utf8');
+    const m = html.match(/window\.FOTOS_PRIMERA=(\{.*?\});/);
+    t('La portada publica el índice', !!m);
+    if (m) {
+      let idx = {};
+      try { idx = JSON.parse(m[1]); } catch (e) {}
+      const claves = Object.keys(idx);
+      t('El índice no viene vacío', claves.length > 0, String(claves.length));
+      const rotas = claves.filter((id) => !hay('../docs/' + idx[id]));
+      t('Cada dirección del índice existe en el disco', rotas.length === 0, rotas.join(', '));
+      /* Al revés también: una carpeta con fotografías que no esté en el índice
+         no rompe nada —cae al sondeo— pero delata un armado viejo. */
+      const carpetasConFoto = (hay(DIR) ? fs.readdirSync(DIR) : []).filter((n) => {
+        const d = path.join(DIR, n);
+        return fs.statSync(d).isDirectory() && fs.readdirSync(d).some((f) => /^01[.-]/.test(f));
+      });
+      const fuera = carpetasConFoto.filter((id) => !claves.includes(id));
+      t('Ninguna carpeta con fotografías se quedó fuera del índice',
+        fuera.length === 0, fuera.join(', '));
+    }
+  }
+}
+
 console.log('\n══ LAS FOTOGRAFÍAS ══');
 const vacias = [], sinMiniatura = [], sinGrande = [], raros = [], conHueco = [], enElTope = [];
 const cuenta = {};

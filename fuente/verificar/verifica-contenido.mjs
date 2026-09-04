@@ -26,7 +26,18 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
 
   t(f+' · sección para proponer un árbol', /id="postula"/.test(s));
   t(f+' · estado de la convocatoria: cerrada', /data-estado="cerrada"/.test(s)&&/La convocatoria está cerrada por ahora/.test(s));
-  t(f+' · el botón está deshabilitado', /<button[^>]*disabled[^>]*aria-disabled="true"[^>]*>Convocatoria cerrada/.test(s));
+  /* CAMBIÓ EL CRITERIO el 4 de septiembre de 2026. La aserción exigía
+     `disabled`, y un botón deshabilitado NO recibe foco: quien navega con
+     teclado o lector de pantalla pasaba de largo y no se enteraba de que hay
+     convocatoria ni de que está cerrada. Ahora se anuncia con `aria-disabled`,
+     que sí deja enfocarlo. Lo que se sigue exigiendo es lo mismo: que el botón
+     declare que no está disponible y que no se pueda usar —no tiene manejador
+     y el estilo lo dice—; lo que se prohíbe es que vuelva `disabled`. */
+  t(f+' · el botón se anuncia no disponible sin salirse del teclado',
+    /<button[^>]*aria-disabled="true"[^>]*>Convocatoria cerrada/.test(s)
+    /* Ojo con la negación: `\bdisabled` casa dentro de «aria-disabled»,
+       porque el guion no es carácter de palabra. Se exige el espacio. */
+    && !/<button[^>]*\sdisabled[\s>]/.test(s));
   t(f+' · dice que la convocatoria es anual', /convocatoria cada año/.test(s));
   /* SE RETIRÓ LA SECUENCIA DE POSTULACIÓN el 28 de agosto de 2026, por
      decisión del área: la sección solo anuncia el estado de la convocatoria.

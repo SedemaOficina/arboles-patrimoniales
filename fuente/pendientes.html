@@ -109,7 +109,7 @@ a{color:var(--jacaranda-hondo)}
       <div><b>12</b><span>Ejemplares publicados</span></div>
       <div><b>12</b><span>Con decreto enlazado</span></div>
       <div><b>12</b><span>Con fotografía y coordenada</span></div>
-      <div><b>20</b><span>Asuntos abiertos</span></div>
+      <div><b>19</b><span>Asuntos abiertos</span></div>
     </div>
   </div>
 </header>
@@ -371,26 +371,7 @@ a{color:var(--jacaranda-hondo)}
           </div>
           <span class="pend__quien" data-q="tu">Saber que existe</span>
         </article>
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Al abrir la portada parpadea: un instante sin fotografías</h3>
-            <p>Reportado el 24 de agosto de 2026. Al entrar, durante unas décimas de segundo el listado se ve con los recuadros morados vacíos —como si ningún ejemplar tuviera fotografía— y las ilustraciones del bosque llegan después. No lo causó ningún cambio reciente: es como está armado el sitio.</p>
-            <p style="margin-top:9px"><b>Por qué pasa.</b> El HTML publicado sale con los contenedores <b>vacíos</b>: <code>#listaPadron</code>, <code>#bosquePista</code> y <code>#cifras</code> no traen nada, y todo lo dibuja <code>logica.js</code> al cargar. Encima, cada tarjeta se emite con la etiqueta de imagen <b>sin dirección</b>, y luego se prueban hasta diez rutas por ejemplar —cinco extensiones de miniatura y cinco de original— dejando que la imagen falle para pasar a la siguiente. Son hasta <b>130 peticiones fallidas</b> en cada visita antes de que se vea la primera foto.</p>
-            <p style="margin-top:9px">Los datos no pueden resolverlo: la columna de fotografías del padrón viene vacía en <b>12 de los 13</b> ejemplares. Las fotos viven en disco, por convención de carpeta, y desde el navegador no se puede listar una carpeta.</p>
-            <div class="arreglo">
-              <b>Cómo se corrige</b>
-              <ol>
-                <li><b>Que el armado liste la carpeta.</b> El armado corre en node y sí puede leer el disco: que recorra <code>assets/img/ejemplares/&lt;id&gt;/</code> y escriba un índice de <i>identificador → primera miniatura</i> dentro de la página.</li>
-                <li><b>Que la tarjeta nazca con su foto.</b> Con ese índice, la etiqueta de imagen se emite ya con su dirección y su clase, desde el primer pintado. Se acaban el parpadeo y las peticiones fallidas.</li>
-                <li><b>Añadir la comprobación</b> que impida que el índice y el disco se desincronicen, para que un armado viejo no publique fotos que ya no están.</li>
-              </ol>
-            </div>
-            <cite>Falta acordar dónde vive ese índice: junto a los datos incrustados o como archivo aparte.</cite>
-          </div>
-          <span class="pend__quien" data-q="decidido">Por hacer</span>
-        </article>
-              </div>
+                      </div>
     </div>
 
     <p class="pend-nota"><b>Para borrar esta página:</b> elimina el archivo <code>pendientes.html</code> de la raíz del sitio. No está enlazada desde ninguna parte, así que no queda ningún enlace roto.</p>

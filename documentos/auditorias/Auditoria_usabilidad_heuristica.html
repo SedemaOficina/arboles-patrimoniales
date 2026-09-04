@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auditoría de usabilidad · Árboles Patrimoniales · 4 de septiembre de 2026</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --jacaranda:#8D4992; --tinta:#2A1630; --bosque:#1E4D2B; --vivo:#2D7A3E;
+  --papel:#FEF7E4; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta-suave:#4A3552; --linea:#E4D9C4; --nube:#FBF3DC;
+  --texto:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --editorial:"Fraunces",Georgia,"Times New Roman",serif;
+  --display:"Anton","Arial Narrow",Impact,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.hoja{max-width:52rem;margin:0 auto;padding:0 1.5rem 5rem}
+header.portada{border-bottom:4px solid var(--jacaranda);padding:3rem 0 2rem;margin-bottom:2.5rem}
+.sello{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dorado);font-weight:700;margin:0 0 1.2rem}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.6rem,7vw,4.2rem);line-height:.98;margin:0 0 .6rem;color:var(--jacaranda);text-transform:uppercase}
+.subtitulo{font-family:var(--editorial);font-size:1.22rem;line-height:1.45;color:var(--tinta-suave);margin:0 0 1.6rem;max-width:42rem}
+.meta{font-size:.86rem;color:var(--tinta-suave);margin:0;border-top:1px solid var(--linea);padding-top:1rem}
+.meta b{color:var(--tinta)}
+h2{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;font-size:1.9rem;line-height:1.1;color:var(--bosque);margin:3.4rem 0 1rem;padding-top:1.2rem;border-top:2px solid var(--linea)}
+h2 .num{color:var(--dorado);margin-right:.5rem}
+h3{font-family:var(--editorial);font-size:1.25rem;line-height:1.3;margin:2.2rem 0 .5rem;color:var(--tinta)}
+p{margin:0 0 1rem}
+a{color:var(--jacaranda)}
+code{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:.86em;background:var(--nube);padding:.1em .35em;border-radius:3px;border:1px solid var(--linea)}
+.veredicto{background:var(--nube);border:1px solid var(--linea);border-left:6px solid var(--jacaranda);padding:1.4rem 1.6rem;margin:2rem 0}
+.veredicto p:last-child{margin-bottom:0}
+.marca{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.2em .6em;border-radius:2px;vertical-align:.15em;white-space:nowrap}
+.m-alto{background:#E07A2F;color:#fff}
+.m-medio{background:var(--dorado);color:#2A1630}
+.m-bajo{background:var(--linea);color:var(--tinta-suave)}
+.m-sano{background:var(--vivo);color:#fff}
+.hallazgo{border:1px solid var(--linea);background:#fff;padding:1.1rem 1.3rem;margin:1.1rem 0;border-radius:2px}
+.hallazgo>h3{margin-top:0;font-family:var(--texto);font-weight:700;font-size:1.05rem;line-height:1.35}
+.hallazgo p:last-child{margin-bottom:0}
+.hallazgo.alto{border-left:4px solid #E07A2F}
+.hallazgo.medio{border-left:4px solid var(--dorado)}
+.hallazgo.bajo{border-left:4px solid var(--linea)}
+.ev{font-size:.9rem;color:var(--tinta-suave);border-left:3px solid var(--linea);padding-left:.9rem;margin:.7rem 0}
+.arreglo{font-size:.94rem;background:var(--nube);padding:.7rem .9rem;border-radius:2px;margin-top:.8rem}
+.arreglo::before{content:"Qué hacer · ";font-weight:700;color:var(--bosque);text-transform:uppercase;font-size:.75rem;letter-spacing:.08em}
+.franja{background:var(--bosque);color:#F3F8F0;padding:1.5rem 1.7rem;margin:2.2rem 0;border-radius:2px}
+.franja h3{color:#fff;margin:0 0 .6rem;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:1.4rem}
+.franja p:last-child{margin-bottom:0}
+.franja code{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#F3F8F0}
+table{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:.93rem}
+.envoltura{overflow-x:auto}
+th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--linea);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--tinta-suave);border-bottom:2px solid var(--dorado)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+ul,ol{margin:0 0 1rem;padding-left:1.3rem}
+li{margin-bottom:.45rem}
+.pie{margin-top:4rem;padding-top:1.2rem;border-top:2px solid var(--linea);font-size:.85rem;color:var(--tinta-suave)}
+@media print{body{background:#fff;font-size:11pt}.hoja{max-width:none}h2{page-break-after:avoid}.hallazgo,.franja{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<header class="portada">
+  <p class="sello">Auditoría de usabilidad · evaluación heurística · documento interno</p>
+  <h1>Lo que el sitio pide de quien lo usa</h1>
+  <p class="subtitulo">Evaluación heurística del micrositio de Árboles Patrimoniales contra los diez principios de Nielsen, medida sobre el sitio publicado y su código, no sobre una maqueta.</p>
+  <p class="meta"><b>Fecha:</b> 4 de septiembre de 2026 · <b>Objeto:</b> portada, ficha de ejemplar y Recursos, en el sitio publicado · <b>Método:</b> sondas sobre el DOM real, lectura del código fuente y revisión de los estados de la interfaz · <b>Distinta de:</b> la Auditoría 360, que revisa datos, activos y publicación.</p>
+</header>
+
+<div class="veredicto">
+  <p><b>Estado al 4 de septiembre de 2026, cerrado el mismo día:</b> de los siete hallazgos, <b>seis se ejecutaron</b> —U2 a U7— y uno se <b>descartó por decisión del área</b>: U1, la hoja de impresión, porque nadie necesita el papel y por eso se retiró la ficha imprimible en agosto. Cada hallazgo conserva abajo su diagnóstico y su evidencia; lo que cambió es que ya no están abiertos.</p>
+  <p><b>El sitio está bien construido en lo que suele fallar.</b> No hay una sola imagen sin texto alternativo, ningún enlace vacío ni genérico, los encabezados no saltan un nivel en cuarenta títulos, los filtros declaran su estado, el buscador tiene etiqueta y el vacío tiene salida. Eso no es lo normal en un sitio de gobierno.</p>
+  <p><b>Los siete hallazgos son de otro tipo:</b> uno de ellos —que no exista hoja de impresión— pesa más que los otros seis juntos, porque la ficha de un árbol patrimonial es un documento que la gente imprime. Ninguno es un error de código.</p>
+</div>
+
+<h2><span class="num">1</span> Cómo se midió</h2>
+<p>Se abrió el sitio publicado y se interrogó el documento real: se contaron encabezados, imágenes, enlaces y objetivos de toque; se leyeron los atributos de los filtros, del buscador y de los marcadores del mapa; y se revisó el código fuente para los estados que no se pueden provocar desde fuera —qué pasa si la cartografía no carga, qué se anuncia al filtrar, qué se ve cuando no hay resultados—.</p>
+<p>Cada hallazgo trae la evidencia que lo sostiene. Lo que se comprobó y salió bien también se anota: una auditoría que solo lista defectos no dice si el sitio está sano.</p>
+
+<h2><span class="num">2</span> Lo que se comprobó y está bien</h2>
+<div class="envoltura">
+<table>
+<tr><th>Qué se midió</th><th class="n">Resultado</th><th>Por qué importa</th></tr>
+<tr><td>Imágenes sin texto alternativo</td><td class="n">0 de 31</td><td>28 son decorativas y lo declaran con <code>alt=""</code>: se saltan en vez de leerse</td></tr>
+<tr><td>Encabezados que saltan de nivel</td><td class="n">0 de 40</td><td>El índice del documento se recorre sin huecos</td></tr>
+<tr><td>Enlaces sin texto o genéricos</td><td class="n">0 de 68</td><td>Ninguno dice «aquí» o «más»: se entienden fuera de contexto</td></tr>
+<tr><td>Enlaces externos sin aviso</td><td class="n">0 de 17</td><td>Los 17 llevan flecha y aviso de pestaña nueva</td></tr>
+<tr><td>Regiones de página</td><td class="n">4 de 4</td><td>Encabezado, navegación, contenido y pie, más «Saltar al contenido»</td></tr>
+<tr><td>Filtros que declaran su estado</td><td class="n">5 de 5</td><td><code>aria-pressed</code> en los cinco, y «Todos» los limpia</td></tr>
+<tr><td>Movimiento reducido</td><td class="n">Respetado</td><td>Global y en el pulso del marcador, que se congela sin desaparecer</td></tr>
+</table>
+</div>
+<p><span class="marca m-sano">Sano</span> Un detalle que sí revisé porque suele estar mal y aquí no lo está: la barra superior es fija y mide unos 74 px, así que al saltar a una sección desde el menú debería tapar su título. No lo tapa, porque cada sección lleva 88 px de aire arriba. <b>Funciona por margen, no por diseño</b> —catorce píxeles—, y aparece abajo como hallazgo menor.</p>
+
+<h2><span class="num">3</span> Los diez principios, uno por uno</h2>
+<div class="envoltura">
+<table>
+<tr><th>Principio</th><th>Cómo lo cumple el sitio</th><th class="n">Estado</th></tr>
+<tr><td><b>1 · Visibilidad del estado</b></td><td>El conteo del padrón vive en una región que se anuncia al filtrar o buscar; los filtros se ven presionados; el marcador que responde «tu más cercano» comparte color con su tarjeta</td><td class="n"><span class="marca m-sano">Bien</span></td></tr>
+<tr><td><b>2 · Lenguaje del usuario</b></td><td>Frases cortas, voz activa, segunda persona. Ninguna sigla sin explicar. Las cifras van en valor concreto, no en porcentaje abstracto</td><td class="n"><span class="marca m-sano">Bien</span></td></tr>
+<tr><td><b>3 · Control y libertad</b></td><td>«Todos» limpia los filtros, «Ver todos» devuelve el mapa a la vista de entrada, y quitar la selección restaura el listado</td><td class="n"><span class="marca m-sano">Bien</span></td></tr>
+<tr><td><b>4 · Consistencia</b></td><td>Un solo estilo de enlace, una sola marca de enlace externo, una sola ruta a cada ficha. Los estilos de foco no se suprimen en ningún lado</td><td class="n"><span class="marca m-sano">Bien</span></td></tr>
+<tr><td><b>5 · Prevención de errores</b></td><td>No hay formularios que enviar, así que casi no hay error posible. El botón de la convocatoria está deshabilitado en vez de fallar al pulsarlo</td><td class="n"><span class="marca m-medio">Con reservas</span></td></tr>
+<tr><td><b>6 · Reconocer, no recordar</b></td><td>Los filtros nombran la categoría y su cuenta; el buscador dice qué acepta; la ficha repite el nombre del ejemplar en el título de la pestaña</td><td class="n"><span class="marca m-sano">Bien</span></td></tr>
+<tr><td><b>7 · Flexibilidad</b></td><td>Tres caminos al mismo árbol: listado, mapa y buscador. Pero el mapa y su lista duplican el recorrido de teclado</td><td class="n"><span class="marca m-medio">Con reservas</span></td></tr>
+<tr><td><b>8 · Diseño minimalista</b></td><td>Cada cifra publicada declara su cobertura; lo que falta se dibuja apagado y dice por qué en vez de desaparecer</td><td class="n"><span class="marca m-sano">Bien</span></td></tr>
+<tr><td><b>9 · Diagnosticar errores</b></td><td>El vacío del listado propone una salida; el mapa caído remite al listado. Pero una de esas frases deja de ser cierta en pantalla chica</td><td class="n"><span class="marca m-medio">Con reservas</span></td></tr>
+<tr><td><b>10 · Ayuda y documentación</b></td><td>Recursos reúne normativa, datos abiertos y metodología. La guía de alta existe pero es interna, y la ruta para postular salió del sitio</td><td class="n"><span class="marca m-medio">Con reservas</span></td></tr>
+</table>
+</div>
+
+<h2><span class="num">4</span> Los siete hallazgos</h2>
+
+<div class="hallazgo bajo">
+  <h3><span class="marca m-bajo">Descartado</span> &nbsp;U1 · No existe hoja de estilo de impresión</h3>
+  <p><b>Decisión del área, 4 de septiembre de 2026: no se hace.</b> Nadie del público ni del equipo necesita el papel, y por eso mismo se retiró la ficha imprimible en agosto. El diagnóstico queda escrito por si la necesidad reaparece —una entrega en expediente físico, una visita de campo sin señal—, no como pendiente.</p>
+  <p class="ev"><code>@media print</code> aparece <b>cero veces</b> en la hoja de estilos del sitio.</p>
+  <p>La ficha de un ejemplar es un documento: se imprime para un expediente, se guarda en PDF para adjuntarlo a un oficio, se lleva impresa a una visita de campo. Hoy, al imprimirla, sale el menú de navegación, sale el pie con sus tres columnas de teléfonos, el mapa sale en blanco —una imagen que se dibuja con código no se imprime— y las secciones de fondo profundo salen como bloques de tinta que se comen un cartucho.</p>
+  <p>Pesa más porque <b>la ficha imprimible se retiró en agosto</b>: no hay un sustituto al que mandar a quien necesite el papel.</p>
+  <div class="arreglo">Una hoja <code>@media print</code> de unas cuarenta líneas: ocultar navegación, pie, filtros y mapa; pasar los fondos oscuros a papel; revelar la dirección de los enlaces junto a su texto; y forzar que la galería imprima solo la primera fotografía. Media jornada, y devuelve una capacidad que el sitio perdió.</div>
+</div>
+
+<div class="hallazgo medio">
+  <h3><span class="marca m-medio">Medio</span> &nbsp;U2 · «El listado de la derecha» deja de ser cierto abajo de 1100 px</h3>
+  <p class="ev">Mensaje de respaldo del mapa: «El mapa no pudo cargarse. <b>El listado de la derecha</b> contiene los mismos ejemplares con su ubicación.» · <code>@media(max-width:1100px){.mapa-zona{grid-template-columns:1fr}}</code></p>
+  <p>En tableta y en teléfono el listado no está a la derecha: está debajo. La única frase que aparece cuando el mapa falla —el momento en que la persona más necesita una instrucción exacta— manda a mirar donde no hay nada.</p>
+  <div class="arreglo">Cambiar la referencia espacial por una que no dependa del ancho: «el listado que acompaña al mapa». Dos palabras.</div>
+</div>
+
+<div class="hallazgo medio">
+  <h3><span class="marca m-medio">Medio</span> &nbsp;U3 · El mapa y su listado duplican el recorrido de teclado</h3>
+  <p class="ev">Doce marcadores enfocables —Leaflet los hace tabulables por omisión— más doce botones del listado paralelo.</p>
+  <p>Quien recorre la página con teclado atraviesa <b>veinticuatro paradas para los mismos doce árboles</b>, en mitad del documento. La redundancia es deliberada y es buena para el ratón; para el teclado es un peaje.</p>
+  <p>La buena noticia: los marcadores <b>sí tienen nombre accesible</b> —«Tacuba, 16.8 metros»—, así que quien llega ahí entiende dónde está. El problema es el volumen, no la calidad.</p>
+  <div class="arreglo">Sacar los marcadores del recorrido de teclado <code>keyboard:false</code> y dejar que el listado paralelo sea la vía accesible al mapa, que ya lo es: sus renglones son botones y declaran cuál está activo. El mapa sigue siendo operable con el ratón y con los controles de acercamiento, que sí quedan en el recorrido.</div>
+</div>
+
+<div class="hallazgo bajo">
+  <h3><span class="marca m-bajo">Bajo</span> &nbsp;U4 · Un mensaje que cubre dos causas distintas</h3>
+  <p class="ev"><code>if (typeof L !== "undefined" &amp;&amp; conCoords.length)</code> — la misma rama de respaldo atiende «la cartografía no cargó» y «ningún ejemplar tiene coordenada».</p>
+  <p>Hoy es latente: los doce ejemplares tienen coordenada, así que solo puede dispararse por la primera causa. Pero el día que la hoja llegue sin coordenadas, el sitio dirá que el mapa no cargó y quien lo opere buscará el fallo en el lugar equivocado. Ya pasó una vez, el 24 de agosto.</p>
+  <div class="arreglo">Separar las dos condiciones y escribir el motivo real en cada caso.</div>
+</div>
+
+<div class="hallazgo bajo">
+  <h3><span class="marca m-bajo">Bajo</span> &nbsp;U5 · El botón de la convocatoria sale del recorrido de teclado</h3>
+  <p class="ev"><code>&lt;button disabled aria-disabled="true"&gt;Convocatoria cerrada&lt;/button&gt;</code></p>
+  <p>Un botón <code>disabled</code> no recibe foco, así que quien navega con teclado o con lector de pantalla nunca se topa con él: pasa de largo y no se entera de que existe una convocatoria ni de que está cerrada. El texto de al lado lo dice, pero se lo pierde quien va saltando de control en control.</p>
+  <div class="arreglo">Quitar <code>disabled</code> y dejar solo <code>aria-disabled="true"</code>: el botón queda enfocable, se anuncia como no disponible y no hace nada al pulsarse.</div>
+</div>
+
+<div class="hallazgo bajo">
+  <h3><span class="marca m-bajo">Bajo</span> &nbsp;U6 · Catorce píxeles entre la barra fija y los títulos</h3>
+  <p class="ev">Barra fija ≈ 74 px de alto · <code>.seccion{padding:88px 0}</code></p>
+  <p>Al saltar a una sección desde el menú, el título queda 14 px por debajo de la barra. Funciona, pero por coincidencia: el día que alguien apriete el aire de las secciones para ganar pantalla, los siete destinos del menú empezarán a aterrizar tapados y nadie relacionará una cosa con la otra.</p>
+  <div class="arreglo">Una línea: <code>html{scroll-padding-top:90px}</code>. Deja de depender del relleno y el aire de las secciones vuelve a ser una decisión de ritmo, no una restricción.</div>
+</div>
+
+<div class="hallazgo bajo">
+  <h3><span class="marca m-bajo">Bajo</span> &nbsp;U7 · La portada parpadea al abrir</h3>
+  <p>El HTML sale sin fotografías y cada tarjeta pide la suya cuando la página ya se está viendo, así que hay un instante de listado sin imágenes. Está diagnosticado y anotado en <code>pendientes.html</code> con su arreglo: que el armado escriba un índice de identificador a fotografía y la etiqueta nazca con su dirección.</p>
+</div>
+
+<div class="franja">
+  <h3>Lo que no se evaluó</h3>
+  <p><b>Ningún usuario real probó el sitio.</b> Esto es una evaluación heurística: una persona con criterio revisando contra principios conocidos. Encuentra los problemas de forma, no los de expectativa —si la gente busca lo que el sitio ofrece, si entiende qué es una declaratoria, si el listado responde a lo que trae a alguien aquí—. Eso solo lo dicen cinco personas frente a la pantalla, y vale más que este documento.</p>
+  <p><b>Tampoco se recorrió con lector de pantalla.</b> Los atributos están puestos y se comprobaron uno por uno, pero atributos correctos no garantizan un recorrido cómodo. Sigue anotado como pendiente.</p>
+</div>
+
+<h2><span class="num">5</span> Qué se hizo</h2>
+<p>Todo el mismo 4 de septiembre de 2026, con las dieciséis suites en verde al cerrar.</p>
+<div class="envoltura">
+<table>
+<tr><th>Hallazgo</th><th>Qué se hizo</th></tr>
+<tr><td><b>U1</b> · Hoja de impresión</td><td><b>Descartado por decisión del área.</b> Nadie necesita el papel</td></tr>
+<tr><td><b>U2</b> · «El listado de la derecha»</td><td>Pasó a «el listado que lo acompaña»: no depende del ancho de pantalla</td></tr>
+<tr><td><b>U3</b> · Recorrido de teclado duplicado</td><td><code>keyboard:false</code> en el mapa. De 24 paradas a 12; el listado paralelo queda como la vía accesible y los controles de acercamiento siguen en el recorrido</td></tr>
+<tr><td><b>U4</b> · Un mensaje, dos causas</td><td>Separadas: la cartografía caída y el padrón sin coordenadas ya no dicen lo mismo</td></tr>
+<tr><td><b>U5</b> · Botón fuera del teclado</td><td>Sale <code>disabled</code>, queda <code>aria-disabled</code>. Se enfoca, se anuncia no disponible y no hace nada. El estilo se enganchó al atributo nuevo</td></tr>
+<tr><td><b>U6</b> · Catorce píxeles de margen</td><td><code>scroll-padding-top:90px</code>. El aire de las secciones vuelve a ser decisión de ritmo</td></tr>
+<tr><td><b>U7</b> · El parpadeo al abrir</td><td>El armado recorre el disco y escribe un índice de identificador → miniatura en la página. La tarjeta <b>nace con su fotografía</b>: se acabaron el parpadeo y una petición fallida por ejemplar</td></tr>
+</table>
+</div>
+<p>U7 llevaba abierto desde agosto y era el único que pedía trabajo de fondo. La pieza que faltaba no era código de navegador sino una idea: <b>un sitio estático no puede preguntarle al servidor qué hay en una carpeta, pero el armado sí</b> —corre en node y lee el disco—. El índice de trece entradas viaja incrustado y cuesta 1.2 KB.</p>
+<p>Ese índice es una foto fija del disco, así que trae su propia guarda: <code>verifica-integridad</code> comprueba que cada dirección publicada exista y que ninguna carpeta con fotografías se haya quedado fuera. Un armado viejo publicando imágenes que ya no están se detecta antes de subirlo.</p>
+
+<p class="pie">Auditoría de usabilidad · evaluación heurística · 4 de septiembre de 2026 · Documento interno de trabajo, no publicado. El registro vivo de pendientes está en <code>fuente/pendientes.html</code>. La revisión de datos, activos y publicación es la Auditoría 360 v4, en esta misma carpeta.</p>
+
+</div>
+</body>
+</html>
