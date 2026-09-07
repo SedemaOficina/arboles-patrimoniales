@@ -27,12 +27,35 @@
       <h2>Los árboles patrimoniales en video</h2>
       <p>La Secretaría del Medio Ambiente documenta en video a los ejemplares del registro y el trabajo que hay detrás de su cuidado.</p>
     </div>
-    <div class="video">
-      <iframe src="https://www.youtube-nocookie.com/embed/-CK1wiS2m3Q?si=YKQUTact3VmZ4WXv&amp;rel=0"
-              title="El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol"
-              loading="lazy" allowfullscreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="videos">
+      <figure class="video-pieza">
+        <div class="video">
+          <iframe src="https://www.youtube-nocookie.com/embed/-CK1wiS2m3Q?si=YKQUTact3VmZ4WXv&amp;rel=0"
+                  title="El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol"
+                  loading="lazy" allowfullscreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        <figcaption>El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol.
+          <span class="video-pieza__fuente">YouTube</span></figcaption>
+      </figure>
+      <figure class="video-pieza">
+        <!-- Video vertical: el reproductor de Facebook entrega 9:16. Va en su
+             propio contenedor para que no deforme la retícula del de YouTube.
+             loading="lazy" no es cosmético: mientras nadie llegue a esta
+             sección, el reproductor —y las cookies de Meta que trae— no se
+             cargan. -->
+        <div class="video video--vertical">
+          <iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1437194384128243%2F&amp;show_text=false&amp;width=360&amp;height=640"
+                  title="Video incrustado desde Facebook"
+                  loading="lazy" allowfullscreen
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  scrolling="no"></iframe>
+        </div>
+        <figcaption><span class="provisional">Falta el pie de este video: qué muestra y quién lo publica.</span>
+          <span class="video-pieza__fuente">Facebook</span></figcaption>
+      </figure>
     </div>
   </div>
 </section>

@@ -1190,6 +1190,26 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .video{position:relative;width:100%;aspect-ratio:16/9;background:var(--tinta-jacaranda);
   border:1px solid rgba(var(--tinta-jacaranda-rgb),.14);overflow:hidden}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+/* Dos videos de proporcion distinta en la misma fila: el institucional en
+   16:9 y el vertical del reel en 9:16. La columna del vertical se limita en
+   ancho porque, a la altura del otro, un 9:16 a todo lo ancho ocuparia media
+   pantalla. */
+/* 256 y 81 no son arbitrarios: son las proporciones que hacen que un 16:9 y
+   un 9:16 den EXACTAMENTE la misma altura lado a lado (16/9 dividido entre
+   9/16). Sin eso, el vertical sobresalia media pantalla por debajo del otro. */
+.videos{display:grid;grid-template-columns:minmax(0,256fr) minmax(0,81fr);gap:24px;align-items:start}
+.video-pieza{margin:0}
+.video--vertical{aspect-ratio:9/16}
+/* En una sola columna la igualdad de alturas ya no aplica y un 9:16 a todo lo
+   ancho mide el doble que la pantalla: se limita. */
+@media(max-width:860px){
+  .videos{grid-template-columns:1fr}
+  .video--vertical{max-width:300px;margin-inline:auto}
+}
+.video-pieza figcaption{margin:12px 0 0;font-size:var(--t-apoyo);line-height:1.55;
+  color:var(--gris);max-width:var(--medida-nota)}
+.video-pieza__fuente{display:block;font-size:var(--t-micro);font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--jacaranda);margin-top:6px}
 /* --- llamada a visitar el ejemplar --- */
 .visita{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:24px 40px}
 .visita h2{font-size:clamp(26px,3.4vw,38px);margin:8px 0 0}

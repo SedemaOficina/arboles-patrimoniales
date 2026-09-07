@@ -785,6 +785,19 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   border:1px solid rgba(var(--tinta-jacaranda-rgb),.14);overflow:hidden}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 
+.videos{display:grid;grid-template-columns:minmax(0,256fr) minmax(0,81fr);gap:24px;align-items:start}
+.video-pieza{margin:0}
+.video--vertical{aspect-ratio:9/16}
+
+@media(max-width:860px){
+  .videos{grid-template-columns:1fr}
+  .video--vertical{max-width:300px;margin-inline:auto}
+}
+.video-pieza figcaption{margin:12px 0 0;font-size:var(--t-apoyo);line-height:1.55;
+  color:var(--gris);max-width:var(--medida-nota)}
+.video-pieza__fuente{display:block;font-size:var(--t-micro);font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--jacaranda);margin-top:6px}
+
 .visita{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:24px 40px}
 .visita h2{font-size:clamp(26px,3.4vw,38px);margin:8px 0 0}
 .visita p{margin:14px 0 0;font-size:var(--t-cuerpo);line-height:1.6;color:var(--tinta-suave);max-width:var(--medida-nota)}
@@ -1649,12 +1662,35 @@ body.sin-desplazamiento{overflow:hidden}
       <h2>Los árboles patrimoniales en video</h2>
       <p>La Secretaría del Medio Ambiente documenta en video a los ejemplares del registro y el trabajo que hay detrás de su cuidado.</p>
     </div>
-    <div class="video">
-      <iframe src="https://www.youtube-nocookie.com/embed/-CK1wiS2m3Q?si=YKQUTact3VmZ4WXv&amp;rel=0"
-              title="El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol"
-              loading="lazy" allowfullscreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="videos">
+      <figure class="video-pieza">
+        <div class="video">
+          <iframe src="https://www.youtube-nocookie.com/embed/-CK1wiS2m3Q?si=YKQUTact3VmZ4WXv&amp;rel=0"
+                  title="El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol"
+                  loading="lazy" allowfullscreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        <figcaption>El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol.
+          <span class="video-pieza__fuente">YouTube</span></figcaption>
+      </figure>
+      <figure class="video-pieza">
+        <!-- Video vertical: el reproductor de Facebook entrega 9:16. Va en su
+             propio contenedor para que no deforme la retícula del de YouTube.
+             loading="lazy" no es cosmético: mientras nadie llegue a esta
+             sección, el reproductor —y las cookies de Meta que trae— no se
+             cargan. -->
+        <div class="video video--vertical">
+          <iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1437194384128243%2F&amp;show_text=false&amp;width=360&amp;height=640"
+                  title="Video incrustado desde Facebook"
+                  loading="lazy" allowfullscreen
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  scrolling="no"></iframe>
+        </div>
+        <figcaption><span class="provisional">Falta el pie de este video: qué muestra y quién lo publica.</span>
+          <span class="video-pieza__fuente">Facebook</span></figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -1713,7 +1749,7 @@ body.sin-desplazamiento{overflow:hidden}
       <span class="rotulo">Para reutilizar</span>
       <h2>Datos abiertos</h2>
       <p>El listado se publica en formato abierto y se actualiza de forma continua. Puedes reutilizarlo citando como fuente a la Secretaría del Medio Ambiente de la Ciudad de México.</p>
-      <p class="dato-fecha"><b>Última actualización:</b> 4 de septiembre de 2026. Al citar cualquier cifra, anota la fecha en que la consultaste: el padrón cambia.</p>
+      <p class="dato-fecha"><b>Última actualización:</b> 7 de septiembre de 2026. Al citar cualquier cifra, anota la fecha en que la consultaste: el padrón cambia.</p>
     </div>
     <div class="recursos-rejilla">
       <article class="recurso">
