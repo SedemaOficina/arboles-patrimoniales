@@ -417,7 +417,7 @@ function pintarMapaEjemplar(e) {
     if (pie) pie.textContent = "";
     return;
   }
-  if (pie) pie.textContent = "Cartografía base de Esri, HERE, Garmin y © colaboradores de OpenStreetMap.";
+  if (pie) pie.textContent = "Cartografía base de CARTO y © colaboradores de OpenStreetMap.";
 
   const centro = [e.coords.lat, e.coords.lng];
   /* Leaflet se descarga cuando el recuadro se acerca a la pantalla: en la
@@ -462,8 +462,8 @@ function dibujarMapaEjemplar(e, lienzo, centro) {
   // La misma base del mapa general, y por el mismo motivo; el porqué del
   // proveedor y del tope de nivel está escrito en mapa.js, donde vive la
   // dirección de referencia.
-  L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-    { maxZoom: 17, maxNativeZoom: 16 }).addTo(mapaFicha);
+  L.tileLayer("https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_32cg_1_639fb69171e990c64b31e73f",
+    { maxZoom: 19, maxNativeZoom: 20, detectRetina: true }).addTo(mapaFicha);
   // Mismo recorte que el mapa general: al alejarse, la Ciudad se distingue del
   // resto de la zona metropolitana en vez de perderse entre municipios.
   L.geoJSON(GEO_CDMX, {

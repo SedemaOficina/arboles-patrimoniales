@@ -72,8 +72,8 @@ class Component extends DCLogic {
   // La misma base del mapa general, y por el mismo motivo; el porqué del
   // proveedor y del tope de nivel está escrito en mapa.js, donde vive la
   // dirección de referencia.
-  L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-    { maxZoom: 17, maxNativeZoom: 16 }).addTo(this._mapa);
+  L.tileLayer("https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_32cg_1_639fb69171e990c64b31e73f",
+    { maxZoom: 19, maxNativeZoom: 20, detectRetina: true }).addTo(this._mapa);
     // Mismo recorte que el mapa general de la portada.
     if (this._GEO) {
       L.geoJSON(this._GEO, { interactive: false,

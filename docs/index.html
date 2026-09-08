@@ -2886,13 +2886,13 @@ const GEO_CDMX = {"type":"FeatureCollection","name":"Perimetro oficial de la Ciu
 
 
 
-const TESELAS = "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}";
+const TESELAS = "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_32cg_1_639fb69171e990c64b31e73f";
 
 const MASCARA_CDMX = GEO_CDMX;
 
 const LIMITES_CDMX = [[18.98, -99.43], [19.66, -98.87]];
 
-const ATRIBUCION = 'Cartografía base de <a href="https://www.esri.com/">Esri</a>, HERE, Garmin y © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const ATRIBUCION = 'Cartografía base de <a href="https://carto.com/attributions">CARTO</a> y © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const nf = (n, d = 1) => (n === null || n === undefined || !isFinite(n) ? "—" : Number(n).toLocaleString("es-MX", { maximumFractionDigits: d }));
@@ -2942,7 +2942,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
 
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true, keyboard: false,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
-    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 17, maxNativeZoom: 16, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
+    L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 19, maxNativeZoom: 20, detectRetina: true, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     vistaCiudad();
     ponerMascara(mascara);
 

@@ -1189,35 +1189,38 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
   const mpj = fs.readFileSync('mapa.js','utf8');
   const flj = fs.readFileSync('ficha-logica.js','utf8');
   const fdj = fs.readFileSync('modelo-ficha.js','utf8');
-  /* CAMBIÓ EL PROVEEDOR el 28 de agosto de 2026, no el criterio. CARTO empezó
-     a exigir llave para sus teselas ráster y a estamparles «API KEY REQUIRED»
-     encima. Lo que hay que seguir garantizando es lo de siempre: una base sin
-     puntos de interés —la de OSM trae farmacias, cimas y gasolineras, que
-     compiten con los marcadores en un mapa cuyo único trabajo es ubicar un
-     árbol— y la MISMA en las tres pantallas. Y dos cosas nuevas que el cambio
-     trajo consigo: que no vuelva a entrar una dirección que pida llave, y que
-     el tope de nivel esté declarado, porque Esri solo dibuja hasta el 16. */
-  const BASE = /services\.arcgisonline\.com\/ArcGIS\/rest\/services\/Canvas\/World_Light_Gray_Base/;
+  /* SEGUNDO CAMBIO DE PROVEEDOR, 8 de septiembre de 2026 — y aquí se dice por
+     qué se movieron estas aserciones, que es la única forma honesta de
+     tocarlas. El 28 de agosto se huyó de CARTO a Esri porque CARTO empezó a
+     exigir llave. Se pidió la llave gratuita y se volvió a Positron, por dos
+     defectos medidos de la base de Esri: solo dibuja hasta el nivel 16 —el 17
+     se fabricaba ampliando el 16, y se veía pixeleado— y su lienzo gris
+     rotula casi ninguna calle secundaria.
+
+     EL CRITERIO NO CAMBIÓ: una base sin puntos de interés, la MISMA en las
+     tres pantallas, con su tope de nivel declarado y su atribución completa.
+     Lo que cambió es que ahora SÍ se pide llave, a propósito y con la
+     atribución que ese plan exige. Por eso la aserción de «ninguna pide
+     llave» se invierte: ahora se comprueba que la llave ESTÉ, porque sin ella
+     vuelve la marca de agua «API KEY REQUIRED» sobre un mapa de gobierno. */
+  const BASE = /basemaps\.cartocdn\.com\/rastertiles\/light_all/;
   t('El mapa general usa una base sin puntos de interés',
     BASE.test(mpj) && !/tile\.openstreetmap\.org/.test(mpj));
   t('El mapa de la ficha usa la misma base', BASE.test(flj) && BASE.test(fdj));
-  t('Ninguna de las tres pide llave a un proveedor',
-    /* Se miran las direcciones de tesela, no el archivo entero: en mapa.js la
-       palabra «apikey» aparece a propósito, en el comentario que explica cómo
-       volver a CARTO si algún día se pide la llave. */
+  t('Las tres llevan la llave: sin ella vuelve la marca de agua',
     [mpj, flj, fdj].every((x) => (x.match(/https:\/\/[^"'`\s]*\{z\}[^"'`\s]*/g) || [])
-      .every((u) => !/cartocdn\.com/.test(u) && !/[?&]key=/.test(u) && !/api_?key/i.test(u))));
-  t('El tope de nivel está declarado en las tres, y es el que Esri dibuja',
-    [mpj, flj, fdj].every((x) => /maxNativeZoom: 16/.test(x) && /maxZoom: 17/.test(x)));
-  /* La atribución no es opcional y cambió con el proveedor: el dibujo es de
-     Esri y sus socios, y los datos siguen siendo de OpenStreetMap. Se sigue
-     comprobando lo mismo —que estén las dos, y que el pie de la ficha no se
-     quede atrás— con los nombres de hoy. */
-  t('Atribuye a Esri y a OpenStreetMap',
-    /openstreetmap\.org\/copyright/.test(mpj) && /Esri/.test(mpj)
-    && !/carto\.com\/attributions/.test(mpj));
+      .every((u) => /[?&]key=cb1_/.test(u))));
+  t('Y es la misma llave en las tres',
+    new Set([mpj, flj, fdj].map((x) => (x.match(/[?&]key=([A-Za-z0-9_]+)/) || [])[1])).size === 1);
+  t('El tope de nivel está declarado en las tres, y es el que CARTO dibuja',
+    [mpj, flj, fdj].every((x) => /maxNativeZoom: 20/.test(x) && /maxZoom: 19/.test(x)));
+  /* La atribución no es opcional: es la contraprestación del plan gratuito de
+     CARTO. Se comprueba que estén las dos —CARTO y OpenStreetMap— y que el pie
+     del mapa de la ficha no se quede con el nombre del proveedor anterior. */
+  t('Atribuye a CARTO y a OpenStreetMap',
+    /openstreetmap\.org\/copyright/.test(mpj) && /carto\.com\/attributions/.test(mpj));
   t('Y también en el pie del mapa de la ficha',
-    /Cartografía base de Esri/.test(flj) && !/teselas de CARTO/.test(flj));
+    /Cartografía base de CARTO/.test(flj) && !/de Esri/.test(flj));
 
   const pv = fs.readFileSync(PRUEBA+'portada-vista-previa.html','utf8');
   const sitio = fs.readFileSync('construir/sitio.js','utf8');

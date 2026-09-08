@@ -289,16 +289,18 @@ t('créditos · se llega desde el pie, por Recursos',
 // atribución de la cartografía —que sí es obligación de licencia— la sigue
 // llevando el propio mapa en su esquina, que es donde el proveedor y
 // OpenStreetMap la piden. Lo que queda en Recursos es la autoría y el cómo
-// citar. CAMBIÓ EL PROVEEDOR el 28 de agosto de 2026 —CARTO empezó a exigir
-// llave— y con él los nombres que hay que acreditar: el dibujo es de Esri y
-// sus socios, los datos siguen siendo de OpenStreetMap. La obligación es la
-// misma; se comprueba con los nombres de hoy.
+// citar. EL PROVEEDOR CAMBIÓ DOS VECES: el 28 de agosto de 2026 se huyó de
+// CARTO a Esri porque CARTO empezó a exigir llave, y el 8 de septiembre se
+// volvió a CARTO con la llave gratuita, porque Esri solo dibuja hasta el nivel
+// 16 y rotula casi ninguna calle secundaria. La obligación de atribuir es la
+// misma de siempre y ahora es además la contraprestación del plan gratuito:
+// se comprueba con los nombres de hoy.
 t('créditos · sin el bloque de obras de terceros',
   !/Obras de terceros que utiliza el sitio/.test(rec) && !/Licencia BSD de dos cláusulas/.test(rec));
 t('créditos · la cartografía se sigue atribuyendo desde el mapa',
   /colaboradores de <a href="https:\/\/www\.openstreetmap\.org\/copyright">OpenStreetMap<\/a>/.test(src)
-  && /Cartografía base de <a href="https:\/\/www\.esri\.com\/">Esri<\/a>, HERE, Garmin/.test(src)
-  && !/carto\.com\/attributions/.test(src));
+  && /Cartografía base de <a href="https:\/\/carto\.com\/attributions">CARTO<\/a>/.test(src)
+  && !/www\.esri\.com/.test(src));
 /* CAMBIÓ EL CRITERIO el 1 de septiembre de 2026. Eran cinco renglones de
    autoría por definir; ahora son dos. Los otros tres —concepto, contenidos,
    diseño y desarrollo— salieron del mismo escritorio y se juntaron en una

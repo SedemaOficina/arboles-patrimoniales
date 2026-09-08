@@ -3563,7 +3563,7 @@ function pintarMapaEjemplar(e) {
     if (pie) pie.textContent = "";
     return;
   }
-  if (pie) pie.textContent = "Cartografía base de Esri, HERE, Garmin y © colaboradores de OpenStreetMap.";
+  if (pie) pie.textContent = "Cartografía base de CARTO y © colaboradores de OpenStreetMap.";
 
   const centro = [e.coords.lat, e.coords.lng];
 
@@ -3587,8 +3587,8 @@ function dibujarMapaEjemplar(e, lienzo, centro) {
     maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 10,
   });
 
-  L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-    { maxZoom: 17, maxNativeZoom: 16 }).addTo(mapaFicha);
+  L.tileLayer("https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_32cg_1_639fb69171e990c64b31e73f",
+    { maxZoom: 19, maxNativeZoom: 20, detectRetina: true }).addTo(mapaFicha);
 
   L.geoJSON(GEO_CDMX, {
     interactive: false,
