@@ -1237,7 +1237,7 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   background:var(--jacaranda);color:#fff;border:2px solid #fff;border-radius:50%;
   box-shadow:0 4px 14px rgba(var(--tinta-jacaranda-rgb),.34);cursor:pointer;
   opacity:0;visibility:hidden;transform:translateY(8px);
-  transition:opacity .18s ease,transform .18s ease,visibility .18s}
+  transition:opacity var(--paso) ease,transform var(--paso) ease,visibility var(--paso)}
 .arriba--visible{opacity:1;visibility:visible;transform:none}
 .arriba:hover{background:var(--tinta-jacaranda)}
 .arriba:focus-visible{outline:3px solid var(--dorado);outline-offset:2px}

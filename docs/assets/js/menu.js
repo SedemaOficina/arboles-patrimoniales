@@ -56,22 +56,76 @@ export function activarMenu() {
     if (a) a.setAttribute("aria-current", "true");
   };
   const visibles = new Set();
+  /* GANA LA ÚLTIMA QUE EMPEZÓ, no la primera visible. Decía «la que esté más
+     arriba en el documento», y con secciones muy altas eso miente: el listado
+     mide casi cinco mil pixeles, así que al bajar al mapa el listado seguía
+     tocando la pantalla y se llevaba el resaltado. Estando en el mapa, el
+     menú decía Listado.
+     Ordenar por su posición en la pantalla y quedarse con la última que ya
+     cruzó el borde superior es lo que hace cualquier índice de lectura: la
+     sección en la que estás es la que empezó más recientemente. */
+  const recalcular = () => {
+    const orden = [...visibles].sort(
+      (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+    marcar(orden.length ? porId.get(orden[orden.length - 1]) : null);
+  };
   const observador = new IntersectionObserver((entradas) => {
     for (const e of entradas) {
       if (e.isIntersecting) visibles.add(e.target); else visibles.delete(e.target);
     }
-    // Gana la sección visible que esté más arriba en el documento.
-    const orden = [...porId.keys()].filter((s) => visibles.has(s));
-    marcar(orden.length ? porId.get(orden[0]) : null);
+    recalcular();
   }, { rootMargin: "-64px 0px -55% 0px", threshold: 0 });
   for (const s of porId.keys()) observador.observe(s);
+  /* El observador solo avisa cuando algo entra o sale. Dentro de una sección
+     muy alta no ocurre ninguna de las dos cosas en varias pantallas, así que
+     el orden relativo se vuelve a calcular al desplazar. */
+  addEventListener("scroll", () => {
+    clearTimeout(recalcular._t);
+    recalcular._t = setTimeout(recalcular, 120);
+  }, { passive: true });
+}
+
+/**
+ * Botón para volver al principio.
+ *
+ * Se monta solo, en las tres páginas, y solo aparece cuando ya hay recorrido
+ * que deshacer: mostrarlo desde el primer pixel es tapar contenido para
+ * ofrecer un viaje de cero.
+ *
+ * Devuelve el foco al inicio del documento además de desplazar: quien navega
+ * con teclado necesita que el punto de lectura vuelva, no solo el scroll.
+ * Y respeta «prefiero menos movimiento»: ahí el salto es instantáneo.
+ */
+export function montarVolverArriba() {
+  if (document.querySelector(".arriba")) return;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "arriba";
+  b.setAttribute("aria-label", "Volver al principio de la página");
+  b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+    + '<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>';
+  document.body.appendChild(b);
+
+  const suave = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  b.addEventListener("click", () => {
+    scrollTo({ top: 0, behavior: suave ? "smooth" : "auto" });
+    const primero = document.querySelector("header a, header button, main h1");
+    if (primero && primero.focus) primero.focus({ preventScroll: true });
+  });
+
+  const UMBRAL = 600;
+  const pintar = () => b.classList.toggle("arriba--visible", scrollY > UMBRAL);
+  addEventListener("scroll", pintar, { passive: true });
+  pintar();
 }
 
 if (typeof document !== "undefined") {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", activarMenu, { once: true });
+    document.addEventListener("DOMContentLoaded", montarVolverArriba, { once: true });
   } else {
     activarMenu();
+    montarVolverArriba();
   }
 }
 
