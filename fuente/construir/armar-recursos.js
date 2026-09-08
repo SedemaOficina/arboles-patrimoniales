@@ -64,6 +64,11 @@ const css = ALIGERAR.aligerarCSS(fs.readFileSync('estilos.css', 'utf8'));
 const body = incluir(fs.readFileSync('recursos-cuerpo.html', 'utf8'));
 const menu = ';(function(){\n' + ALIGERAR.aligerarJS(fs.readFileSync('menu.js', 'utf8'))
   .replace(/^export function /gm, 'function ').replace(/^export /gm, '') + '\n})();';
+// El botón de copiar las citas vive solo en esta página, así que se incrusta
+// aquí y no en la hoja común: ninguna otra página tiene citas que copiar.
+const citar = ';(function(){\n' + ALIGERAR.aligerarJS(fs.readFileSync('citar.js', 'utf8'))
+  .replace(/^export function /gm, 'function ').replace(/^export /gm, '')
+  + '\nmontarCopiaCitas();\n})();';
 
 const html = `<!DOCTYPE html>
 <html lang="es-MX">
@@ -100,6 +105,7 @@ ${css}
 ${body}
 <script>
 ${menu}
+${citar}
 <\/script>
 </body>
 </html>`;

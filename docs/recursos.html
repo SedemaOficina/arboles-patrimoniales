@@ -769,6 +769,15 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 .provisional{background:rgba(var(--dorado-rgb),.28);
   border-bottom:1px dotted var(--dorado);padding:0 2px;border-radius:var(--radio)}
+
+.cita__copiar{display:inline-flex;align-items:center;gap:6px;margin:10px 0 0;
+  padding:6px 12px;background:none;border:1px solid rgba(var(--jacaranda-rgb),.42);
+  border-radius:var(--radio);color:var(--jacaranda);font-family:var(--texto);
+  font-size:var(--t-micro);font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer}
+.cita__copiar:hover{background:rgba(var(--jacaranda-rgb),.08)}
+.cita__copiar--hecho{border-color:var(--verde-vivo);color:var(--verde-bosque);
+  background:rgba(var(--verde-vivo-rgb),.1)}
 .creditos__aviso{margin:0 0 18px;max-width:var(--medida);font-size:var(--t-apoyo);
   line-height:1.55;color:var(--gris)}
 .creditos__aviso b{color:var(--tinta)}
@@ -1665,7 +1674,7 @@ body.sin-desplazamiento{overflow:hidden}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
-        <figcaption>El ahuehuete de Santa Catarina, en Azcapotzalco, es mucho más que un árbol.</figcaption>
+        <figcaption>El ahuehuete de Santa Catarina</figcaption>
       </figure>
       <figure class="video-pieza">
         <!-- Los dos son 16:9. El reel de Facebook se supuso vertical al
@@ -1682,7 +1691,7 @@ body.sin-desplazamiento{overflow:hidden}
                   referrerpolicy="strict-origin-when-cross-origin"
                   scrolling="no"></iframe>
         </div>
-        <figcaption>Los árboles nos dan vida y por eso celebramos sus servicios ambientales con una convocatoria para declararles #ÁrbolesPatrimoniales en nuestra ciudad, como parte del plan estratégico para protegerles y conservarles. El primero en recibir esta distinción fue un ahuehuete en la Alcaldía de Azcapotzalco, al que nombramos «El Viejo del Agua», con 700 años de historia. Cuidar nuestros árboles es cuidar el futuro.</figcaption>
+        <figcaption>El Viejo del Agua, ahuehuete de Azcapotzalco</figcaption>
       </figure>
     </div>
   </div>
@@ -1860,7 +1869,6 @@ body.sin-desplazamiento{overflow:hidden}
     <div class="encabezado">
       <span class="rotulo">Quién lo hizo</span>
       <h2>Créditos y atribuciones</h2>
-      <p>Este sitio se construyó dentro de la Secretaría del Medio Ambiente de la Ciudad de México. Abajo se acredita a quien lo desarrolló y se reconocen las obras de terceros que utiliza, con la licencia bajo la que cada una se usa.</p>
     </div>
 
     <div class="creditos">
@@ -1869,8 +1877,7 @@ body.sin-desplazamiento{overflow:hidden}
         <dl class="creditos__lista">
           <div><dt>Dependencia</dt><dd>Secretaría del Medio Ambiente de la Ciudad de México</dd></div>
           <div><dt>Área coordinadora</dt><dd>Oficina de la Secretaría · Sistema de Información Ambiental</dd></div>
-          <div><dt>Registro de origen</dt><dd>Registro de árboles patrimoniales de la Ciudad de México</dd></div>
-          <div><dt>Dictamen y datos de campo</dt><dd>Dictaminadoras y dictaminadores de arbolado de la Secretaría del Medio Ambiente</dd></div>
+          <div><dt>Dictamen y datos de campo</dt><dd>Dictaminadoras y dictaminadores de arbolado de la Dirección de Infraestructura Verde de la Secretaría del Medio Ambiente</dd></div>
         </dl>
       </div>
 
@@ -1887,13 +1894,11 @@ body.sin-desplazamiento{overflow:hidden}
         <h3 class="rotulo">Desarrollo del sitio</h3>
         <dl class="creditos__lista">
           <div><dt>Concepto, contenidos, diseño y desarrollo</dt><dd>Oficina de la Secretaría · Sistema de Información Ambiental</dd></div>
-          <div><dt>Ilustraciones de las especies</dt><dd data-pendiente>Por definir</dd></div>
         </dl>
       </div>
     </div>
 
     <h3 class="creditos__titulo">Cómo citar este sitio</h3>
-    <p class="creditos__aviso"><b>Las direcciones marcadas están en revisión.</b> El sitio se publica hoy en una dirección de trabajo y cambiará cuando tenga su dominio definitivo. Lo demás de la cita —autoría, título y forma— no cambia.</p>
     <div class="creditos creditos--filas">
       <div class="creditos__bloque">
         <h3 class="rotulo">El sitio completo</h3>
@@ -2356,6 +2361,42 @@ function avisarPestanaNueva(raiz = document) {
   }
 }
 
+})();
+;(function(){
+
+
+function montarCopiaCitas() {
+  if (!navigator.clipboard || !navigator.clipboard.writeText) return;
+  document.querySelectorAll(".cita").forEach((cita) => {
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "cita__copiar";
+
+    boton.innerHTML = '<span class="cita__copiar-aviso" aria-live="polite">Copiar cita</span>';
+    const aviso = boton.firstChild;
+    let reloj = null;
+    boton.addEventListener("click", () => {
+
+      const texto = cita.textContent.replace(/\s+/g, " ").trim();
+      navigator.clipboard.writeText(texto).then(() => {
+        boton.classList.add("cita__copiar--hecho");
+        aviso.textContent = "Cita copiada";
+      }).catch(() => {
+
+        aviso.textContent = "No se pudo copiar";
+      }).then(() => {
+        clearTimeout(reloj);
+        reloj = setTimeout(() => {
+          boton.classList.remove("cita__copiar--hecho");
+          aviso.textContent = "Copiar cita";
+        }, 2400);
+      });
+    });
+    cita.insertAdjacentElement("afterend", boton);
+  });
+}
+
+montarCopiaCitas();
 })();
 </script>
 </body>

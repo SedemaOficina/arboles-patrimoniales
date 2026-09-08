@@ -40,7 +40,7 @@ const SELLADOS = [
   'cuerpo.html', 'ficha-cuerpo.html', 'recursos-cuerpo.html',
   'parciales/encabezado.html', 'parciales/pie.html',
   'datos/contrato-v2.json', 'datos/registro.json',
-  'especies.js', 'estilos.css', 'ficha-logica.js', 'fotos.js', 'geo-cdmx.js',
+  'citar.js', 'especies.js', 'estilos.css', 'ficha-logica.js', 'fotos.js', 'geo-cdmx.js',
   'indicadores.js', 'leaflet-diferido.js', 'logica.js', 'mapa.js', 'menu.js',
   'padron/fuente-viva.js', 'padron/lector-v2.js',
 ];

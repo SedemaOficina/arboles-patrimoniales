@@ -173,7 +173,7 @@ const INCRUSTADOS = {
                    'padron/lector-v2.js', 'padron/fuente-viva.js', 'logica.js'],
   'ficha.html':   ['especies.js', 'fotos.js', 'menu.js', 'leaflet-diferido.js',
                    'geo-cdmx.js', 'ficha-logica.js'],
-  'recursos.html': ['menu.js'],
+  'recursos.html': ['menu.js', 'citar.js'],
 };
 for (const [pag, modulos] of Object.entries(INCRUSTADOS)) {
   const h = hay(DOCS + pag) ? fs.readFileSync(DOCS + pag, 'utf8') : '';

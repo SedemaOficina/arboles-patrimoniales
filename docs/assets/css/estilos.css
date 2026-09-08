@@ -1174,6 +1174,18 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    basta. */
 .provisional{background:rgba(var(--dorado-rgb),.28);
   border-bottom:1px dotted var(--dorado);padding:0 2px;border-radius:var(--radio)}
+/* El botón de copiar la cita. Va debajo del párrafo, alineado a la izquierda
+   con él: puesto al lado, en una cita de cuatro renglones queda flotando a la
+   altura del primero y no se lee como suyo. Lo monta citar.js y solo aparece
+   si el navegador puede copiar de verdad. */
+.cita__copiar{display:inline-flex;align-items:center;gap:6px;margin:10px 0 0;
+  padding:6px 12px;background:none;border:1px solid rgba(var(--jacaranda-rgb),.42);
+  border-radius:var(--radio);color:var(--jacaranda);font-family:var(--texto);
+  font-size:var(--t-micro);font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer}
+.cita__copiar:hover{background:rgba(var(--jacaranda-rgb),.08)}
+.cita__copiar--hecho{border-color:var(--verde-vivo);color:var(--verde-bosque);
+  background:rgba(var(--verde-vivo-rgb),.1)}
 .creditos__aviso{margin:0 0 18px;max-width:var(--medida);font-size:var(--t-apoyo);
   line-height:1.55;color:var(--gris)}
 .creditos__aviso b{color:var(--tinta)}
