@@ -204,6 +204,7 @@ Después, commit y push. El sitio publicado no cambia hasta entonces.
 |---|---|
 | `documentos/Manual_identidad_digital.md` | Paleta, tipografía, componentes y reglas del sistema de diseño |
 | `documentos/PASOS-GITHUB.md` | Cómo publicar, paso a paso |
+| `documentos/DESPLIEGUE-EXPRESS.md` | **Para el programador:** cómo montar `docs/` en Express bajo `/arboles-patrimoniales`, la CSP mínima y qué revisar después |
 | `documentos/marca/emblema/` | El juego completo del emblema: tres versiones por tres tamaños |
 | `documentos/padron/` | Las columnas del `Listado` y el plan de migración del padrón |
 | `documentos/auditorias/` | Las auditorías vigentes; las versiones superadas están en `historico/` |
