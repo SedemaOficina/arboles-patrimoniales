@@ -54,7 +54,8 @@ const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
                'agosto','septiembre','octubre','noviembre','diciembre'];
 const _h = new Date();
 const FECHA_PUBLICACION = `${_h.getDate()} de ${MESES[_h.getMonth()]} de ${_h.getFullYear()}`;
-const enlazar = (h) => h
+const CONVOCATORIA = require('./convocatoria.js');
+const enlazar = (h) => CONVOCATORIA.resolverMenu(h)
   .split('__PORTADA__').join(RUTA_PORTADA)
   .split('__FICHA__').join(RUTA_FICHA)
   .split('__RECURSOS__').join(RUTA_RECURSOS)

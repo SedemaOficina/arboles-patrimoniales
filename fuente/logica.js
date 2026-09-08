@@ -33,7 +33,7 @@ const DEF_CATEGORIA = {
   CENTENARIO: {
     titulo: "Centenario", plural: "Centenarios", dorada: false, icono: "assets/img/categorias/centenario.png", clave: "centenario",
     texto: "Tiene ochenta años o más. Germinó cuando la ciudad todavía cabía dentro de sus canales.",
-    definicion: "Definición de la categoría en el registro de árboles patrimoniales de la Ciudad de México. La categoría CENTENARIO se refiere a ejemplares arbóreos o arboledas cuya edad estimada es igual o superior a 80 años, determinada mediante métodos directos o indirectos, que constituyen un testigo biológico e histórico del entorno. Su valor patrimonial radica en su longevidad excepcional, representando la memoria viva del paisaje, su evolución ecológica y la identidad histórica de la Ciudad de México.",
+    definicion: "La categoría CENTENARIO se refiere a ejemplares arbóreos o arboledas cuya edad estimada es igual o superior a 80 años, determinada mediante métodos directos o indirectos, que constituyen un testigo biológico e histórico del entorno. Su valor patrimonial radica en su longevidad excepcional, representando la memoria viva del paisaje, su evolución ecológica y la identidad histórica de la Ciudad de México.",
   },
   HISTORICO: {
     titulo: "Histórico", plural: "Históricos", dorada: true, icono: "assets/img/categorias/historico.png", clave: "historico",
@@ -49,12 +49,12 @@ const DEF_CATEGORIA = {
   NOTABLE: {
     titulo: "Notable", plural: "Notables", dorada: false, icono: "assets/img/categorias/notable.png", clave: "notable",
     texto: "Destaca por su tamaño, su porte o su especie frente a cualquier otro ejemplar de la ciudad.",
-    definicion: "Definición de la categoría en el registro de árboles patrimoniales de la Ciudad de México. La categoría NOTABLE se refiere a ejemplares arbóreos o arboledas que presentan características extraordinarias o dimensiones excepcionalmente superiores con relación a su especie y contexto, incluyendo porte sobresaliente, rareza taxonómica o valor científico, paisajístico o estético. Su valor patrimonial se manifiesta en su singularidad, monumentalidad y en la contribución significativa que ofrece al paisaje, la biodiversidad y el patrimonio natural urbano.",
+    definicion: "La categoría NOTABLE se refiere a ejemplares arbóreos o arboledas que presentan características extraordinarias o dimensiones excepcionalmente superiores con relación a su especie y contexto, incluyendo porte sobresaliente, rareza taxonómica o valor científico, paisajístico o estético. Su valor patrimonial se manifiesta en su singularidad, monumentalidad y en la contribución significativa que ofrece al paisaje, la biodiversidad y el patrimonio natural urbano.",
   },
   SINGULAR: {
     titulo: "Singular", plural: "Singulares", dorada: true, icono: "assets/img/categorias/singular.png", clave: "singular",
     texto: "No hay otro igual: una forma, una rareza o una condición que no se repite en el arbolado urbano.",
-    definicion: "Definición de la categoría en el registro de árboles patrimoniales de la Ciudad de México. La categoría SINGULAR se refiere a ejemplares arbóreos o arboledas de morfología inusual, especie exótica, rara o poco común en la Ciudad de México, que destacan por su importancia paisajística o cultural local. Su valor patrimonial radica en la contribución que realiza a la calidad del paisaje y la identidad urbana mediante su biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa.",
+    definicion: "La categoría SINGULAR se refiere a ejemplares arbóreos o arboledas de morfología inusual, especie exótica, rara o poco común en la Ciudad de México, que destacan por su importancia paisajística o cultural local. Su valor patrimonial radica en la contribución que realiza a la calidad del paisaje y la identidad urbana mediante su biomasa, longevidad, beneficios ambientales y características de porte sobresalientes, como la altura, el diámetro del tronco o la amplitud de la copa.",
   },
 };
 
@@ -647,11 +647,11 @@ const MENSAJES = [
   },
   {
     archivo: "secretaria-medio-ambiente",
-    nombre: "Julia Álvarez Icaza",
+    nombre: "Julia Álvarez Icaza Ramírez",
     cargo: "Secretaria del Medio Ambiente",
     iniciales: "JA",
     // BORRADOR sin autorizar. Versión del 8-sep-2026 (Oficina de la Secretaría); sustituir si la oficina ajusta el texto.
-    mensaje: "Un árbol patrimonial no es un árbol más. Es un ser vivo que ha resistido décadas —a veces siglos— de crecimiento de la ciudad, y que sigue trabajando para ella: da sombra, captura carbono, retiene agua y sostiene la vida de aves e insectos. Pero su valor va más allá de lo ambiental: estos árboles guardan la historia de sus barrios y son parte de la identidad de quienes viven cerca de ellos. Por eso los declaramos patrimoniales: para que su protección no dependa de la suerte, sino de un compromiso de ciudad. Conocerlos es el primer paso para cuidarlos.",
+    mensaje: "Un árbol patrimonial no es un árbol más. Es un ser vivo que ha resistido décadas, a veces siglos, de crecimiento de la ciudad, y que sigue trabajando para ella: da sombra, captura carbono, retiene agua y sostiene la vida de aves e insectos. Pero su valor va más allá de lo ambiental: estos árboles guardan la historia de sus barrios y son parte de la identidad de quienes viven cerca de ellos. Por eso los declaramos patrimoniales: para que su protección no dependa de la suerte, sino de un compromiso de ciudad. Conocerlos es el primer paso para cuidarlos.",
   },
 ];
 

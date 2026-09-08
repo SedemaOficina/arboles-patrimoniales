@@ -87,7 +87,20 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
      retiró la tarjeta de los artículos 106 y 107 de la Ley Ambiental. Lo que
      importa no cambió: que ningún instrumento citado se quede sin liga a su
      texto vigente. */
-  t(f+' · al menos seis enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=6, String((s.match(/class="norma__fuente"/g)||[]).length));
+  /* CAMBIÓ EL CRITERIO el 8 de septiembre de 2026. Las ligas a los textos
+     vigentes salieron de la portada por decisión del área: el catálogo
+     completo, con la liga de cada instrumento, vive en Recursos, y tenerlas
+     en los dos lados obligaba a mantener las mismas direcciones por
+     duplicado —que es como una acaba rota y la otra no—.
+     LA OBLIGACIÓN NO SE PIERDE, se muda: se sigue exigiendo que ningún
+     instrumento citado se quede sin liga a su texto vigente, pero se exige
+     en Recursos, que es donde ahora vive el catálogo. En la portada se
+     comprueba lo contrario: que no hayan vuelto. */
+  if (f === 'recursos-cuerpo.html')
+    t(f+' · al menos seis enlaces a los textos vigentes', (s.match(/class="norma__fuente"/g)||[]).length>=6, String((s.match(/class="norma__fuente"/g)||[]).length));
+  else
+    t(f+' · la ley se cita en texto y las ligas viven en Recursos',
+      !/class="norma__fuente"/.test(s.slice(s.indexOf('id="proteccion"'), s.indexOf('id="cuidado"'))));
   /* LOS BENEFICIOS GENERALES NO PUEDEN PASAR POR MEDICIÓN. La sección de
      servicios publica dos cifras de ESTOS ejemplares, estimadas con i-Tree, y
      desde el 28 de agosto de 2026 también los beneficios que la investigación

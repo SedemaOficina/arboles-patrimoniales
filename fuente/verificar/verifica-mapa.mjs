@@ -454,7 +454,7 @@ console.log('══ MENSAJES INSTITUCIONALES ══');
 const cu2 = fs.readFileSync('cuerpo.html','utf8');
 t('mensajes · la sección existe y nace oculta', /<section class="seccion seccion--niebla" id="mensaje" hidden>/.test(cu2));
 t('mensajes · nombra a las dos titulares',
-  /Clara Brugada Molina/.test(lg) && /Julia Álvarez Icaza/.test(lg));
+  /Clara Brugada Molina/.test(lg) && /Julia Álvarez Icaza Ramírez/.test(lg));
 // Los textos son BORRADORES: se muestran para poder verlos y editarlos, pero
 // van marcados en el código como no autorizados. Si se vacían, la sección
 // entera deja de mostrarse en vez de dejar un hueco.

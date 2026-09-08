@@ -60,6 +60,7 @@ const NO_VIAJA = {
   'construir/construir.sh':      'el guión del armado, no es contenido',
   'construir/padron-embebido.js':'arma el lector, la capa viva y el contrato recortado para las dos páginas; es parte del armado',
   'construir/sellar.js':         'escribe el recibo, no es contenido',
+  'construir/convocatoria.js':   'declara si la convocatoria está abierta; lo leen los tres armadores para poner o quitar «Postula» del menú',
 };
 
 console.log('══ EL RECIBO DEL ARMADO ══');

@@ -46,7 +46,8 @@ const incluir = (html, {pie = 'pie', esPortada = false} = {}) => {
 const RUTA_PORTADA = process.env.RUTA_PORTADA || NOMBRES.portada;
 const RUTA_FICHA   = process.env.RUTA_FICHA   || NOMBRES.ficha;
 const RUTA_RECURSOS = process.env.RUTA_RECURSOS || NOMBRES.recursos;
-const enlazar = (h) => h.split('__PORTADA__').join(RUTA_PORTADA).split('__FICHA__').join(RUTA_FICHA).split('__RECURSOS__').join(RUTA_RECURSOS);
+const CONVOCATORIA = require('./convocatoria.js');
+const enlazar = (h) => CONVOCATORIA.resolverMenu(h).split('__PORTADA__').join(RUTA_PORTADA).split('__FICHA__').join(RUTA_FICHA).split('__RECURSOS__').join(RUTA_RECURSOS);
 
 const css=ALIGERAR.aligerarCSS(fs.readFileSync('estilos.css','utf8'));
 const body=incluir(fs.readFileSync('ficha-cuerpo.html','utf8'));

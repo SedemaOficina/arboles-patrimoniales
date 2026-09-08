@@ -338,8 +338,15 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .mensaje__iniciales{font-family:var(--display);font-weight:400;font-size:var(--t-titulo-1);
   line-height:1;color:var(--jacaranda);letter-spacing:.02em}
 .mensaje__texto{margin:0 0 20px;flex:1}
-.mensaje__texto p{margin:0;font-family:var(--editorial);font-size:var(--t-cuerpo-grande);line-height:1.62;
+
+.mensaje__texto p{margin:0;font-family:var(--editorial);font-style:italic;
+  font-size:var(--t-cuerpo-grande);line-height:1.62;
   color:var(--tinta);max-width:var(--medida)}
+.mensaje__texto p::before,.mensaje__texto p::after{color:var(--dorado);
+  font-family:var(--editorial);font-style:normal;font-size:var(--t-titulo-3);
+  line-height:0;vertical-align:-.08em}
+.mensaje__texto p::before{content:"«";margin-right:4px}
+.mensaje__texto p::after{content:"»";margin-left:4px}
 .mensaje__firma{display:block;padding-top:16px;border-top:1px solid rgba(var(--tinta-jacaranda-rgb),.12)}
 .mensaje__firma b{display:block;font-size:var(--t-cuerpo);color:var(--tinta-jacaranda);letter-spacing:.01em}
 .mensaje__firma span{display:block;margin-top:4px;font-size:var(--t-nota);color:var(--gris)}
@@ -1633,7 +1640,8 @@ body.sin-desplazamiento{overflow:hidden}
       <a href="index.html#servicios">Beneficios</a>
       <a href="index.html#proteccion">Protección</a>
       <a href="index.html#cuidado">Su cuidado</a>
-      <a href="index.html#postula">Postula</a>
+      
+      <a href="recursos.html#datos">Datos abiertos</a>
       <a href="recursos.html">Recursos</a>
     </nav>
   </div>
