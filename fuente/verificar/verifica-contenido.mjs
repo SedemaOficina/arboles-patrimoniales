@@ -49,7 +49,17 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
     !/class="linea__hito"/.test(s) && !/artículo 54/.test(s)
     && !/Confirma que el árbol califica/.test(s)
     && !/Comisión Interinstitucional del Patrimonio Cultural/.test(s));
-  t(f+' · el plan de manejo viaja con el dictamen', /plan de manejo/.test(s));
+  /* CAMBIÓ EL CRITERIO el 8 de septiembre de 2026. «Plan de manejo» solo
+     vivía en la portada dentro del borrador sin autorizar del mensaje de la
+     Jefatura de Gobierno; al sustituir los dos mensajes por los textos
+     trabajados en la Oficina de la Secretaría, la frase salió de la página.
+     El instrumento real se llama «programa de manejo» y viaja en los
+     documentos de cada ficha, no en la portada. Lo que se exige ahora es
+     doble: que la portada no reintroduzca el término suelto y sin fuente, y
+     que la ficha conserve el programa de manejo entre sus documentos. */
+  t(f+' · el programa de manejo vive en la ficha, no en la portada',
+    !/plan de manejo/.test(s)
+    && /titulo: "Programa de manejo"/.test(fs.readFileSync('ficha-logica.js','utf8')));
   // El bloque de predio privado se retiró por decisión editorial.
   t(f+' · el bloque de predio privado ya no está', !/titularidad del predio/.test(s));
   // Por decisión editorial se retiró el bloque «¿Qué gana el árbol con la
