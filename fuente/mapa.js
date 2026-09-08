@@ -364,16 +364,23 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
    *  si llega, con la afinada. */
   function pintarUbicacion(lat, lng, accuracy, encuadrar) {
     if (marcadorUsuario) mapa.removeLayer(marcadorUsuario);
-    // El anillo iba a un pixel de trazo y 12 % de relleno: sobre el beige y
-    // el café de la cartografía, a zoom alto, prácticamente no se veía. Se
-    // engrosa, se le sube la opacidad y lleva halo blanco por CSS para que
-    // se lea sobre cualquier fondo del mapa.
-    marcadorUsuario = L.layerGroup([
-      L.circle([lat, lng], { radius: Math.max(accuracy || 0, 25), className: "anillo-precision",
-        color: "#7A3E7F", weight: 3, opacity: 0.95, fillColor: "#8D4992", fillOpacity: 0.2 }),
-      L.marker([lat, lng], { icon: L.divIcon({ className: "", iconSize: [18, 18], html: '<div class="pin-usuario"></div>' }),
-        title: "Tu ubicación aproximada" }),
-    ]).addTo(mapa);
+    /* EL ANILLO DE PRECISIÓN SE RETIRÓ el 8 de septiembre de 2026, y con él el
+       halo morado: a la precisión típica de un teléfono en calle el círculo
+       tapaba manzanas enteras y competía con los puntos de los ejemplares,
+       que es lo que el mapa tiene que dejar ver.
+       EL DATO NO SE PIERDE, cambia de soporte: la precisión que reporta el GPS
+       se dice ahora en el título del marcador, en metros. Un número exacto es
+       más honesto que un círculo que casi nadie sabe leer.
+       El pin va anclado en la punta —iconAnchor en el borde inferior—, no en
+       su centro: si se anclara al centro, señalaría medio pin más al sur. */
+    const metros = Math.round(Math.max(accuracy || 0, 0));
+    marcadorUsuario = L.marker([lat, lng], {
+      icon: L.divIcon({ className: "", iconSize: [26, 34], iconAnchor: [13, 34],
+        html: '<svg class="pin-usuario" viewBox="0 0 26 34" aria-hidden="true">'
+            + '<path class="pin-usuario__cuerpo" d="M13 32.6C13 32.6 24 20.1 24 12.6 24 6.2 19.1 1.2 13 1.2S2 6.2 2 12.6C2 20.1 13 32.6 13 32.6Z"/>'
+            + '<circle class="pin-usuario__ojo" cx="13" cy="12.4" r="4.3"/></svg>' }),
+      title: metros ? `Tu ubicación aproximada (± ${metros} m)` : "Tu ubicación aproximada",
+    }).addTo(mapa);
 
     const dentro = lat > 19 && lat < 19.65 && lng > -99.4 && lng < -98.9;
     if (!dentro) {

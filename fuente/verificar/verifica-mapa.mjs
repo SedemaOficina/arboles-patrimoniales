@@ -70,9 +70,21 @@ t('globo · queda por encima de los controles (Leaflet los pone en 1000)',
    con el resto dejaba el marcador en cinco círculos superpuestos. */
 t('cercano · ya no se pinta un anillo geográfico verde',
   !/anillo-cercano|anilloCercano/.test(src) && !/\.anillo-cercano\{/.test(css));
-t('cercano · el anillo morado de precisión sí se conserva: su radio es un dato',
-  /className: "anillo-precision"/.test(src)
-  && /radius: Math\.max\(accuracy \|\| 0, 25\)/.test(src));
+/* CAMBIÓ EL CRITERIO el 8 de septiembre de 2026, y se dice por qué. Hasta hoy
+   se exigía conservar el anillo morado de precisión con el argumento de que su
+   radio es un dato. El argumento seguía siendo cierto y aun así el anillo se
+   retiró: a la precisión de un teléfono en calle tapaba manzanas enteras y
+   competía con los puntos de los ejemplares. Lo que NO se acepta es perder el
+   dato, así que la aserción no se borra: se convierte en su equivalente. Ahora
+   se comprueba que la precisión siga dicha —en metros, en el título del
+   marcador— y que el pin esté anclado en la punta, que es el error clásico al
+   cambiar un punto por un pin. */
+t('ubicación · la precisión del GPS se sigue diciendo, ahora en metros',
+  /Tu ubicación aproximada \(± \$\{metros\} m\)/.test(src)
+  && /Math\.round\(Math\.max\(accuracy \|\| 0, 0\)\)/.test(src));
+t('ubicación · es un pin anclado en la punta, no un punto con halo',
+  /iconAnchor: \[13, 34\]/.test(src) && /class="pin-usuario"/.test(src)
+  && !/anillo-precision/.test(src) && !/\.anillo-precision\{/.test(css));
 t('cercano · el punto ya no parpadea además de pulsar',
   !/parpadeo-cercano/.test(css));
 // «animation:none» del bloque de movimiento reducido no cuenta: apaga, no anima.
