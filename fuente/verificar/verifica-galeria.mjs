@@ -177,11 +177,13 @@ console.log('\n══ FOTOGRAFÍAS MONTADAS ══');
   }
   t('La numeración es correlativa sin huecos', huecos.length === 0, huecos.join(' '));
   t('Cada fotografía tiene su miniatura de 480 px', sinMini.length === 0, sinMini.join(' '));
-  /* Sigue siendo 88: cuenta las fotografías montadas en el disco —las de los
-     ejemplares publicados MÁS las de los que están en espera—, que es lo que
-     protege contra un borrado accidental. Si sube o baja, es porque alguien
-     subió o quitó archivos, y eso tiene que verse. */
-  t('Hay 88 fotografías montadas', grandes === 88, String(grandes));
+  /* 89 desde el 8 de septiembre de 2026: entró la 11 del Viejo del Agua, una
+     toma aérea de la ceremonia. Cuenta las fotografías montadas en el disco
+     —las de los ejemplares publicados MÁS las de los que están en espera—,
+     que es lo que protege contra un borrado accidental. Si sube o baja, es
+     porque alguien subió o quitó archivos, y eso tiene que verse: por eso el
+     número se escribe a mano y se actualiza a mano. */
+  t('Hay 89 fotografías montadas', grandes === 89, String(grandes));
 
   const ft = fs.readFileSync('fotos.js','utf8');
   t('fotos.js sabe construir la ruta de una miniatura', /export const rutaMiniatura/.test(ft) && /export const miniaturaDe/.test(ft));

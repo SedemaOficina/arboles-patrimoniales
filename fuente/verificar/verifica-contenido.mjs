@@ -127,11 +127,17 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
   // El pie de la sección de propuestas se retiró. La ley se sigue enlazando
   // desde el bloque de normativa, que es donde vive el marco jurídico.
   t(f+' · sin el pie de la sección de propuestas', !/class="postula__pie"/.test(s));
-  t(f+' · la ley se sigue enlazando desde la normativa', /1471-leydepatrimonio/.test(s));
-  t(f+' · enlaza la Constitución', /data\.consejeria\.cdmx\.gob\.mx\/index\.php\/leyes\/constitucion/.test(s));
-  t(f+' · enlaza la Ley de Patrimonio', /1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico/.test(s));
-  t(f+' · enlaza la NADF-001 en PDF', /NADF-001-RNAT-2016\.pdf/.test(s));
-  t(f+' · enlaza la Ley Ambiental', /1611-nueva-ley-31/.test(s));
+  /* Las cuatro ligas a texto vigente se comprueban donde ahora viven: en el
+     catálogo de Recursos. Ver el porqué del traslado más arriba, junto a la
+     cuenta de enlaces. En la portada, la ley se cita por artículo y fracción
+     —eso sí se sigue exigiendo, arriba— pero sin liga. */
+  if (f === 'recursos-cuerpo.html') {
+    t(f+' · la ley se sigue enlazando desde la normativa', /1471-leydepatrimonio/.test(s));
+    t(f+' · enlaza la Constitución', /data\.consejeria\.cdmx\.gob\.mx\/index\.php\/leyes\/constitucion/.test(s));
+    t(f+' · enlaza la Ley de Patrimonio', /1471-leydepatrimonioculturalnaturalybioculturaldelaciudaddemexico/.test(s));
+    t(f+' · enlaza la NADF-001 en PDF', /NADF-001-RNAT-2016\.pdf/.test(s));
+    t(f+' · enlaza la Ley Ambiental', /1611-nueva-ley-31/.test(s));
+  }
 
   t(f+' · buscador del listado', /id="buscaPadron"/.test(s)&&/Nombre, especie, alcaldía o colonia/.test(s));
   // La descarga salió de la portada: ahora son archivos estáticos enlazados
