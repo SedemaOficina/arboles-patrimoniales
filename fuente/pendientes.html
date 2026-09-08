@@ -104,12 +104,12 @@ a{color:var(--jacaranda-hondo)}
   <div class="envoltura">
     <span class="rotulo">Árboles patrimoniales · control interno</span>
     <h1>Lo que falta</h1>
-    <p>Página de trabajo. No está enlazada desde el sitio y lleva <code>noindex</code>, así que no aparece en buscadores. <b>Solo lista lo que falta:</b> lo que se cierra se borra de aquí, y queda escrito en las auditorías 360 de <code>documentos/auditorias/</code>. Última limpieza: 3 de septiembre de 2026.</p>
+    <p>Página de trabajo. No está enlazada desde el sitio y lleva <code>noindex</code>, así que no aparece en buscadores. <b>Solo lista lo que falta:</b> lo que se cierra se borra de aquí, y queda escrito en las auditorías 360 de <code>documentos/auditorias/</code>. Última limpieza: 8 de septiembre de 2026.</p>
     <div class="pend-avance">
       <div><b>12</b><span>Ejemplares publicados</span></div>
       <div><b>12</b><span>Con decreto enlazado</span></div>
       <div><b>12</b><span>Con fotografía y coordenada</span></div>
-      <div><b>19</b><span>Asuntos abiertos</span></div>
+      <div><b>18</b><span>Asuntos abiertos</span></div>
     </div>
   </div>
 </header>
@@ -122,26 +122,6 @@ a{color:var(--jacaranda-hondo)}
       <h2>1 · Bloqueado en ti</h2>
       <p>Nada de esto lo puedo resolver yo. Sin estos insumos el sitio funciona, pero se publica incompleto.</p>
       <div class="pend-lista">
-
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El mapa base: se salió de CARTO por la puerta de atrás</h3>
-            <p>El <b>28 de agosto de 2026</b> el mapa amaneció con la leyenda <b>«API KEY REQUIRED»</b> estampada sobre la Ciudad. No fue el sitio: CARTO empezó a exigir llave para sus teselas ráster —las que usábamos, el estilo Positron— y además las declaró <b>en retirada</b>. Un sitio de gobierno con una marca de agua comercial encima del mapa no se puede publicar así.</p>
-            <p style="margin-top:9px"><b>Lo que se hizo hoy:</b> se cambió al <b>lienzo gris de Esri</b>, que no pide llave, no trae puntos de interés —farmacias, gasolineras— y convive con la paleta del sitio igual que Positron. La marca de agua desapareció.</p>
-            <p style="margin-top:9px"><b>Lo que cuesta, dicho sin adorno:</b> Esri solo tiene dibujo hasta el <b>nivel 16</b>; de ahí en adelante devuelve un gris liso. Por eso el mapa ahora llega al nivel 17 —el último se arma ampliando el 16 al doble— en vez de al 19. No se pierde uso real: la ficha abre en 16 y el encuadre del listado se detiene en 15, así que el sitio nunca se acercaba solo más allá. Quien quiera acercarse a mano llega dos escalones menos.</p>
-            <div class="arreglo">
-              <b>Dos cosas de tu lado</b>
-              <ol>
-                <li><b>Si quieres recuperar Positron y el acercamiento completo</b>, pide la llave gratuita en <code>carto.com/basemaps/apikey</code>: no hace falta cuenta, son 5 millones de teselas al mes y para uso no comercial suelen ampliarlo sin costo. Pásamela y la coloco: es una línea en tres archivos. Ojo con que CARTO ya anunció la retirada de estas teselas.</li>
-                <li><b>Confirma los términos de Esri con quien corresponda.</b> Sus teselas se sirven sin llave y se usan así en todas partes, con la atribución puesta —«Esri, HERE, Garmin y colaboradores de OpenStreetMap», que el mapa ya muestra—, pero para un sitio institucional conviene que alguien lo revise en vez de suponerlo.</li>
-              </ol>
-              <p style="margin-top:9px">La tercera salida, si esto se vuelve recurrente, es dejar de depender de un proveedor comercial y usar cartografía del propio Gobierno de la Ciudad o de INEGI. Es medio día de investigación para saber si existe un servicio público, estable y con CORS abierto.</p>
-            </div>
-            <cite>Un mapa de gobierno que anuncia la llave que le falta a un proveedor comercial no está informando: está haciendo publicidad de su propia dependencia.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
 
                                 <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
@@ -175,30 +155,11 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
-            <h3>El título del video no cuadra con el registro</h3>
-            <p>El video habla de «el ahuehuete de Santa Catarina, en Azcapotzalco». En el registro, Santa Catarina es un <i>Fraxinus uhdei</i> —un fresno, no un ahuehuete— y está en Coyoacán, no en Azcapotzalco. El ahuehuete de Azcapotzalco es Viejo del Agua. Son dos discrepancias, especie y alcaldía: o el video trata de otro ejemplar, o el registro tiene un error.</p>
-            <cite>Retirar el título de la vista bajó la urgencia —ya no se lee la contradicción a un lado del listado— pero no la cierra: el título sigue en el atributo del marco y el video sigue estando en la página.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
-
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
             <h3>Los mensajes de la Jefa de Gobierno y de la Secretaria</h3>
             <p>El bloque «Por qué la Ciudad protege a estos árboles» ya está montado en la portada. El 8 de septiembre de 2026 se sustituyeron los borradores originales por los textos trabajados en la Oficina de la Secretaría: el de la Jefa de Gobierno, anclado a la ciudad de los cuidados; el de la Secretaria, sobre el valor ambiental, histórico e identitario de los ejemplares. Viven en <code>fuente/logica.js</code>, en la constante <code>MENSAJES</code>.</p>
+            <p style="margin-top:9px"><b>Estado al 8 de septiembre de 2026:</b> llegaron textos nuevos y ya están montados, y los dos retratos oficiales con ellos. <b>El código los sigue marcando como borradores sin autorizar</b>, que hoy es la única señal en el repositorio de que no deben publicarse. Con fotografía, nombre y cargo al lado se leen como declaración institucional. Confirma si esa versión está aprobada —y actualizo el comentario— o cámbiala.</p>
             <p><b>Falta el visto bueno formal de cada oficina.</b> Son palabras que se atribuyen a una persona con nombre y cargo, así que siguen marcadas en el código como borrador. Cuando cada oficina apruebe o ajuste su texto, se sustituye ahí mismo y se quita la marca —lo que obliga a actualizar también la aserción de <code>verifica-mapa</code> que cuenta los marcadores. Si los textos se vacían, la sección entera deja de mostrarse y vuelve sola en cuanto haya texto.</p>
             <cite>También faltan los dos retratos. Van en <code>fuente/assets/img/personas/</code> con los nombres que indica su LEEME; si no están, queda un medallón con las iniciales y nada se rompe.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
-
-                <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Los nombres de los créditos</h3>
-            <p>La sección de créditos de Recursos ya está montada, con las atribuciones de terceros escritas y verificadas —cartografía, tipografías, biblioteca de mapas, i-Tree, CONABIO y UICN—. Faltan <b>cinco campos de autoría</b>, marcados en la página con un punto dorado: concepto y contenidos, diseño e identidad visual, desarrollo y publicación, fotografía de los ejemplares e ilustraciones de las especies.</p>
-            <cite>Esos nombres no se pueden inferir del proyecto. Dímelos y los coloco.</cite>
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
@@ -241,6 +202,44 @@ a{color:var(--jacaranda-hondo)}
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>El sitio no tiene aviso de privacidad, y ahora rastrea</h3>
+            <p>La sección legal se retiró por decisión editorial y la página de Términos y Condiciones nunca se construyó. Hasta el 7 de septiembre eso era una omisión formal. <b>Dejó de serlo.</b></p>
+            <p style="margin-top:9px">Desde que Recursos incrusta el reproductor de Facebook, el sitio <b>carga cookies y píxel de Meta en el navegador de quien lo visita</b>, sin avisarle y sin pedirle nada. Se mitigó con <code>loading="lazy"</code> —el reproductor no se carga hasta que alguien baja a la sección de videos— pero la mitigación no sustituye al aviso. Y el mapa pide la ubicación, que es otro dato personal que el aviso tiene que declarar.</p>
+            <div class="arreglo">
+              <b>Qué tiene que decir</b>
+              <ol>
+                <li><b>Que el sitio solicita la ubicación</b> —solo si la persona la concede— para calcular su árbol más cercano, y que esa coordenada no se guarda ni se envía a ningún servidor: se usa en el navegador y se descarta.</li>
+                <li><b>Qué terceros se cargan y qué pueden observar:</b> el reproductor de Facebook (Meta), el de YouTube en modo sin cookies, las teselas de CARTO y las tipografías de Google.</li>
+                <li><b>Quién es el responsable</b> del tratamiento y por dónde se ejercen los derechos ARCO.</li>
+              </ol>
+              <p style="margin-top:9px">La plantilla institucional de la Ciudad sirve de base, pero <b>dos de sus frases son falsas para este sitio</b>: dice que no solicita ubicación —sí la solicita— y enumera redes sociales que este sitio no usa. Hay que ajustarlas antes de publicar.</p>
+            </div>
+            <cite>Publicar un sitio de gobierno que carga rastreadores de una empresa sin decírselo a quien entra no es un descuido de forma: es exponer a la dependencia.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Probar en un navegador de verdad el mapa y el reel</h3>
+            <p>Dos cosas se montaron el 8 de septiembre y <b>no se pudieron comprobar desde aquí</b>: ni el contenedor ni la máquina alcanzan <code>cartocdn.com</code> ni <code>facebook.com</code>. Se verificó el código y la construcción, no el dibujo.</p>
+            <div class="arreglo">
+              <b>Levanta un servidor y míralo</b>
+              <ol>
+                <li>Dentro de <code>docs/</code>: <code>python -m http.server</code> y abre <code>localhost:8000</code>. <b>No sirve abrir el archivo con doble clic:</b> las máscaras de los símbolos de categoría y el botón de copiar la cita solo funcionan servidos por HTTP.</li>
+                <li><b>Fuerza la recarga</b> con Ctrl+Shift+R: el navegador tiene guardada la tesela con la marca de agua «API KEY REQUIRED» y puede seguir mostrándola.</li>
+                <li><b>El mapa:</b> acércate al máximo. Debe verse nítido y con nombres de calles. Si algún nivel sale en gris liso, el culpable es el par <code>detectRetina</code> / <code>maxNativeZoom: 20</code> de <code>mapa.js</code>: bajar el segundo a 19.</li>
+                <li><b>El reel de Facebook</b> en Recursos: que cargue y no salga recortado.</li>
+              </ol>
+            </div>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
 
       </div>
     </div>
@@ -251,21 +250,20 @@ a{color:var(--jacaranda-hondo)}
       <p>No son técnicas. Alguien tiene que decidirlas antes de publicar.</p>
       <div class="pend-lista">
 
-                                                <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El crédito de las ilustraciones de árboles</h3>
-            <p>Las fotografías del registro son todas de la Secretaría, así que su crédito deja de ser un dato capturado y pasa a ser una constante escrita una sola vez en el código. Las <b>ilustraciones</b> de las especies tendrán otra procedencia, y ahí esa constante ya no sirve.</p>
-            <cite>Hay que decidir dónde vive ese crédito —en el padrón, junto a los archivos del repositorio, o en la sección de créditos de Recursos— antes de publicar la primera ilustración de fuente ajena.</cite>
-          </div>
-          <span class="pend__quien" data-q="registro">Por decidir</span>
-        </article>
-
                                 <article class="pend">
           <span class="pend__marca"></span>
           <div>
-            <h3>Dominio y ruta definitiva</h3>
-            <p>Los metadatos para compartir apuntan hoy a <code>sedema.cdmx.gob.mx/arboles-patrimoniales/</code>. Si va a otra ruta, hay que cambiarla en las cuatro páginas.</p>
+            <h3>Montar el dominio definitivo</h3>
+            <p>Ya está decidido: <code>https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/</code>. Las tres citas de Recursos ya lo dicen.</p>
+            <p style="margin-top:9px"><b>Lo que falta y por qué se dejó a propósito:</b> el <code>canonical</code>, el <code>og:url</code>, la imagen para compartir y el <code>sitemap</code> siguen apuntando a <code>sedemaoficina.github.io</code>, que es donde el sitio vive hoy. Apuntarlos a un dominio que todavía no responde le diría a los buscadores que ignoren la versión publicada, y la tarjeta de WhatsApp dejaría de resolver.</p>
+            <div class="arreglo">
+              <b>El día que el dominio responda</b>
+              <ol>
+                <li>Cambiar <code>PORDEFECTO</code> en <code>fuente/construir/sitio.js</code>. <b>Es una sola línea</b>, y de ahí salen las cuatro páginas.</li>
+                <li>Subir <code>VERSION_TARJETA</code> en ese mismo archivo, para que WhatsApp y Facebook vuelvan a leer la imagen para compartir en vez de servir la que tienen guardada.</li>
+                <li>Construir producción y correr las suites: la aserción del <code>canonical</code> avisa si algo quedó desalineado.</li>
+              </ol>
+            </div>
           </div>
           <span class="pend__quien" data-q="registro">Decidir</span>
         </article>
@@ -371,6 +369,16 @@ a{color:var(--jacaranda-hondo)}
           </div>
           <span class="pend__quien" data-q="tu">Saber que existe</span>
         </article>
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>La toma aérea del Viejo del Agua está por debajo de la medida</h3>
+            <p>La fotografía 11 entró a <b>1280 × 720 px</b>. La ficha técnica de las galerías pide 2000 px o más en el lado largo para la vista grande, así que en pantalla completa se verá algo blanda. La miniatura de 480 px está bien.</p>
+            <p style="margin-top:9px">Si aparece el original de esa toma, se repone y no hay que tocar nada más: mismo nombre, misma carpeta.</p>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
                       </div>
     </div>
 
