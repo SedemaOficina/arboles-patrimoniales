@@ -261,8 +261,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
   /* Auditoría P1.1: el dorado daba 2.84:1 a 8.5 px. La corteza sube a 6.88:1
      y conserva el registro cálido del bloque institucional. */
   letter-spacing:.05em;text-transform:uppercase;color:var(--corteza)}
+/* UN SOLO FILETE en la marca. Este llevaba 1.5px de guinda opaco y el del
+   nombre del sitio 1px de tinta al 18%: dos tratamientos para la misma función
+   a cuatro centímetros. Se ven juntos cuando el logotipo no carga —es el
+   bloque de respaldo en texto— y ahí la diferencia canta. Gana el tenue: el
+   guinda opaco competía con los propios logotipos. */
 .marca__dep{display:block;line-height:1.1;font-size:var(--t-micro);font-weight:700;letter-spacing:.05em;
-  text-transform:uppercase;color:var(--guinda-gobierno);padding-left:10px;border-left:1.5px solid var(--guinda-gobierno)}
+  text-transform:uppercase;color:var(--guinda-gobierno);padding-left:14px;
+  border-left:1px solid rgba(var(--tinta-jacaranda-rgb),.18)}
 /* El emblema circular salió del encabezado: convivía con el logotipo de
    Gobierno y el nombre del sitio en la misma tira y competía con ambos.
    Sigue en la portada, en el pie y en la sección de protección, que es donde
@@ -566,7 +572,17 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    ser tarjetas con borde: son voces, no fichas de datos, así que llevan el
    filete dorado a la izquierda y nada más. */
 .mensajes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:28px}
-.mensaje{margin:0;background:var(--blanco);border-left:4px solid var(--dorado);
+/* LA REGLA DE LAS TARJETAS, escrita para que deje de ser costumbre:
+     · BASE — fondo blanco, filete de 1px (var(--borde)) y esquina viva. Radio
+       cero en todas, sin excepción.
+     · ACENTO — una barra de 3px marca la tarjeta que tiene voz propia, y va
+       SIEMPRE EN EL BORDE IZQUIERDO. El color dice de qué voz se trata:
+       jacarandá para lo que es del sitio, dorado para lo institucional.
+     · LA ÚNICA EXCEPCIÓN DECLARADA son las tarjetas de categoría, donde la
+       barra va arriba: son cuatro en fila y una barra lateral las partiría en
+       columnas en vez de agruparlas.
+   Esta tarjeta llevaba 4px y ningún filete base: se alinea a la regla. */
+.mensaje{margin:0;background:var(--blanco);border:var(--borde);border-left:3px solid var(--dorado);
   padding:30px 32px 26px;display:flex;flex-direction:column}
 /* El retrato se recorta en círculo. Mientras no haya archivo, el medallón con
    las iniciales ocupa su lugar: el bloque se ve completo desde el primer día. */
@@ -718,6 +734,16 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .ficha__cuerpo h3{font-size:var(--t-subtitulo);line-height:1.05;margin-bottom:6px}
 .ficha__especie{font-family:var(--editorial);font-style:italic;font-size:var(--t-cuerpo);color:var(--gris);margin:0 0 12px}
 .ficha__meta{font-size:var(--t-apoyo);color:var(--gris);margin:0 0 14px;display:flex;align-items:center;gap:6px}
+/* La tarjeta del padrón en móvil: doce de ellas hacen 4 795 px de sección, la
+   más larga del sitio con diferencia. Se recorta el retrato y se aprieta el
+   cuerpo sin quitar nada de lo que dice. */
+@media(max-width:560px){
+  .ficha__retrato{height:126px}
+  .ficha__cuerpo{padding:14px 14px 16px}
+  .ficha__cuerpo h3{margin-bottom:4px}
+  .ficha__especie{margin-bottom:8px}
+  .ficha__meta{margin-bottom:10px}
+}
 .etiquetas{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;align-items:flex-start}
 /* Cuando no hay categoría va la situación y su explicación. En fila, la
    etiqueta se estiraba a la altura del párrafo de al lado y quedaba como un

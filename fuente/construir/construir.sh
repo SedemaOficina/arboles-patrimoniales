@@ -35,10 +35,18 @@ rm -rf "$DEST/assets" "$DEST/vendor"
 mkdir -p "$DEST/assets"
 cp -r ../assets/. "$DEST/assets/"
 cp -r ../vendor "$DEST/" 2>/dev/null || true
-mkdir -p "$DEST/assets/js"
-cp ../mapa.js ../indicadores.js ../especies.js ../menu.js ../geo-cdmx.js ../fotos.js ../patrimoniales-loader.js "$DEST/assets/js/"
-mkdir -p "$DEST/assets/css"
-cp ../estilos.css "$DEST/assets/css/estilos.css"
+# Los modulos sueltos y la hoja aparte SOLO SIRVEN A LAS MAQUETAS de prueba/:
+# ninguna pagina del sitio los pide —todo el codigo y toda la hoja viajan
+# incrustados en cada archivo—, asi que en produccion eran 150 KB de
+# JavaScript y 156 KB de CSS publicados que ningun navegador descargaba nunca.
+# Se siguen copiando a prueba/ porque modelo-portada.js y modelo-ficha.js
+# importan de ahi el lector antiguo.
+if [ "$DESTINO" != "produccion" ]; then
+  mkdir -p "$DEST/assets/js"
+  cp ../mapa.js ../indicadores.js ../especies.js ../menu.js ../geo-cdmx.js ../fotos.js ../patrimoniales-loader.js "$DEST/assets/js/"
+  mkdir -p "$DEST/assets/css"
+  cp ../estilos.css "$DEST/assets/css/estilos.css"
+fi
 
 # Los PDF de las declaratorias viajan al sitio con su nombre intacto: la ficha
 # los busca por el nombre que la hoja de calculo guarda en el campo del

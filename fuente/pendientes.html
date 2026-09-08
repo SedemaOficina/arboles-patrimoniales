@@ -109,7 +109,7 @@ a{color:var(--jacaranda-hondo)}
       <div><b>12</b><span>Ejemplares publicados</span></div>
       <div><b>12</b><span>Con decreto enlazado</span></div>
       <div><b>12</b><span>Con fotografía y coordenada</span></div>
-      <div><b>18</b><span>Asuntos abiertos</span></div>
+      <div><b>15</b><span>Asuntos abiertos</span></div>
     </div>
   </div>
 </header>
@@ -122,47 +122,6 @@ a{color:var(--jacaranda-hondo)}
       <h2>1 · Bloqueado en ti</h2>
       <p>Nada de esto lo puedo resolver yo. Sin estos insumos el sitio funciona, pero se publica incompleto.</p>
       <div class="pend-lista">
-
-                                <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Fotografías</h3>
-            <p>Los trece ejemplares tienen fotografías: <b>88 imágenes</b> montadas desde la carpeta que entregaste, cada una en dos tamaños —1 400 px para el visor de la galería y 480 px para la miniatura de la tarjeta, del mapa y del tirador—. Se aplicó la orientación EXIF —33 de las 92 venían giradas 90°— y se retiraron los metadatos de cámara, incluidas las coordenadas GPS. Se omitieron <b>4 fotografías repetidas</b> dentro de su propia carpeta.</p>
-            <p style="margin-top:9px"><b>Falta cerrar. Son dos hallazgos distintos, los dos entre los ahuehuetes de Cuauhtémoc:</b></p>
-
-            <p style="margin-top:9px"><b>1. Una fotografía archivada dos veces, comprobado byte por byte.</b> El mismo archivo está como foto <b>02 del Jardín Ramón López Velarde</b> y como foto <b>01 del Parque España</b>. En el Parque España es la 01, es decir la de portada: es la que sale en la tarjeta del listado, en el renglón del mapa y como primera de la ficha. Una de las dos atribuciones es falsa y está publicada.</p>
-
-            <p style="margin-top:9px"><b>2. Una sospecha visual, sin comprobar.</b> La portada del Jardín Ramón López Velarde parece ser una segunda fotografía del Jardín San Fernando. No son el mismo archivo —eso ya se descartó—, así que aquí hay que reconocer el sitio, no comparar archivos.</p>
-
-            <p style="margin-top:9px">Los dos apuntan a lo mismo: durante el montaje se barajaron fotografías de ahuehuetes vecinos de la Roma y el Centro. Vale la pena revisar los cuatro de Cuauhtémoc de una sola pasada —San Fernando, Ramón López Velarde, Parque España y Juarista— y no solo estas dos.</p>
-
-            <div class="arreglo">
-              <b>Cómo se corrige</b>
-              <ol>
-                <li><b>Reconoce el sitio.</b> Abre las carpetas en <code>fuente/assets/img/ejemplares/</code> y decide de qué árbol es cada fotografía. Es lo único que no puede hacer nadie más.</li>
-                <li><b>Borra la copia del ejemplar equivocado</b>, y borra <b>las dos versiones</b>: <code>NN.jpg</code> y <code>NN-chica.jpg</code>. Si dejas la miniatura, el censo la sigue contando.</li>
-                <li><b>Renumera para no dejar hueco.</b> El código pide 01, 02, 03… y <b>se detiene en el primer archivo que falta</b>. Si borras la 02, la 03 y la 04 dejan de existir para el sitio. Y si borras la 01, el ejemplar se queda <b>sin ninguna fotografía</b>. Renombra siempre en cadena, con su miniatura: 03→02, 04→03, y así.</li>
-                <li><b>Reconstruye:</b> <code>fuente/construir/construir.sh produccion</code>. Sin esto la corrección no llega a la página.</li>
-                <li><b>Verifica:</b> <code>sh verificar/verificar.sh</code>. La suite de galería cuenta las fotografías de cada ejemplar y avisa si quedó un hueco.</li>
-                <li><b>Commitea y empuja.</b> Deben aparecer cambios en <code>fuente/</code> <i>y</i> en <code>docs/</code>.</li>
-              </ol>
-            </div>
-            <cite>Las especificaciones de nombrado, tamaños y créditos se pasaron a guia-alta.html, paso 4.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">No resuelto</span>
-        </article>
-
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Los mensajes de la Jefa de Gobierno y de la Secretaria</h3>
-            <p>El bloque «Por qué la Ciudad protege a estos árboles» ya está montado en la portada. El 8 de septiembre de 2026 se sustituyeron los borradores originales por los textos trabajados en la Oficina de la Secretaría: el de la Jefa de Gobierno, anclado a la ciudad de los cuidados; el de la Secretaria, sobre el valor ambiental, histórico e identitario de los ejemplares. Viven en <code>fuente/logica.js</code>, en la constante <code>MENSAJES</code>.</p>
-            <p style="margin-top:9px"><b>Estado al 8 de septiembre de 2026:</b> llegaron textos nuevos y ya están montados, y los dos retratos oficiales con ellos. <b>El código los sigue marcando como borradores sin autorizar</b>, que hoy es la única señal en el repositorio de que no deben publicarse. Con fotografía, nombre y cargo al lado se leen como declaración institucional. Confirma si esa versión está aprobada —y actualizo el comentario— o cámbiala.</p>
-            <p><b>Falta el visto bueno formal de cada oficina.</b> Son palabras que se atribuyen a una persona con nombre y cargo, así que siguen marcadas en el código como borrador. Cuando cada oficina apruebe o ajuste su texto, se sustituye ahí mismo y se quita la marca —lo que obliga a actualizar también la aserción de <code>verifica-mapa</code> que cuenta los marcadores. Si los textos se vacían, la sección entera deja de mostrarse y vuelve sola en cuanto haya texto.</p>
-            <cite>También faltan los dos retratos. Van en <code>fuente/assets/img/personas/</code> con los nombres que indica su LEEME; si no están, queda un medallón con las iniciales y nada se rompe.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
 
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
@@ -202,25 +161,6 @@ a{color:var(--jacaranda-hondo)}
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
-        <article class="pend pend--bloquea">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>El sitio no tiene aviso de privacidad, y ahora rastrea</h3>
-            <p>La sección legal se retiró por decisión editorial y la página de Términos y Condiciones nunca se construyó. Hasta el 7 de septiembre eso era una omisión formal. <b>Dejó de serlo.</b></p>
-            <p style="margin-top:9px">Desde que Recursos incrusta el reproductor de Facebook, el sitio <b>carga cookies y píxel de Meta en el navegador de quien lo visita</b>, sin avisarle y sin pedirle nada. Se mitigó con <code>loading="lazy"</code> —el reproductor no se carga hasta que alguien baja a la sección de videos— pero la mitigación no sustituye al aviso. Y el mapa pide la ubicación, que es otro dato personal que el aviso tiene que declarar.</p>
-            <div class="arreglo">
-              <b>Qué tiene que decir</b>
-              <ol>
-                <li><b>Que el sitio solicita la ubicación</b> —solo si la persona la concede— para calcular su árbol más cercano, y que esa coordenada no se guarda ni se envía a ningún servidor: se usa en el navegador y se descarta.</li>
-                <li><b>Qué terceros se cargan y qué pueden observar:</b> el reproductor de Facebook (Meta), el de YouTube en modo sin cookies, las teselas de CARTO y las tipografías de Google.</li>
-                <li><b>Quién es el responsable</b> del tratamiento y por dónde se ejercen los derechos ARCO.</li>
-              </ol>
-              <p style="margin-top:9px">La plantilla institucional de la Ciudad sirve de base, pero <b>dos de sus frases son falsas para este sitio</b>: dice que no solicita ubicación —sí la solicita— y enumera redes sociales que este sitio no usa. Hay que ajustarlas antes de publicar.</p>
-            </div>
-            <cite>Publicar un sitio de gobierno que carga rastreadores de una empresa sin decírselo a quien entra no es un descuido de forma: es exponer a la dependencia.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Tú</span>
-        </article>
 
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
@@ -239,6 +179,24 @@ a{color:var(--jacaranda-hondo)}
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Fotografías</h3>
+            <p>Del lote de fotografías queda <b>un solo defecto vivo</b>, comprobado por huella de archivo el 8 de septiembre de 2026: <b>el mismo archivo está montado dos veces</b>, como <code>02.jpg</code> del <b>Jardín Ramón López Velarde</b> y como <code>01.jpg</code> del <b>Parque España</b>. En el segundo es la foto de portada, así que la tarjeta del listado, el globo del mapa y la primera imagen de la galería de Parque España muestran un árbol que no es el suyo.</p>
+            <p style="margin-top:9px"><b>No lo puedo resolver yo:</b> son el mismo archivo, y decidir de cuál de los dos ejemplares es requiere saberlo de campo.</p>
+            <div class="arreglo">
+              <b>Cuando me digas de cuál es</b>
+              <ol>
+                <li>Se retira del ejemplar al que no pertenece, con su miniatura.</li>
+                <li><b>Se renumera la carpeta.</b> Esto no es opcional: la galería se detiene en el primer archivo que falta, así que quitar la <code>01</code> y dejar <code>02</code>, <code>03</code>… deja al ejemplar <b>sin ninguna fotografía</b>, no con una menos.</li>
+                <li>Se reconstruyen las dos salidas y se corren las suites: el conteo de fotografías montadas baja de 89 a 88 y hay que actualizarlo a mano en <code>verifica-galeria.mjs</code>.</li>
+              </ol>
+            </div>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
 
 
       </div>
@@ -299,35 +257,6 @@ a{color:var(--jacaranda-hondo)}
           <span class="pend__quien" data-q="tu">Por corregir</span>
         </article>
 
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Se publican 40 KB de código que nadie usa</h3>
-            <p><code>patrimoniales-loader.js</code> es el lector de la versión anterior del registro. Ninguna página lo carga —todo el código viaja incrustado en cada archivo—, pero el armado lo sigue copiando a <code>docs/assets/js/</code>, así que se publica. Lleva dentro la dirección del padrón anterior.</p>
-            <cite>Ahí viajan también otros seis archivos por la misma razón: unos 138 KB en total. Antes de retirarlos hay que comprobar qué usan las maquetas <code>modelo-portada.js</code> y <code>modelo-ficha.js</code>, que sí los importan.</cite>
-          </div>
-          <span class="pend__quien" data-q="tu">Por limpiar</span>
-        </article>
-
-                <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Auditoría de accesibilidad con lector de pantalla</h3>
-            <p>El contraste, la jerarquía de encabezados, las marcas semánticas y el recorrido de teclado quedaron verificados de forma automatizada. Falta el recorrido completo con un lector de pantalla real —NVDA o VoiceOver— y con una persona usuaria: eso no se puede simular.</p>
-          </div>
-          <span class="pend__quien" data-q="registro">Pendiente</span>
-        </article>
-
-        <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Auditoría integral de interfaz</h3>
-            <p>No realizada. Falta una revisión completa con criterio de diseño gráfico: jerarquía tipográfica, ritmo entre secciones largas de texto, consistencia entre los patrones de tarjeta que hoy conviven y coherencia del encabezado en las tres vistas.</p>
-            <cite>Incluye el lote de consistencia del encabezado que quedó sin cerrar: espaciado parejo entre los tres logotipos en todas las vistas, jerarquía entre ellos, una sola regla de separador y coherencia de la página activa en el menú.</cite>
-          </div>
-          <span class="pend__quien" data-q="registro">No realizada</span>
-        </article>
-
                                                 <article class="pend">
           <span class="pend__marca"></span>
           <div>
@@ -378,6 +307,35 @@ a{color:var(--jacaranda-hondo)}
           </div>
           <span class="pend__quien" data-q="tu">Tú</span>
         </article>
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Accesibilidad: falta el recorrido con una persona</h3>
+            <p>La parte automatizable se cerró el <b>8 de septiembre de 2026</b> y salió limpia: <code>axe-core</code> contra WCAG 2.0 y 2.1, niveles A y AA, más buenas prácticas, sobre las tres páginas en móvil y escritorio. <b>Cero incumplimientos en las seis combinaciones.</b> El detalle está en <code>documentos/auditorias/Auditoria_accesibilidad_e_interfaz.html</code>.</p>
+            <p style="margin-top:9px"><b>Lo que no se puede simular:</b> las herramientas automatizadas detectan entre un tercio y la mitad de las barreras reales. Falta el recorrido con un lector de pantalla verdadero —NVDA o VoiceOver— y con una persona que lo use a diario. Tres cosas de este sitio solo se juzgan así: si el mapa tiene alternativa utilizable sin ver, si la galería se recorre con sentido, y si las medidas del árbol se anuncian de forma comprensible o como una ráfaga de números.</p>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Interfaz: queda una decisión de identidad</h3>
+            <p>De los cuatro hallazgos de la auditoría del 8 de septiembre, <b>tres se cerraron el mismo día</b>:</p>
+            <div class="arreglo">
+              <b>Resuelto</b>
+              <ol>
+                <li><b>Un solo filete separador en la marca.</b> Convivían 1.5 px de guinda opaco y 1 px de tinta al 18 %. Se unificó en el tenue. Se ven juntos solo cuando el logotipo no carga —es el bloque de respaldo en texto—, pero ahí la diferencia cantaba.</li>
+                <li><b>La regla de las tarjetas quedó escrita en la hoja</b>, no en la costumbre: base de filete de 1 px y esquina viva, radio cero sin excepción; barra de acento de 3 px siempre en el borde izquierdo, con el color diciendo de qué voz se trata. <b>Única excepción declarada:</b> las tarjetas de categoría, donde la barra va arriba porque son cuatro en fila y una lateral las partiría en columnas. La tarjeta de mensaje llevaba 4 px y ningún filete base: se alineó.</li>
+                <li><b>La sección del listado se acortó 525 px en móvil</b>, de 4 795 a 4 270, recortando el retrato de la tarjeta y apretando su cuerpo. No se quitó nada de lo que dice.</li>
+              </ol>
+            </div>
+            <p style="margin-top:9px"><b>Lo que queda, y no es mío:</b> la jerarquía entre los tres logotipos institucionales. <b>No se puede ajustar desde la hoja de estilos:</b> los tres viven dentro de un mismo archivo de imagen de 1147 × 84 px, así que su peso relativo está dibujado, no maquetado. Cambiarlo significa rehacer el lockup, y eso lo decide <b>Comunicación Social</b>.</p>
+            <p style="margin-top:9px"><b>Y una palanca disponible si el listado sigue pareciendo largo:</b> quitar el símbolo de categoría de las etiquetas de la tarjeta —solo en móvil, conservándolo en la ficha— devuelve las etiquetas a un renglón y ahorra otros 480 px. Es una línea. No se hizo porque implica renunciar en móvil a algo que pediste.</p>
+          </div>
+          <span class="pend__quien" data-q="registro">Decidir</span>
+        </article>
+
 
                       </div>
     </div>

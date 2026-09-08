@@ -455,11 +455,19 @@ const cu2 = fs.readFileSync('cuerpo.html','utf8');
 t('mensajes · la sección existe y nace oculta', /<section class="seccion seccion--niebla" id="mensaje" hidden>/.test(cu2));
 t('mensajes · nombra a las dos titulares',
   /Clara Brugada Molina/.test(lg) && /Julia Álvarez Icaza Ramírez/.test(lg));
-// Los textos son BORRADORES: se muestran para poder verlos y editarlos, pero
-// van marcados en el código como no autorizados. Si se vacían, la sección
-// entera deja de mostrarse en vez de dejar un hueco.
-t('mensajes · los borradores van marcados como no autorizados',
-  (lg.match(/BORRADOR sin autorizar/g)||[]).length===2);
+/* CAMBIÓ EL CRITERIO el 8 de septiembre de 2026, porque cambió el hecho. La
+   aserción exigía que los dos textos llevaran escrito «BORRADOR sin
+   autorizar»: se escribió cuando eran palabras de relleno atribuidas a
+   personas con nombre y cargo, y publicarlas habría sido ponerles en la boca
+   algo que no dijeron.
+   Los textos ya están autorizados por la Oficina de la Secretaría. Lo que hay
+   que seguir garantizando es que NO SE OLVIDE DE DÓNDE VIENEN: que cada uno
+   quede fechado y con su fuente, para que el próximo que los edite sepa que
+   no se redactan aquí. Por eso la aserción no se borra: pasa de exigir la
+   advertencia a exigir la constancia. */
+t('mensajes · los dos textos quedan fechados y con su fuente',
+  (lg.match(/Autorizado\. Versión del 8-sep-2026 \(Oficina de la Secretaría\)\./g)||[]).length===2
+  && !/BORRADOR sin autorizar/.test(lg));
 t('mensajes · hay texto en los dos', (lg.match(/mensaje: "[^"]{40,}"/g)||[]).length===2);
 t('mensajes · sin texto, la sección entera no se muestra',
   /if \(!conTexto\.length\) \{ seccion\.hidden = true; return; \}/.test(lg));

@@ -37,6 +37,7 @@ const { sinComentariosJS, sinComentariosCSS } =
   createRequire(import.meta.url)('../construir/aligerar.js');
 
 const DOCS = '../docs/';
+const PRUEBA = '../prueba/';
 let ok = 0, mal = 0;
 const t = (n, c, d = '') => { c ? (ok++, console.log('  ✅', n)) : (mal++, console.log('  ❌', n, d)); };
 const hay = (f) => fs.existsSync(f);
@@ -113,8 +114,16 @@ const comparar = (origen, destino) => {
   if (!hay(destino)) { desigual.push(destino + ' (falta)'); return; }
   if (huella(origen) !== huella(destino)) desigual.push(destino);
 };
-comparar('estilos.css', DOCS + 'assets/css/estilos.css');
-for (const j of COPIADOS_JS) comparar(j, DOCS + 'assets/js/' + j);
+/* SE DEJARON DE PUBLICAR el 8 de septiembre de 2026. Ninguna página los pide
+   —todo viaja incrustado— y en docs/ eran 306 KB que nadie descargaba. Siguen
+   copiándose a prueba/, donde las maquetas sí los importan, y ahí se comprueba
+   que la copia coincida con la fuente. */
+comparar('estilos.css', PRUEBA + 'assets/css/estilos.css');
+for (const j of COPIADOS_JS) comparar(j, PRUEBA + 'assets/js/' + j);
+t('El sitio publicado no lleva la hoja suelta', !hay(DOCS + 'assets/css/estilos.css'),
+  '156 KB que ninguna página pide');
+t('El sitio publicado no lleva los módulos sueltos', !hay(DOCS + 'assets/js'),
+  '150 KB que ninguna página pide');
 const recorrer = (dir, fn) => {
   if (!hay(dir)) return;
   for (const n of fs.readdirSync(dir)) {
@@ -203,9 +212,9 @@ console.log('\n══ NADA DE MÁS EN LO PUBLICADO ══');
 /* Un archivo que se retira de la fuente sobrevive en la salida si nadie lo
    borra. `construir.sh` limpia assets/ y vendor/ antes de copiar; el rodeo de
    correr los armar-*.js a mano no, y ahí es donde aparecen los huérfanos. */
-const jsPublicados = hay(DOCS + 'assets/js') ? fs.readdirSync(DOCS + 'assets/js') : [];
+const jsPublicados = hay(PRUEBA + 'assets/js') ? fs.readdirSync(PRUEBA + 'assets/js') : [];
 const huerfanos = jsPublicados.filter((n) => !COPIADOS_JS.includes(n));
-t('docs/assets/js/ no tiene huérfanos', huerfanos.length === 0,
+t('prueba/assets/js/ no tiene huérfanos', huerfanos.length === 0,
   huerfanos.map((n) => n + ' · nadie lo carga, el armado lo incrusta en la página').join(', '));
 
 /* La documentación interna nunca se publica: `construir.sh` solo la copia

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auditoría de accesibilidad e interfaz · Árboles Patrimoniales · 8 de septiembre de 2026</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --jacaranda:#8D4992; --tinta:#2A1630; --bosque:#1E4D2B; --vivo:#2D7A3E;
+  --papel:#FEF7E4; --dorado:#B28E5C; --alerta:#C0392B;
+  --tinta-suave:#4A3552; --linea:#E4D9C4; --nube:#FBF3DC;
+  --texto:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --editorial:"Fraunces",Georgia,"Times New Roman",serif;
+  --display:"Anton","Arial Narrow",Impact,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.hoja{max-width:52rem;margin:0 auto;padding:0 1.5rem 5rem}
+header.tapa{background:var(--tinta);color:#fff;padding:2.6rem 0 2.2rem;margin-bottom:2.4rem}
+header.tapa .hoja{padding-bottom:0}
+.rotulo{display:block;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dorado);margin-bottom:.6rem}
+h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(2rem,5vw,3rem);line-height:1.02;margin:0 0 .8rem;letter-spacing:.01em}
+header.tapa p{margin:0;color:rgba(255,255,255,.82);max-width:44ch}
+h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:1.6rem;line-height:1.1;margin:3rem 0 .4rem;color:var(--jacaranda)}
+h3{font-size:1.12rem;margin:2rem 0 .4rem;color:var(--tinta)}
+p{margin:0 0 1rem;max-width:64ch}
+.entrada{font-family:var(--editorial);font-size:1.12rem;line-height:1.65;color:var(--tinta-suave)}
+.tablero{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:1px;background:var(--linea);border:1px solid var(--linea);margin:2rem 0}
+.tablero div{background:#fff;padding:1rem 1.1rem}
+.tablero b{display:block;font-family:var(--display);font-weight:400;font-size:2rem;line-height:1;color:var(--bosque)}
+.tablero b.ojo{color:var(--dorado)}
+.tablero span{display:block;font-size:.74rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-suave);margin-top:.5rem}
+table{width:100%;border-collapse:collapse;margin:1.2rem 0 1.6rem;font-size:.94rem}
+th,td{text-align:left;padding:.6rem .7rem;border-bottom:1px solid var(--linea);vertical-align:top}
+th{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--jacaranda);border-bottom:2px solid var(--jacaranda)}
+.h{background:var(--nube);border-left:3px solid var(--dorado);padding:1rem 1.2rem;margin:1.2rem 0}
+.h b{display:block;font-size:.74rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--dorado);margin-bottom:.4rem}
+.h p:last-child{margin-bottom:0}
+.ok{border-left-color:var(--vivo)}.ok b{color:var(--bosque)}
+.al{border-left-color:var(--alerta);background:#FBEDEB}.al b{color:var(--alerta)}
+code{font-family:ui-monospace,'DejaVu Sans Mono',monospace;font-size:.9em;background:rgba(141,73,146,.09);padding:1px 5px;border-radius:2px;color:#6E3573}
+.pie{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--linea);font-size:.9rem;color:var(--tinta-suave)}
+ul{max-width:64ch}li{margin-bottom:.5rem}
+</style>
+</head>
+<body>
+<header class="tapa"><div class="hoja">
+  <span class="rotulo">Árboles patrimoniales · control interno</span>
+  <h1>Auditoría de accesibilidad e interfaz</h1>
+  <p>8 de septiembre de 2026. Tres páginas —portada, ficha y recursos— en dos anchos, 390 y 1280 px.</p>
+</div></header>
+
+<div class="hoja">
+
+<p class="entrada">Se cierran dos pendientes con este documento, pero no del todo: <b>la parte automatizable de la accesibilidad está hecha y sale limpia; la parte que exige una persona no se puede sustituir</b>, y se dice aquí con claridad para que nadie la dé por cubierta.</p>
+
+<div class="tablero">
+  <div><b>0</b><span>Reglas WCAG incumplidas</span></div>
+  <div><b>6</b><span>Combinaciones auditadas</span></div>
+  <div><b>72</b><span>Elementos focalizables</span></div>
+  <div><b class="ojo">4</b><span>Hallazgos de interfaz</span></div>
+</div>
+
+<h2>1 · Accesibilidad</h2>
+
+<h3>Qué se midió y con qué</h3>
+<p>Se ejecutó <code>axe-core</code> sobre las tres páginas construidas, en móvil y escritorio, contra los conjuntos <b>WCAG 2.0 A y AA</b>, <b>WCAG 2.1 A y AA</b> y <b>buenas prácticas</b>. Seis combinaciones en total. A eso se sumó un recorrido de teclado programático: nombre accesible de cada control, visibilidad del foco, orden de encabezados y comportamiento del menú desplegable.</p>
+
+<div class="h ok">
+  <b>Resultado</b>
+  <p><b>Cero incumplimientos</b> en las seis combinaciones. Ninguna imagen sin <code>alt</code>, ningún salto en la jerarquía de encabezados, un solo <code>h1</code> por página, idioma declarado, y enlace para saltar al contenido presente en las tres.</p>
+</div>
+
+<h3>Lo que se comprobó a mano, más allá del automatismo</h3>
+<table>
+  <tr><th>Prueba</th><th>Resultado</th></tr>
+  <tr><td>Todo control focalizable tiene nombre accesible</td><td>Sin excepciones en las tres páginas</td></tr>
+  <tr><td>El menú desplegable cierra con <code>Escape</code></td><td>Cierra y <b>devuelve el foco al botón</b>, que es lo que evita que el teclado quede a la deriva</td></tr>
+  <tr><td><code>aria-expanded</code> refleja el estado real</td><td>Correcto al abrir y al cerrar</td></tr>
+  <tr><td>El botón de volver al principio no es una trampa</td><td>Mientras está oculto no recibe foco: <code>visibility:hidden</code>, no solo opacidad</td></tr>
+  <tr><td>El botón de copiar la cita anuncia el resultado</td><td><code>aria-live="polite"</code>; y si el permiso se niega lo dice, en vez de fingir que copió</td></tr>
+</table>
+
+<div class="h al">
+  <b>Lo que esto NO cubre, y no se puede simular</b>
+  <p>Las herramientas automatizadas detectan entre un tercio y la mitad de las barreras reales. <b>Queda pendiente el recorrido con un lector de pantalla verdadero</b> —NVDA en Windows o VoiceOver en Mac— y con una persona que lo use a diario.</p>
+  <p>Tres cosas de este sitio solo se juzgan así: si el mapa tiene alternativa utilizable sin ver —hay un listado que lo acompaña, pero nadie ha comprobado que se navegue bien—; si la galería de fotografías se recorre con sentido; y si el orden en que se anuncian las medidas del árbol resulta comprensible o es una ráfaga de números.</p>
+</div>
+
+<h2>2 · Interfaz</h2>
+
+<p>Revisión con criterio de diseño gráfico sobre el sitio construido hoy, después de los ajustes de espaciado en móvil.</p>
+
+<h3>Lo que quedó resuelto</h3>
+<table>
+  <tr><th>Punto del pendiente</th><th>Estado</th></tr>
+  <tr><td>Coherencia del encabezado en las tres vistas</td><td><b>Resuelto.</b> Medido: 59 px de alto y misma anchura de marca en portada, ficha y recursos, en los dos anchos</td></tr>
+  <tr><td>Coherencia de la página activa en el menú</td><td><b>Resuelto hoy.</b> Marcaba la sección equivocada en páginas largas; ahora gana la última que cruzó el borde superior</td></tr>
+  <tr><td>Ritmo entre secciones largas</td><td><b>Resuelto hoy en móvil.</b> De 176 px de aire entre secciones a 96</td></tr>
+</table>
+
+<h3>Hallazgos abiertos</h3>
+
+<div class="h">
+  <b>I1 · Dos reglas de separador conviven en el encabezado</b>
+  <p>El separador entre los logotipos institucionales usa guinda opaco <code>#9D2148</code>; el que precede al nombre del sitio usa tinta al 18 %. Son dos tratamientos distintos para la misma función a cuatro centímetros de distancia. <b>Unificar en el tono tenue</b>: el guinda opaco compite con los propios logotipos.</p>
+</div>
+
+<div class="h">
+  <b>I2 · Conviven dos patrones de tarjeta</b>
+  <p>La tarjeta del padrón —retrato arriba, cifra encima de la fotografía— y la tarjeta de norma o de crédito —filete lateral, sin imagen— responden a lógicas distintas y eso es correcto. Lo que no está resuelto es <b>el radio y el filete</b>: unas llevan borde completo y otras solo barra izquierda. Conviene declarar cuál es la regla y cuál la excepción.</p>
+</div>
+
+<div class="h">
+  <b>I3 · Jerarquía entre los tres logotipos</b>
+  <p>Los tres se presentan al mismo peso visual. En una jerarquía institucional correcta, el escudo de la Ciudad y la Secretaría son emisores y el nombre del sitio es el objeto: hoy el visitante los lee como tres marcas equivalentes. Es una decisión de identidad, no un defecto: <b>debe confirmarla Comunicación Social</b> antes de tocarla.</p>
+</div>
+
+<div class="h">
+  <b>I4 · La sección del listado mide casi 4 800 px en móvil</b>
+  <p>Es la sección más larga del sitio por un margen amplio y no ofrece ningún punto de descanso ni de reorientación en todo su recorrido. El botón de volver al principio, montado hoy, lo mitiga pero no lo resuelve. Vale la pena evaluar una paginación o un corte cada cierto número de fichas.</p>
+</div>
+
+<div class="pie">
+  <p><b>Método.</b> <code>axe-core</code> sobre las páginas de <code>docs/</code> servidas por HTTP, en Chromium, tres páginas por dos anchos. Recorrido de teclado y mediciones de encabezado por instrumentación del DOM. Las capturas de referencia se tomaron el mismo día.</p>
+  <p><b>Lo que este documento no acredita:</b> el recorrido con lector de pantalla real y con persona usuaria, y la prueba con usuarios del sitio en general. Ambos siguen abiertos en la lista de pendientes.</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -626,12 +626,12 @@ function pintarRedaccion() {
 /**
  * El bloque de mensajes de la Jefatura de Gobierno y de la Secretaría.
  *
- * ATENCIÓN: los dos textos de abajo son BORRADORES SIN AUTORIZAR. Son palabras
- * que se atribuyen a personas con nombre y cargo, así que no deben publicarse
- * tal cual: hay que sustituirlas por lo que apruebe cada oficina. Se dejan
- * escritas, y no vacías, porque así se ve el bloque terminado y se edita sobre
- * algo. Si se vacían, la sección entera deja de mostrarse —no queda hueco ni
- * relleno— y vuelve sola en cuanto haya texto.
+ * LOS DOS TEXTOS ESTÁN AUTORIZADOS. Versión del 8 de septiembre de 2026,
+ * confirmada por la Oficina de la Secretaría. Son palabras atribuidas a
+ * personas con nombre, cargo y fotografía: cualquier cambio posterior se
+ * sustituye por lo que apruebe cada oficina, nunca se redacta aquí.
+ * Si un mensaje se vacía, la sección entera deja de mostrarse —no queda hueco
+ * ni relleno— y vuelve sola en cuanto haya texto.
  *
  * El retrato se descubre por archivo, igual que las fotografías de los
  * ejemplares. Si no está, queda un medallón con las iniciales.
@@ -642,7 +642,7 @@ const MENSAJES = [
     nombre: "Clara Brugada Molina",
     cargo: "Jefa de Gobierno de la Ciudad de México",
     iniciales: "CB",
-    // BORRADOR sin autorizar. Versión del 8-sep-2026 (Oficina de la Secretaría); sustituir si la oficina ajusta el texto.
+    // Autorizado. Versión del 8-sep-2026 (Oficina de la Secretaría).
     mensaje: "Queremos que la Ciudad de México sea una ciudad que cuida: que cuida a su gente, a sus barrios y a la naturaleza que nos sostiene. Cuidar también es esto: reconocer a los árboles que llevan generaciones dando sombra, agua y memoria a nuestra ciudad, y comprometernos a que sigan de pie. Cada árbol patrimonial es prueba de que lo que se cuida, permanece. Te invito a conocerlos y a cuidarlos con nosotros, porque son patrimonio de todas y todos.",
   },
   {
@@ -650,7 +650,7 @@ const MENSAJES = [
     nombre: "Julia Álvarez Icaza Ramírez",
     cargo: "Secretaria del Medio Ambiente",
     iniciales: "JA",
-    // BORRADOR sin autorizar. Versión del 8-sep-2026 (Oficina de la Secretaría); sustituir si la oficina ajusta el texto.
+    // Autorizado. Versión del 8-sep-2026 (Oficina de la Secretaría).
     mensaje: "Un árbol patrimonial no es un árbol más. Es un ser vivo que ha resistido décadas, a veces siglos, de crecimiento de la ciudad, y que sigue trabajando para ella: da sombra, captura carbono, retiene agua y sostiene la vida de aves e insectos. Pero su valor va más allá de lo ambiental: estos árboles guardan la historia de sus barrios y son parte de la identidad de quienes viven cerca de ellos. Por eso los declaramos patrimoniales: para que su protección no dependa de la suerte, sino de un compromiso de ciudad. Conocerlos es el primer paso para cuidarlos.",
   },
 ];

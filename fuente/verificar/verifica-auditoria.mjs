@@ -917,8 +917,13 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
      «publicado en este sitio». */
   t('El tablero dice enlazado, no publicado aquí',
     /Con decreto enlazado/.test(pe) && !/decreto publicado/i.test(pe));
-  t('Las fotografías siguen abiertas: falta cerrar la portada repetida',
-    /<h3>Fotografías<\/h3>/.test(pe) && /No resuelto/.test(pe));
+  /* El lote de fotografías se cerró el 8 de septiembre de 2026 salvo un
+     defecto, que es el que se sigue vigilando: el duplicado exacto existe en
+     el disco —comprobado por huella— y su ficha no puede desaparecer de aquí
+     mientras exista, porque desaparecería la única constancia de que la
+     portada de Parque España muestra otro árbol. */
+  t('El duplicado de portada sigue anotado mientras exista',
+    /<h3>Fotografías<\/h3>/.test(pe) && /el mismo archivo está montado dos veces/i.test(pe));
   // El 22 de agosto se comprobó que un mismo archivo está archivado como dos
   // ejemplares distintos, y que en uno de ellos es la foto de portada. El
   // procedimiento para corregirlo vive aquí porque es la reparación de un
@@ -931,8 +936,13 @@ console.log('\n══ PENDIENTES · solo lo que falta ══');
     && /class="arreglo"/.test(pe)
     && /se detiene en el primer archivo que falta/.test(pe)
     && /sin ninguna fotografía/.test(pe));
-  t('La auditoría de interfaz sigue sin realizarse',
-    /No realizada/.test(pe) && /consistencia del encabezado/.test(pe));
+  /* CAMBIÓ EL CRITERIO el 8 de septiembre de 2026: la auditoría se realizó y
+     está en documentos/auditorias/. Lo que se sigue vigilando es que sus
+     hallazgos no se evaporen con ella: mientras haya decisiones abiertas,
+     tienen que estar escritas aquí con su procedimiento. */
+  t('Los hallazgos de interfaz quedan anotados con lo que falta decidir',
+    /Interfaz: queda una decisión de identidad/.test(pe)
+    && /Comunicación Social/.test(pe) && /class="arreglo"/.test(pe));
   /* CAMBIÓ EL CRITERIO. El formato ya se validó en carta y en A4, y se
      corrigieron los cuatro defectos que solo se veían imprimiendo. Lo que
      queda anotado ya no es «falta validar» sino la única decisión abierta:
