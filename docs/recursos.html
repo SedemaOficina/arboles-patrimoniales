@@ -208,6 +208,8 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 
 @media(max-width:1240px){.barra nav{gap:2px}.barra nav a{font-size:var(--t-nota);padding:8px 10px}}
 
+@media(min-width:1241px){.barra nav a{padding:8px 10px}}
+
 @media(max-width:1000px){
   .barra__abrir{display:inline-flex}
   .barra nav{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;
@@ -748,7 +750,10 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .creditos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;margin-bottom:34px}
 
 .creditos--filas{grid-template-columns:1fr;gap:16px}
-.creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
+
+.creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);
+  padding:22px 24px;min-width:0}
+.creditos__bloque .cita,.creditos__bloque p{overflow-wrap:anywhere}
 .creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
 .creditos__lista{margin:0;display:grid;gap:10px}
 .creditos__lista div{display:grid;grid-template-columns:minmax(140px,38%) 1fr;gap:12px;align-items:baseline}

@@ -3,7 +3,7 @@
  "destino": "produccion",
  "base": "https://sedemaoficina.github.io/arboles-patrimoniales/",
  "version_tarjeta": 2,
- "armado_id": "20260908T203936Z-74",
+ "armado_id": "20260908T210410Z-73",
  "fuentes": {
   "construir/armar-capa.js": "fd8c38a3d222e984",
   "construir/armar-datos.js": "eb2f772e6feda35a",
@@ -23,7 +23,7 @@
   "datos/registro.json": "da8439476c28aa0e",
   "citar.js": "a2da048ac0f4556b",
   "especies.js": "635f61fdc667b617",
-  "estilos.css": "6f243909d9f3884f",
+  "estilos.css": "a42a1ee22103143a",
   "ficha-logica.js": "c9bcfb4ee02ba943",
   "fotos.js": "13c95dda5f6a675d",
   "geo-cdmx.js": "63995606bc78305f",

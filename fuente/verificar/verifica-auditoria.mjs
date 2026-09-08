@@ -1025,12 +1025,24 @@ console.log('\n══ AUDITORÍA APLICADA · pasos 1 a 4 ══');
 console.log('\n══ MARCA E ILUSTRACIÓN ENTREGADAS ══');
 {
   const ex=(r)=>fs.existsSync(r);
-  // WebP en los tres tamaños; PNG solo en chico y media. El PNG grande pesaba
-  // el triple que su WebP y ningún navegador de los últimos ocho años lo pide.
-  t('El emblema viene en tres versiones y tres tamaños',
+  /* SE MUDÓ EL JUEGO, no se perdió — 8 de septiembre de 2026. El emblema
+     completo son quince archivos y el sitio usa DOS. Todo lo que vive en
+     fuente/assets/ se publica, así que el juego entero significaba subir al
+     servidor 332 KB de imágenes que ningún navegador pide nunca.
+     El juego es un entregable institucional y no se tira: vive en
+     documentos/marca/emblema/, con la documentación, y ahí se sigue
+     comprobando que esté completo. En assets quedan los dos que el sitio usa
+     y los tres nombres históricos.
+     WebP en los tres tamaños; PNG solo en chico y media: el PNG grande pesaba
+     el triple que su WebP y ningún navegador de los últimos ocho años lo pide. */
+  const KIT = '../documentos/marca/emblema/';
+  t('El juego completo del emblema está resguardado',
     ['color','guinda','blanco'].every(v=>
-      ['chico','media','grande'].every(t2=>ex(`assets/img/marca/emblema-${v}-${t2}.webp`))
-      && ['chico','media'].every(t2=>ex(`assets/img/marca/emblema-${v}-${t2}.png`))));
+      ['chico','media','grande'].every(t2=>ex(`${KIT}emblema-${v}-${t2}.webp`) || ex(`assets/img/marca/emblema-${v}-${t2}.webp`))
+      && ['chico','media'].every(t2=>ex(`${KIT}emblema-${v}-${t2}.png`) || ex(`assets/img/marca/emblema-${v}-${t2}.png`))));
+  t('Y el sitio solo publica las variantes que usa',
+    ex('assets/img/marca/emblema-color-grande.webp') && ex('assets/img/marca/emblema-color-media.webp')
+    && !ex('assets/img/marca/emblema-guinda-grande.webp') && !ex('assets/img/marca/emblema-blanco-grande.webp'));
   t('Los nombres históricos siguen apuntando a la versión de color',
     ex('assets/img/marca/emblema-chico.png') && ex('assets/img/marca/emblema-media.png') && ex('assets/img/marca/emblema-grande.png'));
   t('La ilustración de portada es la entregada por la Secretaría',

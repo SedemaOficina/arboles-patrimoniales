@@ -332,6 +332,15 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .barra--abierta .barra__rayas::after{top:0;transform:rotate(-45deg)}
 
 @media(max-width:1240px){.barra nav{gap:2px}.barra nav a{font-size:var(--t-nota);padding:8px 10px}}
+/* ENTRÓ UNA OPCIÓN MÁS el 8 de septiembre de 2026: «Datos abiertos». La banda
+   de arriba estaba medida para el menú anterior y, con una opción más, la tira
+   dejó de caber también por encima de 1240 px: medido, la última opción se
+   salía 4 px, que en un navegador son una barra de desplazamiento horizontal
+   en TODA la página. Se aprietan dos píxeles por lado en cada enlace —28 en
+   total— y el logotipo conserva su tamaño completo.
+   VA AQUÍ, después de la regla base: una consulta de medios no sube la
+   especificidad, así que puesta antes no ganaba. */
+@media(min-width:1241px){.barra nav a{padding:8px 10px}}
 
 /* Por debajo de este ancho la navegación se despliega en panel: antes
    simplemente desaparecía y el sitio se quedaba sin menú. */
@@ -1159,7 +1168,14 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
    miden lo mismo, se leen de corrido y se copian de una pasada, que es lo que
    se hace con una cita. */
 .creditos--filas{grid-template-columns:1fr;gap:16px}
-.creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);padding:22px 24px}
+/* min-width:0 y overflow-wrap: la dirección de la cita es una cadena sin
+   espacios de más de sesenta caracteres. Un elemento de rejilla no baja de su
+   contenido mínimo, así que esa cadena empujaba el bloque a 365 px dentro de
+   334 disponibles y la PÁGINA ENTERA se desplazaba de lado en el teléfono.
+   Es el mismo remedio que ya usa la página de pendientes, por lo mismo. */
+.creditos__bloque{background:var(--blanco);border:var(--borde);border-left:4px solid var(--jacaranda);
+  padding:22px 24px;min-width:0}
+.creditos__bloque .cita,.creditos__bloque p{overflow-wrap:anywhere}
 .creditos__bloque .rotulo{display:block;margin:0 0 14px;color:var(--jacaranda-hondo)}
 .creditos__lista{margin:0;display:grid;gap:10px}
 .creditos__lista div{display:grid;grid-template-columns:minmax(140px,38%) 1fr;gap:12px;align-items:baseline}

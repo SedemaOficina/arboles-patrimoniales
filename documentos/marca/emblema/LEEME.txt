@@ -1,0 +1,26 @@
+EMBLEMA INSTITUCIONAL · JUEGO COMPLETO
+======================================
+
+Aquí vive el juego completo del emblema tal como lo entregó la Secretaría:
+tres versiones —color, guinda y blanco— en tres tamaños, WebP en los tres y
+PNG en chico y media.
+
+POR QUÉ NO ESTÁ EN fuente/assets/
+---------------------------------
+Porque el sitio solo usa dos de estos archivos —emblema-color-grande.webp y
+emblema-color-media.webp— y todo lo que está en fuente/assets/ se publica.
+Tener el juego completo ahí significaba subir al servidor 332 KB de imágenes
+que ningún navegador pide nunca.
+
+El juego no se tira: es un entregable institucional y se necesita el día que
+haga falta la versión guinda o la blanca, o para cualquier otro material.
+Vive aquí, con la documentación, y no con lo que viaja al sitio.
+
+SI SE NECESITA UNA VERSIÓN EN EL SITIO
+--------------------------------------
+Se copia el archivo que haga falta a fuente/assets/img/marca/ y se referencia
+desde la hoja o el marcado. No al revés: no se devuelve el juego entero.
+
+Los nombres históricos —emblema-chico.png, emblema-media.png y
+emblema-grande.png— apuntan a la versión de COLOR y siguen en assets porque
+hay marcado antiguo que los pide.
