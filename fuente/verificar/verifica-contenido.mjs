@@ -21,8 +21,17 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
   t(f+' · la sección de cuidado conserva sus citas normativas',
     /numeral 6\./.test(s) && /numeral 6\.1\.8/.test(s) && /NADF-001-RNAT-2015/.test(s));
   t(f+' · advierte sobre el desmoche con su numeral', /desmoche/.test(s)&&/numeral 6\.4\.2\.1\.6/.test(s));
-  t(f+' · dice qué sí está prohibido', /sin autorización y sin dictamen técnico/.test(s));
-  t(f+' · canaliza la denuncia a la PAOT', /Procuraduría Ambiental y del Ordenamiento Territorial/.test(s)&&/55 5265 0780/.test(s));
+  /* CAMBIÓ EL CRITERIO el 9 de septiembre de 2026. El cierre de la sección
+     —«qué está prohibido» y «si ves una poda»— se retiró por decisión del
+     área: repetía lo que ya dicen las tarjetas de arriba y la vía de denuncia
+     vive en el pie y en el directorio de Recursos. Lo que se sigue exigiendo
+     es que la vía de denuncia NO desaparezca del sitio: se comprueba en el
+     pie, que va en todas las páginas. */
+  if (f === 'cuerpo.html') {
+    const pieHtml = fs.readFileSync('parciales/pie.html','utf8');
+    t('pie · canaliza la denuncia a la PAOT', /Procuraduría Ambiental|PAOT/.test(pieHtml)&&/5265 0780/.test(pieHtml));
+    t(f+' · el cierre repetido ya no está', !/cuidado__cierre/.test(s));
+  }
 
   t(f+' · sección para proponer un árbol', /id="postula"/.test(s));
   t(f+' · estado de la convocatoria: cerrada', /data-estado="cerrada"/.test(s)&&/La convocatoria está cerrada por ahora/.test(s));

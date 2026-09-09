@@ -147,7 +147,15 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
        mapa: sus renglones son botones, dicen el nombre y la altura y declaran
        cuál está activo. Los controles de acercamiento SÍ se quedan en el
        recorrido; lo que sale son los marcadores, que duplicaban. */
+    /* EN PANTALLA TÁCTIL EL MAPA NO SE ARRASTRA CON UN DEDO. Mide 72vh y va
+       seguido de la lista: entre los dos, dos pantallas de teléfono en las que
+       deslizar hacia abajo movía el mapa en vez de la página, y quien quería
+       seguir leyendo se quedaba atorado. Es lo que hace cualquier mapa
+       incrustado: se acerca con dos dedos, se toca un punto, y para recorrerlo
+       está el botón de pantalla completa, donde el arrastre sí se enciende. */
+    const tactil = L.Browser.mobile;
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true, keyboard: false,
+      dragging: !tactil, touchZoom: true, tap: true,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
     L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 19, maxNativeZoom: 20, detectRetina: true, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     vistaCiudad();
@@ -295,11 +303,15 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
         return;
       }
       marco.classList.toggle("mapa-marco--pleno");
-      document.body.classList.toggle("sin-desplazamiento", marco.classList.contains("mapa-marco--pleno"));
+      const pleno = marco.classList.contains("mapa-marco--pleno");
+      document.body.classList.toggle("sin-desplazamiento", pleno);
+      // A pantalla completa no hay página que arrastrar debajo: el dedo mueve el mapa.
+      if (tactil) (pleno ? mapa.dragging.enable() : mapa.dragging.disable());
       reajustar();
     }
 
     document.addEventListener("fullscreenchange", () => {
+      if (tactil) (document.fullscreenElement === marco ? mapa.dragging.enable() : mapa.dragging.disable());
       reajustar();
       if (contenedor._rotularPleno) contenedor._rotularPleno();
     });
@@ -731,12 +743,19 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     const cats = [...new Set(ejemplares.flatMap((e) => e.categorias))].sort();
     const alcs = [...new Set(ejemplares.map((e) => e.alcaldia).filter(Boolean))].sort();
     const esps = [...new Set(ejemplares.map((e) => e.especie).filter(Boolean))].sort();
-    const sel = (id, etiqueta, ops) =>
+    /* El selector de especie se lee por el nombre común, que es el que la gente
+       conoce, con el científico entre paréntesis porque es el que no cambia y
+       el que filtra. El valor de la opción sigue siendo el científico: así los
+       enlaces con filtro en la dirección no se rompen. */
+    const comunDe = {};
+    for (const e of ejemplares) if (e.especie && e.nombreComun && !comunDe[e.especie]) comunDe[e.especie] = e.nombreComun;
+    const rotuloEspecie = (cient) => comunDe[cient] ? `${comunDe[cient]} (${cient})` : cient;
+    const sel = (id, etiqueta, ops, rotulo = (o) => o) =>
       `<select data-filtro="${id}" aria-label="${etiqueta}"><option value="">${etiqueta}</option>${
-        ops.map((o) => `<option value="${esc(o)}">${esc(o)}</option>`).join("")}</select>`;
+        ops.map((o) => `<option value="${esc(o)}">${esc(rotulo(o))}</option>`).join("")}</select>`;
     filtros.innerHTML = `${sel("categoria", "Todas las categorías", cats)}
       ${sel("alcaldia", "Todas las alcaldías", alcs)}
-      ${sel("especie", "Todas las especies", esps)}
+      ${sel("especie", "Todas las especies", esps, rotuloEspecie)}
       <button type="button" class="mapa-borrar" data-borrar hidden>Borrar filtros</button>
       <span class="mapa-conteo" data-conteo></span>`;
     // Lo que venía en la dirección se refleja en los selectores.

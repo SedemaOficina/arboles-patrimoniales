@@ -1569,6 +1569,8 @@ body.sin-desplazamiento{overflow:hidden}
 
 @media(max-width:1100px){.mapa-lista{max-height:420px}}
 
+@media(max-width:700px){.mapa-lista{height:auto;max-height:none;overflow:visible}}
+
 .mapa-aviso{position:absolute;left:12px;bottom:26px;top:auto;right:auto;z-index:var(--capa-mapa-aviso);margin:0;
   width:min(330px,calc(100% - 24px));
   background:rgba(var(--papel-rgb),.97);backdrop-filter:blur(6px);
@@ -1601,7 +1603,8 @@ body.sin-desplazamiento{overflow:hidden}
   font-size:var(--t-titulo-3);line-height:1.08;letter-spacing:.01em;color:var(--jacaranda);margin:4px 0 4px}
 .mapa-aviso__pie{display:block;font-size:var(--t-nota);color:#5B4F62}
 .mapa-aviso__pie b{color:var(--tinta-jacaranda);font-weight:700}
-@media(max-width:560px){.mapa-aviso{left:10px;bottom:22px;width:calc(100% - 20px);padding:10px 30px 10px 14px}
+
+@media(max-width:560px){.mapa-aviso{left:10px;bottom:54px;width:calc(100% - 20px);padding:10px 30px 10px 14px}
   .mapa-aviso__nombre{font-size:var(--t-subtitulo)}}
 
 .mapa-control a{font-size:var(--t-cuerpo-grande);line-height:30px;text-align:center;color:var(--jacaranda);font-weight:700}
@@ -1866,7 +1869,7 @@ body.sin-desplazamiento{overflow:hidden}
     <div class="encabezado">
       <span class="rotulo">Cómo se protegen</span>
       <h2>Lo que dice la ley</h2>
-      <p>La declaratoria patrimonial no es un reconocimiento honorífico: es un acto jurídico que cambia lo que se puede hacer con el árbol. Aquí está de dónde viene esa protección y qué implica; ninguno de estos ejemplares puede podarse, derribarse ni trasplantarse sin autorización previa.</p>
+      <p>La declaratoria patrimonial no es un reconocimiento honorífico: es un acto jurídico que cambia lo que se puede hacer con el árbol. Aquí está de dónde viene esa protección y qué implica; ninguno de estos ejemplares puede podarse, derribarse ni trasplantarse sin autorización previa y sin dictamen técnico.</p>
     </div>
 
     <span class="rotulo rotulo--grupo">De dónde viene la protección</span>
@@ -1948,17 +1951,6 @@ body.sin-desplazamiento{overflow:hidden}
       </article>
     </div>
 
-    <div class="cuidado__cierre">
-      <div>
-        <h3>Entonces, ¿qué está prohibido?</h3>
-        <p>Intervenir un árbol patrimonial <strong>sin autorización y sin dictamen técnico</strong>. Podarlo por encima de los límites de la norma o con técnicas que la norma no permite. Eso está prohibido, y se denuncia.</p>
-      </div>
-      <div>
-        <h3>Si ves una poda que no se ve bien</h3>
-        <p>Repórtalo a la <strong>Procuraduría Ambiental y del Ordenamiento Territorial</strong>. La Procuraduría solo puede investigar lo que conoce.</p>
-        <p class="cuidado__contacto">PAOT · <a href="tel:+525552650780">55 5265 0780</a> · <a href="https://paot.org.mx/denunciantes/inicia-tu-denuncia.php" target="_blank" rel="noopener">Iniciar una denuncia</a></p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -3016,7 +3008,9 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
   const hayCartografia = typeof L !== "undefined";
   if (hayCartografia && conCoords.length) {
 
+    const tactil = L.Browser.mobile;
     mapa = L.map(contenedor, { scrollWheelZoom: true, zoomControl: true, keyboard: false,
+      dragging: !tactil, touchZoom: true, tap: true,
       maxBounds: L.latLngBounds(LIMITES_CDMX), maxBoundsViscosity: 0.85, minZoom: 9 });
     L.tileLayer(TESELAS, { attribution: ATRIBUCION, maxZoom: 19, maxNativeZoom: 20, detectRetina: true, bounds: L.latLngBounds(LIMITES_CDMX) }).addTo(mapa);
     vistaCiudad();
@@ -3141,11 +3135,15 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
         return;
       }
       marco.classList.toggle("mapa-marco--pleno");
-      document.body.classList.toggle("sin-desplazamiento", marco.classList.contains("mapa-marco--pleno"));
+      const pleno = marco.classList.contains("mapa-marco--pleno");
+      document.body.classList.toggle("sin-desplazamiento", pleno);
+
+      if (tactil) (pleno ? mapa.dragging.enable() : mapa.dragging.disable());
       reajustar();
     }
 
     document.addEventListener("fullscreenchange", () => {
+      if (tactil) (document.fullscreenElement === marco ? mapa.dragging.enable() : mapa.dragging.disable());
       reajustar();
       if (contenedor._rotularPleno) contenedor._rotularPleno();
     });
@@ -3456,12 +3454,16 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
     const cats = [...new Set(ejemplares.flatMap((e) => e.categorias))].sort();
     const alcs = [...new Set(ejemplares.map((e) => e.alcaldia).filter(Boolean))].sort();
     const esps = [...new Set(ejemplares.map((e) => e.especie).filter(Boolean))].sort();
-    const sel = (id, etiqueta, ops) =>
+
+    const comunDe = {};
+    for (const e of ejemplares) if (e.especie && e.nombreComun && !comunDe[e.especie]) comunDe[e.especie] = e.nombreComun;
+    const rotuloEspecie = (cient) => comunDe[cient] ? `${comunDe[cient]} (${cient})` : cient;
+    const sel = (id, etiqueta, ops, rotulo = (o) => o) =>
       `<select data-filtro="${id}" aria-label="${etiqueta}"><option value="">${etiqueta}</option>${
-        ops.map((o) => `<option value="${esc(o)}">${esc(o)}</option>`).join("")}</select>`;
+        ops.map((o) => `<option value="${esc(o)}">${esc(rotulo(o))}</option>`).join("")}</select>`;
     filtros.innerHTML = `${sel("categoria", "Todas las categorías", cats)}
       ${sel("alcaldia", "Todas las alcaldías", alcs)}
-      ${sel("especie", "Todas las especies", esps)}
+      ${sel("especie", "Todas las especies", esps, rotuloEspecie)}
       <button type="button" class="mapa-borrar" data-borrar hidden>Borrar filtros</button>
       <span class="mapa-conteo" data-conteo></span>`;
 

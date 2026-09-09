@@ -468,8 +468,12 @@ console.log('\n══ «QUÉ SIGNIFICA» · protección sin cerrarle la puerta a
        jurídica. Eso es lo que se comprueba ahora: que siga dicho en alguna
        parte de la portada, no en cuál. Si desaparece de las dos, la portada
        queda prometiendo protección sin decir de qué está hecha. */
+    /* 9 de septiembre de 2026: el cierre de la sección de cuidado se retiró y
+       con él la frase que esta comprobación buscaba. La exigencia se quedó
+       dicha en la entrada de la sección jurídica —«sin autorización previa y
+       sin dictamen técnico»— que es donde vive la norma que la sostiene. */
     t(nom+' · la portada sigue exigiendo autorización y dictamen, con su norma',
-      /sin autorización y sin dictamen técnico/.test(s)
+      /sin autorización previa y sin dictamen técnico/.test(s)
       && /NADF-001-RNAT-2015/.test(s)
       && !/dictamen técnico de la Secretaría del Medio Ambiente, que lo resuelve/.test(s));
     t(nom+' · la restricción vive en la sección jurídica, con su numeral',

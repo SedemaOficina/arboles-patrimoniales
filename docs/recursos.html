@@ -1565,6 +1565,8 @@ body.sin-desplazamiento{overflow:hidden}
 
 @media(max-width:1100px){.mapa-lista{max-height:420px}}
 
+@media(max-width:700px){.mapa-lista{height:auto;max-height:none;overflow:visible}}
+
 .mapa-aviso{position:absolute;left:12px;bottom:26px;top:auto;right:auto;z-index:var(--capa-mapa-aviso);margin:0;
   width:min(330px,calc(100% - 24px));
   background:rgba(var(--papel-rgb),.97);backdrop-filter:blur(6px);
@@ -1597,7 +1599,8 @@ body.sin-desplazamiento{overflow:hidden}
   font-size:var(--t-titulo-3);line-height:1.08;letter-spacing:.01em;color:var(--jacaranda);margin:4px 0 4px}
 .mapa-aviso__pie{display:block;font-size:var(--t-nota);color:#5B4F62}
 .mapa-aviso__pie b{color:var(--tinta-jacaranda);font-weight:700}
-@media(max-width:560px){.mapa-aviso{left:10px;bottom:22px;width:calc(100% - 20px);padding:10px 30px 10px 14px}
+
+@media(max-width:560px){.mapa-aviso{left:10px;bottom:54px;width:calc(100% - 20px);padding:10px 30px 10px 14px}
   .mapa-aviso__nombre{font-size:var(--t-subtitulo)}}
 
 .mapa-control a{font-size:var(--t-cuerpo-grande);line-height:30px;text-align:center;color:var(--jacaranda);font-weight:700}
@@ -1691,7 +1694,7 @@ body.sin-desplazamiento{overflow:hidden}
     <p class="migas" style="padding:0;margin:0 0 10px"><a href="index.html#inicio">Inicio</a> · Recursos</p>
     <span class="rotulo">Material de consulta</span>
     <h1 class="recursos-portada__titulo">Recursos</h1>
-    <p class="recursos-portada__entrada">Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México. Todo lo que sostiene la información publicada en este sitio, reunido y descargable.</p>
+    
     <nav class="recursos-indice" aria-label="Secciones de recursos">
       <a href="#videos">Videos</a>
       <a href="#normatividad">Marco normativo</a>
@@ -1747,7 +1750,6 @@ body.sin-desplazamiento{overflow:hidden}
     <div class="encabezado">
       <span class="rotulo">Marco normativo</span>
       <h2>La normatividad que protege a estos árboles</h2>
-      <p>El catálogo completo: cada instrumento con su liga al texto vigente publicado por la Consejería Jurídica y de Servicios Legales de la Ciudad de México, o por la propia Secretaría cuando se trata de una norma ambiental.</p>
     </div>
     <div class="normas-rejilla">
       <article class="norma-tarjeta">
