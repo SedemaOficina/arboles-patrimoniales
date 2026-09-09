@@ -91,22 +91,21 @@ declarar CSP** para este sitio.
 
 ---
 
-## 4 · Un cambio en el repositorio, y en qué momento
+## 4 · Los metadatos ya apuntan al dominio definitivo
 
-Los metadatos para compartir —`canonical`, `og:url`, la imagen de WhatsApp y el
-`sitemap`— apuntan hoy a `sedemaoficina.github.io`, **a propósito**: apuntarlos
-a un dominio que todavía no responde le diría a los buscadores que ignoren la
-versión que sí está en línea.
+**Hecho el 9 de septiembre de 2026.** El `canonical`, el `og:url`, la imagen para
+compartir y el `sitemap` de las cuatro páginas ya dicen
+`https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/`, y la imagen para
+compartir lleva versión nueva (`?v=3`) para que WhatsApp y Facebook la vuelvan
+a leer en lugar de servir la que tenían guardada.
 
-El orden correcto es este, y lo hace el equipo de SEDEMA, no el servidor:
+Lo único que hace falta del lado del servidor es **`git pull`** y que `docs/`
+se sirva como dice el punto 2.
 
-1. El programador monta el sitio y confirma que `https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/` responde.
-2. SEDEMA cambia **una línea** en `fuente/construir/sitio.js` (`PORDEFECTO`) y sube `VERSION_TARJETA` en el mismo archivo, para que WhatsApp vuelva a leer la imagen para compartir.
-3. SEDEMA construye producción, corre las suites y hace commit.
-4. El programador hace `git pull`. Listo.
-
-Mientras tanto el sitio funciona igual en el dominio nuevo; lo único que sigue
-apuntando al anterior son los metadatos.
+Si más adelante la vista previa de WhatsApp sigue saliendo vieja en algún
+teléfono, no es el servidor: es la caché del propio WhatsApp, que guarda la
+tarjeta por dirección durante semanas. Se resuelve subiendo `VERSION_TARJETA`
+en `fuente/construir/sitio.js`, reconstruyendo y publicando.
 
 ---
 
@@ -120,7 +119,7 @@ apuntando al anterior son los metadatos.
 | El botón de ubicación del mapa | Pide permiso y marca el pin. Requiere HTTPS, que ya hay |
 | Recursos → «Copiar cita» | Aparece el botón y copia. Requiere HTTPS |
 | Recursos → los dos videos | Cargan (YouTube sin cookies y Facebook) |
-| Compartir la portada por WhatsApp | Tras el paso 4, sale la tarjeta con la imagen nueva |
+| Compartir la portada por WhatsApp | Sale la tarjeta con la imagen. Si sale la vieja, es la caché de WhatsApp: ver el punto 4 |
 | Pestaña Red del navegador | Las páginas llegan con `Content-Encoding: gzip` (o `br`) |
 
 ---

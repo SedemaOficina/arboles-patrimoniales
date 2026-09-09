@@ -207,8 +207,16 @@
    porque cada sección lleva 88 px de aire y la barra mide 74, catorce píxeles
    de margen por coincidencia. El día que alguien aprieta ese aire, los siete
    destinos del menú aterrizan tapados y nadie relaciona las dos cosas. */
-html{scroll-behavior:smooth;scroll-padding-top:90px}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* El desplazamiento suave se declara SOLO mientras algo tiene el foco, es
+   decir, cuando lo pidió una persona con un clic o con el teclado; nunca
+   para la carga. Declarado sin condición sobre html, WebKit anima también la
+   restauración de la posición al cargar o recargar, y la calcula contra un
+   documento que todavía está creciendo (la hoja en vivo, el mapa diferido,
+   las fotografías): en Safari la página bajaba sola o se pasaba del final.
+   Patrón documentado por docs.github.com (issue 45322). 9 de septiembre de 2026. */
+html{scroll-padding-top:90px}
+html:focus-within{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:var(--t-cuerpo-grande);line-height:1.6;-webkit-font-smoothing:antialiased}
 .envoltura{max-width:var(--ancho);margin:0 auto;padding:0 28px}
 a{color:var(--jacaranda);text-decoration-thickness:1px;text-underline-offset:3px}
@@ -890,6 +898,15 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .padron-barra .filtros{margin:0;flex:0 1 auto}
 .padron-conteo{margin:0 0 16px;font-size:var(--t-nota);font-weight:600;color:var(--gris);letter-spacing:.02em;min-height:1em}
 .padron-conteo:empty{margin-bottom:0}
+/* Pie del listado: lo que falta por ver y el botón para pedirlo. */
+.padron-mas{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 18px;
+  margin:26px 0 0;padding:22px 0 0;border-top:1px solid rgba(var(--tinta-jacaranda-rgb),.12)}
+.padron-mas__cuenta{margin:0;flex:1 1 100%;text-align:center;font-size:var(--t-nota);font-weight:600;color:var(--gris);letter-spacing:.02em}
+.padron-mas .boton{cursor:pointer}
+/* «Mostrar los N»: la vía de una sola vez, como enlace, para no competir con el botón. */
+.mas-todos{font-family:var(--texto);font-size:var(--t-apoyo);font-weight:700;color:var(--jacaranda-hondo);background:none;border:0;
+  padding:10px 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.mas-todos:hover{color:var(--tinta-jacaranda)}
 .padron-vacio{grid-column:1/-1;padding:52px 24px;text-align:center;color:var(--gris);font-size:var(--t-cuerpo);line-height:1.6;
   background:var(--blanco);border:1px dashed rgba(var(--tinta-jacaranda-rgb),.2)}
 .datos-abiertos{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;
@@ -1283,10 +1300,19 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .arriba--visible{opacity:1;visibility:visible;transform:none}
 .arriba:hover{background:var(--tinta-jacaranda)}
 .arriba:focus-visible{outline:3px solid var(--dorado);outline-offset:2px}
+/* #contenido recibe el foco al volver arriba y al saltar al contenido: es un
+   destino, no un control, y no debe dibujar anillo. */
+#contenido:focus{outline:none}
 .arriba svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;
   stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:560px){.arriba{right:14px;bottom:18px;width:42px;height:42px}}
 @media(prefers-reduced-motion:reduce){.arriba{transition:none}}
+
+/* Sonda de desplazamiento (solo con ?diag en la dirección): cifras fijas en
+   pantalla para diagnosticar desde un teléfono. No intercepta el toque. */
+.sonda{position:fixed;left:8px;top:8px;z-index:var(--capa-saltar);margin:0;padding:8px 10px;
+  background:rgba(var(--tinta-jacaranda-rgb),.92);color:#fff;font-family:monospace;font-size:var(--t-nota);
+  line-height:1.5;white-space:pre;pointer-events:none;border-radius:var(--radio);max-width:calc(100% - 16px);overflow:hidden}
 
 /* --- video institucional --- */
 .video{position:relative;width:100%;aspect-ratio:16/9;background:var(--tinta-jacaranda);
@@ -2221,6 +2247,10 @@ a[target="_blank"].sin-marca-externa::after{content:none}
 .galeria__contador{position:absolute;right:12px;bottom:12px;background:rgba(var(--tinta-jacaranda-rgb),.86);color:#fff;font-size:var(--t-nota);font-weight:700;letter-spacing:.06em;padding:6px 10px;border-radius:var(--radio)}
 
 /* silueta de respaldo cuando el ejemplar no tiene fotografía */
+/* Sin fotografía la galería deja de ser retícula: la caja de respaldo ocupa
+   todo el ancho y mide lo suyo, en vez de caber en una celda y desbordarla.
+   9 de septiembre de 2026. */
+.galeria--sin-foto{display:block}
 .sin-foto{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
   background:linear-gradient(165deg,var(--jacaranda-brasa),var(--jacaranda-noche));min-height:clamp(360px,52vh,560px);padding:32px;text-align:center}
 /* EXENTO: vive dentro de una caja pequeña; manda el ancho de la caja. */
@@ -2264,6 +2294,9 @@ a[target="_blank"].sin-marca-externa::after{content:none}
 .mapa-filtros select{flex:1 1 200px;min-width:0;font-family:inherit;font-size:var(--t-apoyo);padding:10px 12px;
   border:1px solid rgba(var(--tinta-jacaranda-rgb),.22);border-radius:var(--radio);background:var(--papel);color:var(--tinta);cursor:pointer}
 .mapa-filtros select:focus{outline:2px solid var(--jacaranda);outline-offset:1px;border-color:var(--jacaranda)}
+/* En pantalla táctil el selector va a 16 px: por debajo de eso, Safari en
+   iPhone acerca la página entera al abrir el control y no la devuelve. 9 de septiembre de 2026. */
+@media(pointer:coarse){.mapa-filtros select{font-size:var(--t-cuerpo)}}
 .mapa-borrar{flex:0 0 auto;font-family:var(--texto);font-size:var(--t-nota);font-weight:700;letter-spacing:.02em;
   padding:10px 14px;border:1px solid rgba(var(--jacaranda-hondo-rgb),.35);border-radius:var(--radio-pastilla);background:none;
   color:var(--jacaranda-hondo);cursor:pointer;transition:background var(--paso),border-color var(--paso)}
@@ -2442,6 +2475,13 @@ body.sin-desplazamiento{overflow:hidden}
 .mapa-item em{display:block;font-family:var(--editorial);font-style:italic;font-size:var(--t-nota);color:var(--gris);margin-top:2px}
 .mapa-item__met{display:block;font-size:var(--t-nota);color:var(--gris);margin-top:6px}
 .mapa-vacio{padding:34px 20px;text-align:center;color:var(--gris);font-size:var(--t-apoyo);line-height:1.55}
+/* Pie de la lista del mapa en el teléfono: lo que falta por ver. */
+.mapa-mas{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;padding:14px 16px;
+  border-top:1px solid rgba(var(--tinta-jacaranda-rgb),.12);background:var(--blanco)}
+.mapa-mas__cuenta{flex:1 1 100%;text-align:center;font-size:var(--t-nota);font-weight:600;color:var(--gris);letter-spacing:.02em}
+.mapa-mas__boton{font-family:var(--texto);font-size:var(--t-apoyo);font-weight:700;padding:10px 18px;border:1px solid rgba(var(--jacaranda-rgb),.32);
+  background:var(--blanco);color:var(--jacaranda);border-radius:var(--radio);cursor:pointer;transition:background var(--paso),border-color var(--paso)}
+.mapa-mas__boton:hover{background:var(--niebla);border-color:var(--jacaranda)}
 
 /* ===== PANEL DE INDICADORES DEL MAPA ===== */
 @media(max-width:1100px){.mapa-zona{grid-template-columns:1fr}}

@@ -371,12 +371,22 @@ function pintarPadron(ejemplares, stats) {
      entraba a una ficha y volvía con el botón «atrás» encontraba el listado
      completo otra vez: había perdido su búsqueda sin haber hecho nada. */
   const params = new URLSearchParams(location.search);
-  const estado = { categoria: params.get("cat") || "", busqueda: params.get("q") || "" };
+  /* CUÁNTAS TARJETAS DE UNA VEZ. El registro crece con cada convocatoria y el
+     listado no puede crecer con él: con doce ejemplares ya medía cinco
+     pantallas de teléfono. Se pintan doce y el resto se pide con un botón; el
+     buscador y los filtros siguen viendo el registro entero, así que quien
+     busca «Coyoacán» encuentra lo mismo que antes. Con doce o menos no cambia
+     nada. 9 de septiembre de 2026. */
+  const TANDA = 12;
+  const nInicial = parseInt(params.get("n"), 10);
+  const estado = { categoria: params.get("cat") || "", busqueda: params.get("q") || "",
+                   mostrar: nInicial > TANDA ? nInicial : TANDA };
 
   const guardarEstado = () => {
     const p = new URLSearchParams(location.search);
     estado.categoria ? p.set("cat", estado.categoria) : p.delete("cat");
     estado.busqueda ? p.set("q", estado.busqueda) : p.delete("q");
+    estado.mostrar > TANDA ? p.set("n", String(estado.mostrar)) : p.delete("n");
     const cad = p.toString();
     history.replaceState(null, "", location.pathname + (cad ? "?" + cad : "") + location.hash);
   };
@@ -386,9 +396,11 @@ function pintarPadron(ejemplares, stats) {
     const q = norm(estado.busqueda);
     if (q) lista = lista.filter((e) => indice.get(e).includes(q));
 
-    cont.innerHTML = lista.length
-      ? lista.map((e) => tarjetaFicha(e)).join("")
+    const visibles = lista.slice(0, estado.mostrar);
+    cont.innerHTML = visibles.length
+      ? visibles.map((e) => tarjetaFicha(e)).join("")
       : `<p class="padron-vacio">Ningún ejemplar coincide con lo que buscas. Prueba con el nombre del árbol, su especie o su alcaldía.</p>`;
+    pintarMas(lista.length, visibles.length);
     // Las miniaturas llegan después: la tarjeta ya se ve sin esperar a la red.
     cont.querySelectorAll("img[data-ejemplar]").forEach((img) => {
       montarPrimeraFoto(img, (ok) => {
@@ -400,13 +412,42 @@ function pintarPadron(ejemplares, stats) {
 
     if (conteo) {
       const filtrando = estado.categoria || q;
+      const recortado = lista.length > visibles.length;
       conteo.textContent = filtrando
         ? `${lista.length} ${lista.length === 1 ? "ejemplar" : "ejemplares"} de ${orden.length}`
-        : "";
+          + (recortado ? `, se muestran ${visibles.length}` : "")
+        : (recortado ? `Se muestran ${visibles.length} de ${orden.length} ejemplares` : "");
     }
     if (borrar) borrar.hidden = !estado.busqueda;
     guardarEstado();
   };
+
+  /* El pie del listado: cuántos faltan y el botón para pedirlos. El foco pasa
+     a la primera tarjeta nueva, para que quien navega con teclado o con lector
+     siga leyendo donde apareció lo nuevo y no desde el botón que ya no está. */
+  const mas = document.getElementById("padronMas");
+  const enfocarTarjeta = (i) => {
+    const t = cont.children[i];
+    const a = t && (t.matches("a,button") ? t : t.querySelector("a,button"));
+    if (a) a.focus();
+  };
+  function pintarMas(total, mostrados) {
+    if (!mas) return;
+    const faltan = total - mostrados;
+    mas.hidden = faltan <= 0;
+    if (mas.hidden) { mas.innerHTML = ""; return; }
+    const tanda = Math.min(TANDA, faltan);
+    mas.innerHTML = `<p class="padron-mas__cuenta" aria-hidden="true">Se muestran ${mostrados} de ${total} ejemplares</p>
+      <button type="button" class="boton boton--solido" data-mas>Ver ${tanda} más</button>
+      ${faltan > TANDA ? `<button type="button" class="mas-todos" data-todos>Mostrar los ${total}</button>` : ""}`;
+    mas.querySelector("[data-mas]").addEventListener("click", () => {
+      estado.mostrar = mostrados + tanda; render(); enfocarTarjeta(mostrados);
+    });
+    const todos = mas.querySelector("[data-todos]");
+    if (todos) todos.addEventListener("click", () => {
+      estado.mostrar = total; render(); enfocarTarjeta(mostrados);
+    });
+  }
   // Restaura lo que traiga la dirección antes del primer pintado.
   if (caja && estado.busqueda) caja.value = estado.busqueda;
   render();
@@ -419,20 +460,21 @@ function pintarPadron(ejemplares, stats) {
     if (!b) return;
     document.querySelectorAll(".filtro").forEach((x) => x.setAttribute("aria-pressed", x === b));
     estado.categoria = b.dataset.cat;
+    estado.mostrar = TANDA;
     render();
   });
   }
 
   if (caja && caja.dataset.escuchando !== "si") {
     caja.dataset.escuchando = "si";
-    caja.addEventListener("input", () => { estado.busqueda = caja.value; render(); });
+    caja.addEventListener("input", () => { estado.busqueda = caja.value; estado.mostrar = TANDA; render(); });
     caja.addEventListener("keydown", (ev) => {
-      if (ev.key === "Escape" && caja.value) { caja.value = ""; estado.busqueda = ""; render(); }
+      if (ev.key === "Escape" && caja.value) { caja.value = ""; estado.busqueda = ""; estado.mostrar = TANDA; render(); }
     });
   }
   if (borrar && borrar.dataset.escuchando !== "si") {
     borrar.dataset.escuchando = "si";
-    borrar.addEventListener("click", () => { caja.value = ""; estado.busqueda = ""; render(); caja.focus(); });
+    borrar.addEventListener("click", () => { caja.value = ""; estado.busqueda = ""; estado.mostrar = TANDA; render(); caja.focus(); });
   }
 }
 

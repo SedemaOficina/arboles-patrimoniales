@@ -109,8 +109,15 @@ export function montarVolverArriba() {
   const suave = !matchMedia("(prefers-reduced-motion: reduce)").matches;
   b.addEventListener("click", () => {
     scrollTo({ top: 0, behavior: suave ? "smooth" : "auto" });
-    const primero = document.querySelector("header a, header button, main h1");
-    if (primero && primero.focus) primero.focus({ preventScroll: true });
+    /* El foco vuelve al CONTENEDOR del contenido, no al primer enlace: dar el
+       foco al logotipo dibujaba su anillo dorado después de cada toque, y en
+       el teléfono se quedaba puesto. #contenido es el mismo destino que usa
+       el enlace de saltar al contenido, y no se ve. */
+    const destino = document.getElementById("contenido");
+    if (destino) {
+      if (!destino.hasAttribute("tabindex")) destino.setAttribute("tabindex", "-1");
+      destino.focus({ preventScroll: true });
+    }
   });
 
   const UMBRAL = 600;
@@ -119,13 +126,55 @@ export function montarVolverArriba() {
   pintar();
 }
 
+/**
+ * Sonda de desplazamiento. Solo se monta con «?diag» en la dirección.
+ *
+ * Desde un teléfono no hay inspector: esta caja fija enseña las cifras que
+ * distinguen un documento más alto que su contenido (hueco tras el pie) de
+ * un desplazamiento que se pasa del final (exceso). Con una captura basta
+ * para saber cuál de los dos ocurre. No cambia nada más de la página.
+ */
+export function montarSonda() {
+  if (!/[?&]diag(=|&|$)/.test(location.search)) return;
+  const caja = document.createElement("pre");
+  caja.className = "sonda";
+  caja.setAttribute("aria-hidden", "true");
+  document.body.appendChild(caja);
+  const pintar = () => {
+    const pie = document.querySelector("footer");
+    const finPie = pie ? Math.round(pie.getBoundingClientRect().bottom + scrollY) : NaN;
+    const doc = document.documentElement.scrollHeight;
+    const vv = window.visualViewport;
+    caja.textContent =
+      "desplazado " + Math.round(scrollY) + "\n" +
+      "ventana " + innerWidth + "\u00d7" + innerHeight +
+      (vv ? " (visible " + Math.round(vv.width) + "\u00d7" + Math.round(vv.height)
+        + ", zoom " + vv.scale.toFixed(2) + ")" : "") + "\n" +
+      "documento " + doc + "\n" +
+      "fin del pie " + finPie + "\n" +
+      "hueco tras el pie " + (doc - finPie) + "\n" +
+      "exceso al final " + Math.round(scrollY + innerHeight - doc) + "\n" +
+      "cuerpo: " + (document.body.className || "sin clases");
+  };
+  addEventListener("scroll", pintar, { passive: true });
+  addEventListener("resize", pintar);
+  if (window.visualViewport) {
+    visualViewport.addEventListener("resize", pintar);
+    visualViewport.addEventListener("scroll", pintar);
+  }
+  setInterval(pintar, 1000);
+  pintar();
+}
+
 if (typeof document !== "undefined") {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", activarMenu, { once: true });
     document.addEventListener("DOMContentLoaded", montarVolverArriba, { once: true });
+    document.addEventListener("DOMContentLoaded", montarSonda, { once: true });
   } else {
     activarMenu();
     montarVolverArriba();
+    montarSonda();
   }
 }
 

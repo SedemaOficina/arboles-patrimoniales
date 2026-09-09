@@ -104,7 +104,7 @@ a{color:var(--jacaranda-hondo)}
   <div class="envoltura">
     <span class="rotulo">Árboles patrimoniales · control interno</span>
     <h1>Lo que falta</h1>
-    <p>Página de trabajo. No está enlazada desde el sitio y lleva <code>noindex</code>, así que no aparece en buscadores. <b>Solo lista lo que falta:</b> lo que se cierra se borra de aquí, y queda escrito en las auditorías 360 de <code>documentos/auditorias/</code>. Última limpieza: 8 de septiembre de 2026.</p>
+    <p>Página de trabajo. No está enlazada desde el sitio y lleva <code>noindex</code>, así que no aparece en buscadores. <b>Solo lista lo que falta:</b> lo que se cierra se borra de aquí, y queda escrito en las auditorías 360 de <code>documentos/auditorias/</code>. Última limpieza: 9 de septiembre de 2026.</p>
     <div class="pend-avance">
       <div><b>12</b><span>Ejemplares publicados</span></div>
       <div><b>12</b><span>Con decreto enlazado</span></div>
@@ -208,24 +208,6 @@ a{color:var(--jacaranda-hondo)}
       <p>No son técnicas. Alguien tiene que decidirlas antes de publicar.</p>
       <div class="pend-lista">
 
-                                <article class="pend">
-          <span class="pend__marca"></span>
-          <div>
-            <h3>Montar el dominio definitivo</h3>
-            <p>Ya está decidido: <code>https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/</code>. Las tres citas de Recursos ya lo dicen.</p>
-            <p style="margin-top:9px"><b>Lo que falta y por qué se dejó a propósito:</b> el <code>canonical</code>, el <code>og:url</code>, la imagen para compartir y el <code>sitemap</code> siguen apuntando a <code>sedemaoficina.github.io</code>, que es donde el sitio vive hoy. Apuntarlos a un dominio que todavía no responde le diría a los buscadores que ignoren la versión publicada, y la tarjeta de WhatsApp dejaría de resolver.</p>
-            <div class="arreglo">
-              <b>El día que el dominio responda</b>
-              <ol>
-                <li>Cambiar <code>PORDEFECTO</code> en <code>fuente/construir/sitio.js</code>. <b>Es una sola línea</b>, y de ahí salen las cuatro páginas.</li>
-                <li>Subir <code>VERSION_TARJETA</code> en ese mismo archivo, para que WhatsApp y Facebook vuelvan a leer la imagen para compartir en vez de servir la que tienen guardada.</li>
-                <li>Construir producción y correr las suites: la aserción del <code>canonical</code> avisa si algo quedó desalineado.</li>
-              </ol>
-            </div>
-          </div>
-          <span class="pend__quien" data-q="registro">Decidir</span>
-        </article>
-
       </div>
     </div>
 
@@ -236,6 +218,22 @@ a{color:var(--jacaranda-hondo)}
 
 
 
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>El hueco después del pie en el iPhone</h3>
+            <p>Reportado el 8 de septiembre en el dominio definitivo: en el teléfono la página sigue en blanco después del pie. <b>No se reprodujo en ningún motor disponible</b> el 9 de septiembre: ni en Chromium a siete anchos con emulación táctil, ni en WebKit 2.52 (el motor de Safari) a 390 px, ni con la ventana corta, ni tras recargar con la posición restaurada. En todos, el documento termina exactamente donde termina el pie. Y el sitio publicado todavía es la construcción anterior: las correcciones de móvil de hoy no han llegado al dominio.</p>
+            <div class="arreglo">
+              <b>Qué hacer, en este orden</b>
+              <ol>
+                <li><b>Publica esta construcción</b> (commit y push). Trae tres cosas que cambian el desplazamiento en el teléfono: la lista bajo el mapa ya no es una caja con scroll propio, el mapa no atrapa el dedo, y el desplazamiento suave ya no está declarado para la carga, que es un fallo documentado de WebKit.</li>
+                <li>En el teléfono abre <code>/arboles-patrimoniales/?diag=1</code>, baja hasta el final y <b>manda una captura con la caja de cifras</b> que aparece arriba a la izquierda. Si «hueco tras el pie» es mayor que cero, el documento mide de más y hay que buscar qué elemento; si es cero y «exceso al final» es mayor que cero, no es la página: es el desplazamiento que se pasa del final.</li>
+                <li>Anota en qué página pasa (portada, ficha o Recursos) y si ocurre también sin haber tocado el mapa ni el menú.</li>
+              </ol>
+            </div>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
@@ -323,6 +321,7 @@ a{color:var(--jacaranda-hondo)}
             </div>
             <p style="margin-top:9px"><b>Lo que queda, y no es mío:</b> la jerarquía entre los tres logotipos institucionales. <b>No se puede ajustar desde la hoja de estilos:</b> los tres viven dentro de un mismo archivo de imagen de 1147 × 84 px, así que su peso relativo está dibujado, no maquetado. Cambiarlo significa rehacer el lockup, y eso lo decide <b>Comunicación Social</b>.</p>
             <p style="margin-top:9px"><b>Y una palanca disponible si el listado sigue pareciendo largo:</b> quitar el símbolo de categoría de las etiquetas de la tarjeta —solo en móvil, conservándolo en la ficha— devuelve las etiquetas a un renglón y ahorra otros 480 px. Es una línea. No se hizo porque implica renunciar en móvil a algo que pediste.</p>
+            <p style="margin-top:9px"><b>El crecimiento del registro ya está resuelto</b> (9 de septiembre): el listado pinta doce tarjetas y ofrece «Ver 12 más» y «Mostrar los N»; la lista bajo el mapa, en el teléfono, seis renglones y «Ver 6 más». El buscador y los filtros siguen viendo el registro entero, el estado viaja en la dirección (<code>?n=24</code>) y con doce ejemplares o menos no aparece nada nuevo. Verificado con un registro simulado de 24.</p>
           </div>
           <span class="pend__quien" data-q="registro">Decidir</span>
         </article>

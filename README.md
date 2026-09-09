@@ -176,7 +176,7 @@ Después, commit y push. El sitio publicado no cambia hasta entonces.
 | `indicadores.js` | Las cifras del panel y de la franja |
 | `especies.js` | Las siluetas e ilustraciones por especie |
 | `fotos.js` | Descubrimiento de las fotografías en sus carpetas |
-| `menu.js` | Navegación, resaltado de la sección en pantalla, botón de volver arriba y barras de desplazamiento propias |
+| `menu.js` | Navegación, resaltado de la sección en pantalla, botón de volver arriba y barras de desplazamiento propias. Con `?diag=1` en la dirección monta una caja fija con las cifras del desplazamiento, para diagnosticar desde un teléfono |
 | `citar.js` | El botón que copia cada cita. Solo en Recursos |
 | `geo-cdmx.js` | Perímetro oficial de la Ciudad, del INEGI |
 | `padron/fuente-viva.js` | **Lectura de la hoja publicada**: caché, respaldo y la guardia que rechaza un registro mutilado |
@@ -228,20 +228,17 @@ enlaces se resuelven solos:
 RUTA_PORTADA=inicio.html RUTA_FICHA=arbol.html fuente/construir/construir.sh produccion
 ```
 
-### El día de la mudanza al dominio definitivo
+### El dominio definitivo
 
-1. Cambiar `PORDEFECTO` en **`fuente/construir/sitio.js`**. Es una sola línea, y
-   de ahí salen el `canonical`, el `og:url`, la imagen para compartir y el
-   `sitemap` de las cuatro páginas.
-2. **Subir `VERSION_TARJETA`** en ese mismo archivo, para que WhatsApp y
-   Facebook vuelvan a leer la imagen para compartir en vez de servir la que
-   tienen guardada por semanas.
-3. Construir producción, correr las suites —la aserción del `canonical` avisa si
-   algo quedó desalineado— y copiar el contenido de `docs/` a la raíz del sitio.
+Desde el 9 de septiembre de 2026 el sitio vive en
+`https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/` y todos los metadatos
+apuntan ahí. Cómo está montado y qué revisar después de cada `git pull` está en
+`documentos/DESPLIEGUE-EXPRESS.md`.
 
-Hasta entonces el `canonical` apunta a la dirección de publicación actual **a
-propósito**: apuntarlo a un dominio que todavía no responde le diría a los
-buscadores que ignoren la versión que sí está en línea.
+Si alguna vez cambia de dirección: una línea en `fuente/construir/sitio.js`
+(`PORDEFECTO`), subir `VERSION_TARJETA` en el mismo archivo para que WhatsApp
+vuelva a leer la imagen para compartir, construir producción y correr las
+suites —la aserción del `canonical` avisa si algo quedó desalineado.
 
 ---
 

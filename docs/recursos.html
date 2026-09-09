@@ -7,21 +7,21 @@
 <meta name="description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México. Secretaría del Medio Ambiente.">
 <meta name="author" content="Secretaría del Medio Ambiente de la Ciudad de México">
 <meta name="theme-color" content="#8D4992">
-<link rel="canonical" href="https://sedemaoficina.github.io/arboles-patrimoniales/recursos.html">
+<link rel="canonical" href="https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/recursos.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Árboles patrimoniales de la Ciudad de México · Secretaría del Medio Ambiente">
 <meta property="og:locale" content="es_MX">
 <meta property="og:title" content="Recursos · Árboles patrimoniales de la Ciudad de México">
 <meta property="og:description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México.">
-<meta property="og:url" content="https://sedemaoficina.github.io/arboles-patrimoniales/recursos.html">
-<meta property="og:image" content="https://sedemaoficina.github.io/arboles-patrimoniales/assets/img/portada/compartir.jpg?v=2">
+<meta property="og:url" content="https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/recursos.html">
+<meta property="og:image" content="https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/assets/img/portada/compartir.jpg?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Árboles patrimoniales de la Ciudad de México">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Recursos · Árboles patrimoniales de la Ciudad de México">
 <meta name="twitter:description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México.">
-<meta name="twitter:image" content="https://sedemaoficina.github.io/arboles-patrimoniales/assets/img/portada/compartir.jpg?v=2">
+<meta name="twitter:image" content="https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/assets/img/portada/compartir.jpg?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -124,8 +124,9 @@
 
 *{box-sizing:border-box}
 
-html{scroll-behavior:smooth;scroll-padding-top:90px}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+html{scroll-padding-top:90px}
+html:focus-within{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:var(--t-cuerpo-grande);line-height:1.6;-webkit-font-smoothing:antialiased}
 .envoltura{max-width:var(--ancho);margin:0 auto;padding:0 28px}
 a{color:var(--jacaranda);text-decoration-thickness:1px;text-underline-offset:3px}
@@ -553,6 +554,15 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .padron-barra .filtros{margin:0;flex:0 1 auto}
 .padron-conteo{margin:0 0 16px;font-size:var(--t-nota);font-weight:600;color:var(--gris);letter-spacing:.02em;min-height:1em}
 .padron-conteo:empty{margin-bottom:0}
+
+.padron-mas{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 18px;
+  margin:26px 0 0;padding:22px 0 0;border-top:1px solid rgba(var(--tinta-jacaranda-rgb),.12)}
+.padron-mas__cuenta{margin:0;flex:1 1 100%;text-align:center;font-size:var(--t-nota);font-weight:600;color:var(--gris);letter-spacing:.02em}
+.padron-mas .boton{cursor:pointer}
+
+.mas-todos{font-family:var(--texto);font-size:var(--t-apoyo);font-weight:700;color:var(--jacaranda-hondo);background:none;border:0;
+  padding:10px 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.mas-todos:hover{color:var(--tinta-jacaranda)}
 .padron-vacio{grid-column:1/-1;padding:52px 24px;text-align:center;color:var(--gris);font-size:var(--t-cuerpo);line-height:1.6;
   background:var(--blanco);border:1px dashed rgba(var(--tinta-jacaranda-rgb),.2)}
 .datos-abiertos{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;
@@ -829,10 +839,16 @@ h3{font-size:clamp(19px,1.7vw,24px);letter-spacing:.02em}
 .arriba--visible{opacity:1;visibility:visible;transform:none}
 .arriba:hover{background:var(--tinta-jacaranda)}
 .arriba:focus-visible{outline:3px solid var(--dorado);outline-offset:2px}
+
+#contenido:focus{outline:none}
 .arriba svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;
   stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:560px){.arriba{right:14px;bottom:18px;width:42px;height:42px}}
 @media(prefers-reduced-motion:reduce){.arriba{transition:none}}
+
+.sonda{position:fixed;left:8px;top:8px;z-index:var(--capa-saltar);margin:0;padding:8px 10px;
+  background:rgba(var(--tinta-jacaranda-rgb),.92);color:#fff;font-family:monospace;font-size:var(--t-nota);
+  line-height:1.5;white-space:pre;pointer-events:none;border-radius:var(--radio);max-width:calc(100% - 16px);overflow:hidden}
 
 .video{position:relative;width:100%;aspect-ratio:16/9;background:var(--tinta-jacaranda);
   border:1px solid rgba(var(--tinta-jacaranda-rgb),.14);overflow:hidden}
@@ -1410,6 +1426,7 @@ a[target="_blank"].sin-marca-externa::after{content:none}
 .galeria__pie b{display:block;font-weight:400;font-size:var(--t-nota);color:#6F6A79;margin-top:4px;letter-spacing:.02em}
 .galeria__contador{position:absolute;right:12px;bottom:12px;background:rgba(var(--tinta-jacaranda-rgb),.86);color:#fff;font-size:var(--t-nota);font-weight:700;letter-spacing:.06em;padding:6px 10px;border-radius:var(--radio)}
 
+.galeria--sin-foto{display:block}
 .sin-foto{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
   background:linear-gradient(165deg,var(--jacaranda-brasa),var(--jacaranda-noche));min-height:clamp(360px,52vh,560px);padding:32px;text-align:center}
 
@@ -1447,6 +1464,8 @@ a[target="_blank"].sin-marca-externa::after{content:none}
 .mapa-filtros select{flex:1 1 200px;min-width:0;font-family:inherit;font-size:var(--t-apoyo);padding:10px 12px;
   border:1px solid rgba(var(--tinta-jacaranda-rgb),.22);border-radius:var(--radio);background:var(--papel);color:var(--tinta);cursor:pointer}
 .mapa-filtros select:focus{outline:2px solid var(--jacaranda);outline-offset:1px;border-color:var(--jacaranda)}
+
+@media(pointer:coarse){.mapa-filtros select{font-size:var(--t-cuerpo)}}
 .mapa-borrar{flex:0 0 auto;font-family:var(--texto);font-size:var(--t-nota);font-weight:700;letter-spacing:.02em;
   padding:10px 14px;border:1px solid rgba(var(--jacaranda-hondo-rgb),.35);border-radius:var(--radio-pastilla);background:none;
   color:var(--jacaranda-hondo);cursor:pointer;transition:background var(--paso),border-color var(--paso)}
@@ -1560,6 +1579,13 @@ body.sin-desplazamiento{overflow:hidden}
 .mapa-item em{display:block;font-family:var(--editorial);font-style:italic;font-size:var(--t-nota);color:var(--gris);margin-top:2px}
 .mapa-item__met{display:block;font-size:var(--t-nota);color:var(--gris);margin-top:6px}
 .mapa-vacio{padding:34px 20px;text-align:center;color:var(--gris);font-size:var(--t-apoyo);line-height:1.55}
+
+.mapa-mas{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;padding:14px 16px;
+  border-top:1px solid rgba(var(--tinta-jacaranda-rgb),.12);background:var(--blanco)}
+.mapa-mas__cuenta{flex:1 1 100%;text-align:center;font-size:var(--t-nota);font-weight:600;color:var(--gris);letter-spacing:.02em}
+.mapa-mas__boton{font-family:var(--texto);font-size:var(--t-apoyo);font-weight:700;padding:10px 18px;border:1px solid rgba(var(--jacaranda-rgb),.32);
+  background:var(--blanco);color:var(--jacaranda);border-radius:var(--radio);cursor:pointer;transition:background var(--paso),border-color var(--paso)}
+.mapa-mas__boton:hover{background:var(--niebla);border-color:var(--jacaranda)}
 
 @media(max-width:1100px){.mapa-zona{grid-template-columns:1fr}}
 
@@ -1914,7 +1940,6 @@ body.sin-desplazamiento{overflow:hidden}
 <section class="seccion" id="creditos">
   <div class="envoltura">
     <div class="encabezado">
-      <span class="rotulo">Quién lo hizo</span>
       <h2>Créditos y atribuciones</h2>
     </div>
 
@@ -1949,15 +1974,15 @@ body.sin-desplazamiento{overflow:hidden}
     <div class="creditos creditos--filas">
       <div class="creditos__bloque">
         <h3 class="rotulo">El sitio completo</h3>
-        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Árboles patrimoniales de la Ciudad de México</i> [sitio web]. Ciudad de México: Gobierno de la Ciudad de México. Disponible en: <span class="provisional" title="El dominio definitivo, todavía no montado: hasta que lo esté, el sitio vive en su dirección de publicación">https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales</span>/ [consultado el día de la consulta].</p>
+        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Árboles patrimoniales de la Ciudad de México</i> [sitio web]. Ciudad de México: Gobierno de la Ciudad de México. Disponible en: https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/ [consultado el día de la consulta].</p>
       </div>
       <div class="creditos__bloque">
         <h3 class="rotulo">La ficha de un ejemplar</h3>
-        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. «Nombre del ejemplar», en <i>Árboles patrimoniales de la Ciudad de México</i> [sitio web]. Disponible en: <span class="provisional" title="El dominio definitivo, todavía no montado: hasta que lo esté, el sitio vive en su dirección de publicación">https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales</span>/arbol-nombre-del-ejemplar.html [consultado el día de la consulta].</p>
+        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. «Nombre del ejemplar», en <i>Árboles patrimoniales de la Ciudad de México</i> [sitio web]. Disponible en: https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/arbol-nombre-del-ejemplar.html [consultado el día de la consulta].</p>
       </div>
       <div class="creditos__bloque">
         <h3 class="rotulo">El listado en datos abiertos</h3>
-        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Registro de árboles patrimoniales de la Ciudad de México</i> [conjunto de datos]. Disponible en: <span class="provisional" title="El dominio definitivo, todavía no montado: hasta que lo esté, el sitio vive en su dirección de publicación">https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales</span>/datos/arboles-patrimoniales-cdmx.csv [consultado el día de la consulta].</p>
+        <p class="cita">Secretaría del Medio Ambiente de la Ciudad de México. <i>Registro de árboles patrimoniales de la Ciudad de México</i> [conjunto de datos]. Disponible en: https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/datos/arboles-patrimoniales-cdmx.csv [consultado el día de la consulta].</p>
       </div>
     </div>
     <p class="creditos__cierre">El contenido propio de este sitio puede reutilizarse citando la fuente. Las obras de terceros conservan la licencia de su autor.</p>
@@ -2134,8 +2159,12 @@ function montarVolverArriba() {
   const suave = !matchMedia("(prefers-reduced-motion: reduce)").matches;
   b.addEventListener("click", () => {
     scrollTo({ top: 0, behavior: suave ? "smooth" : "auto" });
-    const primero = document.querySelector("header a, header button, main h1");
-    if (primero && primero.focus) primero.focus({ preventScroll: true });
+
+    const destino = document.getElementById("contenido");
+    if (destino) {
+      if (!destino.hasAttribute("tabindex")) destino.setAttribute("tabindex", "-1");
+      destino.focus({ preventScroll: true });
+    }
   });
 
   const UMBRAL = 600;
@@ -2144,13 +2173,47 @@ function montarVolverArriba() {
   pintar();
 }
 
+function montarSonda() {
+  if (!/[?&]diag(=|&|$)/.test(location.search)) return;
+  const caja = document.createElement("pre");
+  caja.className = "sonda";
+  caja.setAttribute("aria-hidden", "true");
+  document.body.appendChild(caja);
+  const pintar = () => {
+    const pie = document.querySelector("footer");
+    const finPie = pie ? Math.round(pie.getBoundingClientRect().bottom + scrollY) : NaN;
+    const doc = document.documentElement.scrollHeight;
+    const vv = window.visualViewport;
+    caja.textContent =
+      "desplazado " + Math.round(scrollY) + "\n" +
+      "ventana " + innerWidth + "\u00d7" + innerHeight +
+      (vv ? " (visible " + Math.round(vv.width) + "\u00d7" + Math.round(vv.height)
+        + ", zoom " + vv.scale.toFixed(2) + ")" : "") + "\n" +
+      "documento " + doc + "\n" +
+      "fin del pie " + finPie + "\n" +
+      "hueco tras el pie " + (doc - finPie) + "\n" +
+      "exceso al final " + Math.round(scrollY + innerHeight - doc) + "\n" +
+      "cuerpo: " + (document.body.className || "sin clases");
+  };
+  addEventListener("scroll", pintar, { passive: true });
+  addEventListener("resize", pintar);
+  if (window.visualViewport) {
+    visualViewport.addEventListener("resize", pintar);
+    visualViewport.addEventListener("scroll", pintar);
+  }
+  setInterval(pintar, 1000);
+  pintar();
+}
+
 if (typeof document !== "undefined") {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", activarMenu, { once: true });
     document.addEventListener("DOMContentLoaded", montarVolverArriba, { once: true });
+    document.addEventListener("DOMContentLoaded", montarSonda, { once: true });
   } else {
     activarMenu();
     montarVolverArriba();
+    montarSonda();
   }
 }
 

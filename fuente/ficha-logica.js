@@ -161,6 +161,11 @@ function pintarGaleria(e) {
     guia.textContent = "Este ejemplar aún no tiene fotografías en el registro. La silueta representa el porte característico de la especie, dibujado a la altura medida en campo.";
     const iluF = ilustracionDe(e.especie);
     const razonF = PROPORCION_ILUSTRACION[perfilDe(e.especie).clave] || 1;
+    /* La caja «sin fotografía» no es una pieza del mosaico: sin esta clase se
+       colocaba en UNA celda de la retícula —un quinto del ancho en escritorio,
+       la mitad en el teléfono— y, como mide más que la fila, se salía por
+       abajo y se montaba sobre la sección siguiente. 9 de septiembre de 2026. */
+    cont.className = "galeria galeria--sin-foto";
     cont.innerHTML = `<div class="sin-foto">
       ${iluF ? `<img class="ilustracion-arbol" src="${iluF}" srcset="${srcsetIlustracion(e.especie)}" alt="Ilustración de referencia de ${esc(p.nombre)}" style="height:250px;width:${(250 * razonF).toFixed(0)}px">`
              : svgSilueta(e.especie, 230, e.morfologia.extensionCopa_m, e.morfologia.altura_m)}
@@ -224,8 +229,13 @@ function pintarVistaCalle(e) {
     pie.textContent = "";
     return;
   }
-  caja.innerHTML = `<iframe src="${esc(url)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-     title="Vista desde la calle del ejemplar ${esc(e.nombreAsignado || "")}" allowfullscreen></iframe>`;
+  /* Mismo panorama, mismo marco: rehacer el iframe en cada repintado lo
+     descargaba otra vez y, en el teléfono, se quedaba en blanco. */
+  const actual = caja.querySelector("iframe");
+  if (!actual || actual.getAttribute("src") !== url) {
+    caja.innerHTML = `<iframe src="${esc(url)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+       title="Vista desde la calle del ejemplar ${esc(e.nombreAsignado || "")}" allowfullscreen></iframe>`;
+  }
   // El aviso de la fecha era un recuadro sobre la imagen y se pintaba incluso
   // cuando no había panorama que advertir. Va aquí, en el pie, junto con el
   // origen del panorama: es la misma nota sobre la misma imagen, y así
@@ -407,18 +417,26 @@ function pintarUbicacion(e) {
 /** Mismos límites que el mapa general: el encuadre no se sale de la Ciudad. */
 const LIMITES_CDMX = [[18.98, -99.43], [19.66, -98.87]];
 let mapaFicha = null;
+/* Qué ejemplar y qué coordenadas dibuja el mapa que hay. Repintar la ficha
+   —la hoja en vivo llega después del primer pintado— no debe tirar un mapa que
+   sigue valiendo: en el teléfono se veía irse y volver, o no volver. */
+let claveMapaFicha = "";
 function pintarMapaEjemplar(e) {
   const lienzo = document.getElementById("fMapa");
   const pie = document.getElementById("fMapaPie");
   if (!lienzo) return;
 
   if (!e.coords) {
+    claveMapaFicha = "";
     lienzo.innerHTML = `<p class="mapa-caja__vacio">Este ejemplar aún no tiene coordenadas capturadas en el registro. Ubícalo con el domicilio y las referencias.</p>`;
     if (pie) pie.textContent = "";
     return;
   }
   if (pie) pie.textContent = "Cartografía base de CARTO y © colaboradores de OpenStreetMap.";
 
+  const clave = `${e.slug}:${e.coords.lat},${e.coords.lng}`;
+  if (clave === claveMapaFicha) return;
+  claveMapaFicha = clave;
   const centro = [e.coords.lat, e.coords.lng];
   /* Leaflet se descarga cuando el recuadro se acerca a la pantalla: en la
      ficha está por debajo de la galería y de la tabla de medidas, así que la
@@ -942,6 +960,14 @@ export function pintarFicha(datos, slug) {
     meta('meta[name="twitter:description"]', d);
     meta('meta[name="description"]', d);
   }
+  /* EL REPINTADO NO OLVIDA LAS FOTOGRAFÍAS. La hoja en vivo llega como
+     objetos nuevos, sin las fotos que el descubrimiento ya encontró para ese
+     mismo ejemplar; y cargarFotos, al hallarlas en su memoria, contesta que no
+     hace falta repintar. Resultado, hasta el 9 de septiembre de 2026: en la
+     primera visita desde el teléfono las fotografías aparecían un momento y
+     la ficha volvía a la ilustración, ya sin galería. Lo descubierto se
+     reparte antes de pintar, y el primer pintado del repintado ya las lleva. */
+  if (fotosPorId.has(e.id)) e.fotos = fotosPorId.get(e.id);
   const foto = (e.fotos && e.fotos.length && e.fotos[0].url) || null;
   if (foto) { meta('meta[property="og:image"]', foto); meta('meta[name="twitter:image"]', foto); }
   pintarEncabezado(e);
@@ -989,6 +1015,18 @@ export function pintarFicha(datos, slug) {
  * el caso del ejemplar sin decreto: su página ya no se arma, pero alguien
  * puede tener el enlace viejo, y vaciarle la ficha por no encontrarlo en la
  * hoja sería peor que enseñar lo último que sí se supo de él. */
+/** El ejemplar como texto comparable: sin fotografías y con las claves en orden. */
+function canon(o) {
+  const ordenar = (v) => {
+    if (Array.isArray(v)) return v.map(ordenar);
+    if (v && typeof v === "object") {
+      return Object.keys(v).sort().reduce((a, k) => { if (k !== "fotos") a[k] = ordenar(v[k]); return a; }, {});
+    }
+    return v;
+  };
+  return JSON.stringify(ordenar(o));
+}
+
 let vivaFichaIniciada = false;
 function iniciarFuenteVivaFicha(slug) {
   if (vivaFichaIniciada) return;
@@ -1016,8 +1054,13 @@ function iniciarFuenteVivaFicha(slug) {
         console.info("[ficha] La hoja no trae este ejemplar; se conserva lo que ya se mostraba.");
         return;
       }
-      // Repintar cuesta: se compara antes y solo se rehace si de verdad cambió.
-      if (VIGENTE && JSON.stringify(VIGENTE) === JSON.stringify(nuevo)) return;
+      /* Repintar cuesta: se compara antes y solo se rehace si de verdad cambió.
+         Se comparan los DATOS del ejemplar, no las fotografías: esas las pone
+         el descubrimiento en el objeto congelado y nunca vienen en la hoja, así
+         que con ellas dentro los dos objetos jamás coincidían y la ficha se
+         repintaba entera en cada visita. Y con las claves en orden fijo, para
+         que el orden en que las escribió cada lector no cuente como cambio. */
+      if (VIGENTE && canon(VIGENTE) === canon(nuevo)) return;
       /* Se vuelve a permitir el arranque de esta capa: repintar llama otra vez
          a pintarFicha, y sin esto la bandera lo bloquearía para siempre. */
       vivaFichaIniciada = false;

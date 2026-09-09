@@ -118,6 +118,15 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
   // y el montaje reventaba con «Cannot access before initialization».
   let pistaVistaEnMemoria = false;   // la pista de ubicación ya se cerró
   let slugResultado = null;          // ejemplar que respondió «el más cercano»
+  /* EN EL TELÉFONO LA LISTA FLUYE CON LA PÁGINA, así que no puede medir lo
+     que mida el registro: se pintan seis renglones y el resto se pide con un
+     botón. En escritorio la columna tiene desplazamiento propio y aguanta los
+     trescientos de la hoja sin tocar la página. El seleccionado y «tu más
+     cercano» se enseñan siempre, aunque queden más allá de la tanda.
+     9 de septiembre de 2026. */
+  const TANDA_LISTA = 6;
+  const listaCompacta = () => typeof matchMedia === "function" && matchMedia("(max-width:700px)").matches;
+  let mostrarLista = TANDA_LISTA;
 
   /* LA VISTA DE ENTRADA ES LA CIUDAD ENTERA, no el racimo de ejemplares.
      El mapa abría encuadrado sobre los árboles, y como casi todos están en el
@@ -605,8 +614,13 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
       el.setAttribute("aria-hidden", dentro ? "false" : "true");
     });
 
-    const cuerpo = vis.length
-      ? vis.map((e) => {
+    let tope = listaCompacta() ? mostrarLista : Infinity;
+    const imprescindible = Math.max(...[estado.activo, slugResultado].filter(Boolean)
+      .map((slug) => vis.findIndex((e) => e.slug === slug)), -1);
+    if (imprescindible >= tope) { mostrarLista = imprescindible + 1; tope = mostrarLista; }
+    const mostrados = vis.slice(0, tope);
+    const cuerpo = mostrados.length
+      ? mostrados.map((e) => {
           // La miniatura es la fotografía del ejemplar. No se usa la silueta de
           // la especie: solo hay tres especies en el registro y trece siluetas
           // repetidas se leen como un error de carga, no como información.
@@ -629,6 +643,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
       : `<div class="mapa-vacio">Ningún ejemplar cumple con los filtros elegidos.</div>`;
 
     lista.querySelector("[data-lista]").innerHTML = cuerpo;
+    pintarMasLista(vis.length, mostrados.length);
     // Las miniaturas se resuelven después: el renglón ya se lee sin esperarlas.
     lista.querySelectorAll("img[data-ejemplar]").forEach((img) => {
       montarPrimeraFoto(img, (ok) => {
@@ -652,6 +667,33 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     lista.querySelectorAll(".mapa-item").forEach((b) =>
       b.addEventListener("click", () => seleccionar(b.dataset.slug, true)));
 
+  }
+
+  /** El pie de la lista: cuántos faltan y el botón para pedirlos. */
+  function pintarMasLista(total, mostrados) {
+    let mas = lista.querySelector("[data-mas]");
+    if (!mas) {
+      mas = document.createElement("div");
+      mas.className = "mapa-mas";
+      mas.setAttribute("data-mas", "");
+      lista.appendChild(mas);
+    }
+    const faltan = total - mostrados;
+    mas.hidden = faltan <= 0;
+    if (mas.hidden) { mas.innerHTML = ""; return; }
+    const tanda = Math.min(TANDA_LISTA, faltan);
+    mas.innerHTML = `<span class="mapa-mas__cuenta">Se muestran ${mostrados} de ${total}</span>
+      <button type="button" class="mapa-mas__boton" data-mas-tanda>Ver ${tanda} más</button>
+      ${faltan > TANDA_LISTA ? `<button type="button" class="mas-todos" data-mas-todos>Mostrar los ${total}</button>` : ""}`;
+    const enfocar = () => {
+      const nuevo = lista.querySelectorAll(".mapa-item")[mostrados];
+      if (nuevo) nuevo.focus();
+    };
+    mas.querySelector("[data-mas-tanda]").addEventListener("click", () => {
+      mostrarLista = mostrados + tanda; pintarLista(); enfocar();
+    });
+    const todos = mas.querySelector("[data-mas-todos]");
+    if (todos) todos.addEventListener("click", () => { mostrarLista = total; pintarLista(); enfocar(); });
   }
 
   /* El panel de indicadores del mapa se retiró por completo.
@@ -761,10 +803,10 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     // Lo que venía en la dirección se refleja en los selectores.
     filtros.querySelectorAll("[data-filtro]").forEach((sl) => { sl.value = estado[sl.dataset.filtro] || ""; });
     filtros.querySelectorAll("[data-filtro]").forEach((s) =>
-      s.addEventListener("change", () => { estado[s.dataset.filtro] = s.value; estado.activo = null; pintarLista(); reencuadrar(); }));
+      s.addEventListener("change", () => { estado[s.dataset.filtro] = s.value; estado.activo = null; mostrarLista = TANDA_LISTA; pintarLista(); reencuadrar(); }));
     const borrar = filtros.querySelector("[data-borrar]");
     if (borrar) borrar.addEventListener("click", () => {
-      estado.categoria = ""; estado.alcaldia = ""; estado.especie = ""; estado.activo = null;
+      estado.categoria = ""; estado.alcaldia = ""; estado.especie = ""; estado.activo = null; mostrarLista = TANDA_LISTA;
       filtros.querySelectorAll("[data-filtro]").forEach((s) => { s.value = ""; });
       pintarLista();
       reencuadrar();
@@ -772,6 +814,10 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
   }
 
   pintarLista();
+  if (typeof matchMedia === "function") {
+    const mq = matchMedia("(max-width:700px)");
+    if (mq.addEventListener) mq.addEventListener("change", () => pintarLista());
+  }
   return { estado, marcadores, seleccionar, pintarLista, mapa,
            limpiarSeleccion: () => {
              estado.activo = null;

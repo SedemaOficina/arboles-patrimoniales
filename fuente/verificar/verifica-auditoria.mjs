@@ -1257,12 +1257,12 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
   // Un canonical hacia un dominio que aún no existe le dice al buscador que
   // ignore la versión publicada, y la imagen para compartir no resuelve.
   t('El canonical apunta a donde el sitio está de verdad',
-    /rel="canonical" href="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/"/.test(pv));
+    /rel="canonical" href="https:\/\/sedema\.sia\.cdmx\.gob\.mx\/arboles-patrimoniales\/"/.test(pv));
   // Absoluta y del mismo origen, y con el sufijo de versión: WhatsApp guarda
   // la miniatura por dirección, así que sin ?v= el reenvío sigue mostrando la
   // tarjeta anterior por semanas.
   t('La imagen para compartir es absoluta y del mismo origen',
-    /og:image" content="https:\/\/sedemaoficina\.github\.io\/arboles-patrimoniales\/assets\/img\/portada\/compartir\.jpg\?v=\d+"/.test(pv));
+    /og:image" content="https:\/\/sedema\.sia\.cdmx\.gob\.mx\/arboles-patrimoniales\/assets\/img\/portada\/compartir\.jpg\?v=\d+"/.test(pv));
 }
 
 // LAS DOS SECCIONES LEGALES SE SEÑALAN ENTRE SÍ.

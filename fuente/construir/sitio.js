@@ -11,7 +11,10 @@
  *
  *   BASE_SITIO=https://sedema.cdmx.gob.mx/arboles-patrimoniales/ ./construir.sh produccion
  */
-const PORDEFECTO = "https://sedemaoficina.github.io/arboles-patrimoniales/";
+// 9 de septiembre de 2026: el sitio ya responde en su dominio definitivo. La
+// dirección de publicación anterior (sedemaoficina.github.io) sigue sirviendo
+// el mismo docs/, pero la dirección pública es esta.
+const PORDEFECTO = "https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/";
 
 // Se garantiza la diagonal final: sin ella, unir rutas produce direcciones rotas.
 const crudo = process.env.BASE_SITIO || PORDEFECTO;
@@ -30,7 +33,9 @@ const BASE = crudo.endsWith("/") ? crudo : crudo + "/";
  * Al subir este número la dirección deja de ser la misma y el servicio
  * descarga la imagen otra vez. SE SUBE CADA VEZ QUE SE REDIBUJE compartir.jpg.
  */
-const VERSION_TARJETA = 2;
+// 3 desde el 9 de septiembre de 2026: cambió el dominio y WhatsApp guarda la
+// vista previa por dirección completa, así que hay que obligarlo a mirar.
+const VERSION_TARJETA = 3;
 
 const url = (ruta = "") => BASE + String(ruta).replace(/^\//, "");
 
