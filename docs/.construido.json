@@ -3,7 +3,7 @@
  "destino": "produccion",
  "base": "https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/",
  "version_tarjeta": 3,
- "armado_id": "20260911T190309Z-47884",
+ "armado_id": "20260911T191805Z-64362",
  "fuentes": {
   "construir/armar-capa.js": "fd8c38a3d222e984",
   "construir/armar-datos.js": "eb2f772e6feda35a",
@@ -13,7 +13,7 @@
   "construir/shapefile.js": "6b5c17a9d183cc21",
   "construir/aligerar.js": "b643239a39c30cf9",
   "construir/arranque.js": "e5535d3d23e4fb00",
-  "construir/sitio.js": "a222c308a7e2a8cf",
+  "construir/sitio.js": "f79cc8c52fcd0ffd",
   "cuerpo.html": "ccf4a57a88caf031",
   "ficha-cuerpo.html": "dc2bb8d0f075eee3",
   "recursos-cuerpo.html": "1ab993a7e3c9d9cf",

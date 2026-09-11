@@ -57,7 +57,11 @@ const url = (ruta = "") => BASE + String(ruta).replace(/^\//, "");
  * sería peor.
  */
 // 11 de septiembre de 2026: la propiedad existe y este es su identificador.
-const GA_ID = (process.env.GA_ID || "G-699W152ZM0").trim();
+// Se sustituyo G-699W152ZM0 --la primera propiedad, que solo recibio las dos
+// visitas de verificacion-- por la de la cuenta desde la que la Direccion
+// consulta los informes. Una sola propiedad a proposito: mandar a dos duplica
+// la transmision a un tercero y no aporta nada que no resuelva un acceso.
+const GA_ID = (process.env.GA_ID || "G-WCSEPG4P4V").trim();
 
 /**
  * medicion() · el bloque de medición, con el consentimiento CERRADO de origen.
