@@ -198,6 +198,7 @@ const html=`<!DOCTYPE html>
 <style>
 ${css}
 </style>
+${SITIO.medicion()}
 </head>
 <body>
 ${body}
