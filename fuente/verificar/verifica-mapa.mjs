@@ -335,10 +335,20 @@ t('créditos · la cartografía se sigue atribuyendo desde el mapa',
 t('créditos · no queda ningún crédito por definir pasando por acreditado',
   !/>Por definir</.test(rec)
   && /\.creditos__lista dd\[data-pendiente\]/.test(css));
-/* El dictamen ya no se atribuye a «la Secretaría» a secas: lo hace un área con
-   nombre, y nombrarla es lo que convierte el crédito en algo verificable. */
-t('créditos · el dictamen del padrón se acredita al área que lo hizo',
-  /Dictaminadoras y dictaminadores de arbolado de la Dirección de Infraestructura Verde/.test(rec));
+/* CAMBIÓ EL CRITERIO el 11 de septiembre de 2026, porque cambió el crédito.
+   El 8 de septiembre el dictamen dejó de atribuirse a «la Secretaría» a secas
+   y pasó a un área con nombre —la Dirección de Infraestructura Verde—, y la
+   aserción exigía ese nombre literal. El 11 los créditos pasaron de áreas a
+   personas con cargo: la coordinación del equipo dictaminador, el seguimiento
+   técnico y el control de calidad llevan nombre propio, y el dictamen de los
+   ejemplares se acredita al equipo de especialistas. Lo que se sigue
+   impidiendo es lo mismo de siempre: que el trabajo aparezca como de nadie.
+   Por eso se exige la forma —nombre, raya, cargo— y no un nombre concreto:
+   los nombres cambian con la plantilla y la aserción no debe caerse por eso. */
+t('créditos · la coordinación del dictamen lleva nombre y cargo',
+  /<dt>Coordinación del equipo dictaminador<\/dt><dd>[^<—]+ — [^<]+<\/dd>/.test(rec));
+t('créditos · el dictamen técnico se acredita al equipo dictaminador, no a nadie',
+  /<dt>Dictamen técnico de los ejemplares<\/dt><dd>[^<]*dictaminador[^<]*<\/dd>/.test(rec));
 
 
 console.log('══ CINTILLO Y PANEL ══');
