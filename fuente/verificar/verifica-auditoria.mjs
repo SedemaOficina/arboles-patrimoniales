@@ -1263,6 +1263,17 @@ console.log('\n══ CARTOGRAFÍA Y DIRECCIÓN PÚBLICA ══');
   // tarjeta anterior por semanas.
   t('La imagen para compartir es absoluta y del mismo origen',
     /og:image" content="https:\/\/sedema\.sia\.cdmx\.gob\.mx\/arboles-patrimoniales\/assets\/img\/portada\/compartir\.jpg\?v=\d+"/.test(pv));
+  // 11 de septiembre de 2026: Search Console verifica la propiedad leyendo esta
+  // etiqueta en la portada. Si desaparece, Google revoca la verificación y con
+  // ella el sitemap enviado y los informes de indexación. Vive en sitio.js,
+  // como la dirección y la medición, y ningún armador la escribe a mano.
+  t('La verificación de Search Console sale de sitio.js y llega al <head> de la portada',
+    /VERIFICACION_GOOGLE/.test(sitio) && /verificacion\(\)/.test(ar)
+    && /<head>[\s\S]*<meta name="google-site-verification" content="[A-Za-z0-9_\-=]{20,}">[\s\S]*<\/head>/.test(pv));
+  t('Y las fichas y Recursos la llevan también, siempre desde el mismo lugar',
+    ['armar-ficha.js','armar-recursos.js']
+      .every((f) => /\$\{SITIO\.verificacion\(\)\}/.test(fs.readFileSync('construir/'+f,'utf8'))
+        && !/google-site-verification/.test(fs.readFileSync('construir/'+f,'utf8'))));
 }
 
 // LAS DOS SECCIONES LEGALES SE SEÑALAN ENTRE SÍ.

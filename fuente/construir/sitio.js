@@ -64,6 +64,41 @@ const url = (ruta = "") => BASE + String(ruta).replace(/^\//, "");
 const GA_ID = (process.env.GA_ID || "G-WCSEPG4P4V").trim();
 
 /**
+ * VERIFICACION_GOOGLE · la prueba de propiedad ante Google Search Console.
+ *
+ * Search Console no indexa nada hasta que alguien demuestra que administra el
+ * sitio. De los métodos que ofrece, el de «etiqueta HTML» es el único que
+ * depende solo de este repositorio: el de Analytics no sirve porque gtag.js no
+ * se carga hasta que la persona acepta el aviso (Google pide la página sin
+ * aceptar nada y no encuentra la etiqueta), y el de DNS depende de quien
+ * administra sia.cdmx.gob.mx.
+ *
+ * El valor NO es un secreto: es la huella pública que Google asocia a la
+ * propiedad, y solo sirve a quien ya tiene acceso a esa cuenta de Search
+ * Console. Vaciarlo (VERIFICACION_GOOGLE= ./construir.sh) retira la etiqueta
+ * de todas las páginas; Google entonces revoca la verificación en su siguiente
+ * revisión, así que se conserva mientras la propiedad exista.
+ */
+// 11 de septiembre de 2026: propiedad «prefijo de URL» creada para
+// https://sedema.sia.cdmx.gob.mx/arboles-patrimoniales/ desde la cuenta que
+// consulta Analytics. La etiqueta va en las tres páginas públicas por
+// uniformidad, aunque Google solo la lee en la portada de la propiedad.
+const VERIFICACION_GOOGLE = (
+  process.env.VERIFICACION_GOOGLE ?? "8kj_0Vw1pggHojTh0x992Iez13VPJOci-AQFFpotNJo"
+).trim();
+
+/**
+ * verificacion() · la etiqueta <meta> de Search Console, o nada.
+ * Va en <head>, junto a las demás <meta>; el orden respecto a la medición no
+ * importa porque no ejecuta nada.
+ */
+const verificacion = () => {
+  if (!VERIFICACION_GOOGLE) return "";
+  const v = VERIFICACION_GOOGLE.replace(/[^A-Za-z0-9_\-=]/g, "");
+  return `<meta name="google-site-verification" content="${v}">`;
+};
+
+/**
  * medicion() · el bloque de medición, con el consentimiento CERRADO de origen.
  *
  * EL ORDEN DE ESTE BLOQUE NO ES NEGOCIABLE, y es la única razón de que exista
@@ -198,8 +233,10 @@ module.exports = {
   BASE,
   VERSION_TARJETA,
   GA_ID,
+  VERIFICACION_GOOGLE,
   url,
   medicion,
+  verificacion,
   // La imagen para compartir se pide siempre por aquí, nunca con url() a secas.
   urlTarjeta: () => url("assets/img/portada/compartir.jpg") + "?v=" + VERSION_TARJETA,
 };

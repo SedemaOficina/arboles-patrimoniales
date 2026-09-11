@@ -133,6 +133,7 @@ const html=`<!DOCTYPE html>
   <meta name="description" content="${_esc(_desc)}">
   <meta name="author" content="Secretaría del Medio Ambiente de la Ciudad de México">
   <meta name="theme-color" content="#8D4992">
+  ${SITIO.verificacion()}
   <link rel="canonical" href="${_urlFicha}">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Árboles patrimoniales de la Ciudad de México · Secretaría del Medio Ambiente">

@@ -80,6 +80,7 @@ const html = `<!DOCTYPE html>
 <meta name="description" content="Videos, marco normativo, datos abiertos y metodología del registro de árboles patrimoniales de la Ciudad de México. Secretaría del Medio Ambiente.">
 <meta name="author" content="Secretaría del Medio Ambiente de la Ciudad de México">
 <meta name="theme-color" content="#8D4992">
+${SITIO.verificacion()}
 <link rel="canonical" href="${SITIO.url(NOMBRES.recursos)}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Árboles patrimoniales de la Ciudad de México · Secretaría del Medio Ambiente">

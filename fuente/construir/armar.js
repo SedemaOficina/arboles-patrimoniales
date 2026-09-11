@@ -173,6 +173,7 @@ const html=`<!DOCTYPE html>
   <meta name="description" content="Registro público de los árboles declarados patrimonio natural de la Ciudad de México: su ubicación, sus medidas, su estado y el marco jurídico que los protege. Secretaría del Medio Ambiente.">
   <meta name="author" content="Secretaría del Medio Ambiente de la Ciudad de México">
   <meta name="theme-color" content="#8D4992">
+  ${SITIO.verificacion()}
   <link rel="canonical" href="${SITIO.BASE}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Árboles patrimoniales de la Ciudad de México · Secretaría del Medio Ambiente">
