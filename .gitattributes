@@ -1,5 +1,11 @@
 # Normalización de finales de línea al guardar en el repositorio.
-* text=auto
+# Y TAMBIÉN AL SACARLOS: desde el 11 de septiembre de 2026 todo texto se
+# entrega con LF, en Windows incluido. Con «text=auto» a secas, Windows recibía
+# con CRLF lo que otra persona subió con LF —los cuatro armadores de la
+# medición, ese día— y las huellas del recibo dejaban de cuadrar sin que
+# hubiera cambiado una letra. El sitio se arma con Node y se edita con
+# editores que entienden LF; no hay motivo para dos finales de línea.
+* text=auto eol=lf
 
 # Los guiones de shell DEBEN conservar finales de línea LF. Con «* text=auto»
 # a secas, Windows los recibe con CRLF y Git Bash falla al ejecutarlos con

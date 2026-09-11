@@ -79,11 +79,11 @@ Si hace falta una CSP, esta es la mínima que deja funcionar todo:
 
 | Directiva | Orígenes | Para qué |
 |---|---|---|
-| `script-src` | `'self' 'unsafe-inline'` | El JavaScript va incrustado en cada página |
+| `script-src` | `'self' 'unsafe-inline' https://www.googletagmanager.com` | El JavaScript va incrustado en cada página; la biblioteca de Google Analytics se descarga de Google solo después de que la persona acepta el aviso |
 | `style-src` | `'self' 'unsafe-inline' https://fonts.googleapis.com` | La hoja va incrustada; las tipografías vienen de Google |
 | `font-src` | `https://fonts.gstatic.com` | Los archivos de tipografía |
-| `img-src` | `'self' data: https://basemaps.cartocdn.com` | Las fotos, las máscaras de los símbolos y las teselas del mapa |
-| `connect-src` | `'self' https://docs.google.com` | La lectura en vivo de la hoja de cálculo |
+| `img-src` | `'self' data: https://basemaps.cartocdn.com https://*.google-analytics.com https://*.googletagmanager.com` | Las fotos, las máscaras de los símbolos, las teselas del mapa y las balizas de Analytics |
+| `connect-src` | `'self' https://docs.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com` | La lectura en vivo de la hoja de cálculo y el envío de visitas a Google Analytics |
 | `frame-src` | `https://www.youtube-nocookie.com https://www.facebook.com https://www.google.com` | Los dos videos de Recursos y la vista de calle |
 
 Lo más sencillo, si no hay una política institucional que lo exija, es **no
@@ -121,6 +121,7 @@ en `fuente/construir/sitio.js`, reconstruyendo y publicando.
 | Recursos → los dos videos | Cargan (YouTube sin cookies y Facebook) |
 | Compartir la portada por WhatsApp | Sale la tarjeta con la imagen. Si sale la vieja, es la caché de WhatsApp: ver el punto 4 |
 | Pestaña Red del navegador | Las páginas llegan con `Content-Encoding: gzip` (o `br`) |
+| Google Analytics → Informes → Tiempo real | Abre el sitio en otra pestaña, pulsa «Aceptar» en el aviso de medición y la visita aparece en menos de un minuto. La medición (`G-WCSEPG4P4V`, en `fuente/construir/sitio.js`) **no arranca hasta que la persona acepta**: por eso el detector de etiquetas de Analytics seguirá diciendo «no se detectó la etiqueta». La comprobación válida es «Tiempo real», no ese detector |
 
 ---
 

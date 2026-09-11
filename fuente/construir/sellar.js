@@ -45,8 +45,28 @@ const SELLADOS = [
   'padron/fuente-viva.js', 'padron/lector-v2.js',
 ];
 
+/* LA HUELLA NO DEPENDE DE LOS FINALES DE LÍNEA. Desde el 11 de septiembre de
+   2026: Git en Windows entrega los archivos con CRLF al hacer pull de lo que
+   otra persona escribió con LF —pasó ese día con los cuatro armadores que
+   trajo la medición—, y una huella calculada sobre los bytes crudos dejaba de
+   cuadrar con el recibo sin que hubiera cambiado una sola letra. El recibo
+   firmado en una máquina se comprueba en otra (el flujo de GitHub corre en
+   Linux), así que la huella se calcula como si todo llevara LF. Se hace byte a
+   byte, sin decodificar: los archivos binarios que se comparan entre sí pasan
+   por aquí también y no deben alterarse al leerlos como texto. */
+function sinRetornos(b) {
+  let n = 0;
+  for (let i = 0; i < b.length; i++) if (b[i] === 13 && b[i + 1] === 10) n++;
+  if (!n) return b;
+  const s = Buffer.allocUnsafe(b.length - n);
+  for (let i = 0, j = 0; i < b.length; i++) {
+    if (b[i] === 13 && b[i + 1] === 10) continue;
+    s[j++] = b[i];
+  }
+  return s;
+}
 const huella = (f) =>
-  crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex').slice(0, 16);
+  crypto.createHash('sha256').update(sinRetornos(fs.readFileSync(f))).digest('hex').slice(0, 16);
 
 /* EL RECIBO NO SE FIRMA SI NADIE ARMÓ.
    `sellar.js` no compara la salida con la fuente: sella la fuente del momento

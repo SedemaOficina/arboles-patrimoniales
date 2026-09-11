@@ -143,9 +143,17 @@ console.log('\n══ EL CSS QUE DE VERDAD SE SIRVE ══');
 /* Las páginas no enlazan la hoja: la llevan incrustada. Copiar estilos.css a
    docs/assets/css/ y no rearmar las páginas deja el sitio con el CSS viejo
    aunque el archivo suelto ya esté al día. */
-const css = hay('estilos.css') ? sinComentariosCSS(fs.readFileSync('estilos.css', 'utf8')) : '';
+/* LOS FINALES DE LÍNEA NO CUENTAN COMO DERIVA. Desde el 11 de septiembre de
+   2026: Git en Windows entregó las páginas de docs/ con CRLF y la hoja de
+   estilos seguía con LF —nadie la había vuelto a sacar del repositorio—, y
+   esta comparación decía que la página llevaba una hoja vieja sin que hubiera
+   cambiado una letra. Todo lo que se compara aquí se lee como si llevara LF;
+   la deriva que se persigue es de contenido, no de formato de archivo. */
+const LF = (t) => t.replace(/\r\n/g, '\n');
+const leer = (f) => LF(fs.readFileSync(f, 'utf8'));
+const css = hay('estilos.css') ? sinComentariosCSS(leer('estilos.css')) : '';
 for (const pag of ['index.html', 'ficha.html', 'recursos.html']) {
-  const h = hay(DOCS + pag) ? fs.readFileSync(DOCS + pag, 'utf8') : '';
+  const h = hay(DOCS + pag) ? leer(DOCS + pag) : '';
   t(pag + ' lleva incrustada la hoja de hoy', css !== '' && h.includes(css),
     'la página se armó con una versión anterior de estilos.css, o el aligerado de producción cambió');
 }
@@ -186,9 +194,9 @@ const INCRUSTADOS = {
   'recursos.html': ['menu.js', 'citar.js'],
 };
 for (const [pag, modulos] of Object.entries(INCRUSTADOS)) {
-  const h = hay(DOCS + pag) ? fs.readFileSync(DOCS + pag, 'utf8') : '';
+  const h = hay(DOCS + pag) ? leer(DOCS + pag) : '';
   const viejos = modulos.filter((m) =>
-    !hay(m) || !trozos(fs.readFileSync(m, 'utf8')).every((x) => h.includes(x)));
+    !hay(m) || !trozos(leer(m)).every((x) => h.includes(x)));
   t(pag + ' lleva incrustado el guion de hoy', h !== '' && viejos.length === 0,
     viejos.length ? viejos.join(', ') + ' → corre fuente/construir/construir.sh produccion' : 'no se pudo leer la página');
 }
