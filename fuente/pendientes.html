@@ -126,6 +126,44 @@ a{color:var(--jacaranda-hondo)}
         <article class="pend pend--bloquea">
           <span class="pend__marca"></span>
           <div>
+            <h3>La grafía de los nombres de los créditos</h3>
+            <p>El 11 de septiembre de 2026 los créditos pasaron a llevar nombre propio: <b>Jorge Liber Saltijeral Giles</b>, <b>Manuel de Jesús Villegas López</b>, <b>Janelle Sacnité Chávez Barrera</b> y <b>Cristian Ramos Mendoza</b>. Van a una página pública y no se verificaron contra ninguna fuente oficial.</p>
+            <p style="margin-top:9px">Dos dudas concretas: si <b>Sacnité</b> lleva tilde y si <b>Cristian</b> se escribe con <i>h</i>. Un nombre mal escrito en un crédito público no es una errata: es un desaire.</p>
+            <div class="arreglo">
+              <b>Cómo se cierra</b>
+              <ol>
+                <li>Cotejar las cuatro grafías —y los cargos— contra nómina o contra la firma de cada quien.</li>
+                <li>Corregir en <code>fuente/recursos-cuerpo.html</code>, bloque <code>#creditos</code>.</li>
+                <li>Volver a armar: <code>fuente/construir/construir.sh produccion</code>.</li>
+              </ol>
+            </div>
+            <cite>Mientras no se coteje, el sitio publica cuatro nombres que nadie confirmó.</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
+            <h3>Las suites no corrieron sobre este cambio</h3>
+            <p>El cambio de créditos del 11 de septiembre de 2026 se editó en <code>fuente/</code> y se armó <b>solo</b> <code>docs/recursos.html</code>, con el recibo actualizado en la huella de <code>recursos-cuerpo.html</code>. La portada y las fichas no se volvieron a armar: no dependen de ese archivo.</p>
+            <p style="margin-top:9px">Lo que <b>no</b> ocurrió: <code>fuente/verificar/verificar.sh</code> no se ejecutó. Las suites leen <code>prueba/</code>, y la vista previa quedó con los créditos viejos.</p>
+            <div class="arreglo">
+              <b>Cómo se cierra</b>
+              <ol>
+                <li><code>fuente/construir/construir.sh</code> — regenera la vista previa.</li>
+                <li><code>fuente/verificar/verificar.sh</code> — las doce suites, en verde, antes de dar el cambio por bueno.</li>
+                <li>Si la suite de deriva marca rojo, <code>fuente/construir/construir.sh produccion</code> y se rearma todo con un identificador de corrida limpio.</li>
+              </ol>
+            </div>
+            <cite>Ninguna suite afirma nada sobre el bloque de créditos, así que no se esperan rojos por este cambio. Pero «no se esperan» no es «se comprobó».</cite>
+          </div>
+          <span class="pend__quien" data-q="tu">Tú</span>
+        </article>
+
+        <article class="pend pend--bloquea">
+          <span class="pend__marca"></span>
+          <div>
             <h3>La definición de la categoría HISTÓRICO</h3>
             <p>Las cuatro definiciones formales ya están montadas en la portada, plegadas bajo «El criterio completo» de cada tarjeta. <b>Falta la de HISTÓRICO</b>: la que llegó era, palabra por palabra, la de CENTENARIO. El archivo del 23 de agosto vuelve a traerla igual —se comparó carácter por carácter: la única diferencia entre las dos es el nombre de la categoría—, así que el error sigue en el origen y no se corrigió al recapturar.</p>
             <p style="margin-top:9px">Ya está decidido que el umbral de ochenta años pertenece a CENTENARIO. Eso significa que HISTÓRICO <b>necesita una redacción nueva desde cero</b>, no un ajuste: su criterio no puede ser la edad, porque la edad ya es de la otra categoría.</p>
