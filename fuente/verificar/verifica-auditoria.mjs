@@ -472,10 +472,26 @@ console.log('\n══ «QUÉ SIGNIFICA» · protección sin cerrarle la puerta a
        con él la frase que esta comprobación buscaba. La exigencia se quedó
        dicha en la entrada de la sección jurídica —«sin autorización previa y
        sin dictamen técnico»— que es donde vive la norma que la sostiene. */
-    t(nom+' · la portada sigue exigiendo autorización y dictamen, con su norma',
-      /sin autorización previa y sin dictamen técnico/.test(s)
+    /* CAMBIÓ EL CRITERIO el 23 de septiembre de 2026, con la reforma a la Ley
+       Ambiental publicada el 20 de agosto de 2026 (Gaceta núm. 1929 Bis). Ya
+       no basta con «autorización previa y dictamen técnico»: el derribo y el
+       trasplante del arbolado patrimonial no proceden, y la poda solo cabe
+       como intervención de manejo. La entrada jurídica lo dice así, y la
+       tarjeta del artículo 34 lo sostiene con su norma. Lo que se comprueba:
+       que la portada afirme la prohibición con su fecha, que siga exigiendo
+       dictamen técnico para la poda, y que la norma anterior (7.5) no se haya
+       retirado, porque la reforma no la deroga. */
+    t(nom+' · la portada afirma la prohibición de derribo y trasplante, con su fecha y su dictamen',
+      /la ley prohíbe derribar o trasplantar cualquiera de estos ejemplares/.test(s)
+      && /20 de agosto de 2026/.test(s)
+      && /con dictamen técnico/.test(s)
       && /NADF-001-RNAT-2015/.test(s)
       && !/dictamen técnico de la Secretaría del Medio Ambiente, que lo resuelve/.test(s));
+    t(nom+' · la reforma de 2026 vive en la sección jurídica, en sus dos artículos',
+      /Ley Ambiental de la Ciudad de México · artículo 34 · reforma del 20 de agosto de 2026/.test(s)
+      && /no puede ser objeto de derribo ni de trasplante/.test(s)
+      && /Ley Ambiental de la Ciudad de México · artículo 105, segundo párrafo/.test(s)
+      && /debe adaptarse para coexistir con él, sin excepción/.test(s));
     t(nom+' · la restricción vive en la sección jurídica, con su numeral',
       s.indexOf('NADF-001-RNAT-2015 · numeral 7.5')>0
       && /No son susceptibles de ser derribados a cambio de una restitución/.test(s)

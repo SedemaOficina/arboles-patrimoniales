@@ -259,7 +259,7 @@ class Component extends DCLogic {
       entradaPortada: "Los árboles patrimoniales de la Ciudad de México están declarados patrimonio vivo. Llevan aquí más tiempo que las calles que los rodean.",
       ctaPadron: "Conoce el listado",
       tituloPadron: "Los árboles patrimoniales",
-      entradaServicios: "Cada año, los árboles patrimoniales retienen carbono, interceptan lluvia, evitan que el agua corra por el asfalto y limpian el aire. Las cifras se calculan con i-Tree, la herramienta del Servicio Forestal de Estados Unidos, a partir de las medidas tomadas en campo de cada ejemplar.",
+      entradaServicios: "Cada año, los árboles patrimoniales retienen carbono, interceptan lluvia, evitan que el agua corra por el asfalto y limpian el aire. Las cifras se calculan con i-Tree, la herramienta del Servicio Forestal de Estados Unidos, ajustada a las condiciones de México, a partir de los datos dendrométricos tomados en campo de cada ejemplar.",
       enlaceMetodologia: "__RECURSOS__#metodologia",
       hayGuiaMapa: d.filter((x) => x.coords).length !== n,
       guiaMapa: (() => {

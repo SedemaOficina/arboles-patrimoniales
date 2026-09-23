@@ -6,6 +6,23 @@ class Component extends DCLogic {
 
   ALTURA_PERSONA = 1.70;
 
+  /* Espejo de nombreComunLegible() de especies.js: mayúscula inicial y el
+     resto en minúsculas, salvo topónimos («Laurel de la India»). 23-sep-2026. */
+  PROPIOS_EN_NOMBRES = new Set(["india", "indias", "méxico", "mexico", "china", "japón", "japon", "australia",
+    "brasil", "canadá", "canada", "chile", "perú", "peru", "américa", "america", "europa", "ceilán", "ceilan",
+    "persia", "judea", "guinea", "madagascar", "manila", "filipinas", "bengala", "nueva", "zelanda", "california",
+    "texas", "chiapas", "oaxaca", "veracruz", "sonora", "michoacán", "michoacan", "tabasco", "yucatán", "yucatan",
+    "colima", "moctezuma", "montezuma", "santa", "san"]);
+  nombreComunLegible(nombre) {
+    const s = String(nombre || "").trim().replace(/\s+/g, " ");
+    if (!s) return "";
+    return s.toLowerCase().split(" ").map((palabra, i) => {
+      const base = palabra.replace(/^[(«"']+/, "");
+      const inicial = i === 0 || this.PROPIOS_EN_NOMBRES.has(base);
+      return inicial ? palabra.replace(base.charAt(0), base.charAt(0).toUpperCase()) : palabra;
+    }).join(" ");
+  }
+
   /* Clave del API de Google Maps Embed. Con clave se usa el servicio oficial;
      sin ella, el sitio recurre al incrustado público de Street View. */
   CLAVE_MAPS = "";
@@ -205,11 +222,11 @@ class Component extends DCLogic {
     // --- medidas ---
     const medidas = [
       ["Altura total", e.morfologia.altura_m, "m"],
-      ["Diámetro del tronco (DAP)", e.morfologia.diametro_cm, "cm"],
+      ["Diámetro normal (DN)", e.morfologia.diametro_cm, "cm"],
       ["Circunferencia del tronco", e.morfologia.circunferencia_cm, "cm"],
-      ["Ancho de copa, eje mayor", e.morfologia.anchoCopa_m, "m"],
-      ["Largo de copa, eje menor", e.morfologia.largoCopa_m, "m"],
-      ["Extensión promedio de copa", e.morfologia.extensionCopa_m, "m"],
+      ["Ancho de copa", e.morfologia.anchoCopa_m, "m"],
+      ["Largo de copa", e.morfologia.largoCopa_m, "m"],
+      ["Diámetro promedio de copa", e.morfologia.extensionCopa_m, "m"],
     ].map(([texto, v, unidad]) => {
       const val = this.nf(v, 1);
       return { texto, valor: val || "Sin medir", unidad: val ? unidad : "", clase: "medida" + (val ? "" : " medida--vacia") };
@@ -335,7 +352,7 @@ class Component extends DCLogic {
       nombre: e.nombreAsignado || "Ejemplar sin nombre asignado",
       binomio: e.especie || "Especie por determinar",
       hayComun: !!e.nombreComun,
-      comun: e.nombreComun ? e.nombreComun.toLowerCase() : "",
+      comun: e.nombreComun ? this.nombreComunLegible(e.nombreComun) : "",
       etiquetas, resumen,
       notaCategoria, hayNotaCategoria: Boolean(notaCategoria),
       hayAltura: alt != null,

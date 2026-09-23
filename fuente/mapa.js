@@ -8,6 +8,7 @@
 
 import { GEO_CDMX } from "./geo-cdmx.js";
 import { montarPrimeraFoto, fotoConocida } from "./fotos.js";
+import { nombreComunLegible } from "./especies.js";
 
 /**
  * Cartografía base.
@@ -422,9 +423,25 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
       + `<b class="mapa-aviso__nombre">${esc(cerca.e.nombreAsignado || "Sin nombre asignado")}</b>`
       + `<span class="mapa-aviso__pie">a <b>${esc(formatoDistancia(cerca.d))}</b> de tu ubicación aproximada</span>`);
     // El resultado también se marca en el listado: antes el renglón del
-    // ejemplar encontrado se veía igual que los otros doce.
-    seleccionar(cerca.e.slug, false);
+    // ejemplar encontrado se veía igual que los otros doce. Se marca ANTES de
+    // seleccionar: seleccionar() olvida el resultado anterior cuando el
+    // ejemplar elegido es otro, y aquí el elegido es justo el resultado.
     marcarResultado(cerca.e.slug);
+    seleccionar(cerca.e.slug, false);
+  }
+
+  /** La respuesta a «¿cuál es mi árbol más cercano?» deja de tener sentido en
+   *  cuanto la persona elige otro ejemplar: el recuadro seguía flotando sobre
+   *  el mapa y el listado mostraba dos renglones resaltados, el del resultado
+   *  y el del elegido (observación del área técnica, 23 de septiembre de
+   *  2026). Se retira el recuadro, la marca del renglón y el halo del pin; el
+   *  punto de la persona se queda, y el botón ◎ vuelve a responder si se
+   *  vuelve a preguntar. */
+  function olvidarResultado() {
+    if (!slugResultado) return;
+    slugResultado = null;
+    avisar("");
+    pintarPinResultado();
   }
 
   /**
@@ -766,6 +783,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
     estado.activo = estado.activo === slug && !centrar ? null : slug;
     if (!estado.activo) { marcadores.forEach((m) => { const el = m.getElement(); const pin = el && el.querySelector(".pin"); if (pin) pin.classList.remove("pin--activo"); }); pintarLista(); return; }
     slug = estado.activo;
+    if (slugResultado && slug !== slugResultado) olvidarResultado();
     marcadores.forEach((m, s) => {
       const el = m.getElement();
       const pin = el && el.querySelector(".pin");
@@ -791,7 +809,7 @@ export function crearMapa({ contenedor, lista, filtros, ejemplares, alSelecciona
        enlaces con filtro en la dirección no se rompen. */
     const comunDe = {};
     for (const e of ejemplares) if (e.especie && e.nombreComun && !comunDe[e.especie]) comunDe[e.especie] = e.nombreComun;
-    const rotuloEspecie = (cient) => comunDe[cient] ? `${comunDe[cient]} (${cient})` : cient;
+    const rotuloEspecie = (cient) => comunDe[cient] ? `${nombreComunLegible(comunDe[cient])} (${cient})` : cient;
     const sel = (id, etiqueta, ops, rotulo = (o) => o) =>
       `<select data-filtro="${id}" aria-label="${etiqueta}"><option value="">${etiqueta}</option>${
         ops.map((o) => `<option value="${esc(o)}">${esc(rotulo(o))}</option>`).join("")}</select>`;

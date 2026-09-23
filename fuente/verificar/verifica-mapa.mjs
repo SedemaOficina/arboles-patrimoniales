@@ -543,5 +543,21 @@ t('mapa.js · el control dice «Ver todos», sin la cuenta',
 t('mapa.js · la cuenta sigue viva en el título, que es donde ayuda',
   /b\.title = `Ver los \$\{conCoords\.length\} ejemplares/.test(src));
 
+console.log('\n══ EL MÁS CERCANO SE OLVIDA AL ELEGIR OTRO ══');
+/* Observación del área técnica, 23 de septiembre de 2026: tras pulsar ◎, el
+   recuadro «Tu árbol patrimonial más cercano» seguía flotando y el listado
+   mostraba dos renglones resaltados al elegir cualquier otro ejemplar. */
+{
+  const m = fs.readFileSync('mapa.js','utf8');
+  t('mapa.js · existe olvidarResultado y retira recuadro, marca y halo',
+    /function olvidarResultado\(\)\s*\{[^]*?slugResultado = null;[^]*?avisar\(""\);[^]*?pintarPinResultado\(\);/.test(m));
+  t('mapa.js · seleccionar otro ejemplar olvida el resultado',
+    /if \(slugResultado && slug !== slugResultado\) olvidarResultado\(\);/.test(m));
+  t('mapa.js · al ubicarse, el resultado se marca antes de seleccionarlo',
+    /marcarResultado\(cerca\.e\.slug\);\s*\n\s*seleccionar\(cerca\.e\.slug, false\);/.test(m));
+  t('mapa.js · avisar("") oculta el recuadro',
+    /caja\.hidden = !html;/.test(m));
+}
+
 console.log('\nTOTAL:',ok,'aprobadas ·',mal,'fallidas');
 if(mal) process.exitCode=1;

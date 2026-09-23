@@ -2174,6 +2174,24 @@ function ilustracionDe(especie) {
   return ILUSTRACIONES[perfilDe(especie).clave] || null;
 }
 
+const PROPIOS_EN_NOMBRES = new Set([
+  "india", "indias", "méxico", "mexico", "china", "japón", "japon", "australia",
+  "brasil", "canadá", "canada", "chile", "perú", "peru", "américa", "america",
+  "europa", "ceilán", "ceilan", "persia", "judea", "guinea", "madagascar",
+  "manila", "filipinas", "bengala", "nueva", "zelanda", "california", "texas",
+  "chiapas", "oaxaca", "veracruz", "sonora", "michoacán", "michoacan", "tabasco",
+  "yucatán", "yucatan", "colima", "moctezuma", "montezuma", "santa", "san",
+]);
+function nombreComunLegible(nombre) {
+  const s = String(nombre || "").trim().replace(/\s+/g, " ");
+  if (!s) return "";
+  return s.toLowerCase().split(" ").map((palabra, i) => {
+    const base = palabra.replace(/^[(«"']+/, "");
+    const inicial = i === 0 || PROPIOS_EN_NOMBRES.has(base);
+    return inicial ? palabra.replace(base.charAt(0), base.charAt(0).toUpperCase()) : palabra;
+  }).join(" ");
+}
+
 function perfilDe(especie) {
   const k = String(especie || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
   return PERFILES[k] || PERFIL_GENERICO;
@@ -2265,7 +2283,7 @@ function svgSilueta(especie, alturaPx, copaReal, alturaReal, opciones = {}) {
   </svg>`;
 }
 
-window.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.siluetaPlana=siluetaPlana;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.PERSONA=PERSONA;window.srcsetIlustracion=srcsetIlustracion;
+window.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.siluetaPlana=siluetaPlana;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.PERSONA=PERSONA;window.srcsetIlustracion=srcsetIlustracion;window.nombreComunLegible=nombreComunLegible;
 })();
 ;(function(){
 
@@ -3546,7 +3564,7 @@ function pintarEncabezado(e) {
   document.getElementById("fBinomio").textContent = e.especie || "Especie por determinar";
 
   document.getElementById("fComun").innerHTML = e.nombreComun
-    ? `<span>Nombre común</span> ${esc(e.nombreComun.toLowerCase())}` : "";
+    ? `<span>Nombre común</span> ${esc(nombreComunLegible(e.nombreComun))}` : "";
   const cajaEt = document.getElementById("fEtiquetas");
   if (e.categorias.length) {
     cajaEt.className = "etiquetas";
@@ -3746,11 +3764,11 @@ function pintarEscala(e) {
 
   const medidas = [
     ["Altura total", e.morfologia.altura_m, "m", 1],
-    ["Diámetro del tronco (DAP)", e.morfologia.diametro_cm, "cm", 1],
+    ["Diámetro normal (DN)", e.morfologia.diametro_cm, "cm", 1],
     ["Circunferencia del tronco", e.morfologia.circunferencia_cm, "cm", 1],
-    ["Ancho de copa, eje mayor", e.morfologia.anchoCopa_m, "m", 1],
-    ["Largo de copa, eje menor", e.morfologia.largoCopa_m, "m", 1],
-    ["Extensión promedio de copa", e.morfologia.extensionCopa_m, "m", 1],
+    ["Ancho de copa", e.morfologia.anchoCopa_m, "m", 1],
+    ["Largo de copa", e.morfologia.largoCopa_m, "m", 1],
+    ["Diámetro promedio de copa", e.morfologia.extensionCopa_m, "m", 1],
   ];
 
   const permanencia = [
@@ -3987,7 +4005,7 @@ function pintarTaxonomia(e) {
 
   const autoridad = t.autor ? ` · ${esc(t.autor)}` : "";
   escalones.push(`<li class="cascada__hoja" style="--peldano:${peldanos.length}">
-    <em>${esc(e.nombreComun ? e.nombreComun.toLowerCase() : e.especie)}</em>
+    <em>${esc(e.nombreComun ? nombreComunLegible(e.nombreComun) : e.especie)}</em>
     <small><i>${esc(e.especie)}</i>${autoridad}</small></li>`);
 
   document.getElementById("fTaxonomia").innerHTML = escalones.join("");

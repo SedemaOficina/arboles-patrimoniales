@@ -148,6 +148,36 @@ export function ilustracionDe(especie) {
 }
 
 /** Devuelve el perfil de la especie; si no está catalogada, uno genérico. */
+/**
+ * nombreComunLegible · «Fresno mexicano», no «fresno mexicano» ni «Fresno Mexicano».
+ *
+ * 23 de septiembre de 2026: el área técnica pidió que el nombre común empiece
+ * con mayúscula en todas las fichas. El padrón lo captura en mayúsculas de
+ * título («Fresno Mexicano») y la ficha lo bajaba entero a minúsculas; ninguna
+ * de las dos es la forma correcta en español, que es la de frase. Un nombre
+ * común no es un nombre propio, así que solo la primera letra va en mayúscula…
+ * salvo los topónimos y gentilicios que sí la llevan («Laurel de la India»).
+ * Esa lista es corta a propósito: son los que aparecen en nombres comunes de
+ * árboles; una palabra que no esté aquí se escribe en minúscula.
+ */
+const PROPIOS_EN_NOMBRES = new Set([
+  "india", "indias", "méxico", "mexico", "china", "japón", "japon", "australia",
+  "brasil", "canadá", "canada", "chile", "perú", "peru", "américa", "america",
+  "europa", "ceilán", "ceilan", "persia", "judea", "guinea", "madagascar",
+  "manila", "filipinas", "bengala", "nueva", "zelanda", "california", "texas",
+  "chiapas", "oaxaca", "veracruz", "sonora", "michoacán", "michoacan", "tabasco",
+  "yucatán", "yucatan", "colima", "moctezuma", "montezuma", "santa", "san",
+]);
+export function nombreComunLegible(nombre) {
+  const s = String(nombre || "").trim().replace(/\s+/g, " ");
+  if (!s) return "";
+  return s.toLowerCase().split(" ").map((palabra, i) => {
+    const base = palabra.replace(/^[(«"']+/, "");
+    const inicial = i === 0 || PROPIOS_EN_NOMBRES.has(base);
+    return inicial ? palabra.replace(base.charAt(0), base.charAt(0).toUpperCase()) : palabra;
+  }).join(" ");
+}
+
 export function perfilDe(especie) {
   const k = String(especie || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
   return PERFILES[k] || PERFIL_GENERICO;

@@ -1,4 +1,4 @@
-import { svgSilueta, svgPersona, perfilDe, ilustracionDe, PROPORCION_ILUSTRACION, PERSONA, srcsetIlustracion } from "./especies.js";
+import { svgSilueta, svgPersona, perfilDe, ilustracionDe, PROPORCION_ILUSTRACION, PERSONA, srcsetIlustracion, nombreComunLegible } from "./especies.js";
 import { cuandoSeAcerque } from "./leaflet-diferido.js";
 import { GEO_CDMX } from "./geo-cdmx.js";
 import { descubrirFotos } from "./fotos.js";
@@ -69,9 +69,11 @@ function pintarEncabezado(e) {
   document.getElementById("fNombre").textContent = e.nombreAsignado || "Ejemplar sin nombre asignado";
   document.getElementById("fBinomio").textContent = e.especie || "Especie por determinar";
   // «Conocido como ahuehuete» se leía como una frase; el registro tiene un
-  // campo llamado nombre común y así se nombra.
+  // campo llamado nombre común y así se nombra. 23 de septiembre de 2026: con
+  // mayúscula inicial («Fresno mexicano»), a petición del área técnica; antes
+  // se bajaba entero a minúsculas.
   document.getElementById("fComun").innerHTML = e.nombreComun
-    ? `<span>Nombre común</span> ${esc(e.nombreComun.toLowerCase())}` : "";
+    ? `<span>Nombre común</span> ${esc(nombreComunLegible(e.nombreComun))}` : "";
   const cajaEt = document.getElementById("fEtiquetas");
   if (e.categorias.length) {
     cajaEt.className = "etiquetas";
@@ -334,13 +336,19 @@ function pintarEscala(e) {
     anotarCotas(lienzo, { alt, copa, dap: e.morfologia.diametro_cm, px, conIlustracion: !!ilu });
   }
 
+  /* Rótulos de las medidas, 23 de septiembre de 2026, a petición del área
+     técnica: «Diámetro normal (DN)» es el término forestal mexicano para el
+     diámetro del tronco a 1.30 m (lo que el sitio llamaba DAP); los ejes de la
+     copa se nombran sin «mayor/menor», y la media de ambos es un diámetro,
+     no una «extensión». Los campos del padrón y de los datos abiertos no
+     cambian de nombre: solo lo que lee la persona. */
   const medidas = [
     ["Altura total", e.morfologia.altura_m, "m", 1],
-    ["Diámetro del tronco (DAP)", e.morfologia.diametro_cm, "cm", 1],
+    ["Diámetro normal (DN)", e.morfologia.diametro_cm, "cm", 1],
     ["Circunferencia del tronco", e.morfologia.circunferencia_cm, "cm", 1],
-    ["Ancho de copa, eje mayor", e.morfologia.anchoCopa_m, "m", 1],
-    ["Largo de copa, eje menor", e.morfologia.largoCopa_m, "m", 1],
-    ["Extensión promedio de copa", e.morfologia.extensionCopa_m, "m", 1],
+    ["Ancho de copa", e.morfologia.anchoCopa_m, "m", 1],
+    ["Largo de copa", e.morfologia.largoCopa_m, "m", 1],
+    ["Diámetro promedio de copa", e.morfologia.extensionCopa_m, "m", 1],
   ];
   // Expectativa de vida y categoría UICN son texto, no medida: cierran la tabla
   // como dos filas de permanencia, con separación visual respecto a las métricas.
@@ -675,7 +683,7 @@ function pintarTaxonomia(e) {
   // autoridad como su respaldo. Es el único que se destaca.
   const autoridad = t.autor ? ` · ${esc(t.autor)}` : "";
   escalones.push(`<li class="cascada__hoja" style="--peldano:${peldanos.length}">
-    <em>${esc(e.nombreComun ? e.nombreComun.toLowerCase() : e.especie)}</em>
+    <em>${esc(e.nombreComun ? nombreComunLegible(e.nombreComun) : e.especie)}</em>
     <small><i>${esc(e.especie)}</i>${autoridad}</small></li>`);
 
   document.getElementById("fTaxonomia").innerHTML = escalones.join("");

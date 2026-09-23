@@ -652,9 +652,11 @@ function pintarRedaccion() {
   document.getElementById("ctaPadron").textContent = "Conoce el listado";
   document.getElementById("tituloPadron").textContent = "Los árboles patrimoniales";
   // El enlace lleva a la explicación completa de i-Tree, que vive en Recursos:
-  // aquí basta con nombrar la herramienta y ofrecer el camino.
+  // aquí basta con nombrar la herramienta y ofrecer el camino. Redacción del
+  // área técnica, 23 de septiembre de 2026 («ajustada a las condiciones de
+  // México», «datos dendrométricos»).
   document.getElementById("entradaServicios").innerHTML =
-    `Cada año, los árboles patrimoniales retienen carbono, interceptan lluvia, evitan que el agua corra por el asfalto y limpian el aire. Las cifras se calculan con <b>i-Tree</b>, la herramienta del Servicio Forestal de Estados Unidos, a partir de las medidas tomadas en campo de cada ejemplar. <a href="__RECURSOS__#metodologia">Qué es i-Tree y cómo se calculan estas cifras<span aria-hidden="true"> →</span></a>`;
+    `Cada año, los árboles patrimoniales retienen carbono, interceptan lluvia, evitan que el agua corra por el asfalto y limpian el aire. Las cifras se calculan con <b>i-Tree</b>, la herramienta del Servicio Forestal de Estados Unidos, ajustada a las condiciones de México, a partir de los datos dendrométricos tomados en campo de cada ejemplar. <a href="__RECURSOS__#metodologia">Qué es i-Tree y cómo se calculan estas cifras<span aria-hidden="true"> →</span></a>`;
 }
 
 

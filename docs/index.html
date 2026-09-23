@@ -1864,7 +1864,7 @@ body.sin-desplazamiento{overflow:hidden}
     <div class="encabezado">
       <span class="rotulo">Qué significa</span>
       <h2>Por qué un árbol llega a ser patrimonio</h2>
-      <p>Un árbol se declara patrimonial por lo que es y por lo que ha visto: su edad, su tamaño, su especie, su belleza o el papel que juega en la memoria de un barrio. Al entrar a este registro deja de ser un árbol más de la calle. Debajo están las cuatro categorías que usan esas razones para nombrar su valor.</p>
+      <p>Un árbol se declara patrimonial por lo que es y por lo que ha visto: su edad, su tamaño, su especie, su belleza o el papel que desempeña en la memoria de un barrio, pueblo o colonia. Al entrar en este registro deja de ser un árbol más de la calle. Debajo están las cuatro categorías que usan esas razones para nombrar su valor.</p>
     </div>
     <div class="categorias" id="categorias"></div>
   </div>
@@ -1994,7 +1994,7 @@ body.sin-desplazamiento{overflow:hidden}
     <div class="encabezado">
       <span class="rotulo">Cómo se protegen</span>
       <h2>Lo que dice la ley</h2>
-      <p>La declaratoria patrimonial no es un reconocimiento honorífico: es un acto jurídico que cambia lo que se puede hacer con el árbol. Aquí está de dónde viene esa protección y qué implica; ninguno de estos ejemplares puede podarse, derribarse ni trasplantarse sin autorización previa y sin dictamen técnico.</p>
+      <p>La declaratoria patrimonial no es un reconocimiento honorífico: es un acto jurídico que cambia lo que se puede hacer con el árbol. Aquí está de dónde viene esa protección y qué implica: desde el 20 de agosto de 2026 la ley prohíbe derribar o trasplantar cualquiera de estos ejemplares, y su poda solo procede como intervención de manejo, con dictamen técnico y conforme a su programa de manejo.</p>
     </div>
 
     <span class="rotulo rotulo--grupo">De dónde viene la protección</span>
@@ -2015,6 +2015,19 @@ body.sin-desplazamiento{overflow:hidden}
 
     <span class="rotulo rotulo--grupo">Qué implica para el árbol y para ti</span>
     <div class="normas">
+      <!-- 23 de septiembre de 2026: reforma a la Ley Ambiental publicada en la
+           Gaceta Oficial núm. 1929 Bis el 20 de agosto de 2026; textos
+           transcritos por el área técnica de la Secretaría. Va primero porque es
+           la regla más fuerte: ya no es que la autoridad «niegue» el derribo,
+           es que el derribo y el trasplante no proceden. -->
+      <div class="norma">
+        <span class="rotulo">Ley Ambiental de la Ciudad de México · artículo 34 · reforma del 20 de agosto de 2026</span>
+        <p>El arbolado declarado patrimonio natural de la Ciudad de México <strong>no puede ser objeto de derribo ni de trasplante</strong>. Solo proceden las intervenciones de manejo, la limpieza de copa y las correctivas, conforme al plan de manejo de cada ejemplar. La Secretaría niega el derribo o trasplante de los árboles declarados patrimonio, con la única excepción de los ejemplares de riesgo, plagados o enfermos con un grado de infestación alto.</p>
+      </div>
+      <div class="norma">
+        <span class="rotulo">Ley Ambiental de la Ciudad de México · artículo 105, segundo párrafo · reforma del 20 de agosto de 2026</span>
+        <p>Toda obra pública o privada que pueda afectar arbolado declarado patrimonio natural <strong>debe adaptarse para coexistir con él, sin excepción</strong>. El proyecto se ajusta al árbol, no el árbol al proyecto.</p>
+      </div>
       <div class="norma">
         <span class="rotulo">Ley de Patrimonio Cultural, Natural y Biocultural · artículos 46 y 47</span>
         <p>Toda persona tiene derecho a <strong>identificar, conocer, acceder y disfrutar</strong> el patrimonio de la Ciudad.</p>
@@ -2308,6 +2321,24 @@ function ilustracionDe(especie) {
   return ILUSTRACIONES[perfilDe(especie).clave] || null;
 }
 
+const PROPIOS_EN_NOMBRES = new Set([
+  "india", "indias", "méxico", "mexico", "china", "japón", "japon", "australia",
+  "brasil", "canadá", "canada", "chile", "perú", "peru", "américa", "america",
+  "europa", "ceilán", "ceilan", "persia", "judea", "guinea", "madagascar",
+  "manila", "filipinas", "bengala", "nueva", "zelanda", "california", "texas",
+  "chiapas", "oaxaca", "veracruz", "sonora", "michoacán", "michoacan", "tabasco",
+  "yucatán", "yucatan", "colima", "moctezuma", "montezuma", "santa", "san",
+]);
+function nombreComunLegible(nombre) {
+  const s = String(nombre || "").trim().replace(/\s+/g, " ");
+  if (!s) return "";
+  return s.toLowerCase().split(" ").map((palabra, i) => {
+    const base = palabra.replace(/^[(«"']+/, "");
+    const inicial = i === 0 || PROPIOS_EN_NOMBRES.has(base);
+    return inicial ? palabra.replace(base.charAt(0), base.charAt(0).toUpperCase()) : palabra;
+  }).join(" ");
+}
+
 function perfilDe(especie) {
   const k = String(especie || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
   return PERFILES[k] || PERFIL_GENERICO;
@@ -2399,7 +2430,7 @@ function svgSilueta(especie, alturaPx, copaReal, alturaReal, opciones = {}) {
   </svg>`;
 }
 
-window.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.srcsetIlustracion=srcsetIlustracion;
+window.svgSilueta=svgSilueta;window.svgPersona=svgPersona;window.perfilDe=perfilDe;window.ilustracionDe=ilustracionDe;window.PROPORCION_ILUSTRACION=PROPORCION_ILUSTRACION;window.srcsetIlustracion=srcsetIlustracion;window.nombreComunLegible=nombreComunLegible;
 })();
 ;(function(){
 
@@ -3117,6 +3148,7 @@ const GEO_CDMX = {"type":"FeatureCollection","name":"Perimetro oficial de la Ciu
 
 
 
+
 const TESELAS = "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_32cg_1_639fb69171e990c64b31e73f";
 
 const MASCARA_CDMX = GEO_CDMX;
@@ -3392,8 +3424,15 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
       + `<b class="mapa-aviso__nombre">${esc(cerca.e.nombreAsignado || "Sin nombre asignado")}</b>`
       + `<span class="mapa-aviso__pie">a <b>${esc(formatoDistancia(cerca.d))}</b> de tu ubicación aproximada</span>`);
 
-    seleccionar(cerca.e.slug, false);
     marcarResultado(cerca.e.slug);
+    seleccionar(cerca.e.slug, false);
+  }
+
+  function olvidarResultado() {
+    if (!slugResultado) return;
+    slugResultado = null;
+    avisar("");
+    pintarPinResultado();
   }
 
   function ubicarme(boton) {
@@ -3636,6 +3675,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
     estado.activo = estado.activo === slug && !centrar ? null : slug;
     if (!estado.activo) { marcadores.forEach((m) => { const el = m.getElement(); const pin = el && el.querySelector(".pin"); if (pin) pin.classList.remove("pin--activo"); }); pintarLista(); return; }
     slug = estado.activo;
+    if (slugResultado && slug !== slugResultado) olvidarResultado();
     marcadores.forEach((m, s) => {
       const el = m.getElement();
       const pin = el && el.querySelector(".pin");
@@ -3656,7 +3696,7 @@ function crearMapa({ contenedor, lista, filtros, ejemplares, alSeleccionar, masc
 
     const comunDe = {};
     for (const e of ejemplares) if (e.especie && e.nombreComun && !comunDe[e.especie]) comunDe[e.especie] = e.nombreComun;
-    const rotuloEspecie = (cient) => comunDe[cient] ? `${comunDe[cient]} (${cient})` : cient;
+    const rotuloEspecie = (cient) => comunDe[cient] ? `${nombreComunLegible(comunDe[cient])} (${cient})` : cient;
     const sel = (id, etiqueta, ops, rotulo = (o) => o) =>
       `<select data-filtro="${id}" aria-label="${etiqueta}"><option value="">${etiqueta}</option>${
         ops.map((o) => `<option value="${esc(o)}">${esc(rotulo(o))}</option>`).join("")}</select>`;
@@ -4751,7 +4791,7 @@ function pintarRedaccion() {
   document.getElementById("tituloPadron").textContent = "Los árboles patrimoniales";
 
   document.getElementById("entradaServicios").innerHTML =
-    `Cada año, los árboles patrimoniales retienen carbono, interceptan lluvia, evitan que el agua corra por el asfalto y limpian el aire. Las cifras se calculan con <b>i-Tree</b>, la herramienta del Servicio Forestal de Estados Unidos, a partir de las medidas tomadas en campo de cada ejemplar. <a href="recursos.html#metodologia">Qué es i-Tree y cómo se calculan estas cifras<span aria-hidden="true"> →</span></a>`;
+    `Cada año, los árboles patrimoniales retienen carbono, interceptan lluvia, evitan que el agua corra por el asfalto y limpian el aire. Las cifras se calculan con <b>i-Tree</b>, la herramienta del Servicio Forestal de Estados Unidos, ajustada a las condiciones de México, a partir de los datos dendrométricos tomados en campo de cada ejemplar. <a href="recursos.html#metodologia">Qué es i-Tree y cómo se calculan estas cifras<span aria-hidden="true"> →</span></a>`;
 }
 
 const MENSAJES = [

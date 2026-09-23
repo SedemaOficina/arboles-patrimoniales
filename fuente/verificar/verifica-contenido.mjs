@@ -66,9 +66,18 @@ for(const f of [PRUEBA+'portada-vista-previa.html']){
      documentos de cada ficha, no en la portada. Lo que se exige ahora es
      doble: que la portada no reintroduzca el término suelto y sin fuente, y
      que la ficha conserve el programa de manejo entre sus documentos. */
-  t(f+' · el programa de manejo vive en la ficha, no en la portada',
-    !/plan de manejo/.test(s)
-    && /titulo: "Programa de manejo"/.test(fs.readFileSync('ficha-logica.js','utf8')));
+  /* 23 de septiembre de 2026: la reforma a la Ley Ambiental (artículo 34)
+     habla de «plan de manejo», y la tarjeta que la cita en la portada usa el
+     término de la ley. Es la única excepción: la frase puede aparecer una sola
+     vez, dentro de esa tarjeta, y en el resto de la portada sigue proscrita
+     porque el instrumento del registro se llama programa de manejo. */
+  {
+    const veces = (s.match(/plan de manejo/g) || []).length;
+    const tarjeta = /artículo 34 · reforma del 20 de agosto de 2026<\/span>\s*<p>[^]*?plan de manejo[^]*?<\/p>/.test(s);
+    t(f+' · el programa de manejo vive en la ficha; «plan de manejo» solo donde la ley lo dice',
+      veces === 1 && tarjeta
+      && /titulo: "Programa de manejo"/.test(fs.readFileSync('ficha-logica.js','utf8')));
+  }
   // El bloque de predio privado se retiró por decisión editorial.
   t(f+' · el bloque de predio privado ya no está', !/titularidad del predio/.test(s));
   // Por decisión editorial se retiró el bloque «¿Qué gana el árbol con la
@@ -192,6 +201,36 @@ console.log('\n══ EL EXPEDIENTE NO INVENTA FECHAS ══');
     t(f + ' · no publica «Fecha de nominación»', !/Fecha de nominación/.test(s2));
     t(f + ' · sí publica la del decreto', /Fecha del decreto/.test(s2));
   }
+}
+
+console.log('\n══ OBSERVACIONES DEL ÁREA TÉCNICA · 23 de septiembre de 2026 ══');
+{
+  const fl = fs.readFileSync('ficha-logica.js','utf8'), mf = fs.readFileSync('modelo-ficha.js','utf8');
+  for (const [f, s] of [['ficha-logica.js', fl], ['modelo-ficha.js', mf]]) {
+    t(f + ' · las medidas se rotulan como pidió el área: DN y diámetro de copa',
+      /"Diámetro normal \(DN\)"/.test(s) && /"Ancho de copa"/.test(s) && /"Largo de copa"/.test(s)
+      && /"Diámetro promedio de copa"/.test(s)
+      && !/eje mayor|eje menor|Extensión promedio|\(DAP\)/.test(s.replace(/\/\*[^]*?\*\//g, '')));
+  }
+  const esp = fs.readFileSync('especies.js','utf8');
+  t('especies.js · nombreComunLegible pone mayúscula inicial y respeta topónimos',
+    /export function nombreComunLegible/.test(esp) && /PROPIOS_EN_NOMBRES/.test(esp));
+  t('ficha-logica.js · el nombre común ya no se baja entero a minúsculas',
+    !/nombreComun\.toLowerCase\(\)/.test(fl) && /nombreComunLegible\(e\.nombreComun\)/.test(fl));
+  t('modelo-ficha.js · espeja la misma regla',
+    !/nombreComun\.toLowerCase\(\)/.test(mf) && /this\.nombreComunLegible\(e\.nombreComun\)/.test(mf));
+  t('armar.js y armar-ficha.js publican nombreComunLegible',
+    /'nombreComunLegible'/.test(fs.readFileSync('construir/armar.js','utf8'))
+    && /window\.nombreComunLegible=nombreComunLegible/.test(fs.readFileSync('construir/armar-ficha.js','utf8')));
+  const cu = fs.readFileSync('cuerpo.html','utf8');
+  t('cuerpo.html · la razón patrimonial habla de barrio, pueblo o colonia',
+    /el papel que desempeña en la memoria de un barrio, pueblo o colonia\. Al entrar en este registro/.test(cu));
+  const lg = fs.readFileSync('logica.js','utf8');
+  t('logica.js · i-Tree ajustada a México y datos dendrométricos',
+    /ajustada a las condiciones de México, a partir de los datos dendrométricos tomados en campo/.test(lg)
+    && /ajustada a las condiciones de México, a partir de los datos dendrométricos tomados en campo/.test(fs.readFileSync('modelo-portada.js','utf8')));
+  t('logica.js · HISTÓRICO sigue sin definición formal (la que llegó es la de CENTENARIO)',
+    /HISTORICO:[^]*?definicion: null,/.test(lg));
 }
 
 console.log(`\nTOTAL: ${ok} aprobadas · ${mal} fallidas`);

@@ -144,6 +144,7 @@ const _fotosPrimera = {};
 }
 const mapa=envolver('mapa.js',['crearMapa','filtrar','TAMANO_PIN','TOQUE_PIN'])
   .replace(/^import .*indicadores.js";$/m,'')
+  .replace(/^import .*especies.js";$/m,'')  // nombreComunLegible, desde el 23-sep-2026
   .replace(/^import .*geo-cdmx.js";$/m,()=>geo)
   .replace(/^import .*fotos.js";$/m,'');
 /* EL LECTOR DEL PADRÓN, LA CAPA QUE LO ALIMENTA Y EL CONTRATO RECORTADO.
@@ -162,7 +163,7 @@ const contratoMin = PADRON.contratoMin;
 // deja la página en blanco con un solo error de sintaxis.
 const exigir=(src,marca,archivo)=>{ if(!src.includes(marca)) throw new Error(`armar.js: no encontré «${marca}» en ${archivo}`); return src; };
 const js=exigir(ALIGERAR.aligerarJS(fs.readFileSync('logica.js','utf8')),'export function pintarPortada','logica.js').replace(/^import .*mapa.js";$/m,'').replace('export function pintarPortada','function pintarPortada').replace(/^import .*especies.js";$/m,'').replace(/^import .*fotos.js";$/m,'').replace(/^import .*leaflet-diferido.js";$/m,'');const menu=envolver('menu.js',['activarMenu']);
-const esp=envolver('especies.js',['svgSilueta','svgPersona','perfilDe','ilustracionDe','PROPORCION_ILUSTRACION','srcsetIlustracion']);
+const esp=envolver('especies.js',['svgSilueta','svgPersona','perfilDe','ilustracionDe','PROPORCION_ILUSTRACION','srcsetIlustracion','nombreComunLegible']);
 const datos=fs.readFileSync('datos/registro.json','utf8');
 const html=`<!DOCTYPE html>
 <html lang="es-MX">

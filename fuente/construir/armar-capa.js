@@ -46,8 +46,8 @@ const CAMPOS = [
   { nombre: 'DOMICILIO', largo: 90, tipo: 'C', rotulo: 'Calle y número',               de: (e) => [u(e).calle, u(e).numero].filter(Boolean).join(' ') },
   { nombre: 'TIPO_UBIC', largo: 30, tipo: 'C', rotulo: 'Tipo de ubicación',            de: (e) => u(e).tipo },
   { nombre: 'ALTURA_M',  largo: 8,  tipo: 'N', dec: 1, rotulo: 'Altura en metros',      de: (e) => m(e).altura_m },
-  { nombre: 'DAP_CM',    largo: 9,  tipo: 'N', dec: 1, rotulo: 'Diámetro del tronco en centímetros', de: (e) => m(e).diametro_cm },
-  { nombre: 'COPA_M',    largo: 8,  tipo: 'N', dec: 1, rotulo: 'Extensión promedio de copa en metros', de: (e) => m(e).extensionCopa_m },
+  { nombre: 'DAP_CM',    largo: 9,  tipo: 'N', dec: 1, rotulo: 'Diámetro normal (DN) del tronco en centímetros', de: (e) => m(e).diametro_cm },
+  { nombre: 'COPA_M',    largo: 8,  tipo: 'N', dec: 1, rotulo: 'Diámetro promedio de copa en metros', de: (e) => m(e).extensionCopa_m },
   { nombre: 'EDAD_ANIO', largo: 6,  tipo: 'N', dec: 0, rotulo: 'Edad estimada en años', de: (e) => e.edadEstimada },
   { nombre: 'RIESGO', largo: 40, tipo: 'C', rotulo: 'Categoría de riesgo UICN de la especie', de: (e) => e.conservacion && e.conservacion.iucn },
 ];
