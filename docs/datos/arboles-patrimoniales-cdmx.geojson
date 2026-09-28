@@ -343,6 +343,286 @@
      19.38827
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-TLP-QUE-14751ANGIO-0014",
+    "CONSEC": "0014",
+    "NOMBRE": "Diamante Tepeximilpa",
+    "ESPECIE": "Quercus (Quercus) crassipes",
+    "N_COMUN": "Encino",
+    "CATEGORIA": "CENTENARIO; HISTORICO",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Tlalpan",
+    "COLONIA": "Diamante",
+    "DOMICILIO": "Av. De las Torres S/N",
+    "TIPO_UBIC": "Arriate",
+    "ALTURA_M": 14.6,
+    "DAP_CM": 184.2,
+    "COPA_M": 13.62,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC) (En IUCN Red List 2024-2 como Quercus crassipes.)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.193133,
+     19.270541
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-AZC-TAX-19405GIMNO-0018",
+    "CONSEC": "0018",
+    "NOMBRE": "Los Gemelos de San Álvaro",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Azcapotzalco",
+    "COLONIA": "San Álvaro",
+    "DOMICILIO": "Franklin 4",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 24,
+    "DAP_CM": 149.8,
+    "COPA_M": 17.37,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.180872,
+     19.459573
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-AZC-TAX-19405GIMNO-0019",
+    "CONSEC": "0019",
+    "NOMBRE": "Los Gemelos De San Álvaro",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Azcapotzalco",
+    "COLONIA": "San Álvaro",
+    "DOMICILIO": "Franklin 4",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 24,
+    "DAP_CM": 136,
+    "COPA_M": 18.71,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.180813,
+     19.459657
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-COY-TAX-19405GIMNO-0021",
+    "CONSEC": "0021",
+    "NOMBRE": "Atlahuitl",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Coyoacán",
+    "COLONIA": "Parque San Andrés",
+    "DOMICILIO": "Escocia 62",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 25.2,
+    "DAP_CM": 144.2,
+    "COPA_M": 18.12,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.14739,
+     19.348509
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-BJU-TAX-19405GIMNO-0023",
+    "CONSEC": "0023",
+    "NOMBRE": "Ahuehuetlan",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Benito Juárez",
+    "COLONIA": "Narvarte Oriente",
+    "DOMICILIO": "Caleta S/N",
+    "TIPO_UBIC": "Parque",
+    "ALTURA_M": 27.8,
+    "DAP_CM": 139.9,
+    "COPA_M": 17.93,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.149214,
+     19.400856
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-XOC-TAX-19405GIMNO-0024",
+    "CONSEC": "0024",
+    "NOMBRE": "San Cristóbal Xallan",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "CENTENARIO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Xochimilco",
+    "COLONIA": "San Cristóbal",
+    "DOMICILIO": "Callejon Las Flores S/N",
+    "TIPO_UBIC": "Plaza",
+    "ALTURA_M": 20.4,
+    "DAP_CM": 122.4,
+    "COPA_M": 14.02,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.099054,
+     19.260977
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-XOC-TAX-19405GIMNO-0025",
+    "CONSEC": "0025",
+    "NOMBRE": "Molotla",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Xochimilco",
+    "COLONIA": "San Antonio",
+    "DOMICILIO": "Francisco I. Madero S/N",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 28.8,
+    "DAP_CM": 160,
+    "COPA_M": 15.86,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.106944,
+     19.262091
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-MAC-CUP-19282GIMNO-0026",
+    "CONSEC": "0026",
+    "NOMBRE": "Cedro de Padierna",
+    "ESPECIE": "Cupressus lusitanica",
+    "N_COMUN": "Cedro blanco",
+    "CATEGORIA": "CENTENARIO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "La Magdalena Contreras",
+    "COLONIA": "Tierra Unida",
+    "DOMICILIO": "Andador Principal Manzana 22, Lote 7",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 28.2,
+    "DAP_CM": 227,
+    "COPA_M": 17.41,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.269724,
+     19.303763
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-XOC-TAX-19405GIMNO-0027",
+    "CONSEC": "0027",
+    "NOMBRE": "Tlanahuac",
+    "ESPECIE": "Taxodium mucronatum",
+    "N_COMUN": "Ahuehuete",
+    "CATEGORIA": "HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Xochimilco",
+    "COLONIA": "San Pedro",
+    "DOMICILIO": "Cuitláhuac 8",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 17.65,
+    "DAP_CM": 130.2,
+    "COPA_M": 17.65,
+    "EDAD_ANIO": null,
+    "RIESGO": "Preocupación menor (LC)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.106517,
+     19.257793
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "ID": "26-XOC-OLE-57117ANGIO-0028",
+    "CONSEC": "0028",
+    "NOMBRE": "Teuhtli",
+    "ESPECIE": "Olea europaea",
+    "N_COMUN": "Olivo",
+    "CATEGORIA": "CENTENARIO; HISTORICO; NOTABLE",
+    "F_DECRETO": "2026-09-28",
+    "ALCALDIA": "Xochimilco",
+    "COLONIA": "Guadalupita",
+    "DOMICILIO": "Las Ánimas S/N",
+    "TIPO_UBIC": "Banqueta",
+    "ALTURA_M": 9.5,
+    "DAP_CM": 30.7,
+    "COPA_M": 8.79,
+    "EDAD_ANIO": null,
+    "RIESGO": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.016689,
+     19.255517
+    ]
+   }
   }
  ]
 }

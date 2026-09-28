@@ -74,6 +74,62 @@ export const PERFILES = {
     ramas: [[50,80,22,58],[50,80,78,58],[50,78,50,44]],
     raices: [[28,64,80],[38,68,84],[62,68,84],[72,64,80]],
   },
+
+  /* 28 de septiembre de 2026: el decreto publicado en la Gaceta núm. 1955
+     trajo tres especies que el sitio no conocía. Sus perfiles siguen; sus
+     ilustraciones no existen todavía (ILUSTRACIONES las deja en null), así
+     que mientras tanto se dibujan con la silueta, que ya no es la genérica. */
+
+  /* Quercus crassipes · encino (el padrón lo escribe «Quercus (Quercus)
+     crassipes»; perfilDe descarta el subgénero entre paréntesis).
+     Fuste medio y recto, copa redondeada, amplia y densa. */
+  "quercus crassipes": {
+    clave: "quercus",
+    nombre: "Encino",
+    anchoCopa: 0.98,
+    fusteAlto: 0.3,
+    fusteAncho: 0.1,
+    contrafuerte: 0.2,
+    lobulos: [
+      [50,42,34,28],[28,52,22,20],[72,52,22,20],[40,30,22,18],[60,30,22,18],
+      [50,22,20,14],[50,60,30,18],
+    ],
+    ramas: [[50,70,30,50],[50,70,70,50],[50,68,50,36]],
+    raices: [],
+  },
+
+  /* Cupressus lusitanica · cedro blanco.
+     Fuste recto y grueso; copa cónica a oval, ramas desde abajo, más alta
+     que ancha incluso en ejemplares viejos. */
+  "cupressus lusitanica": {
+    clave: "cupressus",
+    nombre: "Cedro blanco",
+    anchoCopa: 0.62,
+    fusteAlto: 0.16,
+    fusteAncho: 0.09,
+    contrafuerte: 0.18,
+    lobulos: [
+      [50,50,26,36],[50,28,16,20],[50,14,9,11],[36,62,16,16],[64,62,16,16],
+    ],
+    ramas: [[50,84,32,66],[50,84,68,66],[50,80,50,30]],
+    raices: [],
+  },
+
+  /* Olea europaea · olivo.
+     Tronco corto, grueso y retorcido; copa redondeada, irregular y baja. */
+  "olea europaea": {
+    clave: "olea",
+    nombre: "Olivo",
+    anchoCopa: 0.95,
+    fusteAlto: 0.28,
+    fusteAncho: 0.14,
+    contrafuerte: 0.35,
+    lobulos: [
+      [50,44,32,26],[30,54,20,18],[70,54,20,18],[42,32,20,16],[60,32,20,16],[50,60,28,16],
+    ],
+    ramas: [[50,72,32,54],[50,72,68,54],[50,70,50,42]],
+    raices: [],
+  },
 };
 
 /**
@@ -89,6 +145,9 @@ export const ILUSTRACIONES = {
   taxodium: "assets/img/especies/taxodium-media.webp",   // Taxodium mucronatum · ahuehuete
   fraxinus: "assets/img/especies/fraxinus-media.webp",   // Fraxinus uhdei · fresno mexicano
   ficus:    "assets/img/especies/ficus-media.webp",      // Ficus microcarpa · laurel de la India
+  quercus: null,     // pendiente desde el 28-sep-2026: sin ilustración licenciada
+  cupressus: null,   // pendiente desde el 28-sep-2026
+  olea: null,        // pendiente desde el 28-sep-2026
   generico: null,
 };
 
@@ -101,6 +160,9 @@ export const ILUSTRACIONES_2X = {
   taxodium: "assets/img/especies/taxodium-grande.webp",
   fraxinus: "assets/img/especies/fraxinus-grande.webp",
   ficus:    "assets/img/especies/ficus-grande.webp",
+  quercus: null,
+  cupressus: null,
+  olea: null,
   generico: null,
 };
 
@@ -179,7 +241,10 @@ export function nombreComunLegible(nombre) {
 }
 
 export function perfilDe(especie) {
-  const k = String(especie || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+  // «Quercus (Quercus) crassipes»: el subgénero entre paréntesis es parte del
+  // binomio formal, no de la llave del perfil. 28-sep-2026.
+  const k = String(especie || "").normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/\s*\([^)]*\)\s*/g, " ").replace(/\s+/g, " ").toLowerCase().trim();
   return PERFILES[k] || PERFIL_GENERICO;
 }
 
@@ -261,6 +326,15 @@ export const CONTORNOS = {
     "M50 14 C62 14 72 18 78 25 C88 25 96 31 97 39 C102 44 101 52 95 56 C96 63 90 69 82 68 " +
     "C77 73 68 75 60 73 C56 76 44 76 40 73 C32 75 23 73 18 68 C10 69 4 63 5 56 " +
     "C-1 52 -2 44 3 39 C4 31 12 25 22 25 C28 18 38 14 50 14 Z",
+  quercus:
+    "M50 8 C61 8 70 12 75 19 C84 22 89 30 87 38 C93 44 92 54 85 59 C82 66 74 71 65 70 " +
+    "C60 74 40 74 35 70 C26 71 18 66 15 59 C8 54 7 44 13 38 C11 30 16 22 25 19 C30 12 39 8 50 8 Z",
+  cupressus:
+    "M50 3 C54 3 57 8 59 15 C64 20 67 28 68 37 C72 44 73 53 72 61 C74 67 71 73 65 74 " +
+    "C60 77 40 77 35 74 C29 73 26 67 28 61 C27 53 28 44 32 37 C33 28 36 20 41 15 C43 8 46 3 50 3 Z",
+  olea:
+    "M50 14 C60 13 69 17 74 24 C82 26 88 33 86 41 C92 47 90 56 83 60 C81 66 74 70 66 69 " +
+    "C60 73 40 73 34 69 C26 70 19 66 17 60 C10 56 8 47 14 41 C12 33 18 26 26 24 C31 17 40 13 50 14 Z",
   generico:
     "M50 8 C60 8 69 13 73 21 C81 25 84 34 81 42 C84 50 80 59 72 62 C68 69 59 72 50 70 " +
     "C41 72 32 69 28 62 C20 59 16 50 19 42 C16 34 19 25 27 21 C31 13 40 8 50 8 Z",

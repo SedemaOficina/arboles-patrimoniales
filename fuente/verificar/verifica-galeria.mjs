@@ -182,8 +182,11 @@ console.log('\n══ FOTOGRAFÍAS MONTADAS ══');
      —las de los ejemplares publicados MÁS las de los que están en espera—,
      que es lo que protege contra un borrado accidental. Si sube o baja, es
      porque alguien subió o quitó archivos, y eso tiene que verse: por eso el
-     número se escribe a mano y se actualiza a mano. */
-  t('Hay 89 fotografías montadas', grandes === 89, String(grandes));
+     número se escribe a mano y se actualiza a mano.
+     151 desde el 28 de septiembre de 2026: entraron las 62 de los diez
+     ejemplares del decreto de la Gaceta 1955 (7+5+6+6+9+7+5+6+5+6), bajadas de
+     las carpetas de Drive que el padrón enlaza en cada ejemplar. */
+  t('Hay 151 fotografías montadas', grandes === 151, String(grandes));
 
   const ft = fs.readFileSync('fotos.js','utf8');
   t('fotos.js sabe construir la ruta de una miniatura', /export const rutaMiniatura/.test(ft) && /export const miniaturaDe/.test(ft));

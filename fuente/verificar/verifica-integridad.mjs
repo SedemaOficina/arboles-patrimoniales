@@ -133,10 +133,22 @@ console.log('\n══ LAS ILUSTRACIONES DE ESPECIE ══');
 const DIRE = 'assets/img/especies';
 const ils = hay(DIRE) ? fs.readdirSync(DIRE) : [];
 const generos = [...new Set(E.map((e) => String(e.especie || '').split(' ')[0].toLowerCase()).filter(Boolean))];
+/* 28 de septiembre de 2026: el decreto de la Gaceta 1955 trajo tres especies
+   sin ilustración (encino, cedro blanco, olivo) y la biblioteca del área no
+   las tiene. Mientras llegan, la ficha usa la silueta propia de la especie
+   (especies.js las dibuja desde ese día), así que la falta no deja la ficha
+   sin imagen. Un género puede declararse en espera en datos/en-espera.json
+   («ilustraciones», con fecha y motivo); lo que se sigue exigiendo es que la
+   espera esté declarada y que no se quede declarada una vez que llegue. */
+const IL_EN_ESPERA = new Map(((JSON.parse(fs.readFileSync('datos/en-espera.json', 'utf8')).ilustraciones) || []).map((i) => [String(i.genero).toLowerCase(), i]));
 const faltanIl = [];
 for (const g of generos) for (const tam of ['grande', 'media'])
-  if (!ils.some((n) => n.toLowerCase().startsWith(g + '-' + tam))) faltanIl.push(g + '-' + tam);
-t('Cada especie del registro tiene sus dos ilustraciones', faltanIl.length === 0, faltanIl.join(', '));
+  if (!ils.some((n) => n.toLowerCase().startsWith(g + '-' + tam)) && !IL_EN_ESPERA.has(g)) faltanIl.push(g + '-' + tam);
+t('Cada especie del registro tiene sus dos ilustraciones o está declarada en espera', faltanIl.length === 0, faltanIl.join(', '));
+const esperaMal = [...IL_EN_ESPERA.values()].filter((i) => !i.desde || !i.motivo).map((i) => i.genero);
+t('Cada ilustración en espera lleva fecha y motivo', esperaMal.length === 0, esperaMal.join(', '));
+const esperaVencida = [...IL_EN_ESPERA.keys()].filter((g) => ils.some((n) => n.toLowerCase().startsWith(g + '-')) || !generos.includes(g));
+t('Ninguna espera de ilustración sobrevive a su llegada (ni a la salida del género)', esperaVencida.length === 0, esperaVencida.join(', '));
 const ilHuerfanas = [...new Set(ils.map((n) => n.split('-')[0].toLowerCase()))].filter((g) => !generos.includes(g));
 t('Ninguna ilustración sobra', ilHuerfanas.length === 0, ilHuerfanas.join(', '));
 

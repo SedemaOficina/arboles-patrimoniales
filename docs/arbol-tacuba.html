@@ -2129,12 +2129,58 @@ const PERFILES = {
     ramas: [[50,80,22,58],[50,80,78,58],[50,78,50,44]],
     raices: [[28,64,80],[38,68,84],[62,68,84],[72,64,80]],
   },
+
+  "quercus crassipes": {
+    clave: "quercus",
+    nombre: "Encino",
+    anchoCopa: 0.98,
+    fusteAlto: 0.3,
+    fusteAncho: 0.1,
+    contrafuerte: 0.2,
+    lobulos: [
+      [50,42,34,28],[28,52,22,20],[72,52,22,20],[40,30,22,18],[60,30,22,18],
+      [50,22,20,14],[50,60,30,18],
+    ],
+    ramas: [[50,70,30,50],[50,70,70,50],[50,68,50,36]],
+    raices: [],
+  },
+
+  "cupressus lusitanica": {
+    clave: "cupressus",
+    nombre: "Cedro blanco",
+    anchoCopa: 0.62,
+    fusteAlto: 0.16,
+    fusteAncho: 0.09,
+    contrafuerte: 0.18,
+    lobulos: [
+      [50,50,26,36],[50,28,16,20],[50,14,9,11],[36,62,16,16],[64,62,16,16],
+    ],
+    ramas: [[50,84,32,66],[50,84,68,66],[50,80,50,30]],
+    raices: [],
+  },
+
+  "olea europaea": {
+    clave: "olea",
+    nombre: "Olivo",
+    anchoCopa: 0.95,
+    fusteAlto: 0.28,
+    fusteAncho: 0.14,
+    contrafuerte: 0.35,
+    lobulos: [
+      [50,44,32,26],[30,54,20,18],[70,54,20,18],[42,32,20,16],[60,32,20,16],[50,60,28,16],
+    ],
+    ramas: [[50,72,32,54],[50,72,68,54],[50,70,50,42]],
+    raices: [],
+  },
 };
 
 const ILUSTRACIONES = {
   taxodium: "assets/img/especies/taxodium-media.webp",
   fraxinus: "assets/img/especies/fraxinus-media.webp",
   ficus:    "assets/img/especies/ficus-media.webp",
+  quercus: null,
+  cupressus: null,
+  olea: null,
   generico: null,
 };
 
@@ -2142,6 +2188,9 @@ const ILUSTRACIONES_2X = {
   taxodium: "assets/img/especies/taxodium-grande.webp",
   fraxinus: "assets/img/especies/fraxinus-grande.webp",
   ficus:    "assets/img/especies/ficus-grande.webp",
+  quercus: null,
+  cupressus: null,
+  olea: null,
   generico: null,
 };
 
@@ -2193,7 +2242,9 @@ function nombreComunLegible(nombre) {
 }
 
 function perfilDe(especie) {
-  const k = String(especie || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+
+  const k = String(especie || "").normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/\s*\([^)]*\)\s*/g, " ").replace(/\s+/g, " ").toLowerCase().trim();
   return PERFILES[k] || PERFIL_GENERICO;
 }
 
@@ -2259,6 +2310,15 @@ const CONTORNOS = {
     "M50 14 C62 14 72 18 78 25 C88 25 96 31 97 39 C102 44 101 52 95 56 C96 63 90 69 82 68 " +
     "C77 73 68 75 60 73 C56 76 44 76 40 73 C32 75 23 73 18 68 C10 69 4 63 5 56 " +
     "C-1 52 -2 44 3 39 C4 31 12 25 22 25 C28 18 38 14 50 14 Z",
+  quercus:
+    "M50 8 C61 8 70 12 75 19 C84 22 89 30 87 38 C93 44 92 54 85 59 C82 66 74 71 65 70 " +
+    "C60 74 40 74 35 70 C26 71 18 66 15 59 C8 54 7 44 13 38 C11 30 16 22 25 19 C30 12 39 8 50 8 Z",
+  cupressus:
+    "M50 3 C54 3 57 8 59 15 C64 20 67 28 68 37 C72 44 73 53 72 61 C74 67 71 73 65 74 " +
+    "C60 77 40 77 35 74 C29 73 26 67 28 61 C27 53 28 44 32 37 C33 28 36 20 41 15 C43 8 46 3 50 3 Z",
+  olea:
+    "M50 14 C60 13 69 17 74 24 C82 26 88 33 86 41 C92 47 90 56 83 60 C81 66 74 70 66 69 " +
+    "C60 73 40 73 34 69 C26 70 19 66 17 60 C10 56 8 47 14 41 C12 33 18 26 26 24 C31 17 40 13 50 14 Z",
   generico:
     "M50 8 C60 8 69 13 73 21 C81 25 84 34 81 42 C84 50 80 59 72 62 C68 69 59 72 50 70 " +
     "C41 72 32 69 28 62 C20 59 16 50 19 42 C16 34 19 25 27 21 C31 13 40 8 50 8 Z",
@@ -3174,10 +3234,16 @@ function construirRegistro(texto, contrato) {
     if (vistos.has(e.id)) avisos.push(`El id ${e.id} viene repetido. El id es la llave: dos ejemplares no pueden compartirlo.`);
     vistos.set(e.id, true);
   });
-  const slugs = new Map();
-  ejemplares.forEach((e) => {
-    if (e.slug && slugs.has(e.slug)) avisos.push(`Dos ejemplares comparten la dirección «${e.slug}»: ${slugs.get(e.slug)} y ${e.id}. La ficha de uno taparía la del otro.`);
-    else if (e.slug) slugs.set(e.slug, e.id);
+
+  const porSlug = new Map();
+  ejemplares.forEach((e) => { if (e.slug) porSlug.set(e.slug, (porSlug.get(e.slug) || []).concat(e)); });
+  porSlug.forEach((grupo, slug) => {
+    if (grupo.length < 2) return;
+    avisos.push(`${grupo.length} ejemplares comparten la dirección «${slug}»: ${grupo.map((e) => e.id).join(", ")}. Se desempató con el número del id; conviene darles nombres distintos en la hoja de captura.`);
+    grupo.forEach((e) => {
+      const sufijo = (String(e.id).match(/(\d{4})$/) || [])[1];
+      if (sufijo) e.slug = `${slug}-${sufijo}`;
+    });
   });
   if (faltantes.length) avisos.push(`La hoja no trae ${faltantes.length} columna(s) del contrato: ${faltantes.join(", ")}.`);
   if (sobrantes.length) avisos.push(`La hoja trae ${sobrantes.length} columna(s) que el contrato no conoce: ${sobrantes.join(", ")}. No se leen.`);
@@ -4867,8 +4933,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/268f422dad19d8fcaea245ed0db75c7c.pdf",
       "idDecretoDrive": null,
-      "tienePrograma": false,
-      "urlPrograma": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/1hhPtjMB4-MnvG25tknIh3TBAN2KK0u2D/view?usp=sharing",
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Calle Central",
@@ -5203,8 +5269,8 @@ const DATOS={
       },
       "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1bb36c95f11d05d5a3065f523946912c.pdf",
       "idDecretoDrive": null,
-      "tienePrograma": false,
-      "urlPrograma": null,
+      "tienePrograma": true,
+      "urlPrograma": "https://drive.google.com/file/d/1RJkJVQJd1roWNpriGP5BWHaOWU3Rr3Si/view?usp=sharing",
       "alcaldia": "Azcapotzalco",
       "ubicacion": {
         "calle": "Glorieta de los Ahuehuetes",
@@ -5627,23 +5693,1182 @@ const DATOS={
       },
       "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1751419047342&group=&note=13/uuid=166736c5-4f82-4b15-9ab2-41ea9cd4e14f&formatted=Cda.+Eugenia+32%2C+Col+del+Valle+Centro%2C+Benito+Ju%C3%A1rez%2C+03100+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Cda.+Eugenia+32%2C+Col+del+Valle+Centro%2C+Benito+Ju%C3%A1rez%2C+03100+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.388326312901413&longitude=-99.16591590302544&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=dfb3281a-5a05-4697-8d2b-ef64d7e7ec21&common=Shamel+ash&condition=1&diameter=48.031496062992126&exposure=1&measurementType=true&namingType=false&scientific=Fraxinus+uhdei&species=FRUH&type=Existing&trillionTrees=null/uuid=f13af958-0c20-499c-804e-b2fba221a555&direction=270&distance=3&proximity=0&vintage=post-1980/uuid=9bf92dbf-f496-49e5-af66-7fc886a8fc4c&optIn=false&emailed=true",
       "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-TLP-QUE-14751ANGIO-0014",
+      "consecutivo": "0014",
+      "codAlcaldia": "TLP",
+      "nombreAsignado": "Diamante Tepeximilpa",
+      "slug": "diamante-tepeximilpa",
+      "nombreComun": "Encino",
+      "especie": "Quercus (Quercus) crassipes",
+      "nominadoPor": "SEDEMA - FELIPE LÓPEZ",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "HISTORICO"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Tlalpan",
+      "ubicacion": {
+        "calle": "Av. De las Torres",
+        "numero": "S/N",
+        "colonia": "Diamante",
+        "cp": "14227",
+        "entreCalles": [
+          "Esmeralda",
+          "Rubí"
+        ],
+        "referencias": "Desarrollándose en arriate elevado",
+        "tipo": "Arriate",
+        "sueloConservacion": true,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.270541,
+        "lng": -99.193133
+      },
+      "coordsValidas": true,
+      "utm": "479705.86; 2130773.94",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Magnoliopsida",
+        "orden": "Fagales",
+        "familia": "Fagaceae",
+        "genero": "Quercus",
+        "autor": "Humb. & Bonpl., 1809",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC) (En IUCN Red List 2024-2 como Quercus crassipes.)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": null,
+        "prioridad": null,
+        "endemismo": "Endémica",
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=9b2063ed2a975252725e4f42241305ea",
+      "urlOrigen": null,
+      "morfologia": {
+        "altura_m": 14.6,
+        "diametro_cm": 184.2,
+        "circunferencia_cm": 578.68,
+        "anchoCopa_m": 10.97,
+        "largoCopa_m": 16.27,
+        "extensionCopa_m": 13.62
+      },
+      "condicion": "Bueno",
+      "estructura": "Susceptible de mejora",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790279032909!6m8!1m7!1sUz9VkXdea5WHf0rEP789Yg!2m2!1d19.27054154796935!2d-99.19309492828776!3f252.36423050985886!4f13.065955907960259!5f0.4000000000000002"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 491.74,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 1.28,
+        "escorrentiaReducida_L": 208.42,
+        "precipitacionInterceptada_L": 152199.16,
+        "coEliminado_g": 3.23,
+        "ozonoEliminado_g": 258.7,
+        "no2Eliminado_g": 78.63,
+        "so2Eliminado_g": 17.01,
+        "pm25Eliminado_g": 30.87,
+        "ahorroElectricidad_kWh": 143.37,
+        "emisionesEvitadasCO2_kg": 37.55,
+        "emisionesEvitadasCO_g": 45.5,
+        "emisionesEvitadasNO2_g": 7.56,
+        "emisionesEvitadasSO2_g": 25.71,
+        "emisionesEvitadasPM25_g": 5.41
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790615932776&group=&note=/uuid=63bf9a2d-907a-4790-89f5-e0f1e2c123f0&formatted=Av.+de+Las+Torres+145%2C+Miguel+Hidalgo+2da+Secc%2C+Tlalpan%2C+14250+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Av.+de+Las+Torres+145%2C+Miguel+Hidalgo+2da+Secc%2C+Tlalpan%2C+14250+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.281257469711434&longitude=-99.19498445094014&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=9668431d-5b62-464b-bb53-3d5745de8e60&common=Quercus+crassipes&condition=1&diameter=72.51968503937007&exposure=0&measurementType=true&namingType=false&scientific=Quercus+crassipes&species=QUCR2&type=&trillionTrees=null/uuid=cc0379cc-b072-4929-915b-3db2ac2ad903&direction=270&distance=15&proximity=0&vintage=post-1980/uuid=ebaf924a-f986-4958-b851-43255e031d18&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-AZC-TAX-19405GIMNO-0018",
+      "consecutivo": "0018",
+      "codAlcaldia": "AZC",
+      "nombreAsignado": "Los Gemelos de San Álvaro",
+      "slug": "los-gemelos-de-san-alvaro-0018",
+      "nombreComun": "Ahuehuete",
+      "especie": "Taxodium mucronatum",
+      "nominadoPor": "SEDEMA - INDRID",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Azcapotzalco",
+      "ubicacion": {
+        "calle": "Franklin",
+        "numero": "4",
+        "colonia": "San Álvaro",
+        "cp": "02090",
+        "entreCalles": [
+          "Juárez",
+          "José Sánchez Trujillo"
+        ],
+        "referencias": "Esquina con Ferrocarril Nacional",
+        "tipo": "Banqueta",
+        "sueloConservacion": false,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.459573,
+        "lng": -99.180872
+      },
+      "coordsValidas": true,
+      "utm": "481016.14; 2151689.46",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Taxodium",
+        "autor": "Ten., 1853",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": "CONABIO 2012",
+        "prioridad": "Alta",
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=84deb4b801237580a3090bdc6c8086f1",
+      "urlOrigen": "https://www.inaturalist.org/observations/16695761",
+      "morfologia": {
+        "altura_m": 24,
+        "diametro_cm": 149.8,
+        "circunferencia_cm": 470.61,
+        "anchoCopa_m": 16.5,
+        "largoCopa_m": 18.24,
+        "extensionCopa_m": 17.37
+      },
+      "condicion": "Bueno",
+      "estructura": "Susceptible de mejora",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790280945310!6m8!1m7!1sVy7SNr4cDO8kK2lQZSV8Cg!2m2!1d19.45952956676695!2d-99.18084232952734!3f332.86782435934447!4f34.46036313203709!5f0.7820865974627469"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 1013.01,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 4.33,
+        "escorrentiaReducida_L": 0.1,
+        "precipitacionInterceptada_L": 0.1,
+        "coEliminado_g": 19.39,
+        "ozonoEliminado_g": 1080.78,
+        "no2Eliminado_g": 351.75,
+        "so2Eliminado_g": 77.21,
+        "pm25Eliminado_g": 130.76,
+        "ahorroElectricidad_kWh": 88.9,
+        "emisionesEvitadasCO2_kg": 26.67,
+        "emisionesEvitadasCO_g": 29.14,
+        "emisionesEvitadasNO2_g": 5.28,
+        "emisionesEvitadasSO2_g": 17.8,
+        "emisionesEvitadasPM25_g": 3.39
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790614446900&group=&note=/uuid=16b6e968-66a6-4ce1-b843-4a775845f8dc&formatted=Franklin+4%2C+San+Alvaro%2C+Azcapotzalco%2C+02090+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Franklin+4%2C+San+Alvaro%2C+Azcapotzalco%2C+02090+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.459588991858723&longitude=-99.18085042223603&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=bf16f006-f0e7-4dd8-a7d1-4ceefd5f1afe&common=Montezuma+cypress&condition=1&diameter=58.97637795275591&exposure=1&measurementType=true&namingType=false&scientific=Taxodium+mucronatum&species=TAMU&type=&trillionTrees=null/uuid=e583d118-82d7-40b0-8a4f-da5878da6935&direction=90&distance=3&proximity=0&vintage=1950-1980/uuid=e92f7273-8219-4d87-84e8-f7b931e6d81c&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-AZC-TAX-19405GIMNO-0019",
+      "consecutivo": "0019",
+      "codAlcaldia": "AZC",
+      "nombreAsignado": "Los Gemelos De San Álvaro",
+      "slug": "los-gemelos-de-san-alvaro-0019",
+      "nombreComun": "Ahuehuete",
+      "especie": "Taxodium mucronatum",
+      "nominadoPor": "SEDEMA - INDGRID",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Azcapotzalco",
+      "ubicacion": {
+        "calle": "Franklin",
+        "numero": "4",
+        "colonia": "San Álvaro",
+        "cp": "02090",
+        "entreCalles": [
+          "Juárez",
+          "José Sánchez Trujillo"
+        ],
+        "referencias": "Esquina con Ferrocarril Nacional",
+        "tipo": "Banqueta",
+        "sueloConservacion": false,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.459657,
+        "lng": -99.180813
+      },
+      "coordsValidas": true,
+      "utm": "481022.27; 2151698.76",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Taxodium",
+        "autor": "Ten., 1853",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": "CONABIO 2012",
+        "prioridad": "Alta",
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=84deb4b801237580a3090bdc6c8086f1",
+      "urlOrigen": "https://www.inaturalist.org/observations/16695761",
+      "morfologia": {
+        "altura_m": 24,
+        "diametro_cm": 136,
+        "circunferencia_cm": 427.26,
+        "anchoCopa_m": 14.4,
+        "largoCopa_m": 23.02,
+        "extensionCopa_m": 18.71
+      },
+      "condicion": "Bueno",
+      "estructura": "Susceptible de mejora",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790281283406!6m8!1m7!1sTpRDKe8hFcZfVE2ZZyW4oA!2m2!1d19.4596056514022!2d-99.18078360888762!3f313.73193149627156!4f47.812038705264996!5f0.7820865974627469"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 1491.58,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 24.79,
+        "escorrentiaReducida_L": 0.1,
+        "precipitacionInterceptada_L": 0.1,
+        "coEliminado_g": 29.91,
+        "ozonoEliminado_g": 1666.85,
+        "no2Eliminado_g": 542.49,
+        "so2Eliminado_g": 119.07,
+        "pm25Eliminado_g": 201.67,
+        "ahorroElectricidad_kWh": 88.9,
+        "emisionesEvitadasCO2_kg": 26.67,
+        "emisionesEvitadasCO_g": 29.14,
+        "emisionesEvitadasNO2_g": 5.28,
+        "emisionesEvitadasSO2_g": 17.8,
+        "emisionesEvitadasPM25_g": 3.39
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790614678895&group=&note=/uuid=b5b21782-1653-4fa2-b7cf-81c22b781472&formatted=Franklin+4%2C+San+Alvaro%2C+Azcapotzalco%2C+02090+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Franklin+4%2C+San+Alvaro%2C+Azcapotzalco%2C+02090+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.45966095084212&longitude=-99.18079948395705&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=e1f7bac8-0949-4a6a-b127-18898fbca93d&common=Montezuma+cypress&condition=1&diameter=53.54330708661417&exposure=1&measurementType=true&namingType=false&scientific=Taxodium+mucronatum&species=TAMU&type=&trillionTrees=null/uuid=d645d61b-e932-4c58-aef3-a4a6cab99b19&direction=90&distance=3&proximity=0&vintage=1950-1980/uuid=3a81a238-5ced-452d-ac30-a71744aef841&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-COY-TAX-19405GIMNO-0021",
+      "consecutivo": "0021",
+      "codAlcaldia": "COY",
+      "nombreAsignado": "Atlahuitl",
+      "slug": "atlahuitl",
+      "nombreComun": "Ahuehuete",
+      "especie": "Taxodium mucronatum",
+      "nominadoPor": "SEDEMA - SILVIA BEHAR LAVALLE",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Coyoacán",
+      "ubicacion": {
+        "calle": "Escocia",
+        "numero": "62",
+        "colonia": "Parque San Andrés",
+        "cp": "04040",
+        "entreCalles": [
+          "California",
+          "Dakota"
+        ],
+        "referencias": "Desarrollándose sobre el arroyo vehícular en la SO de la calle Escocia",
+        "tipo": "Banqueta",
+        "sueloConservacion": false,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.348509,
+        "lng": -99.14739
+      },
+      "coordsValidas": true,
+      "utm": "484519.77; 2139396.53",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Taxodium",
+        "autor": "Ten., 1853",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": "CONABIO 2012",
+        "prioridad": "Alta",
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=84deb4b801237580a3090bdc6c8086f1",
+      "urlOrigen": "https://www.inaturalist.org/observations/16695761",
+      "morfologia": {
+        "altura_m": 25.2,
+        "diametro_cm": 144.2,
+        "circunferencia_cm": 453.02,
+        "anchoCopa_m": 18.1,
+        "largoCopa_m": 18.14,
+        "extensionCopa_m": 18.12
+      },
+      "condicion": "Bueno",
+      "estructura": "Susceptible de mejora",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790282455191!6m8!1m7!1s9qBd3WKWM46h5r_eQQtyPw!2m2!1d19.34855544576452!2d-99.14740505079823!3f140.4296427803715!4f27.12683411636243!5f0.4000000000000002"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 3208.11,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 4.4,
+        "escorrentiaReducida_L": 70.46,
+        "precipitacionInterceptada_L": 50125.43,
+        "coEliminado_g": 30.12,
+        "ozonoEliminado_g": 1199.21,
+        "no2Eliminado_g": 328.03,
+        "so2Eliminado_g": 93.23,
+        "pm25Eliminado_g": 123.78,
+        "ahorroElectricidad_kWh": 18.21,
+        "emisionesEvitadasCO2_kg": null,
+        "emisionesEvitadasCO_g": null,
+        "emisionesEvitadasNO2_g": -27.1,
+        "emisionesEvitadasSO2_g": null,
+        "emisionesEvitadasPM25_g": -0.68
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790613728286&group=&note=/uuid=d7b90a23-c6d5-4349-963b-48ac2d688778&formatted=Escocia+24%2C+Parque+San+Andr%C3%A9s%2C+Coyoac%C3%A1n%2C+04040+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Escocia+24%2C+Parque+San+Andr%C3%A9s%2C+Coyoac%C3%A1n%2C+04040+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.3484925060269&longitude=-99.1473316869098&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=4baffc06-cc66-421c-ac2e-e420f90de041&common=Montezuma+cypress&condition=1&diameter=56.74015748031496&exposure=1&measurementType=true&namingType=false&scientific=Taxodium+mucronatum&species=TAMU&type=&trillionTrees=null/uuid=924012c5-e96a-4580-a9e7-5854d40e3634&direction=180&distance=3&proximity=0&vintage=post-1980/uuid=2e0b4ced-87ad-45c1-8d9c-5e06aecc7d3c&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-BJU-TAX-19405GIMNO-0023",
+      "consecutivo": "0023",
+      "codAlcaldia": "BJU",
+      "nombreAsignado": "Ahuehuetlan",
+      "slug": "ahuehuetlan",
+      "nombreComun": "Ahuehuete",
+      "especie": "Taxodium mucronatum",
+      "nominadoPor": "SEDEMA - SACHIKO CHRIGUCH",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "HISTORICO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Benito Juárez",
+      "ubicacion": {
+        "calle": "Caleta",
+        "numero": "S/N",
+        "colonia": "Narvarte Oriente",
+        "cp": "03023",
+        "entreCalles": [
+          "Av. Doctor Jóse María Vertiz",
+          "Zempoala"
+        ],
+        "referencias": "Dentro el Parque las Americas",
+        "tipo": "Parque",
+        "sueloConservacion": false,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.400856,
+        "lng": -99.149214
+      },
+      "coordsValidas": true,
+      "utm": "484333.17; 2145189.00",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Taxodium",
+        "autor": "Ten., 1853",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": "CONABIO 2012",
+        "prioridad": "Alta",
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=84deb4b801237580a3090bdc6c8086f1",
+      "urlOrigen": "https://www.inaturalist.org/observations/16695761",
+      "morfologia": {
+        "altura_m": 27.8,
+        "diametro_cm": 139.9,
+        "circunferencia_cm": 439.51,
+        "anchoCopa_m": 17.55,
+        "largoCopa_m": 18.3,
+        "extensionCopa_m": 17.93
+      },
+      "condicion": "Bueno",
+      "estructura": "Susceptible de mejora",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790282737878!6m8!1m7!1scCz8A9PXH4irKlmYQSVzLw!2m2!1d19.40095690301979!2d-99.14931485310093!3f141.46090573019524!4f23.411713399037325!5f0.7820865974627469"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 1282.33,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 11.92,
+        "escorrentiaReducida_L": 0.1,
+        "precipitacionInterceptada_L": 0.1,
+        "coEliminado_g": 26.66,
+        "ozonoEliminado_g": 1486.02,
+        "no2Eliminado_g": 483.64,
+        "so2Eliminado_g": 106.15,
+        "pm25Eliminado_g": 179.79,
+        "ahorroElectricidad_kWh": 77.96,
+        "emisionesEvitadasCO2_kg": 17.02,
+        "emisionesEvitadasCO_g": 23.81,
+        "emisionesEvitadasNO2_g": 3.52,
+        "emisionesEvitadasSO2_g": 12.12,
+        "emisionesEvitadasPM25_g": 2.91
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790613465444&group=&note=/uuid=99dfd909-ca7f-4393-8e25-7d3c6120ed4b&formatted=Parque+Las+Am%C3%A9ricas%2C+Diag.+San+Antonio+1737%2C+Narvarte+Oriente%2C+Benito+Ju%C3%A1rez%2C+03023+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Parque+Las+Am%C3%A9ricas%2C+Diag.+San+Antonio+1737%2C+Narvarte+Oriente%2C+Benito+Ju%C3%A1rez%2C+03023+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.40088057561792&longitude=-99.14917951549954&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=4175ae50-3371-4f1e-a55f-d962ffe6dac0&common=Montezuma+cypress&condition=1&diameter=55.07874015748032&exposure=1&measurementType=true&namingType=false&scientific=Taxodium+mucronatum&species=TAMU&type=&trillionTrees=null/uuid=2e57a066-9456-4291-90e5-7ace13edb620&direction=180&distance=15&proximity=0&vintage=1950-1980/uuid=80bc992c-a1c4-46f8-bef8-b46567ad9183&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-XOC-TAX-19405GIMNO-0024",
+      "consecutivo": "0024",
+      "codAlcaldia": "XOC",
+      "nombreAsignado": "San Cristóbal Xallan",
+      "slug": "san-cristobal-xallan",
+      "nombreComun": "Ahuehuete",
+      "especie": "Taxodium mucronatum",
+      "nominadoPor": "SEDEMA - GRUPO COMITE SAN CRISTOBAL",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Xochimilco",
+      "ubicacion": {
+        "calle": "Callejon Las Flores",
+        "numero": "S/N",
+        "colonia": "San Cristóbal",
+        "cp": "16080",
+        "entreCalles": [
+          "Dalia",
+          "Plazuela San Cristóbal"
+        ],
+        "referencias": "Dentro de la Plazuela de San Cristóbal",
+        "tipo": "Plaza",
+        "sueloConservacion": false,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.260977,
+        "lng": -99.099054
+      },
+      "coordsValidas": true,
+      "utm": "489590.92; 2129707.36",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Taxodium",
+        "autor": "Ten., 1853",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": "CONABIO 2012",
+        "prioridad": "Alta",
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=84deb4b801237580a3090bdc6c8086f1",
+      "urlOrigen": "https://www.inaturalist.org/observations/16695761",
+      "morfologia": {
+        "altura_m": 20.4,
+        "diametro_cm": 122.4,
+        "circunferencia_cm": 384.53,
+        "anchoCopa_m": 13.4,
+        "largoCopa_m": 14.63,
+        "extensionCopa_m": 14.02
+      },
+      "condicion": "Bueno",
+      "estructura": "Buena",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790283210083!6m8!1m7!1sZlB8X249v9Yq2Dxa5zryhw!2m2!1d19.26101351116979!2d-99.09902971252201!3f223.26198397230715!4f4.1688245049704165!5f0.4000000000000002"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 1994.79,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 50.02,
+        "escorrentiaReducida_L": 65.1,
+        "precipitacionInterceptada_L": 47420.25,
+        "coEliminado_g": 17.22,
+        "ozonoEliminado_g": 1464.8,
+        "no2Eliminado_g": 436.97,
+        "so2Eliminado_g": 114.19,
+        "pm25Eliminado_g": 185.95,
+        "ahorroElectricidad_kWh": 77.96,
+        "emisionesEvitadasCO2_kg": 17.02,
+        "emisionesEvitadasCO_g": 23.81,
+        "emisionesEvitadasNO2_g": 3.52,
+        "emisionesEvitadasSO2_g": 12.12,
+        "emisionesEvitadasPM25_g": 2.91
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790615744763&group=&note=/uuid=dc9ff094-8b9e-47a9-a9fe-6fcaaef436ac&formatted=C.+Dalia+55%2C+San+Crist%C3%B3bal%2C+Xochimilco%2C+16080+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=C.+Dalia+55%2C+San+Crist%C3%B3bal%2C+Xochimilco%2C+16080+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.260973691900887&longitude=-99.09905750744011&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=7384abfe-fc85-4550-aad6-813c322eb7eb&common=Montezuma+cypress&condition=1&diameter=48.188976377952756&exposure=0&measurementType=true&namingType=false&scientific=Taxodium+mucronatum&species=TAMU&type=&trillionTrees=null/uuid=38cf512f-b62f-4f2a-83f5-a6e8989a5c49&direction=180&distance=15&proximity=0&vintage=1950-1980/uuid=93437ea0-283c-4bde-93e6-6889e2b3e7ad&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-XOC-TAX-19405GIMNO-0025",
+      "consecutivo": "0025",
+      "codAlcaldia": "XOC",
+      "nombreAsignado": "Molotla",
+      "slug": "molotla",
+      "nombreComun": "Ahuehuete",
+      "especie": "Taxodium mucronatum",
+      "nominadoPor": "SEDEMA - BENITO ALONSO CABRERA MEZA",
+      "fechaNominacion": null,
+      "categorias": [
+        "HISTORICO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "HISTORICO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Xochimilco",
+      "ubicacion": {
+        "calle": "Francisco I. Madero",
+        "numero": "S/N",
+        "colonia": "San Antonio",
+        "cp": "16607",
+        "entreCalles": [
+          "Calle M. Maza de Juárez",
+          "Primer Callejón Francisco I. Madero"
+        ],
+        "referencias": "Banqueta Sur de la calle Francisco I. Madero.",
+        "tipo": "Banqueta",
+        "sueloConservacion": false,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.262091,
+        "lng": -99.106944
+      },
+      "coordsValidas": true,
+      "utm": "488761.94; 2129831.13",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Taxodium",
+        "autor": "Ten., 1853",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": "CONABIO 2012",
+        "prioridad": "Alta",
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=84deb4b801237580a3090bdc6c8086f1",
+      "urlOrigen": "https://www.inaturalist.org/observations/16695761",
+      "morfologia": {
+        "altura_m": 28.8,
+        "diametro_cm": 160,
+        "circunferencia_cm": 502.65,
+        "anchoCopa_m": 15.62,
+        "largoCopa_m": 16.1,
+        "extensionCopa_m": 15.86
+      },
+      "condicion": "Bueno",
+      "estructura": "Muy buena",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790284881327!6m8!1m7!1srkprCnFGsX5QsgR1WJS5Cg!2m2!1d19.26215427106256!2d-99.10689737997635!3f233.02289072770955!4f7.417709948850046!5f0.42308739905655324"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 1049.12,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 2.2,
+        "escorrentiaReducida_L": 95.54,
+        "precipitacionInterceptada_L": 69591.34,
+        "coEliminado_g": 8.82,
+        "ozonoEliminado_g": 750.33,
+        "no2Eliminado_g": 223.83,
+        "so2Eliminado_g": 58.49,
+        "pm25Eliminado_g": 95.25,
+        "ahorroElectricidad_kWh": 77.96,
+        "emisionesEvitadasCO2_kg": 17.02,
+        "emisionesEvitadasCO_g": 23.81,
+        "emisionesEvitadasNO2_g": 3.52,
+        "emisionesEvitadasSO2_g": 12.12,
+        "emisionesEvitadasPM25_g": 2.91
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790614856895&group=&note=/uuid=fb4189b8-1450-48a0-a4c1-9d96a6c91c6b&formatted=Francisco+I.+Madero+27%2C+San+Antonio%2C+Xochimilco%2C+16000+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Francisco+I.+Madero+27%2C+San+Antonio%2C+Xochimilco%2C+16000+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.262134537041007&longitude=-99.10693190140401&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=394bb25b-45bc-4f77-9c63-6c94148888a6&common=Montezuma+cypress&condition=1&diameter=62.99212598425197&exposure=1&measurementType=true&namingType=false&scientific=Taxodium+mucronatum&species=TAMU&type=&trillionTrees=null/uuid=ede2dd0c-b5f1-4b04-bbd3-03577e96e2dd&direction=180&distance=15&proximity=0&vintage=1950-1980/uuid=d4378fc0-8640-4309-b3cf-6a5167ac68dd&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-MAC-CUP-19282GIMNO-0026",
+      "consecutivo": "0026",
+      "codAlcaldia": "MAC",
+      "nombreAsignado": "Cedro de Padierna",
+      "slug": "cedro-de-padierna",
+      "nombreComun": "Cedro blanco",
+      "especie": "Cupressus lusitanica",
+      "nominadoPor": "SEDEMA - MARGARITA SOFIA DE LA GUERRA BECERRIL",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "La Magdalena Contreras",
+      "ubicacion": {
+        "calle": "Andador Principal",
+        "numero": "Manzana 22, Lote 7",
+        "colonia": "Tierra Unida",
+        "cp": "10369",
+        "entreCalles": [
+          "Andador 16",
+          "Andador 16 y Andador 17"
+        ],
+        "referencias": "Esquina de calle 16 y calle Andador Principal",
+        "tipo": "Banqueta",
+        "sueloConservacion": true,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.303763,
+        "lng": -99.269724
+      },
+      "coordsValidas": true,
+      "utm": "471663.43; 2134460.71",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Cupressus",
+        "autor": "Mill., 1768",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol; Arbusto",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": "Sujeta a protección especial (Pr)",
+        "cites": null,
+        "prioritaria": null,
+        "prioridad": null,
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=d7796e87402686856779e3f1c08c2492",
+      "urlOrigen": "https://www.inaturalist.org/observations/159089348",
+      "morfologia": {
+        "altura_m": 28.2,
+        "diametro_cm": 227,
+        "circunferencia_cm": 713.14,
+        "anchoCopa_m": 14.93,
+        "largoCopa_m": 19.89,
+        "extensionCopa_m": 17.41
+      },
+      "condicion": "Bueno",
+      "estructura": "Susceptible de mejora",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790292299317!6m8!1m7!1s11uE7Y2_7sdd4GW-8U_sxQ!2m2!1d19.30372526259496!2d-99.2696958013205!3f321.92776945751143!4f60.610705611608296!5f0.4000000000000002"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 1706.91,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 3.59,
+        "escorrentiaReducida_L": 63.1,
+        "precipitacionInterceptada_L": 45948.45,
+        "coEliminado_g": 34.51,
+        "ozonoEliminado_g": 1244.13,
+        "no2Eliminado_g": 597.15,
+        "so2Eliminado_g": 156.75,
+        "pm25Eliminado_g": 180.19,
+        "ahorroElectricidad_kWh": 86.45,
+        "emisionesEvitadasCO2_kg": null,
+        "emisionesEvitadasCO_g": 9.78,
+        "emisionesEvitadasNO2_g": null,
+        "emisionesEvitadasSO2_g": null,
+        "emisionesEvitadasPM25_g": 2.71
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790614175339&group=&note=/uuid=dbcdd260-b70a-4fec-b17c-4631919125e2&formatted=Principal+31%2C+Tierra+Unida%2C+La+Magdalena+Contreras%2C+10369+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Principal+31%2C+Tierra+Unida%2C+La+Magdalena+Contreras%2C+10369+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.303765502859918&longitude=-99.26973067230993&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=aa525ec2-ae52-4d63-bbd6-e11fc5df0b39&common=Cedar-of-Goa&condition=1&diameter=89.37007874015748&exposure=0&measurementType=true&namingType=false&scientific=Cupressus+lusitanica&species=CULU&type=&trillionTrees=null/uuid=fb37b096-07b6-4dee-9f6a-e1d816000341&direction=90&distance=3&proximity=0&vintage=post-1980/uuid=55cd7dd6-4586-451b-b2fc-be8f149975b9&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-XOC-TAX-19405GIMNO-0027",
+      "consecutivo": "0027",
+      "codAlcaldia": "XOC",
+      "nombreAsignado": "Tlanahuac",
+      "slug": "tlanahuac",
+      "nombreComun": "Ahuehuete",
+      "especie": "Taxodium mucronatum",
+      "nominadoPor": "SEDEMA - BENITO ALONSO CABRERA MEZA",
+      "fechaNominacion": null,
+      "categorias": [
+        "HISTORICO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "HISTORICO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Xochimilco",
+      "ubicacion": {
+        "calle": "Cuitláhuac",
+        "numero": "8",
+        "colonia": "San Pedro",
+        "cp": "16090",
+        "entreCalles": [
+          "Pedro Ramírez del Castillo",
+          "José María Morelos"
+        ],
+        "referencias": "Banqueta Norte, esquina calle Pedro Ramirez del Castillo",
+        "tipo": "Banqueta",
+        "sueloConservacion": false,
+        "puebloBarrio": null,
+        "puebloBarrioEstado": null
+      },
+      "coords": {
+        "lat": 19.257793,
+        "lng": -99.106517
+      },
+      "coordsValidas": true,
+      "utm": "488806.47; 2129355.53",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Pinopsida",
+        "orden": "Cupressales",
+        "familia": "Cupressaceae",
+        "genero": "Taxodium",
+        "autor": "Ten., 1853",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": "Preocupación menor (LC)",
+        "nom059": null,
+        "cites": null,
+        "prioritaria": "CONABIO 2012",
+        "prioridad": "Alta",
+        "endemismo": null,
+        "exoticaInvasora": null,
+        "esExotica": false
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=84deb4b801237580a3090bdc6c8086f1",
+      "urlOrigen": "https://www.inaturalist.org/observations/16695761",
+      "morfologia": {
+        "altura_m": 17.65,
+        "diametro_cm": 130.2,
+        "circunferencia_cm": 409.04,
+        "anchoCopa_m": 14.8,
+        "largoCopa_m": 20.5,
+        "extensionCopa_m": 17.65
+      },
+      "condicion": "Bueno",
+      "estructura": "Buena",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790293544472!6m8!1m7!1sFTbkOQcJfGcDjzJXq8DZEg!2m2!1d19.25771527823761!2d-99.10660286656272!3f52.837264200014374!4f35.38432715859028!5f0.7820865974627469"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 2072.25,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 33.3,
+        "escorrentiaReducida_L": 70.94,
+        "precipitacionInterceptada_L": 51669.12,
+        "coEliminado_g": 18.76,
+        "ozonoEliminado_g": 1596.05,
+        "no2Eliminado_g": 476.12,
+        "so2Eliminado_g": 124.42,
+        "pm25Eliminado_g": 202.61,
+        "ahorroElectricidad_kWh": 87.1,
+        "emisionesEvitadasCO2_kg": 1.88,
+        "emisionesEvitadasCO_g": 21.9,
+        "emisionesEvitadasNO2_g": 0.93,
+        "emisionesEvitadasSO2_g": 4.17,
+        "emisionesEvitadasPM25_g": 3.11
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790616269071&group=&note=/uuid=ed3b434b-f3c0-47f3-a61f-8b63b541e27c&formatted=Calle+Cuitlahuac+63%2C+San+Pedro%2C+Xochimilco%2C+16090+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Calle+Cuitlahuac+63%2C+San+Pedro%2C+Xochimilco%2C+16090+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.257781421277855&longitude=-99.10652323162823&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=2863e1f8-1e18-4a84-8851-1a6bf8975560&common=Montezuma+cypress&condition=1&diameter=51.25984251968504&exposure=0&measurementType=true&namingType=false&scientific=Taxodium+mucronatum&species=TAMU&type=&trillionTrees=null/uuid=5bd41ff9-a955-4630-bb4b-0c2d020fe60a&direction=180&distance=3&proximity=0&vintage=1950-1980/uuid=17719aa1-9ede-4185-a381-18d6a7b08fcd&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
+    },
+    {
+      "id": "26-XOC-OLE-57117ANGIO-0028",
+      "consecutivo": "0028",
+      "codAlcaldia": "XOC",
+      "nombreAsignado": "Teuhtli",
+      "slug": "teuhtli",
+      "nombreComun": "Olivo",
+      "especie": "Olea europaea",
+      "nominadoPor": "SEDEMA - BENITO ALONSO CABRERA MEZA",
+      "fechaNominacion": null,
+      "categorias": [
+        "CENTENARIO",
+        "HISTORICO",
+        "NOTABLE"
+      ],
+      "categoriaDominante": "CENTENARIO",
+      "situacionCategoria": "asignada",
+      "fechaDecreto": {
+        "texto": "2026-09-28",
+        "iso": "2026-09-28",
+        "legible": "28 de septiembre de 2026",
+        "anio": 2026
+      },
+      "linkDecreto": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/5f0aef1366b85e11e13bfa391ef47c0b.pdf",
+      "idDecretoDrive": null,
+      "tienePrograma": false,
+      "urlPrograma": null,
+      "alcaldia": "Xochimilco",
+      "ubicacion": {
+        "calle": "Las Ánimas",
+        "numero": "S/N",
+        "colonia": "Guadalupita",
+        "cp": "16740",
+        "entreCalles": [
+          "Avenida Aquiles Serdán",
+          "Francisco I. Madero."
+        ],
+        "referencias": "Cerca de la Casa de la Tercera Edad y Casa de la Cultura de Tulyehualco.",
+        "tipo": "Banqueta",
+        "sueloConservacion": false,
+        "puebloBarrio": "Santiago Tulyehualco",
+        "puebloBarrioEstado": "Santiago Tulyehualco"
+      },
+      "coords": {
+        "lat": 19.255517,
+        "lng": -99.016689
+      },
+      "coordsValidas": true,
+      "utm": "498246.17; 2129100.37",
+      "taxonomia": {
+        "reino": "Plantae",
+        "phylum": "Tracheophyta",
+        "clase": "Magnoliopsida",
+        "orden": "Lamiales",
+        "familia": "Oleaceae",
+        "genero": "Olea",
+        "autor": "L., 1753",
+        "infraespecie": null,
+        "formaCrecimiento": "Árbol; Arbusto",
+        "ambiente": "Terrestre"
+      },
+      "conservacion": {
+        "iucn": null,
+        "nom059": null,
+        "cites": null,
+        "prioritaria": null,
+        "prioridad": null,
+        "endemismo": null,
+        "exoticaInvasora": "Exótica",
+        "esExotica": true
+      },
+      "urlSNIB": "http://www.snib.mx/snibgeoportal/Ejemplar.php?id=16106c85d278153189a50ede8976f5e3",
+      "urlOrigen": null,
+      "morfologia": {
+        "altura_m": 9.5,
+        "diametro_cm": 30.7,
+        "circunferencia_cm": 96.45,
+        "anchoCopa_m": 8.77,
+        "largoCopa_m": 8.8,
+        "extensionCopa_m": 8.79
+      },
+      "condicion": "Declinante incipiente",
+      "estructura": "Irrecuperable",
+      "edadEstimada": null,
+      "expectativaVida": "Más de 40 años",
+      "observaciones": null,
+      "vistaCalle": {
+        "tipo": "panorama",
+        "url": "https://www.google.com/maps/embed?pb=!4v1790294521401!6m8!1m7!1su9B-mEHnibuGrRH7HQYx5w!2m2!1d19.25548556382705!2d-99.01672122620307!3f65.07031455693664!4f14.02862172902546!5f0.4000000000000002"
+      },
+      "fotos": [],
+      "_compuertaITree": "Validado",
+      "serviciosAmbientales": {
+        "beneficioEconomico_moneda": 887.63,
+        "moneda": "MXN (pesos mexicanos)",
+        "carbonoSecuestrado_kg": null,
+        "co2Absorbido_kg": 31.24,
+        "escorrentiaReducida_L": 16.5,
+        "precipitacionInterceptada_L": 12015.81,
+        "coEliminado_g": 5.06,
+        "ozonoEliminado_g": 430.01,
+        "no2Eliminado_g": 128.28,
+        "so2Eliminado_g": 33.52,
+        "pm25Eliminado_g": 54.59,
+        "ahorroElectricidad_kWh": 103.62,
+        "emisionesEvitadasCO2_kg": 53.01,
+        "emisionesEvitadasCO_g": 39.98,
+        "emisionesEvitadasNO2_g": 10,
+        "emisionesEvitadasSO2_g": 32.73,
+        "emisionesEvitadasPM25_g": 4.13
+      },
+      "linkITree": "https://mytree.itreetools.org/#/benefits/error=&warning=&creationDate=1790615542507&group=&note=/uuid=816d3519-fc96-474f-86f4-14c24bf9a824&formatted=Av.+Francisco+I.+Madero+5%2C+Santiago+Tulyehualco%2C+Xochimilco%2C+16700+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&entered=Av.+Francisco+I.+Madero+5%2C+Santiago+Tulyehualco%2C+Xochimilco%2C+16700+Ciudad+de+M%C3%A9xico%2C+CDMX%2C+M%C3%A9xico&city=ciudad+de+m%C3%A9xico&county=ciudad+de+m%C3%A9xico&latitude=19.255511583430945&longitude=-99.01668682029363&nation=m%C3%A9xico&stateAbbr=cdmx&zip=20003&pin=false/uuid=065d378c-d139-4df9-88e9-f0a8c8a1c7fe&common=Olive&condition=2&diameter=12.118110236220472&exposure=0&measurementType=true&namingType=false&scientific=Olea+europaea&species=OLEU&type=&trillionTrees=null/uuid=8cc08407-f2ff-447c-93a3-3b473554fdb2&direction=270&distance=3&proximity=0&vintage=1950-1980/uuid=5503ce86-0c35-49af-b699-f6d830205ba2&optIn=false&emailed=true",
+      "tieneCifrasAmbientales": true
     }
   ],
   "meta": {
     "schemaVersion": 7,
     "origen": "csv-padron-v2",
-    "filasLeidas": 13,
-    "totalEjemplares": 12,
+    "filasLeidas": 28,
+    "totalEjemplares": 22,
     "filasDescartadas": [
       {
         "fila": 8,
+        "motivo": "sin id",
+        "nombre": null
+      },
+      {
+        "fila": 16,
+        "motivo": "sin id",
+        "nombre": null
+      },
+      {
+        "fila": 17,
+        "motivo": "sin id",
+        "nombre": null
+      },
+      {
+        "fila": 18,
+        "motivo": "sin id",
+        "nombre": null
+      },
+      {
+        "fila": 21,
+        "motivo": "sin id",
+        "nombre": null
+      },
+      {
+        "fila": 23,
         "motivo": "sin id",
         "nombre": null
       }
     ],
     "columnasFaltantes": [],
     "columnasNoReconocidas": [],
-    "advertencias": [],
+    "advertencias": [
+      "2 ejemplares comparten la dirección «los-gemelos-de-san-alvaro»: 26-AZC-TAX-19405GIMNO-0018, 26-AZC-TAX-19405GIMNO-0019. Se desempató con el número del id; conviene darles nombres distintos en la hoja de captura."
+    ],
     "sinCifrasAmbientales": [],
     "sinCoordenadas": [],
     "sinFoto": [
@@ -5658,38 +6883,57 @@ const DATOS={
       "25-AZC-TAX-19405GIMNO-0010",
       "25-CUH-TAX-19405GIMNO-0011",
       "25-BJU-FIC-75040ANGIO-0012",
-      "24-BJU-FRA-30222ANGIO-0013"
+      "24-BJU-FRA-30222ANGIO-0013",
+      "26-TLP-QUE-14751ANGIO-0014",
+      "26-AZC-TAX-19405GIMNO-0018",
+      "26-AZC-TAX-19405GIMNO-0019",
+      "26-COY-TAX-19405GIMNO-0021",
+      "26-BJU-TAX-19405GIMNO-0023",
+      "26-XOC-TAX-19405GIMNO-0024",
+      "26-XOC-TAX-19405GIMNO-0025",
+      "26-MAC-CUP-19282GIMNO-0026",
+      "26-XOC-TAX-19405GIMNO-0027",
+      "26-XOC-OLE-57117ANGIO-0028"
     ]
   },
   "stats": {
-    "totalEjemplares": 12,
-    "totalAlcaldias": 5,
-    "totalEspecies": 3,
+    "totalEjemplares": 22,
+    "totalAlcaldias": 8,
+    "totalEspecies": 6,
     "listaAlcaldias": [
       "Azcapotzalco",
       "Benito Juárez",
       "Coyoacán",
       "Cuauhtémoc",
-      "Miguel Hidalgo"
+      "La Magdalena Contreras",
+      "Miguel Hidalgo",
+      "Tlalpan",
+      "Xochimilco"
     ],
     "listaEspecies": [
+      "Cupressus lusitanica",
       "Ficus microcarpa",
       "Fraxinus uhdei",
+      "Olea europaea",
+      "Quercus (Quercus) crassipes",
       "Taxodium mucronatum"
     ],
     "totalPorCategoria": {
-      "centenarios": 3,
-      "historicos": 4,
-      "notables": 11,
+      "centenarios": 11,
+      "historicos": 9,
+      "notables": 20,
       "singulares": 1,
       "otras": 0
     },
     "conteoPorAlcaldia": {
       "Miguel Hidalgo": 1,
       "Cuauhtémoc": 4,
-      "Coyoacán": 3,
-      "Azcapotzalco": 2,
-      "Benito Juárez": 2
+      "Coyoacán": 4,
+      "Azcapotzalco": 4,
+      "Benito Juárez": 3,
+      "Tlalpan": 1,
+      "Xochimilco": 4,
+      "La Magdalena Contreras": 1
     },
     "alcaldiaTop": {
       "nombre": "Cuauhtémoc",
@@ -5699,32 +6943,32 @@ const DATOS={
     "edadPromedio": 318,
     "alturaMaxima": 30,
     "sumatoriaAltura": {
-      "valor": 293.8,
-      "conDato": 12,
+      "valor": 513.95,
+      "conDato": 22,
       "sinDato": 0,
       "completo": true
     },
     "sumatoriaCO2": {
-      "valor": 233.19,
-      "conDato": 12,
+      "valor": 400.26,
+      "conDato": 22,
       "sinDato": 0,
       "completo": true
     },
     "sumatoriaPrecipitacion": {
-      "valor": 301437.74,
-      "conDato": 4,
+      "valor": 730407.6,
+      "conDato": 14,
       "sinDato": 8,
       "completo": false
     },
     "sumatoriaEscorrentia": {
-      "valor": 420.14,
-      "conDato": 4,
+      "valor": 1010.5,
+      "conDato": 14,
       "sinDato": 8,
       "completo": false
     },
     "sumatoriaBeneficio": {
-      "valor": 10807.91,
-      "conDato": 12,
+      "valor": 26005.38,
+      "conDato": 22,
       "sinDato": 0,
       "completo": true
     }

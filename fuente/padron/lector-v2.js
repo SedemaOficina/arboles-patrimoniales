@@ -346,10 +346,22 @@ export function construirRegistro(texto, contrato) {
     if (vistos.has(e.id)) avisos.push(`El id ${e.id} viene repetido. El id es la llave: dos ejemplares no pueden compartirlo.`);
     vistos.set(e.id, true);
   });
-  const slugs = new Map();
-  ejemplares.forEach((e) => {
-    if (e.slug && slugs.has(e.slug)) avisos.push(`Dos ejemplares comparten la dirección «${e.slug}»: ${slugs.get(e.slug)} y ${e.id}. La ficha de uno taparía la del otro.`);
-    else if (e.slug) slugs.set(e.slug, e.id);
+  /* 28 de septiembre de 2026: llegaron dos ahuehuetes gemelos con el mismo
+     nombre asignado («Los Gemelos de San Álvaro», 0018 y 0019). Antes solo se
+     avisaba y la ficha de uno tapaba la del otro. Ahora la dirección se
+     desempata sola: a cada ejemplar cuyo nombre se repita se le añade el
+     sufijo numérico de su id (…-0018, …-0019). Se sigue avisando, porque lo
+     correcto es que el padrón les dé nombres distintos; el desempate solo
+     evita publicar una ficha encima de otra mientras tanto. */
+  const porSlug = new Map();
+  ejemplares.forEach((e) => { if (e.slug) porSlug.set(e.slug, (porSlug.get(e.slug) || []).concat(e)); });
+  porSlug.forEach((grupo, slug) => {
+    if (grupo.length < 2) return;
+    avisos.push(`${grupo.length} ejemplares comparten la dirección «${slug}»: ${grupo.map((e) => e.id).join(", ")}. Se desempató con el número del id; conviene darles nombres distintos en la hoja de captura.`);
+    grupo.forEach((e) => {
+      const sufijo = (String(e.id).match(/(\d{4})$/) || [])[1];
+      if (sufijo) e.slug = `${slug}-${sufijo}`;
+    });
   });
   if (faltantes.length) avisos.push(`La hoja no trae ${faltantes.length} columna(s) del contrato: ${faltantes.join(", ")}.`);
   if (sobrantes.length) avisos.push(`La hoja trae ${sobrantes.length} columna(s) que el contrato no conoce: ${sobrantes.join(", ")}. No se leen.`);
