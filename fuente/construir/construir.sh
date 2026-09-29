@@ -18,6 +18,11 @@ if [ "$DESTINO" = "produccion" ]; then CARPETA=docs; else CARPETA=prueba; fi
 ARMADO_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 export ARMADO_ID
 
+# Las fichas viejas se retiran antes de armar: si un ejemplar cambia de nombre
+# cambia de direccion, y la ficha anterior sobreviviria en la salida como
+# pagina huerfana fuera del sitemap (paso el 29-sep-2026 con los gemelos de
+# San Alvaro). armar-ficha.js las vuelve a escribir todas a continuacion.
+rm -f "../../$CARPETA"/arbol-*.html
 node armar.js
 node armar-ficha.js "${2:-viejo-del-agua}"
 node armar-recursos.js
