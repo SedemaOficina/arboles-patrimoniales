@@ -2024,6 +2024,9 @@ a[target="_blank"].sin-marca-externa::after{content:none}
      Arboleda» estiraba su columna y desalineaba la hilera entera. */
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .bosque__alcaldia{display:block;font-size:var(--t-micro);color:var(--gris);margin-top:2px}
+/* La especie, bajo el nombre propio (30-sep-2026). Verde bosque para que no se
+   confunda con la alcaldía, que va en gris debajo de la altura. */
+.bosque__especie{display:block;font-size:var(--t-micro);color:var(--verde-bosque);margin-top:2px;line-height:1.25}
 .bosque__arbol:hover .bosque__nombre,.bosque__arbol:focus-visible .bosque__nombre{color:var(--jacaranda)}
 /* Barra de desplazamiento propia: alta, siempre visible y con área de
    arrastre generosa. La nativa es superpuesta y de dos píxeles: no se

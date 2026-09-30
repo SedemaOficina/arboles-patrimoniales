@@ -1,7 +1,7 @@
 /* Árboles patrimoniales · lógica de la portada.
    Consume la estructura que emite patrimoniales-loader.js v2. */
 
-import { svgSilueta, ilustracionDe, perfilDe, PROPORCION_ILUSTRACION, srcsetIlustracion } from "./especies.js";
+import { svgSilueta, ilustracionDe, perfilDe, PROPORCION_ILUSTRACION, srcsetIlustracion, nombreComunLegible } from "./especies.js";
 import { crearMapa } from "./mapa.js";
 import { cuandoSeAcerque } from "./leaflet-diferido.js";
 import { montarPrimeraFoto, fotoConocida } from "./fotos.js";
@@ -125,8 +125,16 @@ function pintarBosque(ejemplares) {
     // llega igual sin necesitar el globo.
     const rotulo = [e.nombreAsignado, e.especie, e.nombreComun, e.alcaldia,
       `${nf(e.morfologia.altura_m, 1)} metros`].filter(Boolean).join(", ");
+    // La especie va justo debajo del nombre propio (30-sep-2026): el nombre
+    // asignado dice quién es el árbol, no qué árbol es. Con el nombre común
+    // legible; si la hoja no lo trae, el binomio en cursiva. Nunca vacío si
+    // hay especie, nunca inventado si no la hay.
+    const especie = e.nombreComun
+      ? esc(nombreComunLegible(e.nombreComun))
+      : (e.especie ? `<i>${esc(e.especie)}</i>` : "");
     const pie = [
       `<b class="bosque__nombre">${esc(e.nombreAsignado || "Sin nombre asignado")}</b>`,
+      especie ? `<span class="bosque__especie">${especie}</span>` : "",
       `<span class="bosque__alto">${nf(e.morfologia.altura_m, 1)} m</span>`,
       e.alcaldia ? `<span class="bosque__alcaldia">${esc(e.alcaldia)}</span>` : "",
     ].filter(Boolean).join("");

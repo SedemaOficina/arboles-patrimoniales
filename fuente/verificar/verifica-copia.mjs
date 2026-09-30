@@ -38,6 +38,8 @@ t('portada · filtro «Todos» sin cifra', /etiqueta: "Todos"/.test(p));
 // quedó solo con la llamada a la ficha.
 t('portada · el pie del árbol identifica al ejemplar sin necesidad de ratón',
   /bosque__nombre/.test(p) && /bosque__alto/.test(p) && /bosque__alcaldia/.test(p));
+t('portada · el pie del árbol también dice la especie (30-sep-2026)',
+  /bosque__especie/.test(p) && /nombreComunLegible/.test(p));
 t('portada · y el globo solo llama a la ficha',
   /class="bosque__globo" aria-hidden="true">Ver su ficha/.test(p));
 // El destino se compone en tiempo de ejecución: la constante trae el archivo

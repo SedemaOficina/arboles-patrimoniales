@@ -1154,6 +1154,12 @@ console.log('\n══ LA HILERA A ESCALA REAL ══');
   t('La identificación vive bajo el árbol, no en el globo',
     /class="bosque__pie"/.test(lg) && /bosque__nombre/.test(lg)
     && /bosque__alto/.test(lg) && /bosque__alcaldia/.test(lg));
+  // 30-sep-2026: la especie (nombre común legible, o el binomio en cursiva si
+  // la hoja no trae nombre común) va bajo el nombre propio.
+  t('El pie del árbol dice qué árbol es: la especie bajo el nombre propio',
+    /bosque__especie/.test(lg) && /nombreComunLegible\(e\.nombreComun\)/.test(lg)
+    && /<i>\$\{esc\(e\.especie\)\}<\/i>/.test(lg)
+    && /\.bosque__especie\{/.test(cs));
   t('El globo se quedó con una sola cosa',
     /class="bosque__globo" aria-hidden="true">Ver su ficha/.test(lg)
     && !/bosque__globo-nombre|bosque__globo-especie|bosque__globo-alcaldia/.test(lg));
