@@ -11,27 +11,5 @@
       "motivo": "Todavía no tiene decreto. Hasta el 24 de agosto de 2026 el sitio lo publicaba con la etiqueta «Declaratoria en trámite»; desde que el padrón solo saca a la hoja pública los ejemplares con decreto, no aparece. Sus doce fotografías siguen montadas para el día que se publique el suyo."
     }
   ],
-  "ilustraciones": [
-    {
-      "genero": "quercus",
-      "especie": "Quercus crassipes",
-      "nombre": "Encino",
-      "desde": "2026-09-28",
-      "motivo": "La biblioteca de ilustraciones (insumos/ilustraciones-especies) trae Quercus rugosa y Quercus virginiana, no crassipes. No se sustituye por otra especie. Mientras llega, la ficha dibuja la silueta propia del encino."
-    },
-    {
-      "genero": "cupressus",
-      "especie": "Cupressus lusitanica",
-      "nombre": "Cedro blanco",
-      "desde": "2026-09-28",
-      "motivo": "No hay ilustración en la biblioteca del área. Mientras llega, la ficha dibuja la silueta propia."
-    },
-    {
-      "genero": "olea",
-      "especie": "Olea europaea",
-      "nombre": "Olivo",
-      "desde": "2026-09-28",
-      "motivo": "No hay ilustración en la biblioteca del área. Mientras llega, la ficha dibuja la silueta propia."
-    }
-  ]
+  "ilustraciones": []
 }

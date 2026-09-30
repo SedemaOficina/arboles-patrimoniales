@@ -145,9 +145,9 @@ export const ILUSTRACIONES = {
   taxodium: "assets/img/especies/taxodium-media.webp",   // Taxodium mucronatum · ahuehuete
   fraxinus: "assets/img/especies/fraxinus-media.webp",   // Fraxinus uhdei · fresno mexicano
   ficus:    "assets/img/especies/ficus-media.webp",      // Ficus microcarpa · laurel de la India
-  quercus: null,     // pendiente desde el 28-sep-2026: sin ilustración licenciada
-  cupressus: null,   // pendiente desde el 28-sep-2026
-  olea: null,        // pendiente desde el 28-sep-2026
+  quercus:  "assets/img/especies/quercus-media.webp",    // Quercus crassipes · encino (llegó el 30-sep-2026)
+  cupressus: "assets/img/especies/cupressus-media.webp", // Cupressus lusitanica · cedro blanco (30-sep-2026)
+  olea:     "assets/img/especies/olea-media.webp",       // Olea europaea · olivo (30-sep-2026)
   generico: null,
 };
 
@@ -160,9 +160,9 @@ export const ILUSTRACIONES_2X = {
   taxodium: "assets/img/especies/taxodium-grande.webp",
   fraxinus: "assets/img/especies/fraxinus-grande.webp",
   ficus:    "assets/img/especies/ficus-grande.webp",
-  quercus: null,
-  cupressus: null,
-  olea: null,
+  quercus:  "assets/img/especies/quercus-grande.webp",
+  cupressus: "assets/img/especies/cupressus-grande.webp",
+  olea:     "assets/img/especies/olea-grande.webp",
   generico: null,
 };
 
@@ -180,6 +180,9 @@ export const PROPORCION_ILUSTRACION = {
   taxodium: 0.95,
   fraxinus: 1.39,
   ficus: 1.70,
+  quercus: 0.79,
+  cupressus: 0.44,
+  olea: 1.30,
 };
 
 /**
